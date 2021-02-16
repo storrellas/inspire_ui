@@ -1,0 +1,50 @@
+.w_33{
+    width: 33%;
+}
+.submenu{
+    display: inline-block
+}
+.submenu:hover {
+    border-bottom: 1px solid white !important
+}
+
+.meatze_navbar {
+    background: #343547;
+    height: 7vh;
+    max-height: 200px;
+}
+
+.meatze_main {
+    background-color: #EDEFF8;
+    min-height: '100vh';
+    padding: 0;
+}
+.meatze_content{
+    margin-top: 4em;
+    display: flex;
+    justify-content: center;
+    min-height: 86vh;
+}
+
+.meatze_box{
+    box-shadow: 0px 1px 5px grey;
+    border-radius: 5px;
+    background-color: white;
+    padding: 2em 2em 2em 2em;
+}
+
+.meatze_table_header {
+    height: 50px;
+    vertical-align: top;
+}
+.meatze_figure{
+    color: #1959F0;
+    font-size: 20px;
+}
+.meatze_figure_border{
+    border-right: 1px solid grey;
+}
+.meatze_submit{
+    background: #E67C49;
+    border: 0;
+}
