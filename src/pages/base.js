@@ -19,7 +19,7 @@ import { faUser, faStar, faDirections } from '@fortawesome/free-solid-svg-icons'
 
 // Project imports
 import Login from './login';
-
+import ProjectSelector from './projectselector';
 import InvestigatorList from './investigatorlist';
 
 class Base extends React.Component {
@@ -33,14 +33,7 @@ class Base extends React.Component {
 
   render() {
 
-    console.log("props ", this.props)
-    console.log("props ", `${this.props.match.path}/`)
-    console.log("props ", `${this.props.match.path}login`)
-
     const isLogin = this.props.location.pathname == '/'
-    console.log("isLogin ", isLogin)
-
-
     return (
       <Container fluid className='inspire-main'>
         <Navbar variant="dark" className="inspire-navbar navbar" style={{ padding: '0 10% 0 10%' }}>
@@ -121,6 +114,7 @@ class Base extends React.Component {
         </Navbar>
         <div className="inspire-content">
           <Route path={`${this.props.match.path}/`} component={Login} />
+          <Route path={`${this.props.match.path}project`} component={ProjectSelector} />
           <Route path={`${this.props.match.path}dashboard`} component={InvestigatorList} />
 
 
