@@ -113,9 +113,9 @@ class Base extends React.Component {
           </Nav>
         </Navbar>
         <div className="inspire-content">
-          <Route path={`${this.props.match.path}/`} component={Login} />
-          <Route path={`${this.props.match.path}project`} component={ProjectSelector} />
-          <Route path={`${this.props.match.path}dashboard`} component={InvestigatorList} />
+          <Route path={`${this.props.match.path}/`} exact component={Login} />
+          <Route path={`${this.props.match.path}project`} exact component={ProjectSelector} />
+          <Route path={`${this.props.match.path}project/:id`} exact component={InvestigatorList} />
 
 
 

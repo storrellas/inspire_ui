@@ -5,7 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { withRouter } from 'react-router-dom'
 
 // Styles
-import "./dashboard.scss"
+import "./projectselector.scss"
 // Assets
 
 // Project imports
@@ -19,6 +19,9 @@ class ProjectSelector extends React.Component {
 
 
   render() {
+
+    const items = Array(10).fill(0)
+    console.log("items ", items)
     return (
 
       <div style={{
@@ -27,11 +30,20 @@ class ProjectSelector extends React.Component {
         minHeight: '50vh', padding: '2em'
       }}>
         <div className="w-100">
-          <div style={{ borderBottom: '1px solid #ccc', color: 'grey', background: 'white'}}>SELECT YOUR PLAN</div>
-
-          <div style={{ margin: '0 auto', width: '400px', padding: '3em 0 3em 0'}}>
-            
-            List of projects
+          <div style={{ borderBottom: '1px solid #ccc', color: 'grey', background: 'white' }}>SELECT YOUR PLAN</div>
+          <div className="d-flex flex-wrap" style={{ padding: '2em' }}>
+            {items.map((item, id) =>
+              <div key={id} style={{ padding: '1em 1em 0 1em', width: '33%' }} onClick={ (e) => this.props.history.push('/project/123')}>
+                <div className="landBtn project project-container btnActive"
+                  style={{ height: '10em' }}>
+                  <div className="top-triangle project"></div>
+                  <div className="bottom-triangle project"></div>
+                  <div className="content">
+                    <div className="title project">S_Neurology_1_DACH</div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>);

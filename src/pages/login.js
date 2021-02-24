@@ -43,7 +43,7 @@ class Login extends React.Component {
             <div style={{ paddingTop: '1em'}}>
               <button type="submit" className="btn btn-block" 
                   style={{height:'55px', fontSize:'16px', fontWeight:'bold', backgroundColor: '#4285f4', color: 'white'}}
-                  onClick={(e) => this.props.history.push('/dashboard')}>Login</button>
+                  onClick={(e) => this.props.history.push('/project')}>Login</button>
             </div>
 
             <div style={{ paddingTop: '1em'}}>
