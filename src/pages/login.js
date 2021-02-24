@@ -5,7 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { withRouter } from 'react-router-dom'
 
 // Styles
-import "./dashboard.scss"
+
 // Assets
 
 // Project imports

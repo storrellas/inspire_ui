@@ -40,3 +40,53 @@ $secondary-color: #61dafb;
 }
 
 
+
+.w_33{
+  width: 33%;
+}
+.submenu{
+  display: inline-block
+}
+.submenu:hover {
+  border-bottom: 1px solid white !important
+}
+
+.inspire-navbar {
+  background: #343547;
+  height: 7vh;
+  max-height: 200px;
+}
+
+.inspire-main {
+  background-color: #EDEFF8;
+  min-height: '100vh';
+  padding: 0;
+}
+.inspire-content{
+  margin-top: 4em;
+  display: flex;
+  min-height: 86vh;
+  flex-direction: column;
+  padding: 0 10% 0 10%;
+}
+
+
+.inspire-dropdown-toggle:after{
+  content: none !important;
+}
+
+.inspire-dropdown{
+  background-color: transparent;
+}
+.inspire-dropdown:hover{
+  background-color: #4285f4;
+}
+.inspire-dropdown:focus{
+  border: 0;
+}
+.nav-link{
+  color: black;
+}
+
+
+

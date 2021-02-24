@@ -7,7 +7,7 @@ import { Navbar, Nav, NavDropdown, Dropdown } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom'
 
 // Styles
-import "./dashboard.scss"
+
 // Assets
 
 // Project imports
