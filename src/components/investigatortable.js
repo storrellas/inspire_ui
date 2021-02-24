@@ -98,7 +98,11 @@ const InvestigatorTable = (props) => {
                 <td style={{ cursor: 'pointer' }}>
                   <FontAwesomeIcon icon={faStar} style={{ border: '1px solid grey', fontSize: '2em', color: 'grey' }} />
                 </td>
-                <td><img src={arrow} width="40" style={{ cursor: 'pointer' }}></img></td>
+                <td>
+                  <img src={arrow} width="40" 
+                        onClick={(e) => props.history.push('/project/123/investigator/123')}
+                        style={{ cursor: 'pointer' }}></img>
+                </td>
                 <td>{item.firstName}</td>
                 <td>{item.lastName}</td>
                 <td>{item.specialties}</td>

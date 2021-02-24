@@ -1,0 +1,38 @@
+.accordion-main {
+    transition: height 0.5s ease;
+    display: block;
+    height: 0;
+}
+.accordion-main.show {
+    height: auto;
+}
+
+.inspire-accordion-show {
+    transition: max-height 0.5s ease;
+    display: block;    
+    max-height: 200px;
+    overflow-y: hidden;
+}
+
+.inspire-accordion-hide {
+    transition: max-height 0.5s ease;
+    display: block;
+    max-height: 0;
+    overflow-y: hidden;
+}
+/**/
+/*
+.inspire-accordion-show {
+    transition: height 0.5s ease;
+    display: block;    
+    height: auto;
+    overflow-y: hidden;
+}
+
+.inspire-accordion-hide {
+    transition: max-height 0.5s ease;
+    display: block;
+    height: 0;
+    overflow-y: hidden;
+}
+/**/

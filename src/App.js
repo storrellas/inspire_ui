@@ -21,6 +21,7 @@ import { faUser, faStar, faDirections } from '@fortawesome/free-solid-svg-icons'
 import Login from './pages/login';
 import ProjectSelector from './pages/projectselector';
 import InvestigatorList from './pages/investigatorlist';
+import Investigator from './pages/investigator';
 
 class App extends React.Component {
 
@@ -69,10 +70,10 @@ class App extends React.Component {
                 </Dropdown.Toggle>
 
                   <Dropdown.Menu>
-                    <Dropdown.Item href="#/action-1">Project1</Dropdown.Item>
-                    <Dropdown.Item href="#/action-1">Project2</Dropdown.Item>
-                    <Dropdown.Item href="#/action-1">Project3</Dropdown.Item>
-                    <Dropdown.Item href="#/action-1">Project4</Dropdown.Item>
+                    <Dropdown.Item href="/project/123">Project1</Dropdown.Item>
+                    <Dropdown.Item href="/project/123">Project2</Dropdown.Item>
+                    <Dropdown.Item href="/project/123">Project3</Dropdown.Item>
+                    <Dropdown.Item href="/project/123">Project4</Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
               </div>
@@ -117,6 +118,7 @@ class App extends React.Component {
           <Route path={`${this.props.match.path}/`} exact component={Login} />
           <Route path={`${this.props.match.path}project`} exact component={ProjectSelector} />
           <Route path={`${this.props.match.path}project/:id`} exact component={InvestigatorList} />
+          <Route path={`${this.props.match.path}project/:id/investigator/:subid`} exact component={Investigator} />
           </Switch>
         </div>
       </Container>);
