@@ -11,8 +11,8 @@ import { withRouter } from 'react-router-dom'
 // Assets
 
 // Project imports
-import InvestigatorTable from '../components/investigatortable';
-import InvestigatorMap from '../components/investigatormap';
+import InvestigatorTable from '../components/investigatorlist/investigatortable';
+import InvestigatorMap from '../components/investigatorlist/investigatormap';
 
 
 

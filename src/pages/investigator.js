@@ -11,8 +11,8 @@ import "./investigator.scss"
 // Assets
 
 // Project imports
-import InvestigatorProfile from '../components/investigatorprofile'
-import InvestigatorSnaphot from '../components/investigatorsnapshot'
+import InvestigatorProfile from '../components/investigator/investigatorprofile'
+import InvestigatorSnaphot from '../components/investigator/investigatorsnapshot'
 
 import AnimateHeight from 'react-animate-height';
 
@@ -84,7 +84,7 @@ class Investigator extends React.Component {
           <div style={{ borderBottom: '1px solid #ccc', color: 'grey', background: 'white' }}>
             Professor 123
           </div>
-          
+
           <InvestigatorProfile />
           <InvestigatorSnaphot />
 

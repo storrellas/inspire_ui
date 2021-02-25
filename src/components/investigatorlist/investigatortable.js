@@ -8,7 +8,7 @@ import { withRouter } from 'react-router-dom'
 // Styles
 //import "./dashboard.scss"
 // Assets
-import arrow from '../assets/arrow.png';
+import arrow from '../../assets/arrow.png';
 
 // Project imports
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
