@@ -65,7 +65,6 @@ class Investigator extends React.Component {
       tab_publications_height: 0,
       tab_events_height: 0,
       tab_clinical_trials_height: 0,
-
     }
   }
 
@@ -95,7 +94,7 @@ class Investigator extends React.Component {
   }
 
   render() {
-    console.log(" state ", this.state)
+
     return (
       <div style={{
         backgroundColor: 'white', border: '1px solid',
