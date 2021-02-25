@@ -14,9 +14,12 @@ import "./investigator.scss"
 import InvestigatorProfile from '../components/investigator/investigatorprofile'
 import InvestigatorSnaphot from '../components/investigator/investigatorsnapshot'
 
+import PanelConnections from '../components/investigator/panelconnections'
+import PanelCompanyCooperation from '../components/investigator/panelcompanycooperation'
+
 import AnimateHeight from 'react-animate-height';
 
-import CytoscapeComponent from 'react-cytoscapejs';
+
 
 const PANEL = {
   CONNECTIONS: 1,
@@ -105,11 +108,6 @@ class Investigator extends React.Component {
 
   render() {
 
-    const elements = [
-      { data: { id: 'one', label: 'Node 1' }, position: { x: 0, y: 0 } },
-      { data: { id: 'two', label: 'Node 2' }, position: { x: 100, y: 0 } },
-      { data: { source: 'one', target: 'two', label: 'Edge from Node1 to Node2' } }
-    ];
 
     return (
       <div style={{
@@ -131,13 +129,13 @@ class Investigator extends React.Component {
                   height={this.state.tab_connections_height} 
                     handler={this.showPanel.bind(this)} panel={PANEL.CONNECTIONS}>
                 <div>
-                  <CytoscapeComponent elements={elements} style={{ width: '100%', height: '300px' }} />
+                  <PanelConnections />
                 </div>
               </Panel>
               <Panel title="Company Cooperation" 
                   height={this.state.tab_company_cooperation_height} 
                     handler={this.showPanel.bind(this)} panel={PANEL.COMPANY_COOPERATION}>
-                <div>This is my test</div>
+                <div><PanelCompanyCooperation /></div>
               </Panel>
               <Panel title="Affiliations" 
                   height={this.state.tab_affiliations_height} 
