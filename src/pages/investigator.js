@@ -16,6 +16,8 @@ import InvestigatorSnaphot from '../components/investigator/investigatorsnapshot
 
 import AnimateHeight from 'react-animate-height';
 
+import CytoscapeComponent from 'react-cytoscapejs';
+
 const PANEL = {
   CONNECTIONS: 1,
   COMPANY_COOPERATION: 2,
@@ -69,6 +71,27 @@ class Investigator extends React.Component {
   }
 
   showPanel(panel) {
+
+
+    let tab = undefined;
+    if (panel === PANEL.CONNECTIONS) 
+      tab = this.state.tab_connections_height === 0 ? 'auto' : 0;
+    if (panel === PANEL.COMPANY_COOPERATION) 
+      tab = this.state.tab_company_cooperation_height === 0 ? 'auto' : 0;
+    if (panel === PANEL.AFFILIATIONS) 
+      tab = this.state.tab_affiliations_height === 0 ? 'auto' : 0;
+    if (panel === PANEL.FEEDBACK) 
+      tab = this.state.tab_feedback_height === 0 ? 'auto' : 0;
+
+    if (panel === PANEL.RESEARCH_PROFILE) 
+      tab = this.state.tab_research_profile_height === 0 ? 'auto' : 0;
+    if (panel === PANEL.PUBLICATIONS) 
+      tab = this.state.tab_publications_height === 0 ? 'auto' : 0;
+    if (panel === PANEL.EVENTS) 
+      tab = this.state.tab_events_height === 0 ? 'auto' : 0;
+    if (panel === PANEL.CLINICAL_TRIALS) 
+      tab = this.state.tab_clinical_trials_height === 0 ? 'auto' : 0;
+
     const state = {
       tab_connections_height: 0,
       tab_company_cooperation_height: 0,
@@ -80,20 +103,36 @@ class Investigator extends React.Component {
       tab_events_height: 0,
       tab_clinical_trials_height: 0,
     }
-    if (panel === PANEL.CONNECTIONS) state.tab_connections_height = 'auto'
-    if (panel === PANEL.COMPANY_COOPERATION) state.tab_company_cooperation_height = 'auto'
-    if (panel === PANEL.AFFILIATIONS) state.tab_affiliations_height = 'auto'
-    if (panel === PANEL.FEEDBACK) state.tab_feedback_height = 'auto'
+    if (panel === PANEL.CONNECTIONS) 
+      state.tab_connections_height = tab;
+    if (panel === PANEL.COMPANY_COOPERATION) 
+      state.tab_company_cooperation_height = tab;
+    if (panel === PANEL.AFFILIATIONS) 
+      state.tab_affiliations_height = tab;
+    if (panel === PANEL.FEEDBACK) 
+      state.tab_feedback_height = tab;
 
-    if (panel === PANEL.RESEARCH_PROFILE) state.tab_research_profile_height = 'auto'
-    if (panel === PANEL.PUBLICATIONS) state.tab_publications_height = 'auto'
-    if (panel === PANEL.EVENTS) state.tab_events_height = 'auto'
-    if (panel === PANEL.CLINICAL_TRIALS) state.tab_clinical_trials_height = 'auto'
+    if (panel === PANEL.RESEARCH_PROFILE) 
+      state.tab_research_profile_height = tab;
+    if (panel === PANEL.PUBLICATIONS) 
+      state.tab_publications_height = tab;
+    if (panel === PANEL.EVENTS) 
+      state.tab_events_height = tab;
+    if (panel === PANEL.CLINICAL_TRIALS) 
+      state.tab_clinical_trials_height = tab;
+
+    console.log("state.tab_connections_height ", state.tab_connections_height)
 
     this.setState({ ...state })
   }
 
   render() {
+
+    const elements = [
+      { data: { id: 'one', label: 'Node 1' }, position: { x: 0, y: 0 } },
+      { data: { id: 'two', label: 'Node 2' }, position: { x: 100, y: 0 } },
+      { data: { source: 'one', target: 'two', label: 'Edge from Node1 to Node2' } }
+    ];
 
     return (
       <div style={{
@@ -114,7 +153,9 @@ class Investigator extends React.Component {
               <Panel title="Connections" 
                   height={this.state.tab_connections_height} 
                     handler={this.showPanel.bind(this)} panel={PANEL.CONNECTIONS}>
-                <div>This is my test</div>
+                <div>
+                  <CytoscapeComponent elements={elements} style={{ width: '100%', height: '300px' }} />
+                </div>
               </Panel>
               <Panel title="Company Cooperation" 
                   height={this.state.tab_company_cooperation_height} 
