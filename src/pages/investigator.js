@@ -33,23 +33,24 @@ function Panel(props) {
   return (
     <div>
       <div style={{ backgroundColor: '#F8F8F8', cursor: 'pointer', padding: '1em 0em 1em 1.5em', border: '1px solid #ccc' }}
-        onClick={props.handler(props.panel)}>
-        Connections
-  </div>
+        onClick={(e) => props.handler(props.panel)}>
+        {props.title}
+      </div>
       <AnimateHeight
         id="example-panel"
         height={props.height}
         duration={250}
         className="AnimateHeight">
-        <div style={{ border: '1px solid #ccc' }}>ConnectionsPanel</div>
+        <div style={{ border: '1px solid #ccc' }}>
+          {props.children}
+        </div>
       </AnimateHeight>
     </div>
   );
 }
 
+
 class Investigator extends React.Component {
-
-
 
   constructor(props) {
     super(props)
@@ -69,7 +70,6 @@ class Investigator extends React.Component {
   }
 
   showPanel(panel) {
-    //console.log("showing panel", panel)
     const state = {
       tab_connections_height: 0,
       tab_company_cooperation_height: 0,
@@ -81,15 +81,15 @@ class Investigator extends React.Component {
       tab_events_height: 0,
       tab_clinical_trials_height: 0,
     }
-    if (panel === PANEL.CONNECTIONS) state.tab_connections_height = true
-    if (panel === PANEL.COMPANY_COOPERATION) state.tab_company_cooperation_height = true
-    if (panel === PANEL.AFFILIATIONS) state.tab_affiliations_height = true
-    if (panel === PANEL.FEEDBACK) state.tab_feedback_height = true
+    if (panel === PANEL.CONNECTIONS) state.tab_connections_height = 'auto'
+    if (panel === PANEL.COMPANY_COOPERATION) state.tab_company_cooperation_height = 'auto'
+    if (panel === PANEL.AFFILIATIONS) state.tab_affiliations_height = 'auto'
+    if (panel === PANEL.FEEDBACK) state.tab_feedback_height = 'auto'
 
-    if (panel === PANEL.RESEARCH_PROFILE) state.tab_research_profile_height = true
-    if (panel === PANEL.PUBLICATIONS) state.tab_publications_height = true
-    if (panel === PANEL.EVENTS) state.tab_events_height = true
-    if (panel === PANEL.CLINICAL_TRIALS) state.tab_clinical_trials_height = true
+    if (panel === PANEL.RESEARCH_PROFILE) state.tab_research_profile_height = 'auto'
+    if (panel === PANEL.PUBLICATIONS) state.tab_publications_height = 'auto'
+    if (panel === PANEL.EVENTS) state.tab_events_height = 'auto'
+    if (panel === PANEL.CLINICAL_TRIALS) state.tab_clinical_trials_height = 'auto'
 
     this.setState({ ...state })
   }
@@ -112,111 +112,49 @@ class Investigator extends React.Component {
 
           <div className="d-flex" style={{ padding: '1em 0 0 0' }}>
             <div className="w-50" style={{ padding: '0 0.5em 0 0' }}>
-
-
-              {/* <Panel height={this.state.tab_connections_height} handler={this.showPanel.bind(this)} panel={PANEL.CONNECTIONS}/> */}
-              <div style={{ backgroundColor: '#F8F8F8', cursor: 'pointer', padding: '1em 0em 1em 1.5em', border: '1px solid #ccc' }}
-                onClick={(e) => this.showPanel(PANEL.CONNECTIONS)}>
-                Connections
-                </div>
-              <AnimateHeight
-                id="example-panel"
-                height={this.state.tab_connections_height}
-                duration={250}
-                className="AnimateHeight">
-                <div style={{ border: '1px solid #ccc' }}>ConnectionsPanel</div>
-              </AnimateHeight>
-
-              <div style={{ backgroundColor: '#F8F8F8', cursor: 'pointer', padding: '1em 0em 1em 1.5em', border: '1px solid #ccc' }}
-                onClick={(e) => this.showPanel(PANEL.COMPANY_COOPERATION)}>
-                Company Cooperation
-                </div>
-              <AnimateHeight
-                id="example-panel"
-                height={this.state.tab_company_cooperation_height}
-                duration={250}
-                className="AnimateHeight">
-                <h3>ConnectionsPanel</h3>
-              </AnimateHeight>
-
-              <div style={{ backgroundColor: '#F8F8F8', cursor: 'pointer', padding: '1em 0em 1em 1.5em', border: '1px solid #ccc' }}
-                onClick={(e) => this.showPanel(PANEL.AFFILIATIONS)}>
-                Affiliations
-                </div>
-              <AnimateHeight
-                id="example-panel"
-                height={this.state.tab_affiliations_height}
-                duration={250}
-                className="AnimateHeight">
-                <h3>ConnectionsPanel</h3>
-              </AnimateHeight>
-
-
-              <div style={{ backgroundColor: '#F8F8F8', cursor: 'pointer', padding: '1em 0em 1em 1.5em', border: '1px solid #ccc' }}
-                onClick={(e) => this.showPanel(PANEL.FEEDBACK)}>
-                Feedback
-                </div>
-              <AnimateHeight
-                id="example-panel"
-                height={this.state.tab_feedback_height}
-                duration={250}
-                className="AnimateHeight">
-                <h3>ConnectionsPanel</h3>
-              </AnimateHeight>
-
+              <Panel title="Connections" 
+                  height={this.state.tab_connections_height} 
+                    handler={this.showPanel.bind(this)} panel={PANEL.CONNECTIONS}>
+                <div>This is my test</div>
+              </Panel>
+              <Panel title="Company Cooperation" 
+                  height={this.state.tab_company_cooperation_height} 
+                    handler={this.showPanel.bind(this)} panel={PANEL.COMPANY_COOPERATION}>
+                <div>This is my test</div>
+              </Panel>
+              <Panel title="Affiliations" 
+                  height={this.state.tab_affiliations_height} 
+                    handler={this.showPanel.bind(this)} panel={PANEL.AFFILIATIONS}>
+                <div>This is my test</div>
+              </Panel>
+              <Panel title="Feedback" 
+                  height={this.state.tab_feedback_height} 
+                    handler={this.showPanel.bind(this)} panel={PANEL.FEEDBACK}>
+                <div>This is my test</div>
+              </Panel>
             </div>
 
-
             <div className="w-50" style={{ padding: '0 0 0.5em 0' }}>
-
-              <div style={{ backgroundColor: '#F8F8F8', cursor: 'pointer', padding: '1em 0em 1em 1.5em', border: '1px solid #ccc' }}
-                onClick={(e) => this.showPanel(PANEL.RESEARCH_PROFILE)}>
-                Research Profile
-              </div>
-              <AnimateHeight
-                id="example-panel"
-                height={this.state.tab_research_profile_height}
-                duration={250}
-                className="AnimateHeight">
-                <h3>ConnectionsPanel</h3>
-              </AnimateHeight>
-
-              <div style={{ backgroundColor: '#F8F8F8', cursor: 'pointer', padding: '1em 0em 1em 1.5em', border: '1px solid #ccc' }}
-                onClick={(e) => this.showPanel(PANEL.PUBLICATIONS)}>
-                Publications
-              </div>
-              <AnimateHeight
-                id="example-panel"
-                height={this.state.tab_publications_height}
-                duration={250}
-                className="AnimateHeight">
-                <h3>ConnectionsPanel</h3>
-              </AnimateHeight>
-
-              <div style={{ backgroundColor: '#F8F8F8', cursor: 'pointer', padding: '1em 0em 1em 1.5em', border: '1px solid #ccc' }}
-                onClick={(e) => this.showPanel(PANEL.EVENTS)}>
-                Events
-              </div>
-              <AnimateHeight
-                id="example-panel"
-                height={this.state.tab_events_height}
-                duration={250}
-                className="AnimateHeight">
-                <h3>ConnectionsPanel</h3>
-              </AnimateHeight>
-
-              <div style={{ backgroundColor: '#F8F8F8', cursor: 'pointer', padding: '1em 0em 1em 1.5em', border: '1px solid #ccc' }}
-                onClick={(e) => this.showPanel(PANEL.CLINICAL_TRIALS)}>
-                Clinical Trials
-              </div>
-              <AnimateHeight
-                id="example-panel"
-                height={this.state.tab_clinical_trials_height}
-                duration={250}
-                className="AnimateHeight">
-                <h3>ConnectionsPanel</h3>
-              </AnimateHeight>
-
+              <Panel title="Research Profile" 
+                  height={this.state.tab_research_profile_height} 
+                    handler={this.showPanel.bind(this)} panel={PANEL.RESEARCH_PROFILE}>
+                <div>This is my test</div>
+              </Panel>
+              <Panel title="Publications" 
+                  height={this.state.tab_publications_height} 
+                    handler={this.showPanel.bind(this)} panel={PANEL.PUBLICATIONS}>
+                <div>This is my test</div>
+              </Panel>
+              <Panel title="Events" 
+                  height={this.state.tab_events_height} 
+                    handler={this.showPanel.bind(this)} panel={PANEL.EVENTS}>
+                <div>This is my test</div>
+              </Panel>
+              <Panel title="Clinical Trials" 
+                  height={this.state.tab_clinical_trials_height} 
+                    handler={this.showPanel.bind(this)} panel={PANEL.CLINICAL_TRIALS}>
+                <div>This is my test</div>
+              </Panel>
             </div>
 
           </div>
