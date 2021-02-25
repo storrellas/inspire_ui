@@ -14,8 +14,18 @@ import "./investigator.scss"
 import InvestigatorProfile from '../components/investigator/investigatorprofile'
 import InvestigatorSnaphot from '../components/investigator/investigatorsnapshot'
 
-import PanelConnections from '../components/investigator/panelconnections'
-import PanelCompanyCooperation from '../components/investigator/panelcompanycooperation'
+// Left Side
+import PanelConnections from '../components/investigator/panelconnections';
+import PanelCompanyCooperation from '../components/investigator/panelcompanycooperation';
+import PanelAffiliations from '../components/investigator/panelaffiliations';
+import PanelFeedback from '../components/investigator/panelfeedback';
+
+// Right Side
+import PanelResearchProfile from '../components/investigator/panelresearchprofile';
+import PanelPublications from '../components/investigator/panelpublications';
+import PanelEvents from '../components/investigator/panelevents';
+import PanelClinicalTrials from '../components/investigator/panelclinicaltrials';
+
 
 import AnimateHeight from 'react-animate-height';
 
@@ -140,12 +150,12 @@ class Investigator extends React.Component {
               <Panel title="Affiliations" 
                   height={this.state.tab_affiliations_height} 
                     handler={this.showPanel.bind(this)} panel={PANEL.AFFILIATIONS}>
-                <div>This is my test</div>
+                <div><PanelAffiliations /></div>
               </Panel>
               <Panel title="Feedback" 
                   height={this.state.tab_feedback_height} 
                     handler={this.showPanel.bind(this)} panel={PANEL.FEEDBACK}>
-                <div>This is my test</div>
+                <div><PanelFeedback /></div>
               </Panel>
             </div>
 
@@ -153,22 +163,22 @@ class Investigator extends React.Component {
               <Panel title="Research Profile" 
                   height={this.state.tab_research_profile_height} 
                     handler={this.showPanel.bind(this)} panel={PANEL.RESEARCH_PROFILE}>
-                <div>This is my test</div>
+                <div><PanelResearchProfile /></div>
               </Panel>
               <Panel title="Publications" 
                   height={this.state.tab_publications_height} 
                     handler={this.showPanel.bind(this)} panel={PANEL.PUBLICATIONS}>
-                <div>This is my test</div>
+                <div><PanelPublications /></div>
               </Panel>
               <Panel title="Events" 
                   height={this.state.tab_events_height} 
                     handler={this.showPanel.bind(this)} panel={PANEL.EVENTS}>
-                <div>This is my test</div>
+                <div><PanelEvents /></div>
               </Panel>
               <Panel title="Clinical Trials" 
                   height={this.state.tab_clinical_trials_height} 
                     handler={this.showPanel.bind(this)} panel={PANEL.CLINICAL_TRIALS}>
-                <div>This is my test</div>
+                <div><PanelClinicalTrials /></div>
               </Panel>
             </div>
 

@@ -9,7 +9,6 @@ import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 
-import CytoscapeComponent from 'react-cytoscapejs';
 
 /* Chart code */
 // Themes begin
@@ -34,7 +33,7 @@ class PanelCompanyCooperation extends React.Component {
 
   componentDidMount(){
     // Create chart instance
-    let chart = am4core.create("chartdiv", am4charts.XYChart);
+    let chart = am4core.create("companycooperationchart", am4charts.XYChart);
 
     // Add data
     chart.data = [{
@@ -108,16 +107,9 @@ class PanelCompanyCooperation extends React.Component {
 
   render() {
 
-
-    const elements = [
-      { data: { id: 'one', label: 'Node 1' }, position: { x: 100, y: 100 } },
-      { data: { id: 'two', label: 'Node 2' }, position: { x: 100, y: 0 } },
-      { data: { source: 'one', target: 'two', label: 'Edge from Node1 to Node2' } }
-    ];
-
     return (
       <div>
-        <div id="chartdiv" style={{height:'100%', marginTop:'20px'}}></div>
+        <div id="companycooperationchart" style={{height:'100%', marginTop:'20px'}}></div>
       </div>);
   }
 }
