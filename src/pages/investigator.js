@@ -71,27 +71,6 @@ class Investigator extends React.Component {
   }
 
   showPanel(panel) {
-
-
-    let tab = undefined;
-    if (panel === PANEL.CONNECTIONS) 
-      tab = this.state.tab_connections_height === 0 ? 'auto' : 0;
-    if (panel === PANEL.COMPANY_COOPERATION) 
-      tab = this.state.tab_company_cooperation_height === 0 ? 'auto' : 0;
-    if (panel === PANEL.AFFILIATIONS) 
-      tab = this.state.tab_affiliations_height === 0 ? 'auto' : 0;
-    if (panel === PANEL.FEEDBACK) 
-      tab = this.state.tab_feedback_height === 0 ? 'auto' : 0;
-
-    if (panel === PANEL.RESEARCH_PROFILE) 
-      tab = this.state.tab_research_profile_height === 0 ? 'auto' : 0;
-    if (panel === PANEL.PUBLICATIONS) 
-      tab = this.state.tab_publications_height === 0 ? 'auto' : 0;
-    if (panel === PANEL.EVENTS) 
-      tab = this.state.tab_events_height === 0 ? 'auto' : 0;
-    if (panel === PANEL.CLINICAL_TRIALS) 
-      tab = this.state.tab_clinical_trials_height === 0 ? 'auto' : 0;
-
     const state = {
       tab_connections_height: 0,
       tab_company_cooperation_height: 0,
@@ -104,24 +83,22 @@ class Investigator extends React.Component {
       tab_clinical_trials_height: 0,
     }
     if (panel === PANEL.CONNECTIONS) 
-      state.tab_connections_height = tab;
+      state.tab_connections_height = this.state.tab_connections_height === 0 ? 'auto' : 0;;
     if (panel === PANEL.COMPANY_COOPERATION) 
-      state.tab_company_cooperation_height = tab;
+      state.tab_company_cooperation_height = this.state.tab_company_cooperation_height === 0 ? 'auto' : 0;;
     if (panel === PANEL.AFFILIATIONS) 
-      state.tab_affiliations_height = tab;
+      state.tab_affiliations_height = this.state.tab_affiliations_height === 0 ? 'auto' : 0;;
     if (panel === PANEL.FEEDBACK) 
-      state.tab_feedback_height = tab;
+      state.tab_feedback_height = this.state.tab_feedback_height === 0 ? 'auto' : 0;;
 
     if (panel === PANEL.RESEARCH_PROFILE) 
-      state.tab_research_profile_height = tab;
+      state.tab_research_profile_height = this.state.tab_research_profile_height === 0 ? 'auto' : 0;;
     if (panel === PANEL.PUBLICATIONS) 
-      state.tab_publications_height = tab;
+      state.tab_publications_height = this.state.tab_publications_height === 0 ? 'auto' : 0;;
     if (panel === PANEL.EVENTS) 
-      state.tab_events_height = tab;
+      state.tab_events_height = this.state.tab_events_height === 0 ? 'auto' : 0;;
     if (panel === PANEL.CLINICAL_TRIALS) 
-      state.tab_clinical_trials_height = tab;
-
-    console.log("state.tab_connections_height ", state.tab_connections_height)
+      state.tab_clinical_trials_height = this.state.tab_clinical_trials_height === 0 ? 'auto' : 0;;
 
     this.setState({ ...state })
   }
