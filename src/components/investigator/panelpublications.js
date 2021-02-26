@@ -4,11 +4,111 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { withRouter } from 'react-router-dom'
 
+/* Imports */
+import * as am4core from "@amcharts/amcharts4/core";
+import * as am4charts from "@amcharts/amcharts4/charts";
+import am4themes_animated from "@amcharts/amcharts4/themes/animated";
+
+// Themes begin
+am4core.useTheme(am4themes_animated);
+
 // Styles
 
 // Assets
 
 // Project imports
+
+const publicationTypes = [
+  {
+    "name":"Clinical Trial",
+    "total":1
+  },
+  {
+    "name":"Historical Article",
+    "total":1
+  },
+  {
+    "name":"Introductory Journal Article",
+    "total":1
+  },
+  {
+    "name":"News",
+    "total":1
+  },
+  {
+    "name":"Clinical Trial Publication, Phase II",
+    "total":2
+  },
+  {
+    "name":"Letter",
+    "total":2
+  },
+  {
+    "name":"Consensus Development Conference",
+    "total":3
+  },
+  {
+    "name":"Case Reports",
+    "total":5
+  },
+  {
+    "name":"Comparative Study",
+    "total":8
+  },
+  {
+    "name":"English Abstract",
+    "total":11
+  },
+  {
+    "name":"Journal Article",
+    "total":52
+  }]
+
+const publicationYear = [
+  {
+    "publication_year":"2008",
+    "total":3
+  },
+  {
+    "publication_year":"2009",
+    "total":10
+  },
+  {
+    "publication_year":"2010",
+    "total":14
+  },
+  {
+    "publication_year":"2011",
+    "total":14
+  },
+  {
+    "publication_year":"2012",
+    "total":6
+  },
+  {
+    "publication_year":"2013",
+    "total":10
+  },
+  {
+    "publication_year":"2014",
+    "total":6
+  },
+  {
+    "publication_year":"2015",
+    "total":7
+  },
+  {
+    "publication_year":"2016",
+    "total":3
+  },
+  {
+    "publication_year":"2017",
+    "total":7
+  },
+  {
+    "publication_year":"2018",
+    "total":7
+  }]
 
 
 class PanelPublications extends React.Component {
@@ -19,13 +119,71 @@ class PanelPublications extends React.Component {
     }
   }
 
+  publicationTypeChart() {
+    // Create chart instance
+    this.publicationTypechart = am4core.create("publicationTypeContainerChart", am4charts.PieChart);
+
+    // Add data
+    this.publicationTypechart.data = publicationTypes;
+    this.publicationTypechart.innerRadius = am4core.percent(60);
+
+    // Add and configure Series
+    var pieSeries = this.publicationTypechart.series.push(new am4charts.PieSeries());
+    pieSeries.labels.template.disabled = true;
+    pieSeries.dataFields.value = "total";
+    pieSeries.dataFields.category = "name";
+    pieSeries.dataFields.tooltipText = "{category}{value}";
+
+  
+  }
+
+  publicationYearChart() {
+    // Create chart instance
+    let chart = am4core.create("publicationYearContainerChart", am4charts.XYChart);
+
+    // Add data
+    chart.data = publicationYear;
+
+    let categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+    categoryAxis.dataFields.category = "publication_year";
+    let valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+
+    // Create series
+    let series = chart.series.push(new am4charts.LineSeries());
+    series.dataFields.valueY = "value";
+    series.dataFields.dateX = "date";
+    series.tooltipText = "{value}"
+    series.strokeWidth = 2;
+    series.minBulletDistance = 15;
+    series.dataFields.valueY = "total";
+    series.dataFields.categoryX = "publication_year";
+
+
+    this.publicationYearchart = chart;
+  }
+
+  componentDidMount(){
+    this.publicationTypeChart()
+    this.publicationYearChart()
+
+  }
 
   render() {
 
+
+      
     return (
       <div>
-        <div style={{ padding: '1em 1em 1em 1em'}}>
-          Publications
+        <div className="d-flex" style={{ padding: '1em 1em 1em 1em'}}>
+          <div className="w-50 text-center">
+            <div>Publication Types</div>
+            <div id="publicationTypeContainerChart" style={{ width:'100%', marginTop:'20px'}}></div>
+          </div>
+          <div className="w-50 text-center">
+            <div>Publication Years</div>
+            <div id="publicationYearContainerChart" style={{width:'100%', marginTop:'20px'}}></div>
+          </div>
+
         </div>
       </div>);
   }
