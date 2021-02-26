@@ -109,7 +109,7 @@ class PanelCompanyCooperation extends React.Component {
 
     return (
       <div>
-        <div id="companycooperationchart" style={{height:'100%', marginTop:'20px'}}></div>
+        <div id="companycooperationchart" style={{ height:'100%' }}></div>
       </div>);
   }
 }

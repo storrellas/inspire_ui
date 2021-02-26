@@ -12,7 +12,7 @@ import "./App.scss"
 // Assets
 import inspire_logo from './assets/logo.png';
 
-//Font Awesome
+// Font Awesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser, faStar, faDirections } from '@fortawesome/free-solid-svg-icons'
 
@@ -114,11 +114,11 @@ class App extends React.Component {
           </Nav>
         </Navbar>
         <div className="inspire-content">
-        <Switch>
-          <Route path={`${this.props.match.path}/`} exact component={Login} />
-          <Route path={`${this.props.match.path}project`} exact component={ProjectSelector} />
-          <Route path={`${this.props.match.path}project/:id`} exact component={InvestigatorList} />
-          <Route path={`${this.props.match.path}project/:id/investigator/:subid`} exact component={Investigator} />
+          <Switch>
+            <Route path={`${this.props.match.path}/`} exact component={Login} />
+            <Route path={`${this.props.match.path}project`} exact component={ProjectSelector} />
+            <Route path={`${this.props.match.path}project/:id`} exact component={InvestigatorList} />
+            <Route path={`${this.props.match.path}project/:id/investigator/:subid`} exact component={Investigator} />
           </Switch>
         </div>
       </Container>);

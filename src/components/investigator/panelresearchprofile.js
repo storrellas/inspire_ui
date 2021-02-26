@@ -88,26 +88,27 @@ class PanelResearchProfile extends React.Component {
     chart.data = data;
 
     var series = chart.series.push(new am4charts.PieSeries());
+    series.radius = "100%"
     series.dataFields.value = "counter";
     series.dataFields.radiusValue = "counter";
     series.dataFields.category = "name";
     series.slices.template.cornerRadius = 6;
     series.colors.step = 3;
     // See: https://www.amcharts.com/docs/v4/tutorials/dealing-with-piechart-labels-that-dont-fit/
-    series.labels.template.maxWidth = 150;
+    series.labels.template.maxWidth = 100;
     series.labels.template.wrap = true;
   
     series.hiddenState.properties.endAngle = -90;
   
-    chart.legend = new am4charts.Legend();
+    //chart.legend = new am4charts.Legend();
     this.chart = chart
   }
 
   render() {
 
     return (
-      <div>        
-        <div id="researchprofilechart" style={{height:'100%', height: '500px', marginTop:'20px'}}></div>
+      <div style={{ padding: '1em'}}>        
+        <div id="researchprofilechart" style={{ height:'100%', height: '500px' }}></div>
       </div>);
   }
 }

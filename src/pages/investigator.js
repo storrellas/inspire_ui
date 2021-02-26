@@ -10,17 +10,19 @@ import { Accordion, Card, Button } from 'react-bootstrap';
 import "./investigator.scss"
 // Assets
 
+// Font Awesome
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCaretDown } from '@fortawesome/free-solid-svg-icons'
+
 // Project imports
 import InvestigatorProfile from '../components/investigator/investigatorprofile'
 import InvestigatorSnaphot from '../components/investigator/investigatorsnapshot'
 
-// Left Side
 import PanelConnections from '../components/investigator/panelconnections';
 import PanelCompanyCooperation from '../components/investigator/panelcompanycooperation';
 import PanelAffiliations from '../components/investigator/panelaffiliations';
 import PanelFeedback from '../components/investigator/panelfeedback';
 
-// Right Side
 import PanelResearchProfile from '../components/investigator/panelresearchprofile';
 import PanelPublications from '../components/investigator/panelpublications';
 import PanelEvents from '../components/investigator/panelevents';
@@ -28,8 +30,6 @@ import PanelClinicalTrials from '../components/investigator/panelclinicaltrials'
 
 
 import AnimateHeight from 'react-animate-height';
-
-
 
 const PANEL = {
   CONNECTIONS: 1,
@@ -45,18 +45,19 @@ const PANEL = {
 
 function Panel(props) {
 
+  const classNameStr = (props.height===0)?"panel-caret mr-2":"panel-caret active mr-2";
   return (
-    <div>
-      <div style={{ backgroundColor: '#F8F8F8', cursor: 'pointer', padding: '1em 0em 1em 1.5em', border: '1px solid #ccc' }}
+    <div style={{ padding: '0.2em 0 0.2em 0'}}>
+      <div style={{ backgroundColor: '#F8F8F8', cursor: 'pointer', padding: '1em 0em 1em 1.5em', border: '1px solid #ccc', borderRadius: '5px 5px 0 0' }}
         onClick={(e) => props.handler(props.panel)}>
-        {props.title}
+        <b><FontAwesomeIcon icon={faCaretDown} className={classNameStr}/>{props.title}</b>
       </div>
       <AnimateHeight
         id="example-panel"
         height={props.height}
         duration={250}
         className="AnimateHeight">
-        <div style={{ border: '1px solid #ccc' }}>
+        <div style={{ border: '1px solid #ccc', borderTop: '0', borderRadius: '0 0 5px 5px' }}>
           {props.children}
         </div>
       </AnimateHeight>
