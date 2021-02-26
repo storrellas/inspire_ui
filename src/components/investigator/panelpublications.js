@@ -169,8 +169,6 @@ class PanelPublications extends React.Component {
   }
 
   render() {
-
-
       
     return (
       <div>
@@ -183,7 +181,6 @@ class PanelPublications extends React.Component {
             <div>Publication Years</div>
             <div id="publicationYearContainerChart" style={{width:'100%', marginTop:'20px'}}></div>
           </div>
-
         </div>
       </div>);
   }
