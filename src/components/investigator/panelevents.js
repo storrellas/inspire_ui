@@ -80,23 +80,11 @@ class PanelEvents extends React.Component {
     pieSeries.dataFields.category = "name";
     pieSeries.dataFields.tooltipText = "{category}{value}";
 
-  
   }
 
   generateRoleContainerChart(){
     // Create chart instance
     var chart = am4core.create("eventRoleContainerChart", am4charts.XYChart);
-
-    // Add data
-    // chart.data = [{
-    //   "year": "",
-    //   "europe": 2.5,
-    //   "namerica": 2.5,
-    //   "asia": 2.1,
-    //   "lamerica": 0.3,
-    //   "meast": 0.2,
-    //   "africa": 0.1
-    // }];
 
     chart.data = [
       {"state":"","Organizer":3,"Chairperson":11,"Speaker":13}
