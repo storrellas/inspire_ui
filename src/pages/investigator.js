@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 // Bootstrap
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Col, Row } from 'react-bootstrap';
+
 
 import { withRouter } from 'react-router-dom'
 
@@ -45,12 +47,12 @@ const PANEL = {
 
 function Panel(props) {
 
-  const classNameStr = (props.height===0)?"panel-caret mr-2":"panel-caret active mr-2";
+  const classNameStr = (props.height === 0) ? "panel-caret mr-2" : "panel-caret active mr-2";
   return (
-    <div style={{ padding: '0.2em 0 0.2em 0'}}>
+    <div style={{ padding: '0.2em 0 0.2em 0' }}>
       <div style={{ backgroundColor: '#F8F8F8', cursor: 'pointer', padding: '1em 0em 1em 1.5em', border: '1px solid #ccc', borderRadius: '5px 5px 0 0' }}
         onClick={(e) => props.handler(props.panel)}>
-        <b><FontAwesomeIcon icon={faCaretDown} className={classNameStr}/>{props.title}</b>
+        <b><FontAwesomeIcon icon={faCaretDown} className={classNameStr} />{props.title}</b>
       </div>
       <AnimateHeight
         id="example-panel"
@@ -96,22 +98,22 @@ class Investigator extends React.Component {
       tab_events_height: 0,
       tab_clinical_trials_height: 0,
     }
-    if (panel === PANEL.CONNECTIONS) 
+    if (panel === PANEL.CONNECTIONS)
       state.tab_connections_height = this.state.tab_connections_height === 0 ? 'auto' : 0;;
-    if (panel === PANEL.COMPANY_COOPERATION) 
+    if (panel === PANEL.COMPANY_COOPERATION)
       state.tab_company_cooperation_height = this.state.tab_company_cooperation_height === 0 ? 'auto' : 0;;
-    if (panel === PANEL.AFFILIATIONS) 
+    if (panel === PANEL.AFFILIATIONS)
       state.tab_affiliations_height = this.state.tab_affiliations_height === 0 ? 'auto' : 0;;
-    if (panel === PANEL.FEEDBACK) 
+    if (panel === PANEL.FEEDBACK)
       state.tab_feedback_height = this.state.tab_feedback_height === 0 ? 'auto' : 0;;
 
-    if (panel === PANEL.RESEARCH_PROFILE) 
+    if (panel === PANEL.RESEARCH_PROFILE)
       state.tab_research_profile_height = this.state.tab_research_profile_height === 0 ? 'auto' : 0;;
-    if (panel === PANEL.PUBLICATIONS) 
+    if (panel === PANEL.PUBLICATIONS)
       state.tab_publications_height = this.state.tab_publications_height === 0 ? 'auto' : 0;;
-    if (panel === PANEL.EVENTS) 
+    if (panel === PANEL.EVENTS)
       state.tab_events_height = this.state.tab_events_height === 0 ? 'auto' : 0;;
-    if (panel === PANEL.CLINICAL_TRIALS) 
+    if (panel === PANEL.CLINICAL_TRIALS)
       state.tab_clinical_trials_height = this.state.tab_clinical_trials_height === 0 ? 'auto' : 0;;
 
     this.setState({ ...state })
@@ -121,12 +123,13 @@ class Investigator extends React.Component {
 
 
     return (
-      <div style={{
-        backgroundColor: 'white', border: '1px solid',
-        borderColor: 'transparent #dee2e6 #dee2e6 #dee2e6', borderRadius: '0 .25rem 0 .25rem',
-        minHeight: '50vh', padding: '2em'
-      }}>
-        <div className="w-100">
+      <Row>
+        <Col sm={12} style={{
+          backgroundColor: 'white', border: '1px solid',
+          borderColor: 'transparent #dee2e6 #dee2e6 #dee2e6', borderRadius: '0 .25rem 0 .25rem',
+          minHeight: '50vh', padding: '2em'
+        }}>
+
           <div style={{ borderBottom: '1px solid #ccc', color: 'grey', background: 'white' }}>
             Professor 123
           </div>
@@ -134,59 +137,61 @@ class Investigator extends React.Component {
           <InvestigatorProfile />
           <InvestigatorSnaphot />
 
-          <div className="d-flex" style={{ padding: '1em 0 0 0' }}>
-            <div className="w-50" style={{ padding: '0 0.5em 0 0' }}>
-              <Panel title="Connections" 
-                  height={this.state.tab_connections_height} 
-                    handler={this.showPanel.bind(this)} panel={PANEL.CONNECTIONS}>
+          <Row style={{ marginTop: '1em' }}>
+            <Col sm={6}>
+              <Panel title="Connections"
+                height={this.state.tab_connections_height}
+                handler={this.showPanel.bind(this)} panel={PANEL.CONNECTIONS}>
                 <div>
                   <PanelConnections />
                 </div>
               </Panel>
-              <Panel title="Company Cooperation" 
-                  height={this.state.tab_company_cooperation_height} 
-                    handler={this.showPanel.bind(this)} panel={PANEL.COMPANY_COOPERATION}>
+              <Panel title="Company Cooperation"
+                height={this.state.tab_company_cooperation_height}
+                handler={this.showPanel.bind(this)} panel={PANEL.COMPANY_COOPERATION}>
                 <div><PanelCompanyCooperation /></div>
               </Panel>
-              <Panel title="Affiliations" 
-                  height={this.state.tab_affiliations_height} 
-                    handler={this.showPanel.bind(this)} panel={PANEL.AFFILIATIONS}>
+              <Panel title="Affiliations"
+                height={this.state.tab_affiliations_height}
+                handler={this.showPanel.bind(this)} panel={PANEL.AFFILIATIONS}>
                 <div><PanelAffiliations /></div>
               </Panel>
-              <Panel title="Feedback" 
-                  height={this.state.tab_feedback_height} 
-                    handler={this.showPanel.bind(this)} panel={PANEL.FEEDBACK}>
+              <Panel title="Feedback"
+                height={this.state.tab_feedback_height}
+                handler={this.showPanel.bind(this)} panel={PANEL.FEEDBACK}>
                 <div><PanelFeedback /></div>
               </Panel>
-            </div>
 
-            <div className="w-50" style={{ padding: '0 0 0.5em 0' }}>
-              <Panel title="Research Profile" 
-                  height={this.state.tab_research_profile_height} 
-                    handler={this.showPanel.bind(this)} panel={PANEL.RESEARCH_PROFILE}>
+            </Col>
+            <Col sm={6}>
+              <Panel title="Research Profile"
+                height={this.state.tab_research_profile_height}
+                handler={this.showPanel.bind(this)} panel={PANEL.RESEARCH_PROFILE}>
                 <div><PanelResearchProfile /></div>
               </Panel>
-              <Panel title="Publications" 
-                  height={this.state.tab_publications_height} 
-                    handler={this.showPanel.bind(this)} panel={PANEL.PUBLICATIONS}>
+              <Panel title="Publications"
+                height={this.state.tab_publications_height}
+                handler={this.showPanel.bind(this)} panel={PANEL.PUBLICATIONS}>
                 <div><PanelPublications /></div>
               </Panel>
-              <Panel title="Events" 
-                  height={this.state.tab_events_height} 
-                    handler={this.showPanel.bind(this)} panel={PANEL.EVENTS}>
+              <Panel title="Events"
+                height={this.state.tab_events_height}
+                handler={this.showPanel.bind(this)} panel={PANEL.EVENTS}>
                 <div><PanelEvents /></div>
               </Panel>
-              <Panel title="Clinical Trials" 
-                  height={this.state.tab_clinical_trials_height} 
-                    handler={this.showPanel.bind(this)} panel={PANEL.CLINICAL_TRIALS}>
+              <Panel title="Clinical Trials"
+                height={this.state.tab_clinical_trials_height}
+                handler={this.showPanel.bind(this)} panel={PANEL.CLINICAL_TRIALS}>
                 <div><PanelClinicalTrials /></div>
               </Panel>
-            </div>
 
-          </div>
+            </Col>
+          </Row>
 
-        </div>
-      </div>);
+
+        </Col>
+      </Row>
+    );
   }
 }
 
