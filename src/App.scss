@@ -1,3 +1,7 @@
+@import "bootstrap/scss/functions"; 
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/mixins";
+
 .App {
   text-align: center;
 }
@@ -39,43 +43,73 @@ $secondary-color: #61dafb;
   }
 }
 
-
-
-.w_33{
-  width: 33%;
-}
-.submenu{
-  display: inline-block
-}
-.submenu:hover {
-  border-bottom: 1px solid white !important
-}
+$navbar-bg-color: #343547;
+$navbar-bg-hover: #4285f4;
 
 .inspire-navbar {
-  background: #343547;
-  height: 7vh;
+  background: $navbar-bg-color;
   max-height: 200px;
+  padding:0;
 }
+
+@include media-breakpoint-up(sm){
+  .inspire-navbar {
+    padding: 0 10% 0 10%;    
+  }
+  .inspire-nav{
+    align-items: center!important;
+  }
+
+  
+}
+
 
 .inspire-main {
   background-color: #EDEFF8;
   min-height: '100vh';
-  padding: 0;
 }
 .inspire-content{
-  margin: 0 auto;
   margin-top: 3em;
-  padding-top: 4em;
   min-height: 86vh;
-  padding: 0 10% 0 10%;
-  max-width: 1200px;
-  
 }
 
+.inspire-dropdown-toggle{
+  background-color: transparent;
+  border: 1px solid white;
+}
 .inspire-dropdown-toggle:after{
   content: none !important;
 }
+.inspire-dropdown-toggle:hover{
+  background-color: $navbar-bg-hover;
+  border: 1px solid white;
+  box-shadow: none;
+}
+.inspire-dropdown-toggle:focus{
+  background-color: transparent;
+  box-shadow: none;
+  border: 1px solid white;
+}
+.inspire-dropdown-toggle:active{
+  background-color: transparent !important;
+  box-shadow: none;
+  border: 1px solid white;
+}
+.inspire-dropdown-toggle:active:focus{
+  background-color: transparent !important;
+  box-shadow: none;
+  border: 1px solid white;
 
+}
+
+.inspire-navbar-link {
+  border: 1px solid white;
+  border-radius: 5px;  
+  margin: 0 0.5em 0 0.5em;
+}
+.inspire-navbar-link:hover {
+  background-color: #4285f4;
+}
 
 
 .inspire-reponsive-dropdown{ 
@@ -90,12 +124,11 @@ $secondary-color: #61dafb;
 }
 
 
-
 .inspire-dropdown{
   background-color: transparent;
 }
 .inspire-dropdown:hover{
-  background-color: #4285f4;
+  background-color: $navbar-bg-hover;
 }
 .inspire-dropdown:focus{
   border: 0;
