@@ -9,6 +9,11 @@ import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 
+// Redux
+import { connect } from "react-redux";
+
+
+import LoadingOverlay from 'react-loading-overlay';
 
 /* Chart code */
 // Themes begin
@@ -20,17 +25,31 @@ am4core.useTheme(am4themes_animated);
 
 // Project imports
 
+const mapStateToProps = state => {
+  return { 
+    tab_research_profile_rendered: state.tab_research_profile_rendered,
+    };
+};
+
 
 class PanelResearchProfile extends React.Component {
 
   constructor(props) {
     super(props)
     this.state = {
+      isOpened: false,
+      isLoading: true
     }
   }
 
   componentDidMount(){
+  }
 
+  componentDidUpdate(){
+  }
+
+  generateChart(){
+    console.log("Generating chart in RP")
     const data = [
       {
         "id":340,
@@ -102,15 +121,27 @@ class PanelResearchProfile extends React.Component {
   
     //chart.legend = new am4charts.Legend();
     this.chart = chart
+
+    // Set state after timeout
+    this.setState({isLoading: false, isOpened: true})
   }
 
   render() {
 
+    if( this.props.tab_research_profile_rendered == true && this.state.isOpened == false){
+      const that = this;
+      setTimeout(function(){ that.generateChart() }, 500);
+    }
+
     return (
-      <div style={{ padding: '1em'}}>        
+      <div style={{ padding: '1em'}}>    
+        <LoadingOverlay
+          active={this.state.isLoading}
+          spinner>
         <div id="researchprofilechart" style={{ height:'100%', height: '500px' }}></div>
+        </LoadingOverlay>    
       </div>);
   }
 }
 
-export default withRouter(PanelResearchProfile);
+export default connect(mapStateToProps, undefined)(withRouter(PanelResearchProfile))

@@ -32,8 +32,13 @@ import PanelClinicalTrials from '../components/investigator/panelclinicaltrials'
 
 
 // Redux
-import { TAB_COMPANY_COOPERATION_OPENED } from "../redux";
-import { setTabCompanyCooperationRendered } from "../redux";
+import { 
+  setTabCompanyCooperationRendered, 
+  setTabResearchProfileRendered, 
+  setTabPublicationsRendered,
+  setTabEventsRendered, 
+  setTabClinicalTrialsRendered
+} from "../redux";
 import { connect } from "react-redux";
 
 
@@ -69,7 +74,10 @@ function Panel(props) {
         height={props.height}
         duration={250}
         className="AnimateHeight"
-        onAnimationEnd={ (e) => props.onAnimationEnd(props.panel) }>
+        onAnimationEnd={ (e) => {
+          props.onAnimationEnd(props.panel) 
+
+        }}>
         <div style={{ border: '1px solid #ccc', borderTop: '0', borderRadius: '0 0 5px 5px' }}>
           {props.children}
         </div>
@@ -82,7 +90,12 @@ function Panel(props) {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    setTabCompanyCooperationRendered: () => dispatch(setTabCompanyCooperationRendered())
+    setTabCompanyCooperationRendered: () => dispatch(setTabCompanyCooperationRendered()),
+
+    setTabResearchProfileRendered: () => dispatch(setTabResearchProfileRendered()),
+    setTabPublicationsRendered: () => dispatch(setTabPublicationsRendered()),
+    setTabEventsRendered: () => dispatch(setTabEventsRendered()),
+    setTabClinicalTrialsRendered: () => dispatch(setTabClinicalTrialsRendered()),
   };
 }
 
@@ -140,9 +153,17 @@ class Investigator extends React.Component {
   }
 
   onAnimationEnd(panel){
-    console.log("OnAnimation end", panel)
-    this.setState({trigger: true})
-    this.props.setTabCompanyCooperationRendered()
+    if( panel == PANEL.COMPANY_COOPERATION ) 
+      this.props.setTabCompanyCooperationRendered()
+    
+    if( panel == PANEL.RESEARCH_PROFILE ) 
+      this.props.setTabResearchProfileRendered()      
+    if( panel == PANEL.PUBLICATIONS ) 
+      this.props.setTabPublicationsRendered()
+    if( panel == PANEL.EVENTS ) 
+      this.props.setTabEventsRendered()      
+    if( panel == PANEL.CLINICAL_TRIALS ) 
+      this.props.setTabClinicalTrialsRendered()            
   }
 
   render() {
@@ -158,7 +179,6 @@ class Investigator extends React.Component {
           <div style={{ borderBottom: '1px solid #ccc', color: 'grey', background: 'white' }}>
             Professor 123
           </div>
-          <div>This is my animation</div>                      
           <InvestigatorProfile />
           <InvestigatorSnaphot />
 
@@ -174,22 +194,19 @@ class Investigator extends React.Component {
                 height={this.state.tab_company_cooperation}
                 handler={this.showPanel.bind(this)} panel={PANEL.COMPANY_COOPERATION}
                 onAnimationEnd={this.onAnimationEnd.bind(this)}>                        
-                {/* <div>This is my animation</div>    */}
-                <div><PanelCompanyCooperation open={this.state.tab_company_cooperation == 'auto'}/></div>
+                <div><PanelCompanyCooperation/></div>
               </Panel>
               <Panel title="Affiliations"
                 height={this.state.tab_affiliations}
                 handler={this.showPanel.bind(this)} panel={PANEL.AFFILIATIONS}
                 onAnimationEnd={this.onAnimationEnd.bind(this)}>
-                <div>This is my animation</div>    
-                {/* <div><PanelAffiliations /></div> */}
+                <div><PanelAffiliations /></div>
               </Panel>
               <Panel title="Feedback"
                 height={this.state.tab_feedback}
                 handler={this.showPanel.bind(this)} panel={PANEL.FEEDBACK}
                 onAnimationEnd={this.onAnimationEnd.bind(this)}>
-                <div>This is my animation</div>    
-                {/* <div><PanelFeedback /></div> */}
+                <div><PanelFeedback /></div>
               </Panel>
 
             </Col>
@@ -197,9 +214,8 @@ class Investigator extends React.Component {
               <Panel title="Research Profile"
                 height={this.state.tab_research_profile}
                 handler={this.showPanel.bind(this)} panel={PANEL.RESEARCH_PROFILE}
-                onAnimationEnd={this.onAnimationEnd.bind(this)}>
-                <div>This is my animation</div>                      
-                {/* <div><PanelResearchProfile /></div> */}
+                onAnimationEnd={this.onAnimationEnd.bind(this)}>                
+                <div><PanelResearchProfile /></div>
               </Panel>
               <Panel title="Publications"
                 height={this.state.tab_publications}

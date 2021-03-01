@@ -10,8 +10,10 @@ import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 
 // Redux
-import { TAB_COMPANY_COOPERATION_OPENED } from "../../redux";
 import { connect } from "react-redux";
+
+import LoadingOverlay from 'react-loading-overlay';
+
 
 /* Chart code */
 // Themes begin
@@ -38,18 +40,17 @@ class PanelCompanyCooperation extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      rendered: false
+      isOpened: false,
+      isLoading: true
     }
   }
 
 
 
   componentDidMount(){
-    this.generateChart()
   }
 
   componentDidUpdate(){
-    this.generateChart()
   }
 
   createSeries(field, name) {
@@ -67,19 +68,6 @@ class PanelCompanyCooperation extends React.Component {
   }
 
   generateChart(){
-    console.log("componentDidUpdate")
-    if( this.props.tab_company_cooperation_rendered == false ){
-      console.log("Company Cooperation Not Opened")
-      return
-    } 
-    if( this.state.rendered == true ){
-      console.log("Company Cooperation already Rendered")
-      return
-    } 
-    this.state.rendered = true;
-
-    console.log("Generating Chart")
-
 
     // Create chart instance
     this.chart = am4core.create("companycooperationchart", am4charts.XYChart);
@@ -136,6 +124,9 @@ class PanelCompanyCooperation extends React.Component {
     this.createSeries("lamerica", "Latin America");
     this.createSeries("meast", "Middle East");
     this.createSeries("africa", "Africa");
+
+    // Set state after timeout
+    this.setState({isLoading: false, isOpened: true})
   }
 
   componentWillUnmount() {
@@ -145,16 +136,22 @@ class PanelCompanyCooperation extends React.Component {
   }
 
   render() {
-    console.log("tab_company_cooperation_rendered ", this.props.tab_company_cooperation_rendered)
-    
+    if( this.props.tab_company_cooperation_rendered == true && this.state.isOpened == false){
+      const that = this;
+      setTimeout(function(){ that.generateChart() }, 500);
+    }
+      
     return (
       <div>
-        <div id="companycooperationchart" style={{ height:'150px' }}></div>
+        <LoadingOverlay
+          active={this.state.isLoading}
+          spinner>
+          <div id="companycooperationchart" style={{ height:'200px' }}></div>         
+        </LoadingOverlay>
       </div>);
   }
 }
 
 
-//export default withRouter(PanelCompanyCooperation);
 export default connect(mapStateToProps, undefined)(withRouter(PanelCompanyCooperation))
 
