@@ -31,7 +31,15 @@ import PanelEvents from '../components/investigator/panelevents';
 import PanelClinicalTrials from '../components/investigator/panelclinicaltrials';
 
 
+// Redux
+import { TAB_COMPANY_COOPERATION_OPENED } from "../redux";
+import { setTabCompanyCooperationRendered } from "../redux";
+import { connect } from "react-redux";
+
+
 import AnimateHeight from 'react-animate-height';
+
+
 
 const PANEL = {
   CONNECTIONS: 1,
@@ -44,6 +52,8 @@ const PANEL = {
   EVENTS: 7,
   CLINICAL_TRIALS: 8,
 }
+
+
 
 function Panel(props) {
 
@@ -68,6 +78,13 @@ function Panel(props) {
   );
 }
 
+
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setTabCompanyCooperationRendered: () => dispatch(setTabCompanyCooperationRendered())
+  };
+}
 
 class Investigator extends React.Component {
 
@@ -98,6 +115,8 @@ class Investigator extends React.Component {
       tab_publications: 0,
       tab_events: 0,
       tab_clinical_trials: 0,
+
+      trigger: false,
     }
     if (panel === PANEL.CONNECTIONS)
       state.tab_connections = this.state.tab_connections === 0 ? 'auto' : 0;;
@@ -122,10 +141,11 @@ class Investigator extends React.Component {
 
   onAnimationEnd(panel){
     console.log("OnAnimation end", panel)
+    this.setState({trigger: true})
+    this.props.setTabCompanyCooperationRendered()
   }
 
   render() {
-
 
     return (
       <Row>
@@ -153,9 +173,9 @@ class Investigator extends React.Component {
               <Panel title="Company Cooperation"
                 height={this.state.tab_company_cooperation}
                 handler={this.showPanel.bind(this)} panel={PANEL.COMPANY_COOPERATION}
-                onAnimationEnd={this.onAnimationEnd.bind(this)}>
-                <div>This is my animation</div>         
-                {/* <div><PanelCompanyCooperation open={this.state.tab_company_cooperation == 'auto'}/></div> */}
+                onAnimationEnd={this.onAnimationEnd.bind(this)}>                        
+                {/* <div>This is my animation</div>    */}
+                <div><PanelCompanyCooperation open={this.state.tab_company_cooperation == 'auto'}/></div>
               </Panel>
               <Panel title="Affiliations"
                 height={this.state.tab_affiliations}
@@ -213,4 +233,5 @@ class Investigator extends React.Component {
 }
 
 
-export default withRouter(Investigator);
+//export default withRouter(Investigator);
+export default connect(undefined, mapDispatchToProps)(withRouter(Investigator))

@@ -9,6 +9,9 @@ import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 
+// Redux
+import { TAB_COMPANY_COOPERATION_OPENED } from "../../redux";
+import { connect } from "react-redux";
 
 /* Chart code */
 // Themes begin
@@ -22,24 +25,68 @@ am4core.useTheme(am4themes_animated);
 // Project imports
 
 
+const mapStateToProps = state => {
+  return { 
+      tab_company_cooperation_rendered: state.tab_company_cooperation_rendered,
+    };
+};
+
+
 
 class PanelCompanyCooperation extends React.Component {
 
   constructor(props) {
     super(props)
     this.state = {
+      rendered: false
     }
   }
 
 
+
+  componentDidMount(){
+    this.generateChart()
+  }
+
   componentDidUpdate(){
-    if( this.props.open == false) return
+    this.generateChart()
+  }
+
+  createSeries(field, name) {
+    let series = this.chart.series.push(new am4charts.ColumnSeries());
+    series.dataFields.valueX = field;
+    series.dataFields.categoryY = "year";
+    series.stacked = true;
+    series.name = name;
+    
+    let labelBullet = series.bullets.push(new am4charts.LabelBullet());
+    labelBullet.locationX = 0.5;
+    labelBullet.label.text = "{valueX}";
+    labelBullet.label.fill = am4core.color("#fff");
+
+  }
+
+  generateChart(){
+    console.log("componentDidUpdate")
+    if( this.props.tab_company_cooperation_rendered == false ){
+      console.log("Company Cooperation Not Opened")
+      return
+    } 
+    if( this.state.rendered == true ){
+      console.log("Company Cooperation already Rendered")
+      return
+    } 
+    this.state.rendered = true;
+
+    console.log("Generating Chart")
+
 
     // Create chart instance
-    let chart = am4core.create("companycooperationchart", am4charts.XYChart);
+    this.chart = am4core.create("companycooperationchart", am4charts.XYChart);
+
 
     // Add data
-    chart.data = [{
+    this.chart.data = [{
       "year": "2016",
       "europe": 2.5,
       "namerica": 2.5,
@@ -65,15 +112,14 @@ class PanelCompanyCooperation extends React.Component {
       "africa": 0.1
     }];
 
-    // chart.legend = new am4charts.Legend();
-    // chart.legend.position = "right";
+
 
     // Create axes
-    let categoryAxis = chart.yAxes.push(new am4charts.CategoryAxis());
+    let categoryAxis = this.chart.yAxes.push(new am4charts.CategoryAxis());
     categoryAxis.dataFields.category = "year";
     categoryAxis.renderer.grid.template.opacity = 0;
 
-    let valueAxis = chart.xAxes.push(new am4charts.ValueAxis());
+    let valueAxis = this.chart.xAxes.push(new am4charts.ValueAxis());
     valueAxis.min = 0;
     valueAxis.renderer.grid.template.opacity = 0;
     valueAxis.renderer.ticks.template.strokeOpacity = 0.5;
@@ -83,41 +129,32 @@ class PanelCompanyCooperation extends React.Component {
     valueAxis.renderer.baseGrid.disabled = true;
     valueAxis.renderer.minGridDistance = 40;
 
-    // Create series
-    function createSeries(field, name) {
-      let series = chart.series.push(new am4charts.ColumnSeries());
-      series.dataFields.valueX = field;
-      series.dataFields.categoryY = "year";
-      series.stacked = true;
-      series.name = name;
-      
-      let labelBullet = series.bullets.push(new am4charts.LabelBullet());
-      labelBullet.locationX = 0.5;
-      labelBullet.label.text = "{valueX}";
-      labelBullet.label.fill = am4core.color("#fff");
-    }
 
-    createSeries("europe", "Europe");
-    createSeries("namerica", "North America");
-    createSeries("asia", "Asia");
-    createSeries("lamerica", "Latin America");
-    createSeries("meast", "Middle East");
-    createSeries("africa", "Africa");
-
-    this.chart = chart
+    this.createSeries("europe", "Europe");
+    this.createSeries("namerica", "North America");
+    this.createSeries("asia", "Asia");
+    this.createSeries("lamerica", "Latin America");
+    this.createSeries("meast", "Middle East");
+    this.createSeries("africa", "Africa");
   }
 
-
+  componentWillUnmount() {
+    if (this.chart) {
+      this.chart.dispose();
+    }
+  }
 
   render() {
-    console.log("open ", this.props.open)
-
+    console.log("tab_company_cooperation_rendered ", this.props.tab_company_cooperation_rendered)
+    
     return (
       <div>
-        <div id="companycooperationchart" style={{ height:'100%' }}></div>
+        <div id="companycooperationchart" style={{ height:'150px' }}></div>
       </div>);
   }
 }
 
 
-export default withRouter(PanelCompanyCooperation);
+//export default withRouter(PanelCompanyCooperation);
+export default connect(mapStateToProps, undefined)(withRouter(PanelCompanyCooperation))
+
