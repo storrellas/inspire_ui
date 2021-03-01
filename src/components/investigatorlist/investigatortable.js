@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 // Bootstrap
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Col, Row } from 'react-bootstrap';
 
 import { Dropdown } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom'
@@ -12,7 +13,7 @@ import arrow from '../../assets/arrow.png';
 
 // Project imports
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {  faStar, faSearch } from '@fortawesome/free-solid-svg-icons'
+import { faStar, faSearch } from '@fortawesome/free-solid-svg-icons'
 
 
 const SearchHeader = (props) => {
@@ -51,12 +52,13 @@ const SearchHeader = (props) => {
 const InvestigatorTable = (props) => {
 
   return (
-    <div style={{
-      backgroundColor: 'white', border: '1px solid',
-      borderColor: 'transparent #dee2e6 #dee2e6 #dee2e6', borderRadius: '0 .25rem 0 .25rem',
-      minHeight: '50vh', padding: '2em'
-    }}>
-      <div className="w-100">
+    <Row style={{ padding: 0, margin: 0 }}>
+      <Col sm={12} style={{
+        backgroundColor: 'white', border: '1px solid',
+        borderColor: 'transparent #dee2e6 #dee2e6 #dee2e6', borderRadius: '0 .25rem 0 .25rem',
+        minHeight: '50vh', padding: '2em', overflow: 'hidden'
+      }}>
+
         <table className="w-100">
           <thead>
             <tr>
@@ -99,9 +101,9 @@ const InvestigatorTable = (props) => {
                   <FontAwesomeIcon icon={faStar} style={{ border: '1px solid grey', fontSize: '2em', color: 'grey' }} />
                 </td>
                 <td>
-                  <img src={arrow} width="40" 
-                        onClick={(e) => props.history.push('/project/123/investigator/123')}
-                        style={{ cursor: 'pointer' }}></img>
+                  <img src={arrow} width="40"
+                    onClick={(e) => props.history.push('/project/123/investigator/123')}
+                    style={{ cursor: 'pointer' }}></img>
                 </td>
                 <td>{item.firstName}</td>
                 <td>{item.lastName}</td>
@@ -118,8 +120,10 @@ const InvestigatorTable = (props) => {
             )}
           </tbody>
         </table>
-      </div>
-    </div>
+
+      </Col>
+    </Row>
+
   );
 }
 

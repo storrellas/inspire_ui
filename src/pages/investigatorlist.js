@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container } from 'react-bootstrap';
 import { Navbar, Nav, NavDropdown, Dropdown } from 'react-bootstrap';
+import { Col, Row } from 'react-bootstrap';
 
 import { withRouter } from 'react-router-dom'
 
@@ -48,8 +49,9 @@ class InvestigatorList extends React.Component {
     // Select tab to be displayed
     const content = (activeTab==='table')?<InvestigatorTable data={data} />:<InvestigatorMap />;
     return (
-      <div>
-        <Nav variant="tabs" style={{ width: '100%' }}>
+      <Row>
+        <Col sm={12}>
+        <Nav variant="tabs" style={{ width: '100%'}}>
           <Nav.Item>
             <Nav.Link href="#" active={activeTab == 'table'} onClick={(e) => this.setState({ activeTab: 'table' })}>Table</Nav.Link>
           </Nav.Item>
@@ -57,9 +59,9 @@ class InvestigatorList extends React.Component {
             <Nav.Link href="#" active={activeTab == 'map'} onClick={(e) => this.setState({ activeTab: 'map' })}>Map</Nav.Link>
           </Nav.Item>
         </Nav>
-        { content }
-        
-      </div>);
+        { content }        
+      </Col>
+      </Row>);
   }
 }
 
