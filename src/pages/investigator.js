@@ -58,7 +58,8 @@ function Panel(props) {
         id="example-panel"
         height={props.height}
         duration={250}
-        className="AnimateHeight">
+        className="AnimateHeight"
+        onAnimationEnd={ (e) => props.onAnimationEnd(props.panel) }>
         <div style={{ border: '1px solid #ccc', borderTop: '0', borderRadius: '0 0 5px 5px' }}>
           {props.children}
         </div>
@@ -74,49 +75,53 @@ class Investigator extends React.Component {
     super(props)
     this.state = {
 
-      tab_connections_height: 0,
-      tab_company_cooperation_height: 0,
-      tab_affiliations_height: 0,
-      tab_feedback_height: 0,
+      tab_connections: 0,
+      tab_company_cooperation: 0,
+      tab_affiliations: 0,
+      tab_feedback: 0,
 
-      tab_research_profile_height: 0,
-      tab_publications_height: 0,
-      tab_events_height: 0,
-      tab_clinical_trials_height: 0,
+      tab_research_profile: 0,
+      tab_publications: 0,
+      tab_events: 0,
+      tab_clinical_trials: 0,
     }
   }
 
   showPanel(panel) {
     const state = {
-      tab_connections_height: 0,
-      tab_company_cooperation_height: 0,
-      tab_affiliations_height: 0,
-      tab_feedback_height: 0,
+      tab_connections: 0,
+      tab_company_cooperation: 0,
+      tab_affiliations: 0,
+      tab_feedback: 0,
 
-      tab_research_profile_height: 0,
-      tab_publications_height: 0,
-      tab_events_height: 0,
-      tab_clinical_trials_height: 0,
+      tab_research_profile: 0,
+      tab_publications: 0,
+      tab_events: 0,
+      tab_clinical_trials: 0,
     }
     if (panel === PANEL.CONNECTIONS)
-      state.tab_connections_height = this.state.tab_connections_height === 0 ? 'auto' : 0;;
+      state.tab_connections = this.state.tab_connections === 0 ? 'auto' : 0;;
     if (panel === PANEL.COMPANY_COOPERATION)
-      state.tab_company_cooperation_height = this.state.tab_company_cooperation_height === 0 ? 'auto' : 0;;
+      state.tab_company_cooperation = this.state.tab_company_cooperation === 0 ? 'auto' : 0;;
     if (panel === PANEL.AFFILIATIONS)
-      state.tab_affiliations_height = this.state.tab_affiliations_height === 0 ? 'auto' : 0;;
+      state.tab_affiliations = this.state.tab_affiliations === 0 ? 'auto' : 0;;
     if (panel === PANEL.FEEDBACK)
-      state.tab_feedback_height = this.state.tab_feedback_height === 0 ? 'auto' : 0;;
+      state.tab_feedback = this.state.tab_feedback === 0 ? 'auto' : 0;;
 
     if (panel === PANEL.RESEARCH_PROFILE)
-      state.tab_research_profile_height = this.state.tab_research_profile_height === 0 ? 'auto' : 0;;
+      state.tab_research_profile = this.state.tab_research_profile === 0 ? 'auto' : 0;;
     if (panel === PANEL.PUBLICATIONS)
-      state.tab_publications_height = this.state.tab_publications_height === 0 ? 'auto' : 0;;
+      state.tab_publications = this.state.tab_publications === 0 ? 'auto' : 0;;
     if (panel === PANEL.EVENTS)
-      state.tab_events_height = this.state.tab_events_height === 0 ? 'auto' : 0;;
+      state.tab_events = this.state.tab_events === 0 ? 'auto' : 0;;
     if (panel === PANEL.CLINICAL_TRIALS)
-      state.tab_clinical_trials_height = this.state.tab_clinical_trials_height === 0 ? 'auto' : 0;;
+      state.tab_clinical_trials = this.state.tab_clinical_trials === 0 ? 'auto' : 0;;
 
     this.setState({ ...state })
+  }
+
+  onAnimationEnd(panel){
+    console.log("OnAnimation end", panel)
   }
 
   render() {
@@ -133,58 +138,70 @@ class Investigator extends React.Component {
           <div style={{ borderBottom: '1px solid #ccc', color: 'grey', background: 'white' }}>
             Professor 123
           </div>
-
+          <div>This is my animation</div>                      
           <InvestigatorProfile />
           <InvestigatorSnaphot />
 
           <Row style={{ marginTop: '1em' }}>
             <Col sm={6}>
               <Panel title="Connections"
-                height={this.state.tab_connections_height}
-                handler={this.showPanel.bind(this)} panel={PANEL.CONNECTIONS}>
-                <div>
-                  <PanelConnections />
-                </div>
+                height={this.state.tab_connections}
+                handler={this.showPanel.bind(this)} panel={PANEL.CONNECTIONS}
+                onAnimationEnd={this.onAnimationEnd.bind(this)}>
+                <div><PanelConnections /></div>                
               </Panel>
               <Panel title="Company Cooperation"
-                height={this.state.tab_company_cooperation_height}
-                handler={this.showPanel.bind(this)} panel={PANEL.COMPANY_COOPERATION}>
-                <div><PanelCompanyCooperation /></div>
+                height={this.state.tab_company_cooperation}
+                handler={this.showPanel.bind(this)} panel={PANEL.COMPANY_COOPERATION}
+                onAnimationEnd={this.onAnimationEnd.bind(this)}>
+                <div>This is my animation</div>         
+                {/* <div><PanelCompanyCooperation open={this.state.tab_company_cooperation == 'auto'}/></div> */}
               </Panel>
               <Panel title="Affiliations"
-                height={this.state.tab_affiliations_height}
-                handler={this.showPanel.bind(this)} panel={PANEL.AFFILIATIONS}>
-                <div><PanelAffiliations /></div>
+                height={this.state.tab_affiliations}
+                handler={this.showPanel.bind(this)} panel={PANEL.AFFILIATIONS}
+                onAnimationEnd={this.onAnimationEnd.bind(this)}>
+                <div>This is my animation</div>    
+                {/* <div><PanelAffiliations /></div> */}
               </Panel>
               <Panel title="Feedback"
-                height={this.state.tab_feedback_height}
-                handler={this.showPanel.bind(this)} panel={PANEL.FEEDBACK}>
-                <div><PanelFeedback /></div>
+                height={this.state.tab_feedback}
+                handler={this.showPanel.bind(this)} panel={PANEL.FEEDBACK}
+                onAnimationEnd={this.onAnimationEnd.bind(this)}>
+                <div>This is my animation</div>    
+                {/* <div><PanelFeedback /></div> */}
               </Panel>
 
             </Col>
             <Col sm={6}>
               <Panel title="Research Profile"
-                height={this.state.tab_research_profile_height}
-                handler={this.showPanel.bind(this)} panel={PANEL.RESEARCH_PROFILE}>
-                <div><PanelResearchProfile /></div>
+                height={this.state.tab_research_profile}
+                handler={this.showPanel.bind(this)} panel={PANEL.RESEARCH_PROFILE}
+                onAnimationEnd={this.onAnimationEnd.bind(this)}>
+                <div>This is my animation</div>                      
+                {/* <div><PanelResearchProfile /></div> */}
               </Panel>
               <Panel title="Publications"
-                height={this.state.tab_publications_height}
-                handler={this.showPanel.bind(this)} panel={PANEL.PUBLICATIONS}>
-                <div><PanelPublications /></div>
+                height={this.state.tab_publications}
+                handler={this.showPanel.bind(this)} panel={PANEL.PUBLICATIONS}
+                onAnimationEnd={this.onAnimationEnd.bind(this)}>
+                <div>This is my animation</div>                      
+                {/* <div><PanelPublications /></div> */}
               </Panel>
               <Panel title="Events"
-                height={this.state.tab_events_height}
-                handler={this.showPanel.bind(this)} panel={PANEL.EVENTS}>
-                <div><PanelEvents /></div>
+                height={this.state.tab_events}
+                handler={this.showPanel.bind(this)} panel={PANEL.EVENTS}
+                onAnimationEnd={this.onAnimationEnd.bind(this)}>
+                  <div>This is my animation</div>                      
+                {/* <div><PanelEvents /></div> */}
               </Panel>
               <Panel title="Clinical Trials"
-                height={this.state.tab_clinical_trials_height}
-                handler={this.showPanel.bind(this)} panel={PANEL.CLINICAL_TRIALS}>
-                <div><PanelClinicalTrials /></div>
+                height={this.state.tab_clinical_trials}
+                handler={this.showPanel.bind(this)} panel={PANEL.CLINICAL_TRIALS}
+                onAnimationEnd={this.onAnimationEnd.bind(this)}>
+                <div>This is my animation</div>                      
+                {/* <div><PanelClinicalTrials /></div> */}
               </Panel>
-
             </Col>
           </Row>
 

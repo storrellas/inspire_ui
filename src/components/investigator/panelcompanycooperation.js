@@ -31,7 +31,10 @@ class PanelCompanyCooperation extends React.Component {
     }
   }
 
-  componentDidMount(){
+
+  componentDidUpdate(){
+    if( this.props.open == false) return
+
     // Create chart instance
     let chart = am4core.create("companycooperationchart", am4charts.XYChart);
 
@@ -105,7 +108,9 @@ class PanelCompanyCooperation extends React.Component {
   }
 
 
+
   render() {
+    console.log("open ", this.props.open)
 
     return (
       <div>
