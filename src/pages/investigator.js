@@ -221,22 +221,19 @@ class Investigator extends React.Component {
                 height={this.state.tab_publications}
                 handler={this.showPanel.bind(this)} panel={PANEL.PUBLICATIONS}
                 onAnimationEnd={this.onAnimationEnd.bind(this)}>
-                <div>This is my animation</div>                      
-                {/* <div><PanelPublications /></div> */}
+                <PanelPublications />
               </Panel>
               <Panel title="Events"
                 height={this.state.tab_events}
                 handler={this.showPanel.bind(this)} panel={PANEL.EVENTS}
                 onAnimationEnd={this.onAnimationEnd.bind(this)}>
-                  <div>This is my animation</div>                      
-                {/* <div><PanelEvents /></div> */}
+                <PanelEvents />
               </Panel>
               <Panel title="Clinical Trials"
                 height={this.state.tab_clinical_trials}
                 handler={this.showPanel.bind(this)} panel={PANEL.CLINICAL_TRIALS}
                 onAnimationEnd={this.onAnimationEnd.bind(this)}>
-                <div>This is my animation</div>                      
-                {/* <div><PanelClinicalTrials /></div> */}
+                <PanelClinicalTrials />
               </Panel>
             </Col>
           </Row>

@@ -9,6 +9,11 @@ import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 
+// Redux
+import { connect } from "react-redux";
+
+import LoadingOverlay from 'react-loading-overlay';
+
 // Themes begin
 am4core.useTheme(am4themes_animated);
 
@@ -18,42 +23,49 @@ am4core.useTheme(am4themes_animated);
 
 // Project imports
 
+const mapStateToProps = state => {
+  return {
+    tab_events_rendered: state.tab_events_rendered,
+  };
+};
+
+
 const eventType = [
   {
-    "name":"Symposium",
-    "total":1
+    "name": "Symposium",
+    "total": 1
   },
   {
-    "name":"Course",
-    "total":2
+    "name": "Course",
+    "total": 2
   },
   {
-    "name":"Forum",
-    "total":2
+    "name": "Forum",
+    "total": 2
   },
   {
-    "name":"Satellite Symposium",
-    "total":2
+    "name": "Satellite Symposium",
+    "total": 2
   },
   {
-    "name":"Workshop",
-    "total":2
+    "name": "Workshop",
+    "total": 2
   },
   {
-    "name":"Seminar",
-    "total":3
+    "name": "Seminar",
+    "total": 3
   },
   {
-    "name":"Conference",
-    "total":5
+    "name": "Conference",
+    "total": 5
   },
   {
-    "name":"Congress",
-    "total":10
+    "name": "Congress",
+    "total": 10
   }]
 
 const eventRole = [
-  {"state":"event","Organizer":3,"Chairperson":11,"Speaker":13}
+  { "state": "event", "Organizer": 3, "Chairperson": 11, "Speaker": 13 }
 ]
 
 
@@ -62,9 +74,11 @@ class PanelEvents extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      isOpened: false,
+      isLoading: true
     }
   }
-  
+
   generateEventTypeChart() {
     // Create chart instance
     this.eventTypeChart = am4core.create("eventTypeContainerChart", am4charts.PieChart);
@@ -79,15 +93,16 @@ class PanelEvents extends React.Component {
     pieSeries.dataFields.value = "total";
     pieSeries.dataFields.category = "name";
     pieSeries.dataFields.tooltipText = "{category}{value}";
+    pieSeries.hiddenState.properties.endAngle = -90;
 
   }
 
-  generateRoleContainerChart(){
+  generateRoleContainerChart() {
     // Create chart instance
     var chart = am4core.create("eventRoleContainerChart", am4charts.XYChart);
 
     chart.data = [
-      {"state":"","Organizer":3,"Chairperson":11,"Speaker":13}
+      { "state": "", "Organizer": 3, "Chairperson": 11, "Speaker": 13 }
     ]
 
     // Create axes
@@ -103,27 +118,27 @@ class PanelEvents extends React.Component {
 
     // Create series
     function createSeries(field, name) {
-      
+
       // Set up series
       let series = chart.series.push(new am4charts.ColumnSeries());
       series.name = name;
       series.dataFields.valueY = field;
       series.dataFields.categoryX = "state";
       series.sequencedInterpolation = true;
-      
+
       // Make it stacked
       series.stacked = true;
-      
+
       // Configure columns
       series.columns.template.width = am4core.percent(60);
       series.columns.template.tooltipText = "[bold]{name}[/]\n[font-size:14px]{categoryX}";
-      
+
       // Add label
       let labelBullet = series.bullets.push(new am4charts.LabelBullet());
       labelBullet.label.text = "{valueY}";
       labelBullet.locationY = 0.5;
       labelBullet.label.hideOversized = true;
-      
+
       return series;
     }
 
@@ -134,31 +149,58 @@ class PanelEvents extends React.Component {
     // Legend
     //chart.legend = new am4charts.Legend();
 
-    this.eventTypeChart = chart;
+    this.eventRoleChart = chart;
+
+
 
   }
 
-  componentDidMount(){
+  componentDidMount() {
+
+  }
+
+  generateChart() {
     this.generateEventTypeChart()
     this.generateRoleContainerChart()
+
+    // Set state after timeout
+    this.setState({isLoading: false, isOpened: true})
+  }
+
+  componentWillUnmount() {
+    if (this.eventTypeChart) {
+      this.eventTypeChart.dispose();
+    }
+    if (this.eventRoleChart) {
+      this.eventRoleChart.dispose();
+    }
   }
 
   render() {
+    if (this.props.tab_events_rendered == true && this.state.isOpened == false) {
+      const that = this;
+      setTimeout(function () { that.generateChart() }, 500);
+    }
 
     return (
       <div>
-        <div className="d-flex" style={{ height: '400px', padding: '1em 1em 1em 1em'}}>
-          <div className="w-50 text-center">
-            <div>Event Types</div>
-            <div id="eventTypeContainerChart" style={{ width:'100%', height: '100%', paddingBottom: '0.5em'}}></div>
+        <LoadingOverlay
+          active={this.state.isLoading}
+          spinner>
+          <div className="d-flex" style={{ height: '400px', padding: '1em 1em 1em 1em' }}>
+            <div className="w-50 text-center">
+              <div>Event Types</div>
+              <div id="eventTypeContainerChart" style={{ width: '100%', height: '100%', paddingBottom: '0.5em' }}></div>
+            </div>
+            <div className="w-50 text-center">
+              <div>Event Roles</div>
+              <div id="eventRoleContainerChart" style={{ width: '100%', height: '100%', paddingBottom: '0.5em' }}></div>
+            </div>
           </div>
-          <div className="w-50 text-center">
-            <div>Event Roles</div>
-            <div id="eventRoleContainerChart" style={{width:'100%', height: '100%', paddingBottom: '0.5em'}}></div>
-          </div>
-        </div>
+        </LoadingOverlay>
       </div>);
   }
 }
 
-export default withRouter(PanelEvents);
+export default connect(mapStateToProps, undefined)(withRouter(PanelEvents))
+

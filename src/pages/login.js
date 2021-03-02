@@ -31,7 +31,7 @@ class Login extends React.Component {
           <div style={{ borderBottom: '1px solid #ccc', color: 'grey'}}>
             LOGIN
           </div>
-          <div style={{ margin: '0 auto', padding: '3em 10% 3em 10%' }}>
+          <div style={{ margin: '0 auto', padding: '3em 10% 3em 10%', maxWidth: '600px' }}>
 
             <div>
               <input type="text" className="form-control text-center"

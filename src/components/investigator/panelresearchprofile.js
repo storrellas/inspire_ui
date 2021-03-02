@@ -126,6 +126,12 @@ class PanelResearchProfile extends React.Component {
     this.setState({isLoading: false, isOpened: true})
   }
 
+  componentWillUnmount() {
+    if (this.chart) {
+      this.chart.dispose();
+    }
+  }
+
   render() {
 
     if( this.props.tab_research_profile_rendered == true && this.state.isOpened == false){

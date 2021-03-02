@@ -9,6 +9,11 @@ import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 
+// Redux
+import { connect } from "react-redux";
+
+import LoadingOverlay from 'react-loading-overlay';
+
 // Themes begin
 am4core.useTheme(am4themes_animated);
 
@@ -17,6 +22,12 @@ am4core.useTheme(am4themes_animated);
 // Assets
 
 // Project imports
+
+const mapStateToProps = state => {
+  return { 
+      tab_publications_rendered: state.tab_publications_rendered,
+    };
+};
 
 const publicationTypes = [
   {
@@ -116,6 +127,8 @@ class PanelPublications extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      isOpened: false,
+      isLoading: true
     }
   }
 
@@ -133,8 +146,8 @@ class PanelPublications extends React.Component {
     pieSeries.dataFields.value = "total";
     pieSeries.dataFields.category = "name";
     pieSeries.dataFields.tooltipText = "{category}{value}";
-
   
+    this.publicationTypechart.hiddenState.properties.radius = am4core.percent(0);
   }
 
   publicationYearChart() {
@@ -160,30 +173,58 @@ class PanelPublications extends React.Component {
 
 
     this.publicationYearchart = chart;
+
   }
 
-  componentDidMount(){
+  generateChart(){
     this.publicationTypeChart()
     this.publicationYearChart()
 
+    // Set state after timeout
+    this.setState({isLoading: false, isOpened: true})
+  }
+
+  componentDidMount(){
+  }
+
+  componentDidUpdate(){
+  }
+
+  componentWillUnmount() {
+    if (this.publicationYearchart) {
+      this.publicationYearchart.dispose();
+    }
+    if (this.publicationTypechart) {
+      this.publicationTypechart.dispose();
+    }
   }
 
   render() {
+    if( this.props.tab_publications_rendered == true && this.state.isOpened == false){
+      const that = this;
+      setTimeout(function(){ that.generateChart() }, 500);
+    }
       
+    
     return (
       <div>
+        <LoadingOverlay
+          active={this.state.isLoading}
+          spinner>
         <div className="d-flex" style={{ padding: '1em 1em 1em 1em'}}>
           <div className="w-50 text-center">
             <div>Publication Types</div>
-            <div id="publicationTypeContainerChart" style={{ width:'100%', marginTop:'20px'}}></div>
+            <div id="publicationTypeContainerChart" style={{ width:'100%', height:'200px', marginTop:'20px'}}></div>
           </div>
           <div className="w-50 text-center">
             <div>Publication Years</div>
-            <div id="publicationYearContainerChart" style={{width:'100%', marginTop:'20px'}}></div>
+            <div id="publicationYearContainerChart" style={{width:'100%', height:'200px', marginTop:'20px'}}></div>
           </div>
         </div>
+        </LoadingOverlay>
       </div>);
   }
 }
 
-export default withRouter(PanelPublications);
+export default connect(mapStateToProps, undefined)(withRouter(PanelPublications))
+
