@@ -87,37 +87,37 @@ class Investigator extends React.Component {
 
   getInitialState(){
     return {
-      tabConnectionsActive: false,
-      tabCompanyCooperationActive: false,
-      tabAffiliationsActive: false,
+      panelConnectionsActive: false,
+      panelCompanyCooperationActive: false,
+      panelAffiliationsActive: false,
       tabFeedbackActive: false,
 
-      tabResearchProfileActive: false,
-      tabPublicationsActive: false,
-      tabEventsActive: false,
-      tabClinicalTrialsActive: false,
+      panelResearchProfileActive: false,
+      panelPublicationsActive: false,
+      panelEventsActive: false,
+      panelClinicalTrialsActive: false,
     }
   }
 
   togglePanel(panel) {
     const state = this.getInitialState()
     if (panel === PANEL.CONNECTIONS)
-      state.tabConnectionsActive = !this.state.tabConnectionsActive;
+      state.panelConnectionsActive = !this.state.panelConnectionsActive;
     if (panel === PANEL.COMPANY_COOPERATION)
-      state.tabCompanyCooperationActive = !this.state.tabCompanyCooperationActive;
+      state.panelCompanyCooperationActive = !this.state.panelCompanyCooperationActive;
     if (panel === PANEL.AFFILIATIONS)
-      state.tabAffiliationsActive = !this.state.tabAffiliationsActive;
+      state.panelAffiliationsActive = !this.state.panelAffiliationsActive;
     if (panel === PANEL.FEEDBACK)
-      state.tabFeedbackActive = !this.state.tabFeedbackActive;
+      state.panelFeedbackActive = !this.state.panelFeedbackActive;
 
     if (panel === PANEL.RESEARCH_PROFILE)
-      state.tabResearchProfileActive = !this.state.tabResearchProfileActive;
+      state.panelResearchProfileActive = !this.state.panelResearchProfileActive;
     if (panel === PANEL.PUBLICATIONS)
-      state.tabPublicationsActive = !this.state.tabPublicationsActive;
+      state.panelPublicationsActive = !this.state.panelPublicationsActive;
     if (panel === PANEL.EVENTS)
-      state.tabEventsActive = !this.state.tabEventsActive;
+      state.panelEventsActive = !this.state.panelEventsActive;
     if (panel === PANEL.CLINICAL_TRIALS)
-      state.tabClinicalTrialsActive = !this.state.tabClinicalTrialsActive;
+      state.panelClinicalTrialsActive = !this.state.panelClinicalTrialsActive;
 
     this.setState({ ...state })
   }
@@ -151,25 +151,25 @@ class Investigator extends React.Component {
           <Row style={{ marginTop: '1em' }}>
             <Col sm={6}>
               <Panel title="Connections"
-                height={this.state.tabConnectionsActive?'auto':0}
+                height={this.state.panelConnectionsActive?'auto':0}
                 handler={this.togglePanel.bind(this)} panel={PANEL.CONNECTIONS}
                 onAnimationEnd={this.onAnimationEnd.bind(this)}>
                 <PanelConnections />
               </Panel>
               <Panel title="Company Cooperation"
-                height={this.state.tabCompanyCooperationActive?'auto':0}
+                height={this.state.panelCompanyCooperationActive?'auto':0}
                 handler={this.togglePanel.bind(this)} panel={PANEL.COMPANY_COOPERATION}
                 onAnimationEnd={this.onAnimationEnd.bind(this)}>                        
                 <PanelCompanyCooperation/>
               </Panel>
               <Panel title="Affiliations"
-                height={this.state.tabAffiliationsActive?'auto':0}
+                height={this.state.panelAffiliationsActive?'auto':0}
                 handler={this.togglePanel.bind(this)} panel={PANEL.AFFILIATIONS}
                 onAnimationEnd={this.onAnimationEnd.bind(this)}>
                 <PanelAffiliations />
               </Panel>
               <Panel title="Feedback"
-                height={this.state.tabFeedbackActive?'auto':0}
+                height={this.state.panelFeedbackActive?'auto':0}
                 handler={this.togglePanel.bind(this)} panel={PANEL.FEEDBACK}
                 onAnimationEnd={this.onAnimationEnd.bind(this)}>
                 <PanelFeedback />
@@ -178,25 +178,25 @@ class Investigator extends React.Component {
             </Col>
             <Col sm={6}>
               <Panel title="Research Profile"
-                height={this.state.tabResearchProfileActive?'auto':0}
+                height={this.state.panelResearchProfileActive?'auto':0}
                 handler={this.togglePanel.bind(this)} panel={PANEL.RESEARCH_PROFILE}
                 onAnimationEnd={this.onAnimationEnd.bind(this)}>                
                 <PanelResearchProfile />
               </Panel>
               <Panel title="Publications"
-                height={this.state.tabPublicationsActive?'auto':0}
+                height={this.state.panelPublicationsActive?'auto':0}
                 handler={this.togglePanel.bind(this)} panel={PANEL.PUBLICATIONS}
                 onAnimationEnd={this.onAnimationEnd.bind(this)}>
                 <PanelPublications />
               </Panel>
               <Panel title="Events"
-                height={this.state.tabEventsActive?'auto':0}
+                height={this.state.panelEventsActive?'auto':0}
                 handler={this.togglePanel.bind(this)} panel={PANEL.EVENTS}
                 onAnimationEnd={this.onAnimationEnd.bind(this)}>
                 <PanelEvents />
               </Panel>
               <Panel title="Clinical Trials"
-                height={this.state.tabClinicalTrialsActive?'auto':0}
+                height={this.state.panelClinicalTrialsActive?'auto':0}
                 handler={this.togglePanel.bind(this)} panel={PANEL.CLINICAL_TRIALS}
                 onAnimationEnd={this.onAnimationEnd.bind(this)}>
                 <PanelClinicalTrials />
