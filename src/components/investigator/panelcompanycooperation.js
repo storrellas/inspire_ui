@@ -40,8 +40,7 @@ class PanelCompanyCooperation extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      isOpened: false,
-      isLoading: true
+      isOpened: false
     }
   }
 
@@ -126,7 +125,7 @@ class PanelCompanyCooperation extends React.Component {
     this.createSeries("africa", "Africa");
 
     // Set state after timeout
-    this.setState({isLoading: false, isOpened: true})
+    this.setState({isOpened: true})
   }
 
   componentWillUnmount() {
@@ -144,7 +143,7 @@ class PanelCompanyCooperation extends React.Component {
     return (
       <div>
         <LoadingOverlay
-          active={this.state.isLoading}
+          active={this.state.isOpened == false}
           spinner>
           <div id="companycooperationchart" style={{ height:'200px' }}></div>         
         </LoadingOverlay>

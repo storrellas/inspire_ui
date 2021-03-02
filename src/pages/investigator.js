@@ -188,25 +188,25 @@ class Investigator extends React.Component {
                 height={this.state.tab_connections}
                 handler={this.showPanel.bind(this)} panel={PANEL.CONNECTIONS}
                 onAnimationEnd={this.onAnimationEnd.bind(this)}>
-                <div><PanelConnections /></div>                
+                <PanelConnections />
               </Panel>
               <Panel title="Company Cooperation"
                 height={this.state.tab_company_cooperation}
                 handler={this.showPanel.bind(this)} panel={PANEL.COMPANY_COOPERATION}
                 onAnimationEnd={this.onAnimationEnd.bind(this)}>                        
-                <div><PanelCompanyCooperation/></div>
+                <PanelCompanyCooperation/>
               </Panel>
               <Panel title="Affiliations"
                 height={this.state.tab_affiliations}
                 handler={this.showPanel.bind(this)} panel={PANEL.AFFILIATIONS}
                 onAnimationEnd={this.onAnimationEnd.bind(this)}>
-                <div><PanelAffiliations /></div>
+                <PanelAffiliations />
               </Panel>
               <Panel title="Feedback"
                 height={this.state.tab_feedback}
                 handler={this.showPanel.bind(this)} panel={PANEL.FEEDBACK}
                 onAnimationEnd={this.onAnimationEnd.bind(this)}>
-                <div><PanelFeedback /></div>
+                <PanelFeedback />
               </Panel>
 
             </Col>
@@ -215,7 +215,7 @@ class Investigator extends React.Component {
                 height={this.state.tab_research_profile}
                 handler={this.showPanel.bind(this)} panel={PANEL.RESEARCH_PROFILE}
                 onAnimationEnd={this.onAnimationEnd.bind(this)}>                
-                <div><PanelResearchProfile /></div>
+                <PanelResearchProfile />
               </Panel>
               <Panel title="Publications"
                 height={this.state.tab_publications}

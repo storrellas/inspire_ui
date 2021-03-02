@@ -127,8 +127,7 @@ class PanelPublications extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      isOpened: false,
-      isLoading: true
+      isOpened: false
     }
   }
 
@@ -181,7 +180,7 @@ class PanelPublications extends React.Component {
     this.publicationYearChart()
 
     // Set state after timeout
-    this.setState({isLoading: false, isOpened: true})
+    this.setState({isOpened: true})
   }
 
   componentDidMount(){
@@ -209,7 +208,7 @@ class PanelPublications extends React.Component {
     return (
       <div>
         <LoadingOverlay
-          active={this.state.isLoading}
+          active={this.state.isOpened == false}
           spinner>
         <div className="d-flex" style={{ padding: '1em 1em 1em 1em'}}>
           <div className="w-50 text-center">

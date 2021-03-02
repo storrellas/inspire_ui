@@ -37,8 +37,7 @@ class PanelResearchProfile extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      isOpened: false,
-      isLoading: true
+      isOpened: false
     }
   }
 
@@ -116,6 +115,8 @@ class PanelResearchProfile extends React.Component {
     // See: https://www.amcharts.com/docs/v4/tutorials/dealing-with-piechart-labels-that-dont-fit/
     series.labels.template.maxWidth = 100;
     series.labels.template.wrap = true;
+    series.labels.template.fontSize = 14;
+
   
     series.hiddenState.properties.endAngle = -90;
   
@@ -123,7 +124,7 @@ class PanelResearchProfile extends React.Component {
     this.chart = chart
 
     // Set state after timeout
-    this.setState({isLoading: false, isOpened: true})
+    this.setState({isOpened: true})
   }
 
   componentWillUnmount() {
@@ -140,11 +141,11 @@ class PanelResearchProfile extends React.Component {
     }
 
     return (
-      <div style={{ padding: '1em'}}>    
+      <div>    
         <LoadingOverlay
-          active={this.state.isLoading}
+          active={this.state.isOpened == false}
           spinner>
-        <div id="researchprofilechart" style={{ height:'100%', height: '500px' }}></div>
+        <div id="researchprofilechart" style={{ height:'100%', height: '300px' }}></div>
         </LoadingOverlay>    
       </div>);
   }

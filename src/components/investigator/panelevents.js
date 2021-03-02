@@ -74,8 +74,7 @@ class PanelEvents extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      isOpened: false,
-      isLoading: true
+      isOpened: false
     }
   }
 
@@ -164,7 +163,7 @@ class PanelEvents extends React.Component {
     this.generateRoleContainerChart()
 
     // Set state after timeout
-    this.setState({isLoading: false, isOpened: true})
+    this.setState({isOpened: true})
   }
 
   componentWillUnmount() {
@@ -185,7 +184,7 @@ class PanelEvents extends React.Component {
     return (
       <div>
         <LoadingOverlay
-          active={this.state.isLoading}
+          active={this.state.isOpened === false}
           spinner>
           <div className="d-flex" style={{ height: '400px', padding: '1em 1em 1em 1em' }}>
             <div className="w-50 text-center">
