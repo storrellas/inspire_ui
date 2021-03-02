@@ -33,31 +33,13 @@ import PanelClinicalTrials from '../components/investigator/panelclinicaltrials'
 
 // Redux
 import { 
-  setTabCompanyCooperationRendered, 
-  setTabResearchProfileRendered, 
-  setTabPublicationsRendered,
-  setTabEventsRendered, 
-  setTabClinicalTrialsRendered
+  setPanelRendered,
+  PANEL
 } from "../redux";
 import { connect } from "react-redux";
 
 
 import AnimateHeight from 'react-animate-height';
-
-
-
-const PANEL = {
-  CONNECTIONS: 1,
-  COMPANY_COOPERATION: 2,
-  AFFILIATIONS: 3,
-  FEEDBACK: 4,
-
-  RESEARCH_PROFILE: 5,
-  PUBLICATIONS: 6,
-  EVENTS: 7,
-  CLINICAL_TRIALS: 8,
-}
-
 
 
 function Panel(props) {
@@ -90,12 +72,7 @@ function Panel(props) {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    setTabCompanyCooperationRendered: () => dispatch(setTabCompanyCooperationRendered()),
-
-    setTabResearchProfileRendered: () => dispatch(setTabResearchProfileRendered()),
-    setTabPublicationsRendered: () => dispatch(setTabPublicationsRendered()),
-    setTabEventsRendered: () => dispatch(setTabEventsRendered()),
-    setTabClinicalTrialsRendered: () => dispatch(setTabClinicalTrialsRendered()),
+    setPanelRendered: (panel) => dispatch(setPanelRendered(panel))
   };
 }
 
@@ -104,66 +81,55 @@ class Investigator extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-
-      tab_connections: 0,
-      tab_company_cooperation: 0,
-      tab_affiliations: 0,
-      tab_feedback: 0,
-
-      tab_research_profile: 0,
-      tab_publications: 0,
-      tab_events: 0,
-      tab_clinical_trials: 0,
+      ... this.getInitialState()
     }
   }
 
-  showPanel(panel) {
-    const state = {
-      tab_connections: 0,
-      tab_company_cooperation: 0,
-      tab_affiliations: 0,
-      tab_feedback: 0,
+  getInitialState(){
+    return {
+      tabConnectionsActive: false,
+      tabCompanyCooperationActive: false,
+      tabAffiliationsActive: false,
+      tabFeedbackActive: false,
 
-      tab_research_profile: 0,
-      tab_publications: 0,
-      tab_events: 0,
-      tab_clinical_trials: 0,
-
-      trigger: false,
+      tabResearchProfileActive: false,
+      tabPublicationsActive: false,
+      tabEventsActive: false,
+      tabClinicalTrialsActive: false,
     }
+  }
+
+  togglePanel(panel) {
+    const state = this.getInitialState()
     if (panel === PANEL.CONNECTIONS)
-      state.tab_connections = this.state.tab_connections === 0 ? 'auto' : 0;;
+      state.tabConnectionsActive = !this.state.tabConnectionsActive;
     if (panel === PANEL.COMPANY_COOPERATION)
-      state.tab_company_cooperation = this.state.tab_company_cooperation === 0 ? 'auto' : 0;;
+      state.tabCompanyCooperationActive = !this.state.tabCompanyCooperationActive;
     if (panel === PANEL.AFFILIATIONS)
-      state.tab_affiliations = this.state.tab_affiliations === 0 ? 'auto' : 0;;
+      state.tabAffiliationsActive = !this.state.tabAffiliationsActive;
     if (panel === PANEL.FEEDBACK)
-      state.tab_feedback = this.state.tab_feedback === 0 ? 'auto' : 0;;
+      state.tabFeedbackActive = !this.state.tabFeedbackActive;
 
     if (panel === PANEL.RESEARCH_PROFILE)
-      state.tab_research_profile = this.state.tab_research_profile === 0 ? 'auto' : 0;;
+      state.tabResearchProfileActive = !this.state.tabResearchProfileActive;
     if (panel === PANEL.PUBLICATIONS)
-      state.tab_publications = this.state.tab_publications === 0 ? 'auto' : 0;;
+      state.tabPublicationsActive = !this.state.tabPublicationsActive;
     if (panel === PANEL.EVENTS)
-      state.tab_events = this.state.tab_events === 0 ? 'auto' : 0;;
+      state.tabEventsActive = !this.state.tabEventsActive;
     if (panel === PANEL.CLINICAL_TRIALS)
-      state.tab_clinical_trials = this.state.tab_clinical_trials === 0 ? 'auto' : 0;;
+      state.tabClinicalTrialsActive = !this.state.tabClinicalTrialsActive;
 
     this.setState({ ...state })
   }
 
-  onAnimationEnd(panel){
-    if( panel == PANEL.COMPANY_COOPERATION ) 
-      this.props.setTabCompanyCooperationRendered()
-    
-    if( panel == PANEL.RESEARCH_PROFILE ) 
-      this.props.setTabResearchProfileRendered()      
-    if( panel == PANEL.PUBLICATIONS ) 
-      this.props.setTabPublicationsRendered()
-    if( panel == PANEL.EVENTS ) 
-      this.props.setTabEventsRendered()      
-    if( panel == PANEL.CLINICAL_TRIALS ) 
-      this.props.setTabClinicalTrialsRendered()            
+  onAnimationEnd(panel){  
+    // These panels do not require to trigger action
+    if( panel === PANEL.CONNECTIONS || 
+        panel === PANEL.AFFILIATIONS ||
+        panel === PANEL.FEEDBACK ){
+          return
+    }    
+    this.props.setPanelRendered(panel)
   }
 
   render() {
@@ -185,26 +151,26 @@ class Investigator extends React.Component {
           <Row style={{ marginTop: '1em' }}>
             <Col sm={6}>
               <Panel title="Connections"
-                height={this.state.tab_connections}
-                handler={this.showPanel.bind(this)} panel={PANEL.CONNECTIONS}
+                height={this.state.tabConnectionsActive?'auto':0}
+                handler={this.togglePanel.bind(this)} panel={PANEL.CONNECTIONS}
                 onAnimationEnd={this.onAnimationEnd.bind(this)}>
                 <PanelConnections />
               </Panel>
               <Panel title="Company Cooperation"
-                height={this.state.tab_company_cooperation}
-                handler={this.showPanel.bind(this)} panel={PANEL.COMPANY_COOPERATION}
+                height={this.state.tabCompanyCooperationActive?'auto':0}
+                handler={this.togglePanel.bind(this)} panel={PANEL.COMPANY_COOPERATION}
                 onAnimationEnd={this.onAnimationEnd.bind(this)}>                        
                 <PanelCompanyCooperation/>
               </Panel>
               <Panel title="Affiliations"
-                height={this.state.tab_affiliations}
-                handler={this.showPanel.bind(this)} panel={PANEL.AFFILIATIONS}
+                height={this.state.tabAffiliationsActive?'auto':0}
+                handler={this.togglePanel.bind(this)} panel={PANEL.AFFILIATIONS}
                 onAnimationEnd={this.onAnimationEnd.bind(this)}>
                 <PanelAffiliations />
               </Panel>
               <Panel title="Feedback"
-                height={this.state.tab_feedback}
-                handler={this.showPanel.bind(this)} panel={PANEL.FEEDBACK}
+                height={this.state.tabFeedbackActive?'auto':0}
+                handler={this.togglePanel.bind(this)} panel={PANEL.FEEDBACK}
                 onAnimationEnd={this.onAnimationEnd.bind(this)}>
                 <PanelFeedback />
               </Panel>
@@ -212,26 +178,26 @@ class Investigator extends React.Component {
             </Col>
             <Col sm={6}>
               <Panel title="Research Profile"
-                height={this.state.tab_research_profile}
-                handler={this.showPanel.bind(this)} panel={PANEL.RESEARCH_PROFILE}
+                height={this.state.tabResearchProfileActive?'auto':0}
+                handler={this.togglePanel.bind(this)} panel={PANEL.RESEARCH_PROFILE}
                 onAnimationEnd={this.onAnimationEnd.bind(this)}>                
                 <PanelResearchProfile />
               </Panel>
               <Panel title="Publications"
-                height={this.state.tab_publications}
-                handler={this.showPanel.bind(this)} panel={PANEL.PUBLICATIONS}
+                height={this.state.tabPublicationsActive?'auto':0}
+                handler={this.togglePanel.bind(this)} panel={PANEL.PUBLICATIONS}
                 onAnimationEnd={this.onAnimationEnd.bind(this)}>
                 <PanelPublications />
               </Panel>
               <Panel title="Events"
-                height={this.state.tab_events}
-                handler={this.showPanel.bind(this)} panel={PANEL.EVENTS}
+                height={this.state.tabEventsActive?'auto':0}
+                handler={this.togglePanel.bind(this)} panel={PANEL.EVENTS}
                 onAnimationEnd={this.onAnimationEnd.bind(this)}>
                 <PanelEvents />
               </Panel>
               <Panel title="Clinical Trials"
-                height={this.state.tab_clinical_trials}
-                handler={this.showPanel.bind(this)} panel={PANEL.CLINICAL_TRIALS}
+                height={this.state.tabClinicalTrialsActive?'auto':0}
+                handler={this.togglePanel.bind(this)} panel={PANEL.CLINICAL_TRIALS}
                 onAnimationEnd={this.onAnimationEnd.bind(this)}>
                 <PanelClinicalTrials />
               </Panel>

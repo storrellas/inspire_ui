@@ -4,6 +4,19 @@ import { createStore } from "redux";
 
 // Actions
 // ---------------------
+export const PANEL = {
+  CONNECTIONS: 1,
+  COMPANY_COOPERATION: 2,
+  AFFILIATIONS: 3,
+  FEEDBACK: 4,
+
+  RESEARCH_PROFILE: 5,
+  PUBLICATIONS: 6,
+  EVENTS: 7,
+  CLINICAL_TRIALS: 8,
+}
+
+
 export const TAB_COMPANY_COOPERATION_OPENED = "TAB_COMPANY_COOPERATION_OPENED";
 export const TAB_AFFILIATIONS_OPENED = "TAB_AFFILIATIONS_OPENED";
 
@@ -15,23 +28,20 @@ export const TAB_CLINICAL_TRIALS_OPENED = "TAB_CLINICAL_TRIALS_OPENED";
 // Content list
 
 // SubContentList
-export function setTabCompanyCooperationRendered() {
-  return { type: TAB_COMPANY_COOPERATION_OPENED }
-};
+export function setPanelRendered(panel) {
 
-export function setTabResearchProfileRendered() {
-  return { type: TAB_RESEARCH_PROFILE_OPENED }
-};
-export function setTabPublicationsRendered() {
-  return { type: TAB_PUBLICATIONS_OPENED }
-};
-export function setTabEventsRendered() {
-  return { type: TAB_EVENTS_OPENED }
-};
-export function setTabClinicalTrialsRendered() {
-  return { type: TAB_CLINICAL_TRIALS_OPENED }
-};
+  if( panel == PANEL.COMPANY_COOPERATION ) 
+    return { type: TAB_COMPANY_COOPERATION_OPENED }
 
+  if( panel == PANEL.RESEARCH_PROFILE ) 
+    return { type: TAB_RESEARCH_PROFILE_OPENED } 
+  if( panel == PANEL.PUBLICATIONS ) 
+    return { type: TAB_PUBLICATIONS_OPENED } 
+  if( panel == PANEL.EVENTS ) 
+    return { type: TAB_EVENTS_OPENED } 
+  if( panel == PANEL.CLINICAL_TRIALS ) 
+    return { type: TAB_CLINICAL_TRIALS_OPENED }
+};
 
 // Reducers
 // ---------------------
