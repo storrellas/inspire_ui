@@ -12,6 +12,7 @@ import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 // Redux
 import { connect } from "react-redux";
 
+// Loading overlay
 import LoadingOverlay from 'react-loading-overlay';
 
 

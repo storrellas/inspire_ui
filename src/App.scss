@@ -1,3 +1,5 @@
+$enable-prefers-reduced-motion-media-query: false;
+
 @import "bootstrap/scss/functions"; 
 @import "bootstrap/scss/variables";
 @import "bootstrap/scss/mixins";
@@ -18,6 +20,8 @@
 }
 $primary-color: #282c34;
 $secondary-color: #61dafb;
+
+
 
 .App-header {
   background-color: $primary-color;

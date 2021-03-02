@@ -25,6 +25,7 @@ import ProjectSelector from './pages/projectselector';
 import InvestigatorList from './pages/investigatorlist';
 import Investigator from './pages/investigator';
 
+
 class App extends React.Component {
 
   constructor(props) {
@@ -34,7 +35,7 @@ class App extends React.Component {
   }
 
   render() {
-
+    console.log("ReRender")
     const isLogin = this.props.location.pathname == '/'
     return (
       <div className='inspire-main'>
