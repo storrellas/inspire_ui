@@ -25,7 +25,7 @@ am4core.useTheme(am4themes_animated);
 
 const mapStateToProps = state => {
   return {
-    tab_events_rendered: state.tab_events_rendered,
+    tabEventsOpened: state.tabEventsOpened,
   };
 };
 
@@ -176,7 +176,7 @@ class PanelEvents extends React.Component {
   }
 
   render() {
-    if (this.props.tab_events_rendered == true && this.state.isOpened == false) {
+    if (this.props.tabEventsOpened == true && this.state.isOpened == false) {
       const that = this;
       setTimeout(function () { that.generateChart() }, 500);
     }

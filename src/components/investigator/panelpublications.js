@@ -25,7 +25,7 @@ am4core.useTheme(am4themes_animated);
 
 const mapStateToProps = state => {
   return { 
-      tab_publications_rendered: state.tab_publications_rendered,
+    tabPublicationsOpened: state.tabPublicationsOpened,
     };
 };
 
@@ -199,7 +199,7 @@ class PanelPublications extends React.Component {
   }
 
   render() {
-    if( this.props.tab_publications_rendered == true && this.state.isOpened == false){
+    if( this.props.tabPublicationsOpened == true && this.state.isOpened == false){
       const that = this;
       setTimeout(function(){ that.generateChart() }, 500);
     }

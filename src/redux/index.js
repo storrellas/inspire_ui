@@ -17,13 +17,13 @@ export const PANEL = {
 }
 
 
-export const TAB_COMPANY_COOPERATION_OPENED = "TAB_COMPANY_COOPERATION_OPENED";
-export const TAB_AFFILIATIONS_OPENED = "TAB_AFFILIATIONS_OPENED";
+export const PANEL_COMPANY_COOPERATION_OPENED = "PANEL_COMPANY_COOPERATION_OPENED";
+export const PANEL_AFFILIATIONS_OPENED = "PANEL_AFFILIATIONS_OPENED";
 
-export const TAB_RESEARCH_PROFILE_OPENED = "TAB_RESEARCH_PROFILE_OPENED";
-export const TAB_PUBLICATIONS_OPENED = "TAB_PUBLICATIONS_OPENED";
-export const TAB_EVENTS_OPENED = "TAB_EVENTS_OPENED";
-export const TAB_CLINICAL_TRIALS_OPENED = "TAB_CLINICAL_TRIALS_OPENED";
+export const PANEL_RESEARCH_PROFILE_OPENED = "PANEL_RESEARCH_PROFILE_OPENED";
+export const PANEL_PUBLICATIONS_OPENED = "PANEL_PUBLICATIONS_OPENED";
+export const PANEL_EVENTS_OPENED = "PANEL_EVENTS_OPENED";
+export const PANEL_CLINICAL_TRIALS_OPENED = "PANEL_CLINICAL_TRIALS_OPENED";
 
 // Content list
 
@@ -31,50 +31,46 @@ export const TAB_CLINICAL_TRIALS_OPENED = "TAB_CLINICAL_TRIALS_OPENED";
 export function setPanelRendered(panel) {
 
   if( panel == PANEL.COMPANY_COOPERATION ) 
-    return { type: TAB_COMPANY_COOPERATION_OPENED }
+    return { type: PANEL_COMPANY_COOPERATION_OPENED }
 
   if( panel == PANEL.RESEARCH_PROFILE ) 
-    return { type: TAB_RESEARCH_PROFILE_OPENED } 
+    return { type: PANEL_RESEARCH_PROFILE_OPENED } 
   if( panel == PANEL.PUBLICATIONS ) 
-    return { type: TAB_PUBLICATIONS_OPENED } 
+    return { type: PANEL_PUBLICATIONS_OPENED } 
   if( panel == PANEL.EVENTS ) 
-    return { type: TAB_EVENTS_OPENED } 
+    return { type: PANEL_EVENTS_OPENED } 
   if( panel == PANEL.CLINICAL_TRIALS ) 
-    return { type: TAB_CLINICAL_TRIALS_OPENED }
+    return { type: PANEL_CLINICAL_TRIALS_OPENED }
 };
 
 // Reducers
 // ---------------------
 const initialState = {
-  tab_company_cooperation_rendered: false,
-  tab_affiliations_rendered: false,
+  tabCompanyCooperationOpened: false,  
   
-  
-  tab_research_profile_rendered: false,
-  tab_publications_rendered: false,
-  tab_events_rendered: false,
-  tab_clinical_trials_rendered: false,
+  tabResearchProfileOpened: false,
+  tabPublicationsOpened: false,
+  tabEventsOpened: false,
+  tabClinicalTrialsOpened: false,
 };
 
 export function rootReducer(state = initialState, action) {
-  if (action.type === TAB_COMPANY_COOPERATION_OPENED) {
-    return {tab_company_cooperation_rendered: true };
+  if (action.type === PANEL_COMPANY_COOPERATION_OPENED) {
+    return {tabCompanyCooperationOpened: true };
   }
-  if (action.type === TAB_AFFILIATIONS_OPENED) {
-    return {tab_affiliations_rendered: true };
-  }
+
   
-  if (action.type === TAB_RESEARCH_PROFILE_OPENED) {
-    return {tab_research_profile_rendered: true };
+  if (action.type === PANEL_RESEARCH_PROFILE_OPENED) {
+    return {tabResearchProfileOpened: true };
   }
-  if (action.type === TAB_PUBLICATIONS_OPENED) {
-    return {tab_publications_rendered: true };
+  if (action.type === PANEL_PUBLICATIONS_OPENED) {
+    return {tabPublicationsOpened: true };
   }
-  if (action.type === TAB_EVENTS_OPENED) {
-    return {tab_events_rendered: true };
+  if (action.type === PANEL_EVENTS_OPENED) {
+    return {tabEventsOpened: true };
   }
-  if (action.type === TAB_CLINICAL_TRIALS_OPENED) {
-    return {tab_clinical_trials_rendered: true };
+  if (action.type === PANEL_CLINICAL_TRIALS_OPENED) {
+    return {tabClinicalTrialsOpened: true };
   }
 
   

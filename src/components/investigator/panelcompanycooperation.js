@@ -29,7 +29,7 @@ am4core.useTheme(am4themes_animated);
 
 const mapStateToProps = state => {
   return { 
-      tab_company_cooperation_rendered: state.tab_company_cooperation_rendered,
+    tabCompanyCooperationOpened: state.tabCompanyCooperationOpened,
     };
 };
 
@@ -135,7 +135,7 @@ class PanelCompanyCooperation extends React.Component {
   }
 
   render() {
-    if( this.props.tab_company_cooperation_rendered == true && this.state.isOpened == false){
+    if( this.props.tabCompanyCooperationOpened == true && this.state.isOpened == false){
       const that = this;
       setTimeout(function(){ that.generateChart() }, 500);
     }
