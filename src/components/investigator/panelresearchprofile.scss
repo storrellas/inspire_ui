@@ -1,0 +1,13 @@
+.rowshadow{
+    background: linear-gradient(to left, #c9dff4, #4b92d9);
+    line-height: 30px;
+    font-weight: bold;
+    color: #303030;
+ }
+ .bar {
+   width: 0;
+   transition: width 1s;
+ }
+ .bar.ready {
+     width: 100%;
+ }

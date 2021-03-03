@@ -9,6 +9,10 @@ import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 
+// Font Awesome
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faExpandArrowsAlt } from '@fortawesome/free-solid-svg-icons'
+
 // Redux
 import { connect } from "react-redux";
 
@@ -127,7 +131,10 @@ class PanelPublications extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      isOpened: false
+      isOpened: false,
+      showModalPublicationType: false,
+      showModalPublicationYears: false,
+      showModalViewDetails: false,
     }
   }
 
@@ -198,6 +205,18 @@ class PanelPublications extends React.Component {
     }
   }
 
+  openModalPublicationType(){
+    console.log("openModalPublicationType ")    
+  }
+
+  openModalPublicationYear(){
+    console.log("openModalPublicationYear ")    
+  }
+
+  openModalViewDetails(){
+    console.log("openModalViewDetails ")    
+  }
+
   render() {
     if( this.props.tabPublicationsOpened == true && this.state.isOpened == false){
       const that = this;
@@ -214,11 +233,20 @@ class PanelPublications extends React.Component {
           <div className="w-50 text-center">
             <div>Publication Types</div>
             <div id="publicationTypeContainerChart" style={{ width:'100%', height:'200px', marginTop:'20px'}}></div>
+            <div className="text-right pr-2 pb-1" style={{ cursor: 'pointer' }} onClick={(e) => this.openModal()}>
+              <FontAwesomeIcon icon={faExpandArrowsAlt} />
+            </div>
           </div>
           <div className="w-50 text-center">
             <div>Publication Years</div>
             <div id="publicationYearContainerChart" style={{width:'100%', height:'200px', marginTop:'20px'}}></div>
+            <div className="text-right pr-2 pb-1" style={{ cursor: 'pointer' }} onClick={(e) => this.openModal()}>
+              <FontAwesomeIcon icon={faExpandArrowsAlt} />
+            </div>
           </div>
+        </div>
+        <div className="text-right pr-2 pb-1" style={{ cursor: 'pointer' }} onClick={(e) => this.openModal()}>
+          View Details ...
         </div>
         </LoadingOverlay>
       </div>);

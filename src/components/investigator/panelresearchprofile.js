@@ -4,6 +4,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { withRouter } from 'react-router-dom'
 
+import { Modal, Button } from 'react-bootstrap';
+
 /* Imports */
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
@@ -14,6 +16,8 @@ import { connect } from "react-redux";
 
 
 import LoadingOverlay from 'react-loading-overlay';
+
+import './panelresearchprofile.scss';
 
 /* Chart code */
 // Themes begin
@@ -37,7 +41,9 @@ class PanelResearchProfile extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      isOpened: false
+      isOpened: false,
+      showModal: false,
+      openedModal: false,
     }
   }
 
@@ -133,6 +139,18 @@ class PanelResearchProfile extends React.Component {
     }
   }
 
+  openModal(e) {
+    this.setState({ showModal: true })
+  }
+
+  closeModal(e) {
+    this.setState({ showModal: false, openedModal: false })
+  }
+
+  modalOpened(e){
+    this.setState({openedModal: true})
+  }
+
   render() {
 
     if( this.props.tabResearchProfileOpened == true && this.state.isOpened == false){
@@ -140,13 +158,55 @@ class PanelResearchProfile extends React.Component {
       setTimeout(function(){ that.generateChart() }, 500);
     }
 
+    const data = [
+      { label: 'test', width: '80%', value: 4},
+      { label: 'test1', width: '20%', value: 3},
+      { label: 'test2', width: '40%', value: 6},
+    ]
+
     return (
       <div>    
         <LoadingOverlay
           active={this.state.isOpened == false}
           spinner>
-        <div id="researchprofilechart" style={{ height:'100%', height: '300px' }}></div>
-        </LoadingOverlay>    
+          <div id="researchprofilechart" style={{ height:'100%', height: '300px' }}></div>
+          <div className="text-right pr-2 pb-1" style={{ cursor: 'pointer' }} onClick={(e) => this.openModal()}>
+              View Details ...
+          </div>
+        </LoadingOverlay> 
+
+        <Modal animation centered
+          show={this.state.showModal}
+          onHide={(e) => this.closeModal(e)}
+          onEntered={(e) => this.modalOpened()}
+          dialogClassName="researh-profile-modal">
+          <Modal.Header closeButton>
+            <Modal.Title>Company Cooperation</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+      
+            <div id="category-page-3" className="category" style={{ marginTop: '1em', width: '100%'}}>
+              <h4><b>Anatomy</b></h4>
+              <div className="d-flex flex-wrap">
+                {data.map( (item, key) => 
+                  <div key={key} className="w-50 p-2">
+                    {item.label}
+                    <div className={this.state.openedModal ? "bar ready" : "bar"}>
+                      <div className="rowshadow text-rigth pl-3" style={{ width: item.width }}>{item.value}</div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={(e) => this.closeModal(e)}>
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
       </div>);
   }
 }

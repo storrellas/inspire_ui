@@ -206,7 +206,7 @@ class PanelCompanyCooperation extends React.Component {
           spinner>
           <div id="companycooperationchart" style={{ height: '200px' }}></div>
           <div className="text-right pr-2 pb-1" style={{ cursor: 'pointer' }} onClick={(e) => this.openModal(e)}>
-            <FontAwesomeIcon icon={faExpandArrowsAlt} />
+            View Details ...
           </div>
         </LoadingOverlay>
 
