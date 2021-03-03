@@ -329,7 +329,7 @@ class PanelPublications extends React.Component {
       setTimeout(function(){ that.generateChart() }, 500);
     }
       
-    const {showModal, showModalPublicationType, showModalPublicationYears} = this.state;
+    const { showModal, showModalPublicationType, showModalPublicationYears } = this.state;
     const isModal = showModal || showModalPublicationType || showModalPublicationYears;
     let modalContent = <div>Unknown</div>
     if( showModal ){
@@ -345,27 +345,27 @@ class PanelPublications extends React.Component {
         <LoadingOverlay
           active={this.state.isOpened == false}
           spinner>
-        <div className="d-flex" style={{ padding: '1em 1em 1em 1em'}}>
-          <div className="w-50 text-center">
-            <div>Publication Types</div>
-            <div id="publicationTypeChart" style={{ width:'100%', height:'200px', marginTop:'20px'}}></div>
-            <div className="text-right pr-2 pb-1" style={{ cursor: 'pointer' }} 
-                onClick={(e) => this.setState({ showModalPublicationType: true})}>
-              <FontAwesomeIcon icon={faExpandArrowsAlt} />
+          <div className="d-flex" style={{ padding: '1em 1em 1em 1em' }}>
+            <div className="w-50 text-center">
+              <div>Publication Types</div>
+              <div id="publicationTypeChart" style={{ width: '100%', height: '200px', marginTop: '20px' }}></div>
+              <div className="text-right pr-2 pb-1" style={{ cursor: 'pointer' }}
+                onClick={(e) => this.setState({ showModalPublicationType: true })}>
+                <FontAwesomeIcon icon={faExpandArrowsAlt} />
+              </div>
+            </div>
+            <div className="w-50 text-center">
+              <div>Publication Years</div>
+              <div id="publicationYearsChart" style={{ width: '100%', height: '200px', marginTop: '20px' }}></div>
+              <div className="text-right pr-2 pb-1" style={{ cursor: 'pointer' }}
+                onClick={(e) => this.setState({ showModalPublicationYears: true })}>
+                <FontAwesomeIcon icon={faExpandArrowsAlt} />
+              </div>
             </div>
           </div>
-          <div className="w-50 text-center">
-            <div>Publication Years</div>
-            <div id="publicationYearsChart" style={{width:'100%', height:'200px', marginTop:'20px'}}></div>
-            <div className="text-right pr-2 pb-1" style={{ cursor: 'pointer' }} 
-                  onClick={(e) => this.setState({ showModalPublicationYears: true})}>
-              <FontAwesomeIcon icon={faExpandArrowsAlt} />
-            </div>
-          </div>
-        </div>
-        <div className="text-right pr-2 pb-1" style={{ cursor: 'pointer' }} 
-                  onClick={(e) => this.setState({ showModal: true})}>
-          View Details ...
+          <div className="text-right pr-2 pb-1" style={{ cursor: 'pointer' }}
+            onClick={(e) => this.setState({ showModal: true })}>
+            View Details ...
         </div>
         </LoadingOverlay>
 
@@ -373,7 +373,7 @@ class PanelPublications extends React.Component {
           show={isModal}
           onHide={(e) => this.closeModal(e)}
           onEntered={(e) => this.openedModal()}
-          dialogClassName="publication-type-modal">
+          dialogClassName="publications-modal">
           <Modal.Header closeButton>
             <Modal.Title>Company Cooperation</Modal.Title>
           </Modal.Header>

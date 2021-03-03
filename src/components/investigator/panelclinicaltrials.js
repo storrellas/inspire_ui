@@ -3,11 +3,16 @@ import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { withRouter } from 'react-router-dom'
+import { Modal, Button } from 'react-bootstrap';
 
 /* Imports */
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
+
+// Font Awesome
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faExpandArrowsAlt, faSearch } from '@fortawesome/free-solid-svg-icons'
 
 // Redux
 import { connect } from "react-redux";
@@ -88,20 +93,23 @@ class PanelClinicalTrials extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      isOpened: false
+      isOpened: false,
+      showModalConditions: false, 
+      showModalInterventions: false, 
+      showModal: false
     }
   }
 
-  generateConditionsContainerChart() {
+  generateConditionsChart() {
     // Create chart instance
-    this.conditionsContainerChart = am4core.create("conditionsContainerChart", am4charts.PieChart);
+    this.conditionsChart = am4core.create("conditionsChart", am4charts.PieChart);
 
     // Add data
-    this.conditionsContainerChart.data = conditions;
-    this.conditionsContainerChart.innerRadius = am4core.percent(60);
+    this.conditionsChart.data = conditions;
+    this.conditionsChart.innerRadius = am4core.percent(60);
 
     // Add and configure Series
-    var pieSeries = this.conditionsContainerChart.series.push(new am4charts.PieSeries());
+    var pieSeries = this.conditionsChart.series.push(new am4charts.PieSeries());
     pieSeries.labels.template.disabled = true;
     pieSeries.dataFields.value = "total";
     pieSeries.dataFields.category = "name";
@@ -113,18 +121,59 @@ class PanelClinicalTrials extends React.Component {
 
   }
 
-  generateInterventionsContainerChart() {
+  generateConditionsMaxChart() {
     // Create chart instance
-    this.interventionsContainerChart = am4core.create("interventionsContainerChart", am4charts.PieChart);
+    this.conditionsMaxChart = am4core.create("conditionsMaxChart", am4charts.PieChart);
 
     // Add data
-    this.interventionsContainerChart.data = interventions;
-    this.interventionsContainerChart.innerRadius = am4core.percent(60);
+    this.conditionsMaxChart.data = conditions;
+    this.conditionsMaxChart.innerRadius = am4core.percent(60);
+
+    // Add and configure Series
+    var pieSeries = this.conditionsMaxChart.series.push(new am4charts.PieSeries());
+    pieSeries.labels.template.disabled = true;
+    pieSeries.dataFields.value = "total";
+    pieSeries.dataFields.category = "name";
+    pieSeries.dataFields.tooltipText = "{category}{value}";
+
+    
+    pieSeries.slices.template.showOnInit = true;
+    pieSeries.slices.template.hiddenState.properties.shiftRadius = 1;
+
+    this.conditionsMaxChart.legend = new am4charts.Legend();
+  }
+
+  generateInterventionsChart() {
+    // Create chart instance
+    this.interventionsChart = am4core.create("interventionsChart", am4charts.PieChart);
+
+    // Add data
+    this.interventionsChart.data = interventions;
+    this.interventionsChart.innerRadius = am4core.percent(60);
+
+    // Add and configure Series
+    var pieSeries = this.interventionsChart.series.push(new am4charts.PieSeries());
+    pieSeries.labels.template.disabled = true;
+    pieSeries.dataFields.value = "total";
+    pieSeries.dataFields.category = "intervention__name";
+    pieSeries.dataFields.tooltipText = "{category}{intervention__name}";
+
+    pieSeries.slices.template.showOnInit = true;
+    pieSeries.slices.template.hiddenState.properties.shiftRadius = 1;
+  }
+
+  generateInterventionsMaxChart() {
+    // Create chart instance
+    this.interventionsMaxChart = am4core.create("interventionsMaxChart", am4charts.PieChart);
+
+    // Add data
+    this.interventionsMaxChart.data = interventions;
+    this.interventionsMaxChart.innerRadius = am4core.percent(60);
 
     
 
     // Add and configure Series
-    var pieSeries = this.interventionsContainerChart.series.push(new am4charts.PieSeries());
+    var pieSeries = this.interventionsMaxChart.series.push(new am4charts.PieSeries());
     pieSeries.labels.template.disabled = true;
     pieSeries.dataFields.value = "total";
     pieSeries.dataFields.category = "intervention__name";
@@ -133,25 +182,114 @@ class PanelClinicalTrials extends React.Component {
     pieSeries.slices.template.showOnInit = true;
     pieSeries.slices.template.hiddenState.properties.shiftRadius = 1;
 
+    this.interventionsMaxChart.legend = new am4charts.Legend();
   }
 
   componentDidMount() {
   }
 
+  generateModalContent(){
+    const item = {
+      name: 'Ticagrelor Versus Clopidogrel in Carotid Artery Stenting	',
+      condition: 'Carotid Stenosis',
+      status: 'Recruiting',
+      startYear: '2016',
+      endYear: '2019',
+      phase: 'Phase 2',
+      studyType: 'Interventional',
+      enrolment: '',
+      intervention: 'Drug: Ticagrelor|Drug: Clopidogrel|Drug: Aspirin',
+    }
+    const data = Array(10).fill(item);
+
+    return (
+    <div className="p-3">
+      <table className="w-100" style={{ fontSize: '12px'}}>
+        <thead>
+          <tr>
+            <td className="text-center">Name</td>
+            <td className="text-center">Condition</td>
+            <td className="text-center">Status</td>
+            <td className="text-center">Start Year</td>
+            
+            <td className="text-center">End Year</td>
+            <td className="text-center">Phase</td>
+            <td className="text-center">StudyType</td>
+            <td className="text-center">Enrolment</td>
+            <td className="text-center">Intervention</td>
+          </tr>
+          <tr style={{ border: '1px solid grey', borderWidth: '1px 0px 2px 0px' }}>
+            <td><FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} /></td>
+            <td><FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} /></td>
+            <td><FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} /></td>
+            <td><FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} /></td>
+            
+            <td><FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} /></td>
+            <td><FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} /></td>
+            <td><FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} /></td>
+            <td><FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} /></td>
+            <td><FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} /></td>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((item, id) =>
+            <tr key={id}>
+              <td>{item.name}</td>
+              <td>{item.condition}</td>
+              <td>{item.status}</td>
+              <td>{item.startYear}</td>
+              <td>{item.endYear}</td>
+              <td>{item.phase}</td>
+              <td>{item.studyType}</td>
+              <td>{item.enrolment}</td>
+              <td>{item.intervention}</td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+    </div>)
+  }
+
   generateChart() {
-    this.generateConditionsContainerChart()
-    this.generateInterventionsContainerChart()
+    this.generateConditionsChart()
+    this.generateInterventionsChart()
 
     // Set state after timeout
     this.setState({isOpened: true})
   }
 
   componentWillUnmount() {
-    if (this.interventionsContainerChart) {
-      this.interventionsContainerChart.dispose();
+    if (this.interventionsChart) {
+      this.interventionsChart.dispose();
     }
-    if (this.conditionsContainerChart) {
-      this.conditionsContainerChart.dispose();
+    if (this.conditionsChart) {
+      this.conditionsChart.dispose();
+    }
+    if (this.interventionsMaxChart) {
+      this.interventionsMaxChart.dispose();
+    }
+    if (this.conditionsMaxChart) {
+      this.conditionsMaxChart.dispose();
+    }
+  }
+
+  closeModal(){
+    this.setState({ 
+      showModalConditions: false, 
+      showModalInterventions: false, 
+      showModal: false
+    })
+  }
+
+  openedModal(){
+    const {showModal, showModalConditions, showModalInterventions} = this.state;
+    console.log("OpenedModal")
+    if( showModal ){
+      // Do nothing      
+    }else if( showModalConditions ){
+      this.generateConditionsMaxChart()
+    }else if( showModalInterventions ){
+      this.generateInterventionsMaxChart()
     }
   }
 
@@ -161,22 +299,66 @@ class PanelClinicalTrials extends React.Component {
       setTimeout(function(){ that.generateChart() }, 500);
     }
 
+    const {showModal, showModalConditions, showModalInterventions} = this.state;
+    const isModal = showModal || showModalConditions || showModalInterventions;
+    let modalContent = <div>Unknown</div>
+    if( showModal ){
+      modalContent = this.generateModalContent()      
+    }else if( showModalConditions ){      
+      modalContent = <div id="conditionsMaxChart" style={{ width:'100%', height:'100%', marginTop:'20px'}}></div>
+    }else if( showModalInterventions ){
+      modalContent = <div id="interventionsMaxChart" style={{ width:'100%', height:'100%', marginTop:'20px'}}></div>
+    }
+
+
     return (
       <div>
         <LoadingOverlay
           active={this.state.isOpened == false}
           spinner>
-          <div className="d-flex" style={{ height: '400px', padding: '1em 1em 1em 1em' }}>
+          <div className="d-flex" style={{ padding: '1em 1em 1em 1em' }}>
             <div className="w-50 text-center">
               <div>Conditions</div>
-              <div id="conditionsContainerChart" style={{ width: '100%', height: '100%', paddingBottom: '0.5em' }}></div>
+              <div id="conditionsChart" style={{ height: '200px', width: '100%' }}></div>
+              <div className="text-right pr-2 pb-1" style={{ cursor: 'pointer' }}
+                onClick={(e) => this.setState({ showModalConditions: true })}>
+                <FontAwesomeIcon icon={faExpandArrowsAlt} />
+              </div>
             </div>
             <div className="w-50 text-center">
               <div>Interventions</div>
-              <div id="interventionsContainerChart" style={{ width: '100%', height: '100%', paddingBottom: '0.5em' }}></div>
+              <div id="interventionsChart" style={{ width: '100%', height: '200px' }}></div>
+              <div className="text-right pr-2 pb-1" style={{ cursor: 'pointer' }}
+                onClick={(e) => this.setState({ showModalInterventions: true })}>
+                <FontAwesomeIcon icon={faExpandArrowsAlt} />
+              </div>
             </div>
           </div>
+          <div className="text-right pr-2 pb-1" style={{ cursor: 'pointer' }} 
+                  onClick={(e) => this.setState({ showModal: true})}>
+          View Details ...
+        </div>
         </LoadingOverlay>
+
+
+        <Modal animation centered
+          show={isModal}
+          onHide={(e) => this.closeModal(e)}
+          onEntered={(e) => this.openedModal()}
+          dialogClassName="clinical-trials-modal">
+          <Modal.Header closeButton>
+            <Modal.Title>Clinical Trials</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            {modalContent}
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={(e) => this.closeModal(e)}>
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
       </div>);
   }
 }

@@ -43,20 +43,29 @@
     height: 80%;
 }
 
-.publication-type-modal {
+.publications-modal {
     width: 80%;
     height: 90vh;
     max-width: initial;
 }
-.publication-type-modal .modal-content {
+.publications-modal .modal-content {
     height: 80%;
 }
 
-.publication-year-modal {
+.events-modal {
     width: 80%;
     height: 90vh;
     max-width: initial;
 }
-.publication-year-modal .modal-content {
+.events-modal .modal-content {
+    height: 80%;
+}
+
+.clinical-trials-modal {
+    width: 90%;
+    height: 90vh;
+    max-width: initial;
+}
+.clinical-trials-modal .modal-content {
     height: 80%;
 }

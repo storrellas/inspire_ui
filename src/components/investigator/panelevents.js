@@ -273,6 +273,12 @@ class PanelEvents extends React.Component {
     if (this.eventRoleChart) {
       this.eventRoleChart.dispose();
     }
+    if (this.eventTypeMaxChart) {
+      this.eventTypeMaxChart.dispose();
+    }
+    if (this.eventRoleMaxChart) {
+      this.eventRoleMaxChart.dispose();
+    }
   }
 
   closeModal(){
@@ -287,7 +293,6 @@ class PanelEvents extends React.Component {
     const {showModal, showModalEventType, showModalEventRole} = this.state;
 
     
-    console.log("openedModal ... ", showModalEventRole)
     if( showModal ){
       // Do nothing      
     }else if( showModalEventType ){
@@ -350,7 +355,7 @@ class PanelEvents extends React.Component {
           show={isModal}
           onHide={(e) => this.closeModal(e)}
           onEntered={(e) => this.openedModal()}
-          dialogClassName="publication-type-modal">
+          dialogClassName="events-modal">
           <Modal.Header closeButton>
             <Modal.Title>Events</Modal.Title>
           </Modal.Header>
