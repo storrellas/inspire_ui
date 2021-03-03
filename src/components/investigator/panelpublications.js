@@ -12,7 +12,7 @@ import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 
 // Font Awesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faExpandArrowsAlt } from '@fortawesome/free-solid-svg-icons'
+import { faExpandArrowsAlt, faSearch } from '@fortawesome/free-solid-svg-icons'
 
 // Redux
 import { connect } from "react-redux";
@@ -227,6 +227,50 @@ class PanelPublications extends React.Component {
     this.publicationYearsMaxChart.legend = new am4charts.Legend();
   }
 
+  generateModalContent(){
+    const item = {
+      position: 'Head of',
+      name: 'Predictive value of the Essen Stroke Risk Score and Ankle Brachial Index in acute ischaemic stroke patients from 85 German stroke units.',
+      year: '2008',
+      position: 'Coauthor',
+      type: 'Journal Article',
+    }
+    const data = Array(10).fill(item);
+
+    return (
+    <div className="p-3">
+      <table className="w-100">
+        <thead>
+          <tr>
+            <td className="text-center">WebLink</td>
+            <td className="text-center">Name</td>
+            <td className="text-center">Year</td>
+            <td className="text-center">Position</td>
+            <td className="text-center">Type</td>
+          </tr>
+          <tr style={{ border: '1px solid grey', borderWidth: '1px 0px 2px 0px' }}>
+            <td><FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} /></td>
+            <td><FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} /></td>
+            <td><FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} /></td>
+            <td><FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} /></td>
+            <td><FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} /></td>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((item, id) =>
+            <tr key={id}>
+              <td><img src="https://demo.explicatos.com/img/Internet.png" style={{ height:'25px' }}></img></td>
+              <td>{item.name}</td>
+              <td>{item.year}</td>
+              <td>{item.position}</td>
+              <td>{item.type}</td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+    </div>)
+  }
+
   generateChart(){
     this.generatePublicationTypeChart()
     this.generatePublicationYearsChart()
@@ -290,8 +334,7 @@ class PanelPublications extends React.Component {
 
     let modalContent = <div>Unknown</div>
     if( showModal ){
-      modalContent = <div>Modal Content</div>
-      
+      modalContent = this.generateModalContent()      
     }else if( showModalPublicationType ){
       modalContent = <div id="publicationTypeMaxChart" style={{ width:'100%', height:'100%', marginTop:'20px'}}></div>
     }else if( showModalPublicationYears ){

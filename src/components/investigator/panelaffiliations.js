@@ -93,8 +93,7 @@ class PanelAffiliations extends React.Component {
             <Modal.Title>Affiliations</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <div className="d-flex" style={{ height: '100%', padding: '1em' }}>
-
+            <div className="p-3">
                 <table className="w-100">
                   <thead>
                     <tr>
