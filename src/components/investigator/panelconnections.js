@@ -6,7 +6,7 @@ import { withRouter } from 'react-router-dom'
 
 import { Modal, Button, Nav, Row, Col } from 'react-bootstrap';
 
-import './modal.scss'
+import './modal.scss';
 
 // Font Awesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -198,10 +198,7 @@ class PanelConnections extends React.Component {
           <Modal.Footer>
             <Button variant="secondary" onClick={(e) => this.closeModal(e)}>
               Close
-          </Button>
-            <Button variant="primary" onClick={(e) => this.closeModal(e)}>
-              Save Changes
-          </Button>
+            </Button>
           </Modal.Footer>
         </Modal>
 
