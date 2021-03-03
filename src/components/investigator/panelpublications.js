@@ -331,7 +331,6 @@ class PanelPublications extends React.Component {
       
     const {showModal, showModalPublicationType, showModalPublicationYears} = this.state;
     const isModal = showModal || showModalPublicationType || showModalPublicationYears;
-
     let modalContent = <div>Unknown</div>
     if( showModal ){
       modalContent = this.generateModalContent()      
