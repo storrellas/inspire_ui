@@ -179,7 +179,7 @@ class PanelResearchProfile extends React.Component {
           show={this.state.showModal}
           onHide={(e) => this.closeModal(e)}
           onEntered={(e) => this.modalOpened()}
-          dialogClassName="researh-profile-modal">
+          dialogClassName="research-profile-modal">
           <Modal.Header closeButton>
             <Modal.Title>Company Cooperation</Modal.Title>
           </Modal.Header>

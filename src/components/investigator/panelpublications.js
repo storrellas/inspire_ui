@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { withRouter } from 'react-router-dom'
+import { Modal, Button } from 'react-bootstrap';
 
 /* Imports */
 import * as am4core from "@amcharts/amcharts4/core";
@@ -134,31 +135,50 @@ class PanelPublications extends React.Component {
       isOpened: false,
       showModalPublicationType: false,
       showModalPublicationYears: false,
-      showModalViewDetails: false,
+      showModal: false,
     }
   }
 
-  publicationTypeChart() {
+  generatePublicationTypeChart() {
     // Create chart instance
-    this.publicationTypechart = am4core.create("publicationTypeContainerChart", am4charts.PieChart);
+    this.publicationTypeChart = am4core.create("publicationTypeChart", am4charts.PieChart);
 
     // Add data
-    this.publicationTypechart.data = publicationTypes;
-    this.publicationTypechart.innerRadius = am4core.percent(60);
+    this.publicationTypeChart.data = publicationTypes;
+    this.publicationTypeChart.innerRadius = am4core.percent(60);
 
     // Add and configure Series
-    var pieSeries = this.publicationTypechart.series.push(new am4charts.PieSeries());
+    var pieSeries = this.publicationTypeChart.series.push(new am4charts.PieSeries());
     pieSeries.labels.template.disabled = true;
     pieSeries.dataFields.value = "total";
     pieSeries.dataFields.category = "name";
     pieSeries.dataFields.tooltipText = "{category}{value}";
   
-    this.publicationTypechart.hiddenState.properties.radius = am4core.percent(0);
+    this.publicationTypeChart.hiddenState.properties.radius = am4core.percent(0);
   }
 
-  publicationYearChart() {
+  generatePublicationTypeMaxChart() {
     // Create chart instance
-    let chart = am4core.create("publicationYearContainerChart", am4charts.XYChart);
+    this.publicationTypeMaxChart = am4core.create("publicationTypeMaxChart", am4charts.PieChart);
+
+    // Add data
+    this.publicationTypeMaxChart.data = publicationTypes;
+    this.publicationTypeMaxChart.innerRadius = am4core.percent(60);
+
+    // Add and configure Series
+    var pieSeries = this.publicationTypeMaxChart.series.push(new am4charts.PieSeries());
+    pieSeries.labels.template.disabled = true;
+    pieSeries.dataFields.value = "total";
+    pieSeries.dataFields.category = "name";
+    pieSeries.dataFields.tooltipText = "{category}{value}";
+  
+    this.publicationTypeMaxChart.hiddenState.properties.radius = am4core.percent(0);
+    this.publicationTypeMaxChart.legend = new am4charts.Legend();
+  }
+
+  generatePublicationYearsChart() {
+    // Create chart instance
+    let chart = am4core.create("publicationYearsChart", am4charts.XYChart);
 
     // Add data
     chart.data = publicationYear;
@@ -178,13 +198,38 @@ class PanelPublications extends React.Component {
     series.dataFields.categoryX = "publication_year";
 
 
-    this.publicationYearchart = chart;
+    this.publicationYearsChart = chart;
+  }
 
+  generatePublicationYearsMaxChart() {
+    // Create chart instance
+    let chart = am4core.create("publicationYearsMaxChart", am4charts.XYChart);
+
+    // Add data
+    chart.data = publicationYear;
+
+    let categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+    categoryAxis.dataFields.category = "publication_year";
+    let valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+
+    // Create series
+    let series = chart.series.push(new am4charts.LineSeries());
+    series.dataFields.valueY = "value";
+    series.dataFields.dateX = "date";
+    series.tooltipText = "{value}"
+    series.strokeWidth = 2;
+    series.minBulletDistance = 15;
+    series.dataFields.valueY = "total";
+    series.dataFields.categoryX = "publication_year";
+
+
+    this.publicationYearsMaxChart = chart;
+    this.publicationYearsMaxChart.legend = new am4charts.Legend();
   }
 
   generateChart(){
-    this.publicationTypeChart()
-    this.publicationYearChart()
+    this.generatePublicationTypeChart()
+    this.generatePublicationYearsChart()
 
     // Set state after timeout
     this.setState({isOpened: true})
@@ -197,25 +242,42 @@ class PanelPublications extends React.Component {
   }
 
   componentWillUnmount() {
-    if (this.publicationYearchart) {
-      this.publicationYearchart.dispose();
+    if (this.publicationYearChart) {
+      this.publicationYearsChart.dispose();
     }
-    if (this.publicationTypechart) {
-      this.publicationTypechart.dispose();
+    if (this.publicationTypeChart) {
+      this.publicationTypeChart.dispose();
+    }
+    if (this.publicationYearsMaxChart) {
+      this.publicationYearsMaxChart.dispose();
+    }
+    if (this.publicationTypeMaxChart) {
+      this.publicationTypeMaxChart.dispose();
     }
   }
 
-  openModalPublicationType(){
-    console.log("openModalPublicationType ")    
+  closeModal(){
+    this.setState({ 
+      showModalPublicationType: false, 
+      showModalPublicationYears: false, 
+      showModal: false
+    })
   }
 
-  openModalPublicationYear(){
-    console.log("openModalPublicationYear ")    
+
+  openedModal(){
+    const {showModal, showModalPublicationType, showModalPublicationYears} = this.state;
+
+    if( showModal ){
+      // Do nothing      
+    }else if( showModalPublicationType ){
+      this.generatePublicationTypeMaxChart()
+    }else if( showModalPublicationYears ){
+      this.generatePublicationYearsMaxChart()
+    }
   }
 
-  openModalViewDetails(){
-    console.log("openModalViewDetails ")    
-  }
+
 
   render() {
     if( this.props.tabPublicationsOpened == true && this.state.isOpened == false){
@@ -223,7 +285,19 @@ class PanelPublications extends React.Component {
       setTimeout(function(){ that.generateChart() }, 500);
     }
       
-    
+    const {showModal, showModalPublicationType, showModalPublicationYears} = this.state;
+    const isModal = showModal || showModalPublicationType || showModalPublicationYears;
+
+    let modalContent = <div>Unknown</div>
+    if( showModal ){
+      modalContent = <div>Modal Content</div>
+      
+    }else if( showModalPublicationType ){
+      modalContent = <div id="publicationTypeMaxChart" style={{ width:'100%', height:'100%', marginTop:'20px'}}></div>
+    }else if( showModalPublicationYears ){
+      modalContent = <div id="publicationYearsMaxChart" style={{ width:'100%', height:'100%', marginTop:'20px'}}></div>
+    }
+
     return (
       <div>
         <LoadingOverlay
@@ -232,23 +306,46 @@ class PanelPublications extends React.Component {
         <div className="d-flex" style={{ padding: '1em 1em 1em 1em'}}>
           <div className="w-50 text-center">
             <div>Publication Types</div>
-            <div id="publicationTypeContainerChart" style={{ width:'100%', height:'200px', marginTop:'20px'}}></div>
-            <div className="text-right pr-2 pb-1" style={{ cursor: 'pointer' }} onClick={(e) => this.openModal()}>
+            <div id="publicationTypeChart" style={{ width:'100%', height:'200px', marginTop:'20px'}}></div>
+            <div className="text-right pr-2 pb-1" style={{ cursor: 'pointer' }} 
+                onClick={(e) => this.setState({ showModalPublicationType: true})}>
               <FontAwesomeIcon icon={faExpandArrowsAlt} />
             </div>
           </div>
           <div className="w-50 text-center">
             <div>Publication Years</div>
-            <div id="publicationYearContainerChart" style={{width:'100%', height:'200px', marginTop:'20px'}}></div>
-            <div className="text-right pr-2 pb-1" style={{ cursor: 'pointer' }} onClick={(e) => this.openModal()}>
+            <div id="publicationYearsChart" style={{width:'100%', height:'200px', marginTop:'20px'}}></div>
+            <div className="text-right pr-2 pb-1" style={{ cursor: 'pointer' }} 
+                  onClick={(e) => this.setState({ showModalPublicationYears: true})}>
               <FontAwesomeIcon icon={faExpandArrowsAlt} />
             </div>
           </div>
         </div>
-        <div className="text-right pr-2 pb-1" style={{ cursor: 'pointer' }} onClick={(e) => this.openModal()}>
+        <div className="text-right pr-2 pb-1" style={{ cursor: 'pointer' }} 
+                  onClick={(e) => this.setState({ showModal: true})}>
           View Details ...
         </div>
         </LoadingOverlay>
+
+        <Modal animation centered
+          show={isModal}
+          onHide={(e) => this.closeModal(e)}
+          onEntered={(e) => this.openedModal()}
+          dialogClassName="publication-type-modal">
+          <Modal.Header closeButton>
+            <Modal.Title>Company Cooperation</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            {modalContent}
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={(e) => this.closeModal(e)}>
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
+
       </div>);
   }
 }
