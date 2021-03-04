@@ -233,6 +233,4 @@ class Investigator extends React.Component {
   }
 }
 
-
-//export default withRouter(Investigator);
 export default connect(undefined, mapDispatchToProps)(withRouter(Investigator))
