@@ -19,6 +19,11 @@ import { connect } from "react-redux";
 // Loading Overlay
 import LoadingOverlay from 'react-loading-overlay';
 
+import './panelevents.scss';
+
+// Animate Height
+import AnimateHeight from 'react-animate-height';
+
 // Themes begin
 am4core.useTheme(am4themes_animated);
 
@@ -73,12 +78,31 @@ class PanelEvents extends React.Component {
 
   constructor(props) {
     super(props)
+
+    const item = {
+      name: 'Update Neurologie der Kliniken Schmieder 2017',
+      position: 'Speaker',
+      subtype: 'Congress',
+      year: '2008',
+      city: 'Allensbach',
+      country: 'Germany',
+      talks: 'Schlaganfall – Sekundärprophylaxe',
+      sessions: '1. Themenblock: Autoimmunentzündliche Prozesse',
+      posters: '1. Themenblock: Autoimmunentzündliche Prozesse',
+      show: false,      
+    }
+
     this.state = {
       isOpened: false,
       showModalEventType: false,
       showModalEventRole: false,
       showModal: false,
+      tableData: Array(10).fill(item)
     }
+
+
+
+    
   }
 
   generateEventTypeChart() {
@@ -195,24 +219,23 @@ class PanelEvents extends React.Component {
     this.eventRoleMaxChart.legend = new am4charts.Legend();    
   }
 
+  onClickedDetail(id){    
+    let { tableData } = this.state;    
+    const target = !tableData[id].show
+    tableData = tableData.map( item => { return {...item, show: false} })
+    tableData[id].show = target;
+    this.setState({ tableData: tableData })
+  }
+
   generateModalContent(){
     const headers = [
       "Name", "Position", "Subtype", "Year", 
       "City", "Country"
     ]
-    const item = {
-      name: 'Update Neurologie der Kliniken Schmieder 2017',
-      position: 'Speaker',
-      subtype: 'Congress',
-      year: '2008',
-      city: 'Allensbach',
-      country: 'Germany',
-    }
-    const data = Array(10).fill(item);
+
 
     return (
     <div className="p-3">
-      <div style={{ color: 'red'}}> Still missing expandable row </div>
       <table className="w-100">
         <thead>
           <tr>
@@ -229,10 +252,13 @@ class PanelEvents extends React.Component {
           </tr>
         </thead>
         <tbody>
-          {data.map((item, id) =>
-            <tr key={id}>
-              <td className="text-center">
-                <FontAwesomeIcon icon={faCaretRight} style={{ fontSize: '1em', color: 'grey', cursor:'pointer' }} />
+          {this.state.tableData.map((item, id) =>
+            [
+            <tr>
+              <td className="text-center" >
+                <FontAwesomeIcon className={item.show?'table-caret active':'table-caret'} icon={faCaretRight} 
+                  style={{ fontSize: '1em', color: 'grey', cursor:'pointer' }} 
+                  onClick={(e) => this.onClickedDetail(id)} />
               </td>
               <td>{item.name}</td>
               <td>{item.position}</td>
@@ -240,7 +266,22 @@ class PanelEvents extends React.Component {
               <td>{item.year}</td>
               <td>{item.city}</td>              
               <td>{item.country}</td>
-            </tr>
+            </tr>,
+            <tr>
+              <td colSpan="7">
+              <AnimateHeight
+                id="example-panel"
+                height={ item.show?'auto':0}
+                duration={250}>
+                <div style={{ border: '1px solid grey', borderWidth: '1px 0px 1px 0px', padding: '0.5em', paddingLeft: '2em', backgroundColor: '#fafafa'}}>
+                  <div><span className="font-weight-bold">Talks:</span> {item.talks}</div>
+                  <div><span className="font-weight-bold">Sesions:</span> {item.sessions}</div>
+                  <div><span className="font-weight-bold">Posters:</span> {item.posters}</div>
+                </div>
+                </AnimateHeight>
+              </td>
+            </tr>]
+            
           )}
         </tbody>
       </table>

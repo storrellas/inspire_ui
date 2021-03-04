@@ -29,20 +29,22 @@ function NodeDetail(props) {
 
   return (
     <div style={{ fontSize: '14px', color: "#000000" }}>
-      <p style={{ fontSize: '18px', color: "#337ab7" }}>Joachim Rother</p>
-      <p>Asklepios Kliniken - Asklepios Klinik Altona, Abteilung für Neurologie</p>
-      <p>
+      <div style={{ fontSize: '18px', color: "#337ab7" }}>Joachim Rother</div>
+      <div>Asklepios Kliniken - Asklepios Klinik Altona, Abteilung für Neurologie</div>
+      <div>
         <FontAwesomeIcon icon={faFolder} />
         <span className="ml-2">All</span>
-      </p>
-      <p><FontAwesomeIcon icon={faFolder} />
-        <span className="ml-2">Trials</span></p>
-      <p>
+      </div>
+      <div><FontAwesomeIcon icon={faFolder} />
+        <span className="ml-2">Trials</span>
+      </div>
+      <div>
         <FontAwesomeIcon icon={faCalendarWeek} />
-        <span className="ml-2">Events</span></p>
-      <p><FontAwesomeIcon icon={faBook} /><span className="ml-2">Publications</span></p>
-      <p><FontAwesomeIcon icon={faHome} /><span className="ml-2">Affiliations (past)</span></p>
-      <p><FontAwesomeIcon icon={faHome} /><span className="ml-2">Affiliations (present)</span></p>
+        <span className="ml-2">Events</span>
+      </div>
+      <div><FontAwesomeIcon icon={faBook} /><span className="ml-2">Publications</span></div>
+      <div><FontAwesomeIcon icon={faHome} /><span className="ml-2">Affiliations (past)</span></div>
+      <div><FontAwesomeIcon icon={faHome} /><span className="ml-2">Affiliations (present)</span></div>
     </div>
   );
 }
