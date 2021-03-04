@@ -1,20 +1,16 @@
 import React, { useState } from 'react';
 // Bootstrap
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { Col, Row } from 'react-bootstrap';
+import { Col, Row, Dropdown } from 'react-bootstrap';
 
-import { Dropdown } from 'react-bootstrap';
+// React Router
 import { withRouter } from 'react-router-dom'
 
-// Styles
-//import "./dashboard.scss"
 // Assets
 import arrow from '../../assets/arrow.png';
 
 // Project imports
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faStar, faSearch } from '@fortawesome/free-solid-svg-icons'
-
 
 const SearchHeader = (props) => {
 

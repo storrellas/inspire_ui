@@ -1,20 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 // Bootstrap
-import 'bootstrap/dist/css/bootstrap.min.css';
-
-import { withRouter } from 'react-router-dom'
-
 import { Modal, Button } from 'react-bootstrap';
+
+// React Router
+import { withRouter } from 'react-router-dom'
 
 // Font Awesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faExpandArrowsAlt, faSearch } from '@fortawesome/free-solid-svg-icons'
-
-// Styles
-
-// Assets
-
-// Project imports
 
 
 class PanelAffiliations extends React.Component {

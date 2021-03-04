@@ -1,23 +1,18 @@
 import React, { useState } from 'react';
 // Bootstrap
-import 'bootstrap/dist/css/bootstrap.min.css';
 import { Col, Row } from 'react-bootstrap';
 
+// React Router
 import { withRouter } from 'react-router-dom'
 
 // Styles
 import "./projectselector.scss"
-// Assets
-
-// Project imports
-
 
 class ProjectSelector extends React.Component {
 
   constructor(props) {
     super(props)
   }
-
 
   render() {
 

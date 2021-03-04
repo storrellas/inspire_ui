@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 // Bootstrap
-import 'bootstrap/dist/css/bootstrap.min.css';
-
-import { withRouter } from 'react-router-dom'
-
 import { Modal, Button } from 'react-bootstrap';
 
-/* Imports */
+// React Router
+import { withRouter } from 'react-router-dom'
+
+// am4charts
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
@@ -14,20 +13,14 @@ import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 // Redux
 import { connect } from "react-redux";
 
-
+// Loading Overlay
 import LoadingOverlay from 'react-loading-overlay';
 
+// Styles
 import './panelresearchprofile.scss';
 
-/* Chart code */
 // Themes begin
 am4core.useTheme(am4themes_animated);
-
-// Styles
-
-// Assets
-
-// Project imports
 
 const mapStateToProps = state => {
   return { 
@@ -54,7 +47,6 @@ class PanelResearchProfile extends React.Component {
   }
 
   generateChart(){
-    console.log("Generating chart in RP")
     const data = [
       {
         "id":340,
@@ -181,7 +173,7 @@ class PanelResearchProfile extends React.Component {
           onEntered={(e) => this.modalOpened()}
           dialogClassName="research-profile-modal">
           <Modal.Header closeButton>
-            <Modal.Title>Company Cooperation</Modal.Title>
+            <Modal.Title>Research Profile</Modal.Title>
           </Modal.Header>
           <Modal.Body>
       

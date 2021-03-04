@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
-// Bootstrap
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { Container } from 'react-bootstrap';
-import { Navbar, Nav, NavDropdown, Dropdown } from 'react-bootstrap';
-import { Col, Row } from 'react-bootstrap';
+import React from 'react';
 
+// Bootstrap
+import { Nav, Col, Row } from 'react-bootstrap';
+
+// React Router
 import { withRouter } from 'react-router-dom'
 
 // Styles

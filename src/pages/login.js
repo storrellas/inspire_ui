@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 // Bootstrap
-import 'bootstrap/dist/css/bootstrap.min.css';
 import { Col, Row } from 'react-bootstrap';
 
 import { withRouter } from 'react-router-dom'

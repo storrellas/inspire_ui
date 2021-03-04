@@ -1,26 +1,23 @@
-import React, { useState } from 'react';
+import React from 'react';
 // Bootstrap
-import 'bootstrap/dist/css/bootstrap.min.css';
-
-import { withRouter } from 'react-router-dom'
-
 import { Modal, Button, Nav, Row, Col } from 'react-bootstrap';
 
+// React Router
+import { withRouter } from 'react-router-dom'
+
+// Styles
 import './modal.scss';
 
 // Font Awesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faExpandArrowsAlt } from '@fortawesome/free-solid-svg-icons'
 
-// Styles
-
-// Assets
-
-// Project imports
+// Cytoscape
 import CytoscapeComponent from 'react-cytoscapejs';
-
 import cytoscape from 'cytoscape';
 import euler from 'cytoscape-euler';
+
+// Project imports
 import source from './source'
 
 cytoscape.use(euler);

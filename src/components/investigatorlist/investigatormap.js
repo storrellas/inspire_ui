@@ -1,10 +1,7 @@
 import React from 'react';
-// Bootstrap
-import 'bootstrap/dist/css/bootstrap.min.css';
 
-
+// React Router
 import { withRouter } from 'react-router-dom'
-
 
 // am4charts
 import * as am4core from "@amcharts/amcharts4/core";

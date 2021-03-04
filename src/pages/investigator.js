@@ -1,12 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 // Bootstrap
-import 'bootstrap/dist/css/bootstrap.min.css';
 import { Col, Row } from 'react-bootstrap';
 
-
+// React Router
 import { withRouter } from 'react-router-dom'
-
-import { Accordion, Card, Button } from 'react-bootstrap';
 
 // Styles
 import "./investigator.scss"

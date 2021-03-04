@@ -1,17 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
+
 // Bootstrap
-import 'bootstrap/dist/css/bootstrap.min.css';
 import { Col, Row } from 'react-bootstrap';
 
+// React Router
 import { withRouter } from 'react-router-dom'
 
-
-
-// Styles
-
-// Assets
-
-// Project imports
 
 class InvestigatorProfile extends React.Component {
 

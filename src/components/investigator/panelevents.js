@@ -1,12 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 // Bootstrap
-import 'bootstrap/dist/css/bootstrap.min.css';
-
-import { withRouter } from 'react-router-dom'
 import { Modal, Button } from 'react-bootstrap';
+// React Router
+import { withRouter } from 'react-router-dom'
 
-
-/* Imports */
+// am4Charts
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
@@ -18,16 +16,12 @@ import { faExpandArrowsAlt, faSearch, faCaretRight } from '@fortawesome/free-sol
 // Redux
 import { connect } from "react-redux";
 
+// Loading Overlay
 import LoadingOverlay from 'react-loading-overlay';
 
 // Themes begin
 am4core.useTheme(am4themes_animated);
 
-// Styles
-
-// Assets
-
-// Project imports
 
 const mapStateToProps = state => {
   return {
@@ -202,6 +196,10 @@ class PanelEvents extends React.Component {
   }
 
   generateModalContent(){
+    const headers = [
+      "Name", "Position", "Subtype", "Year", 
+      "City", "Country"
+    ]
     const item = {
       name: 'Update Neurologie der Kliniken Schmieder 2017',
       position: 'Speaker',
@@ -219,21 +217,15 @@ class PanelEvents extends React.Component {
         <thead>
           <tr>
             <td></td>
-            <td className="text-center">Name</td>
-            <td className="text-center">Position</td>
-            <td className="text-center">Subtype</td>
-            <td className="text-center">Year</td>
-            <td className="text-center">City</td>
-            <td className="text-center">Country</td>
+            {headers.map((item, id) =>
+              <td key={id} className="text-center">{item}</td>
+            )}
           </tr>
           <tr style={{ border: '1px solid grey', borderWidth: '1px 0px 2px 0px' }}>
-            <td><FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} /></td>
-            <td><FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} /></td>
-            <td><FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} /></td>
-            <td><FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} /></td>
-            <td><FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} /></td>
-            <td><FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} /></td>
-            <td><FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} /></td>
+            <td></td>
+            {headers.map((item, id) =>
+              <td key={id} ><FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} /></td>
+            )}
           </tr>
         </thead>
         <tbody>
@@ -273,12 +265,7 @@ class PanelEvents extends React.Component {
     if (this.eventRoleChart) {
       this.eventRoleChart.dispose();
     }
-    if (this.eventTypeMaxChart) {
-      this.eventTypeMaxChart.dispose();
-    }
-    if (this.eventRoleMaxChart) {
-      this.eventRoleMaxChart.dispose();
-    }
+
   }
 
   closeModal(){
@@ -299,6 +286,16 @@ class PanelEvents extends React.Component {
       this.generateEventTypeMaxChart()
     }else if( showModalEventRole ){
       this.generateEventRoleMaxChart()
+    }
+  }
+
+
+  closedModal(){
+    if (this.eventTypeMaxChart) {
+      this.eventTypeMaxChart.dispose();
+    }
+    if (this.eventRoleMaxChart) {
+      this.eventRoleMaxChart.dispose();
     }
   }
 
@@ -355,6 +352,7 @@ class PanelEvents extends React.Component {
           show={isModal}
           onHide={(e) => this.closeModal(e)}
           onEntered={(e) => this.openedModal()}
+          onExited={(e) => this.closedModal(e)}
           dialogClassName="events-modal">
           <Modal.Header closeButton>
             <Modal.Title>Events</Modal.Title>

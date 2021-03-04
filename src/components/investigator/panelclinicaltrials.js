@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 // Bootstrap
-import 'bootstrap/dist/css/bootstrap.min.css';
-
-import { withRouter } from 'react-router-dom'
 import { Modal, Button } from 'react-bootstrap';
 
-/* Imports */
+// React Router
+import { withRouter } from 'react-router-dom'
+
+// am4Charts
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
@@ -17,6 +17,7 @@ import { faExpandArrowsAlt, faSearch } from '@fortawesome/free-solid-svg-icons'
 // Redux
 import { connect } from "react-redux";
 
+// Loading Overlay
 import LoadingOverlay from 'react-loading-overlay';
 
 // Themes begin
@@ -189,6 +190,12 @@ class PanelClinicalTrials extends React.Component {
   }
 
   generateModalContent(){
+
+    const headers = [
+      "Name", "Condition", "Status", "Start Year", 
+      "End Year", "Phase", "Study Type", "Enrolment", "Intervention"
+    ]
+
     const item = {
       name: 'Ticagrelor Versus Clopidogrel in Carotid Artery Stenting	',
       condition: 'Carotid Stenosis',
@@ -207,28 +214,14 @@ class PanelClinicalTrials extends React.Component {
       <table className="w-100" style={{ fontSize: '12px'}}>
         <thead>
           <tr>
-            <td className="text-center">Name</td>
-            <td className="text-center">Condition</td>
-            <td className="text-center">Status</td>
-            <td className="text-center">Start Year</td>
-            
-            <td className="text-center">End Year</td>
-            <td className="text-center">Phase</td>
-            <td className="text-center">StudyType</td>
-            <td className="text-center">Enrolment</td>
-            <td className="text-center">Intervention</td>
+            {headers.map((item, id) =>
+              <td key={id} className="text-center">{item}</td>
+            )}
           </tr>
           <tr style={{ border: '1px solid grey', borderWidth: '1px 0px 2px 0px' }}>
-            <td><FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} /></td>
-            <td><FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} /></td>
-            <td><FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} /></td>
-            <td><FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} /></td>
-            
-            <td><FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} /></td>
-            <td><FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} /></td>
-            <td><FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} /></td>
-            <td><FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} /></td>
-            <td><FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} /></td>
+            {headers.map((item, id) =>
+              <td key={id} ><FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} /></td>
+            )}
           </tr>
         </thead>
         <tbody>
@@ -265,12 +258,7 @@ class PanelClinicalTrials extends React.Component {
     if (this.conditionsChart) {
       this.conditionsChart.dispose();
     }
-    if (this.interventionsMaxChart) {
-      this.interventionsMaxChart.dispose();
-    }
-    if (this.conditionsMaxChart) {
-      this.conditionsMaxChart.dispose();
-    }
+
   }
 
   closeModal(){
@@ -281,9 +269,17 @@ class PanelClinicalTrials extends React.Component {
     })
   }
 
+  closedModal(){
+    if (this.interventionsMaxChart) {
+      this.interventionsMaxChart.dispose();
+    }
+    if (this.conditionsMaxChart) {
+      this.conditionsMaxChart.dispose();
+    }
+  }
+
   openedModal(){
     const {showModal, showModalConditions, showModalInterventions} = this.state;
-    console.log("OpenedModal")
     if( showModal ){
       // Do nothing      
     }else if( showModalConditions ){
@@ -345,6 +341,7 @@ class PanelClinicalTrials extends React.Component {
           show={isModal}
           onHide={(e) => this.closeModal(e)}
           onEntered={(e) => this.openedModal()}
+          onExited={(e) => this.closedModal(e)}
           dialogClassName="clinical-trials-modal">
           <Modal.Header closeButton>
             <Modal.Title>Clinical Trials</Modal.Title>

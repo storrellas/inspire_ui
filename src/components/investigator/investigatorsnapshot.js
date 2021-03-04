@@ -1,16 +1,7 @@
-import React, { useState } from 'react';
-// Bootstrap
-import 'bootstrap/dist/css/bootstrap.min.css';
+import React from 'react';
 
+// React Router
 import { withRouter } from 'react-router-dom'
-
-
-
-// Styles
-
-// Assets
-
-// Project imports
 
 class InvestigatorSnaphot extends React.Component {
 

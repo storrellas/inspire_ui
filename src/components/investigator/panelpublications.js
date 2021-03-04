@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 // Bootstrap
-import 'bootstrap/dist/css/bootstrap.min.css';
-
-import { withRouter } from 'react-router-dom'
 import { Modal, Button } from 'react-bootstrap';
 
-/* Imports */
+// React Router
+import { withRouter } from 'react-router-dom'
+
+// am4charts
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
@@ -17,6 +17,7 @@ import { faExpandArrowsAlt, faSearch } from '@fortawesome/free-solid-svg-icons'
 // Redux
 import { connect } from "react-redux";
 
+// Loading Overlay
 import LoadingOverlay from 'react-loading-overlay';
 
 // Themes begin
@@ -228,6 +229,10 @@ class PanelPublications extends React.Component {
   }
 
   generateModalContent(){
+    const headers = [
+      "Name", "Year", "Position", "Type"
+    ]
+
     const item = {
       position: 'Head of',
       name: 'Predictive value of the Essen Stroke Risk Score and Ankle Brachial Index in acute ischaemic stroke patients from 85 German stroke units.',
@@ -243,17 +248,15 @@ class PanelPublications extends React.Component {
         <thead>
           <tr>
             <td className="text-center">WebLink</td>
-            <td className="text-center">Name</td>
-            <td className="text-center">Year</td>
-            <td className="text-center">Position</td>
-            <td className="text-center">Type</td>
+            {headers.map((item, id) =>
+              <td key={id} className="text-center">{item}</td>
+            )}
           </tr>
           <tr style={{ border: '1px solid grey', borderWidth: '1px 0px 2px 0px' }}>
-            <td><FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} /></td>
-            <td><FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} /></td>
-            <td><FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} /></td>
-            <td><FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} /></td>
-            <td><FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} /></td>
+            <td></td>
+            {headers.map((item, id) =>
+              <td key={id}><FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} /></td>
+            )}
           </tr>
         </thead>
         <tbody>
@@ -286,7 +289,7 @@ class PanelPublications extends React.Component {
   }
 
   componentWillUnmount() {
-    if (this.publicationYearChart) {
+    if (this.publicationYearsChart) {
       this.publicationYearsChart.dispose();
     }
     if (this.publicationTypeChart) {
@@ -321,7 +324,14 @@ class PanelPublications extends React.Component {
     }
   }
 
-
+  closedModal(){
+    if (this.publicationYearsMaxChart) {
+      this.publicationYearsMaxChart.dispose();
+    }
+    if (this.publicationTypeMaxChart) {
+      this.publicationTypeMaxChart.dispose();
+    }
+  }
 
   render() {
     if( this.props.tabPublicationsOpened == true && this.state.isOpened == false){
@@ -373,9 +383,10 @@ class PanelPublications extends React.Component {
           show={isModal}
           onHide={(e) => this.closeModal(e)}
           onEntered={(e) => this.openedModal()}
+          onExited={(e) => this.closedModal(e)}
           dialogClassName="publications-modal">
           <Modal.Header closeButton>
-            <Modal.Title>Company Cooperation</Modal.Title>
+            <Modal.Title>Publications</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             {modalContent}

@@ -1,23 +1,22 @@
 import React from 'react';
-// Bootstrap
+
+// Boostrap
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Container, Navbar, Col, Nav, NavDropdown, Dropdown, Row } from 'react-bootstrap';
 
-
-import { Container } from 'react-bootstrap';
-import { Navbar, Col, Nav, NavDropdown, Dropdown, Row } from 'react-bootstrap';
-import { Switch, Route } from "react-router-dom";
-
+// React Router
+import { Route } from "react-router-dom";
 import { withRouter } from 'react-router-dom'
 
 // Styles
 import "./App.scss"
+
 // Assets
 import inspire_logo from './assets/logo.png';
 
 // Font Awesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser, faStar, faDirections } from '@fortawesome/free-solid-svg-icons'
-
 
 // Project imports
 import Login from './pages/login';
@@ -39,16 +38,16 @@ class App extends React.Component {
     const isLogin = this.props.location.pathname == '/'
     return (
       <div className='inspire-main'>
-        <Navbar variant="dark" className="inspire-navbar navbar" expand="sm">
+        <Navbar variant="dark" className="navbar inspire-navbar" expand="sm">
 
-          <Navbar.Brand href="#home" className="h-100">
+          <Navbar.Brand href="/" className="h-100">
             <img src={inspire_logo} alt="logo" style={{ height: '50px' }}></img>
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse className="h-100 justify-content-end">
             <Nav className="h-100 inspire-nav" style={{ backgroundColor: '#343547' }}>
               {isLogin ? '' :
-                <Nav.Link href="#home">
+                <Nav.Link href="/">
                   <div className="inspire-navbar-link" style={{ display: 'inline', padding: '0.5em' }}>
                     <FontAwesomeIcon style={{ color: 'white' }} icon={faDirections} />
                   </div>

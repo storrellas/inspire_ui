@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 // Bootstrap
-import 'bootstrap/dist/css/bootstrap.min.css';
-
-import { withRouter } from 'react-router-dom'
-
 import { Modal, Button } from 'react-bootstrap';
 
-/* Imports */
+// React Router
+import { withRouter } from 'react-router-dom'
+
+// am4Charts
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 
+// Styles
 import './modal.scss';
 
 // Redux
@@ -21,27 +21,16 @@ import LoadingOverlay from 'react-loading-overlay';
 
 // Font Awesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faExpandArrowsAlt, faSearch } from '@fortawesome/free-solid-svg-icons'
+import { faSearch } from '@fortawesome/free-solid-svg-icons'
 
-/* Chart code */
 // Themes begin
 am4core.useTheme(am4themes_animated);
-// Themes end
-
-// Styles
-
-// Assets
-
-// Project imports
-
 
 const mapStateToProps = state => {
   return {
     tabCompanyCooperationOpened: state.tabCompanyCooperationOpened,
   };
 };
-
-
 
 class PanelCompanyCooperation extends React.Component {
 
@@ -53,13 +42,9 @@ class PanelCompanyCooperation extends React.Component {
     }
   }
 
+  componentDidMount() {}
 
-
-  componentDidMount() {
-  }
-
-  componentDidUpdate() {
-  }
+  componentDidUpdate() {}
 
   createSeries(field, name) {
     let series = this.chart.series.push(new am4charts.ColumnSeries());
@@ -173,6 +158,9 @@ class PanelCompanyCooperation extends React.Component {
   componentWillUnmount() {
     if (this.chart) {
       this.chart.dispose();
+    }
+    if( this.maxChart ){
+      this.maxchart.dispose()
     }
   }
 

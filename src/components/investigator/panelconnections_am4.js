@@ -1,21 +1,14 @@
 import React, { useState } from 'react';
-// Bootstrap
-import 'bootstrap/dist/css/bootstrap.min.css';
-
 import { withRouter } from 'react-router-dom'
-
-
 
 // Styles
 
 // Assets
 
 // Project imports
-import CytoscapeComponent from 'react-cytoscapejs';
 
 import cytoscape from 'cytoscape';
 import euler from 'cytoscape-euler';
-import source from './source'
 
 /* Imports */
 import * as am4core from "@amcharts/amcharts4/core";
