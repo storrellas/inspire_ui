@@ -14,7 +14,15 @@ am4core.useTheme(am4themes_animated);
 
 class InvestigatorMap extends React.Component {
 
+  constructor(props){
+    super(props)
+    this.state = {
+      isOpened: false
+    }
+  }
+
   componentDidMount(){
+
     // Themes end
     var continents = {
       "AF": 0,
@@ -100,6 +108,12 @@ class InvestigatorMap extends React.Component {
 
 
     this.chart = chart
+  }
+
+  componentWillUnmount() {
+    if (this.chart) {
+      this.chart.dispose();
+    }
   }
 
   render(){
