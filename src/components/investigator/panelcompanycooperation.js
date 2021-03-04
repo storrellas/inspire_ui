@@ -42,7 +42,9 @@ class PanelCompanyCooperation extends React.Component {
     }
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    console.log("Component PanelCompanyCooperation Mounted")
+  }
 
   componentDidUpdate() {}
 

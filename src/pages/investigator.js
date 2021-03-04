@@ -16,21 +16,6 @@ import "./investigator.scss"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCaretDown } from '@fortawesome/free-solid-svg-icons'
 
-// Project imports
-import InvestigatorProfile from '../components/investigator/investigatorprofile'
-import InvestigatorSnaphot from '../components/investigator/investigatorsnapshot'
-
-import PanelConnections from '../components/investigator/panelconnections';
-import PanelCompanyCooperation from '../components/investigator/panelcompanycooperation';
-import PanelAffiliations from '../components/investigator/panelaffiliations';
-import PanelFeedback from '../components/investigator/panelfeedback';
-
-import PanelResearchProfile from '../components/investigator/panelresearchprofile';
-import PanelPublications from '../components/investigator/panelpublications';
-import PanelEvents from '../components/investigator/panelevents';
-import PanelClinicalTrials from '../components/investigator/panelclinicaltrials';
-
-
 // Redux
 import { 
   setPanelRendered,
@@ -41,6 +26,29 @@ import { connect } from "react-redux";
 
 import AnimateHeight from 'react-animate-height';
 
+// Project imports
+import InvestigatorProfile from '../components/investigator/investigatorprofile'
+import InvestigatorSnaphot from '../components/investigator/investigatorsnapshot'
+
+//import PanelConnections from '../components/investigator/panelconnections';
+//import PanelCompanyCooperation from '../components/investigator/panelcompanycooperation';
+// import PanelAffiliations from '../components/investigator/panelaffiliations';
+// import PanelFeedback from '../components/investigator/panelfeedback';
+
+// import PanelResearchProfile from '../components/investigator/panelresearchprofile';
+// import PanelPublications from '../components/investigator/panelpublications';
+// import PanelEvents from '../components/investigator/panelevents';
+// import PanelClinicalTrials from '../components/investigator/panelclinicaltrials';
+
+const PanelConnections = React.lazy(() => import('../components/investigator/panelconnections'));
+const PanelCompanyCooperation = React.lazy(() => import('../components/investigator/panelcompanycooperation'));
+const PanelAffiliations = React.lazy(() => import('../components/investigator/panelaffiliations'));
+const PanelFeedback = React.lazy(() => import('../components/investigator/panelfeedback'));
+
+const PanelResearchProfile = React.lazy(() => import('../components/investigator/panelresearchprofile'));
+const PanelPublications = React.lazy(() => import('../components/investigator/panelpublications'));
+const PanelEvents = React.lazy(() => import('../components/investigator/panelevents'));
+const PanelClinicalTrials = React.lazy(() => import('../components/investigator/panelclinicaltrials'));
 
 function Panel(props) {
 
@@ -96,28 +104,56 @@ class Investigator extends React.Component {
       panelPublicationsActive: false,
       panelEventsActive: false,
       panelClinicalTrialsActive: false,
+
+      panelConnectionsRendered: false,
+      panelCompanyCooperationRendered: false,
+      panelAffiliationsRendered: false,
+      tabFeedbackRendered: false,
+
+      panelResearchProfileRendered: false,
+      panelPublicationsRendered: false,
+      panelEventsRendered: false,
+      panelClinicalTrialsRendered: false,
     }
   }
 
   togglePanel(panel) {
     const state = this.getInitialState()
-    if (panel === PANEL.CONNECTIONS)
+    if (panel === PANEL.CONNECTIONS){
       state.panelConnectionsActive = !this.state.panelConnectionsActive;
-    if (panel === PANEL.COMPANY_COOPERATION)
+      state.panelConnectionsRendered = true;
+    } 
+    if (panel === PANEL.COMPANY_COOPERATION){
       state.panelCompanyCooperationActive = !this.state.panelCompanyCooperationActive;
-    if (panel === PANEL.AFFILIATIONS)
+      state.panelCompanyCooperationRendered = true;
+    } 
+    if (panel === PANEL.AFFILIATIONS){
       state.panelAffiliationsActive = !this.state.panelAffiliationsActive;
-    if (panel === PANEL.FEEDBACK)
+      state.panelAffiliationsRendered = true;
+    }
+    if (panel === PANEL.FEEDBACK){
       state.panelFeedbackActive = !this.state.panelFeedbackActive;
+      state.panelFeedbackRendered = true;
+    }
+      
 
-    if (panel === PANEL.RESEARCH_PROFILE)
+    if (panel === PANEL.RESEARCH_PROFILE){
       state.panelResearchProfileActive = !this.state.panelResearchProfileActive;
-    if (panel === PANEL.PUBLICATIONS)
+      state.panelResearchProfileRendered = true;
+    }
+    if (panel === PANEL.PUBLICATIONS){
       state.panelPublicationsActive = !this.state.panelPublicationsActive;
-    if (panel === PANEL.EVENTS)
+      state.panelPublicationsRendered = true;
+    }      
+    if (panel === PANEL.EVENTS){
       state.panelEventsActive = !this.state.panelEventsActive;
-    if (panel === PANEL.CLINICAL_TRIALS)
+      state.panelEventsRendered = true;
+    }      
+    if (panel === PANEL.CLINICAL_TRIALS){
       state.panelClinicalTrialsActive = !this.state.panelClinicalTrialsActive;
+      state.panelClinicalTrialsRendered = true;
+    }
+
 
     this.setState({ ...state })
   }
@@ -150,25 +186,33 @@ class Investigator extends React.Component {
                   height={this.state.panelConnectionsActive?'auto':0}
                   handler={this.togglePanel.bind(this)} panel={PANEL.CONNECTIONS}
                   onAnimationEnd={this.onAnimationEnd.bind(this)}>
-                  <PanelConnections />
+                  <Suspense fallback={<div>Loading...</div>}>
+                    {this.state.panelConnectionsRendered?<PanelConnections />:''}
+                  </Suspense>
                 </Panel>
                 <Panel title="Company Cooperation"
                   height={this.state.panelCompanyCooperationActive?'auto':0}
                   handler={this.togglePanel.bind(this)} panel={PANEL.COMPANY_COOPERATION}
                   onAnimationEnd={this.onAnimationEnd.bind(this)}>                        
-                  <PanelCompanyCooperation/>
+                  <Suspense fallback={<div>Loading...</div>}>
+                    {this.state.panelCompanyCooperationRendered?<PanelCompanyCooperation/>:''}
+                  </Suspense>
                 </Panel>
                 <Panel title="Affiliations"
                   height={this.state.panelAffiliationsActive?'auto':0}
                   handler={this.togglePanel.bind(this)} panel={PANEL.AFFILIATIONS}
                   onAnimationEnd={this.onAnimationEnd.bind(this)}>
-                  <PanelAffiliations />
+                  <Suspense fallback={<div>Loading...</div>}>
+                    {this.state.panelAffiliationsRendered?<PanelAffiliations />:''}
+                  </Suspense>
                 </Panel>
                 <Panel title="Feedback"
                   height={this.state.panelFeedbackActive?'auto':0}
                   handler={this.togglePanel.bind(this)} panel={PANEL.FEEDBACK}
                   onAnimationEnd={this.onAnimationEnd.bind(this)}>
-                  <PanelFeedback />
+                  <Suspense fallback={<div>Loading...</div>}>
+                    {this.state.panelFeedbackRendered?<PanelFeedback />:''}
+                  </Suspense>
                 </Panel>
 
               </Col>
@@ -177,25 +221,34 @@ class Investigator extends React.Component {
                   height={this.state.panelResearchProfileActive?'auto':0}
                   handler={this.togglePanel.bind(this)} panel={PANEL.RESEARCH_PROFILE}
                   onAnimationEnd={this.onAnimationEnd.bind(this)}>                
-                  <PanelResearchProfile />
+                  <Suspense fallback={<div>Loading...</div>}>
+                    {this.state.panelResearchProfileRendered?<PanelResearchProfile />:''}
+                  </Suspense>
                 </Panel>
                 <Panel title="Publications"
                   height={this.state.panelPublicationsActive?'auto':0}
                   handler={this.togglePanel.bind(this)} panel={PANEL.PUBLICATIONS}
                   onAnimationEnd={this.onAnimationEnd.bind(this)}>
-                  <PanelPublications />
+                  <Suspense fallback={<div>Loading...</div>}>
+                    {this.state.panelPublicationsRendered?<PanelPublications />:''}
+                  </Suspense>                  
                 </Panel>
                 <Panel title="Events"
                   height={this.state.panelEventsActive?'auto':0}
                   handler={this.togglePanel.bind(this)} panel={PANEL.EVENTS}
                   onAnimationEnd={this.onAnimationEnd.bind(this)}>
-                  <PanelEvents />
+                  <Suspense fallback={<div>Loading...</div>}>
+                    {this.state.panelEventsRendered?<PanelEvents />:''}
+                  </Suspense>                  
                 </Panel>
                 <Panel title="Clinical Trials"
                   height={this.state.panelClinicalTrialsActive?'auto':0}
                   handler={this.togglePanel.bind(this)} panel={PANEL.CLINICAL_TRIALS}
                   onAnimationEnd={this.onAnimationEnd.bind(this)}>
-                  <PanelClinicalTrials />
+                  <Suspense fallback={<div>Loading...</div>}>
+                    {this.state.panelClinicalTrialsRendered?<PanelClinicalTrials />:''}
+                  </Suspense>  
+
                 </Panel>
               </Col>
             </Row>
