@@ -33,6 +33,11 @@ class App extends React.Component {
     }
   }
 
+  logout(e){
+    localStorage.clear('token');
+    this.props.history.push('/')
+  }
+
   render() {
     console.log("ReRender")
     const isLogin = this.props.location.pathname == '/'
@@ -87,8 +92,8 @@ class App extends React.Component {
                     </Dropdown.Toggle>
 
                     <Dropdown.Menu align="right">
-                      <Dropdown.Item href="#/action-1">Sergi Torrellas</Dropdown.Item>
-                      <Dropdown.Item href="#/action-2">Logout</Dropdown.Item>
+                      <Dropdown.Item href="#">Sergi Torrellas</Dropdown.Item>
+                      <Dropdown.Item href="#" onClick={(e) => this.logout(e)}>Logout</Dropdown.Item>
                     </Dropdown.Menu>
                   </div>
                 </Dropdown>
