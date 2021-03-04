@@ -25,7 +25,6 @@ class InvestigatorMap extends React.Component {
   }
 
   generateMap(){
-    console.log("Generating map")
     // Themes end
     var continents = {
       "AF": 0,

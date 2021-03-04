@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 // Bootstrap
 import { Col, Row } from 'react-bootstrap';
 
 // React Router
 import { withRouter } from 'react-router-dom'
 
+// Loading Overlay
+import LoadingOverlay from 'react-loading-overlay';
+
 // Styles
 import "./investigator.scss"
-// Assets
+
 
 // Font Awesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -145,61 +148,65 @@ class Investigator extends React.Component {
           <InvestigatorProfile />
           <InvestigatorSnaphot />
 
-          <Row style={{ marginTop: '1em' }}>
-            <Col sm={6}>
-              <Panel title="Connections"
-                height={this.state.panelConnectionsActive?'auto':0}
-                handler={this.togglePanel.bind(this)} panel={PANEL.CONNECTIONS}
-                onAnimationEnd={this.onAnimationEnd.bind(this)}>
-                <PanelConnections />
-              </Panel>
-              <Panel title="Company Cooperation"
-                height={this.state.panelCompanyCooperationActive?'auto':0}
-                handler={this.togglePanel.bind(this)} panel={PANEL.COMPANY_COOPERATION}
-                onAnimationEnd={this.onAnimationEnd.bind(this)}>                        
-                <PanelCompanyCooperation/>
-              </Panel>
-              <Panel title="Affiliations"
-                height={this.state.panelAffiliationsActive?'auto':0}
-                handler={this.togglePanel.bind(this)} panel={PANEL.AFFILIATIONS}
-                onAnimationEnd={this.onAnimationEnd.bind(this)}>
-                <PanelAffiliations />
-              </Panel>
-              <Panel title="Feedback"
-                height={this.state.panelFeedbackActive?'auto':0}
-                handler={this.togglePanel.bind(this)} panel={PANEL.FEEDBACK}
-                onAnimationEnd={this.onAnimationEnd.bind(this)}>
-                <PanelFeedback />
-              </Panel>
 
-            </Col>
-            <Col sm={6}>
-              <Panel title="Research Profile"
-                height={this.state.panelResearchProfileActive?'auto':0}
-                handler={this.togglePanel.bind(this)} panel={PANEL.RESEARCH_PROFILE}
-                onAnimationEnd={this.onAnimationEnd.bind(this)}>                
-                <PanelResearchProfile />
-              </Panel>
-              <Panel title="Publications"
-                height={this.state.panelPublicationsActive?'auto':0}
-                handler={this.togglePanel.bind(this)} panel={PANEL.PUBLICATIONS}
-                onAnimationEnd={this.onAnimationEnd.bind(this)}>
-                <PanelPublications />
-              </Panel>
-              <Panel title="Events"
-                height={this.state.panelEventsActive?'auto':0}
-                handler={this.togglePanel.bind(this)} panel={PANEL.EVENTS}
-                onAnimationEnd={this.onAnimationEnd.bind(this)}>
-                <PanelEvents />
-              </Panel>
-              <Panel title="Clinical Trials"
-                height={this.state.panelClinicalTrialsActive?'auto':0}
-                handler={this.togglePanel.bind(this)} panel={PANEL.CLINICAL_TRIALS}
-                onAnimationEnd={this.onAnimationEnd.bind(this)}>
-                <PanelClinicalTrials />
-              </Panel>
-            </Col>
-          </Row>
+          <Suspense fallback={<div>Loading...</div>}>            
+            <Row style={{ marginTop: '1em' }}>
+              <Col sm={6}>
+                <Panel title="Connections"
+                  height={this.state.panelConnectionsActive?'auto':0}
+                  handler={this.togglePanel.bind(this)} panel={PANEL.CONNECTIONS}
+                  onAnimationEnd={this.onAnimationEnd.bind(this)}>
+                  <PanelConnections />
+                </Panel>
+                <Panel title="Company Cooperation"
+                  height={this.state.panelCompanyCooperationActive?'auto':0}
+                  handler={this.togglePanel.bind(this)} panel={PANEL.COMPANY_COOPERATION}
+                  onAnimationEnd={this.onAnimationEnd.bind(this)}>                        
+                  <PanelCompanyCooperation/>
+                </Panel>
+                <Panel title="Affiliations"
+                  height={this.state.panelAffiliationsActive?'auto':0}
+                  handler={this.togglePanel.bind(this)} panel={PANEL.AFFILIATIONS}
+                  onAnimationEnd={this.onAnimationEnd.bind(this)}>
+                  <PanelAffiliations />
+                </Panel>
+                <Panel title="Feedback"
+                  height={this.state.panelFeedbackActive?'auto':0}
+                  handler={this.togglePanel.bind(this)} panel={PANEL.FEEDBACK}
+                  onAnimationEnd={this.onAnimationEnd.bind(this)}>
+                  <PanelFeedback />
+                </Panel>
+
+              </Col>
+              <Col sm={6}>
+                <Panel title="Research Profile"
+                  height={this.state.panelResearchProfileActive?'auto':0}
+                  handler={this.togglePanel.bind(this)} panel={PANEL.RESEARCH_PROFILE}
+                  onAnimationEnd={this.onAnimationEnd.bind(this)}>                
+                  <PanelResearchProfile />
+                </Panel>
+                <Panel title="Publications"
+                  height={this.state.panelPublicationsActive?'auto':0}
+                  handler={this.togglePanel.bind(this)} panel={PANEL.PUBLICATIONS}
+                  onAnimationEnd={this.onAnimationEnd.bind(this)}>
+                  <PanelPublications />
+                </Panel>
+                <Panel title="Events"
+                  height={this.state.panelEventsActive?'auto':0}
+                  handler={this.togglePanel.bind(this)} panel={PANEL.EVENTS}
+                  onAnimationEnd={this.onAnimationEnd.bind(this)}>
+                  <PanelEvents />
+                </Panel>
+                <Panel title="Clinical Trials"
+                  height={this.state.panelClinicalTrialsActive?'auto':0}
+                  handler={this.togglePanel.bind(this)} panel={PANEL.CLINICAL_TRIALS}
+                  onAnimationEnd={this.onAnimationEnd.bind(this)}>
+                  <PanelClinicalTrials />
+                </Panel>
+              </Col>
+            </Row>
+          </Suspense>
+
 
 
         </Col>
