@@ -22,6 +22,7 @@ import source from './source'
 
 cytoscape.use(euler);
 
+const TAB = { NETWORK: 1, PROFILES: 2, }
 class PanelConnections extends React.Component {
 
   constructor(props) {
@@ -29,7 +30,8 @@ class PanelConnections extends React.Component {
     this.state = {
       showModal: false,
       showModalCytoscape: false,
-      activeTab: 'network'
+      activeTab: TAB.NETWORK,
+      modalNetwork: undefined
     }
   }
 
@@ -97,7 +99,7 @@ class PanelConnections extends React.Component {
     const networkContent = this.state.showModalCytoscape ? cytoscape : '';
 
     const { activeTab } = this.state;
-    const content = (activeTab == 'network')?networkContent:<div>ProfilesConetent</div>
+    const content = (activeTab == TAB.NETWORK)?networkContent:<div>ProfilesConetent</div>
 
     return (
       <div>
@@ -178,10 +180,12 @@ class PanelConnections extends React.Component {
               <div  style={{ width: '100%'}} >
                 <Nav variant="tabs" style={{ width: '100%'}}>
                   <Nav.Item>
-                    <Nav.Link href="#" active={activeTab == 'network'} onClick={(e) => this.setState({ activeTab: 'network' })}>Network</Nav.Link>
+                    <Nav.Link href="#" active={activeTab == TAB.NETWORK} 
+                      onClick={(e) => this.setState({ activeTab: TAB.NETWORK })}>Network</Nav.Link>
                   </Nav.Item>
                   <Nav.Item>
-                    <Nav.Link href="#" active={activeTab == 'profiles'} onClick={(e) => this.setState({ activeTab: 'profiles' })}>Profiles</Nav.Link>
+                    <Nav.Link href="#" active={activeTab == TAB.PROFILES} 
+                      onClick={(e) => this.setState({ activeTab: TAB.PROFILES })}>Profiles</Nav.Link>
                   </Nav.Item>
                 </Nav>
               </div>

@@ -17,7 +17,6 @@ import InvestigatorMap from '../components/investigatorlist/investigatormap';
 //const InvestigatorMap = React.lazy(() => import('../components/investigatorlist/investigatormap'));
 
 const TAB = { TABLE: 1, MAP: 2, }
-
 class InvestigatorList extends React.Component {
 
   constructor(props) {
