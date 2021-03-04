@@ -10,6 +10,9 @@ import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 import am4geodata_worldLow from "@amcharts/amcharts4-geodata/worldLow";
 import am4geodata_data_countries2 from "@amcharts/amcharts4-geodata/data/countries2";
 
+// Loading overlay
+import LoadingOverlay from 'react-loading-overlay';
+
 am4core.useTheme(am4themes_animated);
 
 class InvestigatorMap extends React.Component {
@@ -134,10 +137,12 @@ class InvestigatorMap extends React.Component {
         backgroundColor: 'white', border: '1px solid',
         borderColor: 'transparent #dee2e6 #dee2e6 #dee2e6', borderRadius: '0 .25rem 0 .25rem',
         minHeight: '50vh', padding: '2em'
-      }}>
-        <div className="w-100">
-          <div id="mapdiv" style={{height:'400px', marginTop:'20px'}}></div>
-        </div>
+      }}>        
+          <LoadingOverlay
+            active={this.state.isOpened == false}
+            spinner>              
+            <div id="mapdiv"  className="w-100" style={{height:'400px', marginTop:'20px'}}></div>
+          </LoadingOverlay>        
       </div>
     );
   }
