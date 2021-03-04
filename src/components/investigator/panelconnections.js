@@ -10,7 +10,7 @@ import './modal.scss';
 
 // Font Awesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faExpandArrowsAlt } from '@fortawesome/free-solid-svg-icons'
+import { faExpandArrowsAlt, faFolder, faBook, faCalendarWeek, faHome  } from '@fortawesome/free-solid-svg-icons'
 
 // Cytoscape
 import CytoscapeComponent from 'react-cytoscapejs';
@@ -21,6 +21,29 @@ import euler from 'cytoscape-euler';
 import source from './source'
 
 cytoscape.use(euler);
+
+function NodeDetail(props) {
+
+  return (
+    <div style={{ fontSize: '14px', color: "#000000"}}>
+    <p style={{fontSize: '18px', color:"#337ab7" }}>Joachim Rother</p>
+    <p>Asklepios Kliniken - Asklepios Klinik Altona, Abteilung für Neurologie</p>
+    <p>
+      <FontAwesomeIcon icon={faFolder} />
+      <span className="ml-2">All</span>
+    </p>
+    <p><FontAwesomeIcon icon={faFolder} />
+    <span className="ml-2">Trials</span></p>
+    <p>
+    <FontAwesomeIcon icon={faCalendarWeek} />
+    <span className="ml-2">Events</span></p>
+    <p><FontAwesomeIcon icon={faBook} /><span className="ml-2">Publications</span></p>
+    <p><FontAwesomeIcon icon={faHome} /><span className="ml-2">Affiliations (past)</span></p>
+    <p><FontAwesomeIcon icon={faHome} /><span className="ml-2">Affiliations (present)</span></p>
+  </div>
+  );
+}
+
 
 const TAB = { NETWORK: 1, PROFILES: 2, }
 class PanelConnections extends React.Component {
@@ -33,6 +56,50 @@ class PanelConnections extends React.Component {
       activeTab: TAB.NETWORK,
       modalNetwork: undefined
     }
+    this.cytoscape = undefined
+    this.cytoscapeStylesheet = [ {
+        selector: 'node',
+        css: {
+          'height': 10,
+          'width': 10,
+          'background-color': '#FFFFFF',
+          'border-color': '#4283f1',
+          'border-width': 1,
+          'border-opacity': 0.5,
+          'background-image': 'data(image)',
+          'background-width': '60%',
+          'background-height': '60%',
+          'label': 'data(label)',
+          'font-size': 6,
+          'color': 'gray',
+        }
+      },
+      {
+        selector: 'edge',
+        css: { 'line-color': 'data(color)', 'width': 1, }
+      },
+      {
+        selector: 'node:selected',
+        css: {
+          'height': 14,
+          'width': 14,
+          'background-color': '#FFFFFF',
+          'border-color': '#4283f1',
+          'border-width': 1,
+          'border-opacity': 0.5,
+          'background-image': 'https://demo.explicatos.com/img/user.png',
+          'background-width': '60%',
+          'background-height': '60%',
+          'label': 'data(label)',
+          'font-size': 11,
+        }
+      }]
+      this.cytoscapeLayout = {
+        name: 'euler',
+        randomize: true,
+        animate: false,
+      }
+    
   }
 
   openModal(e) {
@@ -45,113 +112,68 @@ class PanelConnections extends React.Component {
     this.setState({ showModal: false, showModalCytoscape: false })
   }
 
+  generateProfiles(){
+    const base =
+    {
+      label: 'Roman',
+      affiliation: 'Charité Universitätsmedizin Berlin (Campus Benjamin Franklin), Klinik für Neurologie mit Experimenteller Neurologie',
+      url: '/project/${user.medical_expert_oid}/'
+    }
+    const data = Array(10).fill(base);
+
+    return <div style={{ display: "flex", flexWrap: "wrap" }}>
+            {data.map( (item, id) => 
+                  <div style={{ width:"33%", padding: '1em'}}>                  
+                  {item.url===''?
+                  <p style={{fontSize: '18px', color:"#337ab7" }}>{item.label}</p>
+                  :
+                  <a href="#" target="_blank" >
+                      <b>{item.label}</b>
+                  </a>
+                  }
+                  <p style={{ fontSize: '14px'}}>{item.affiliation}</p>
+                  
+              </div>
+            )}
+
+    </div>
+  }
+
+  componentDidUpdate(){
+    console.log("Mounted", this.cy)
+    if(this.cy !== undefined ){
+      this.cy.on('select', 'node', function (evt) {
+         var data = evt.target[0].data();
+         console.log(data )
+      });
+    }
+
+  }
+
   render() {
-    const cytoscape = <CytoscapeComponent
-      elements={source}
-      cy={(cy) => { this.cy = cy }}
-      style={{ width: '100%', height: '100%' }}
-      stylesheet={
-        [{
-          selector: 'node',
-          css: {
-            'height': 10,
-            'width': 10,
-            'background-color': '#FFFFFF',
-            'border-color': '#4283f1',
-            'border-width': 1,
-            'border-opacity': 0.5,
-            'background-image': 'data(image)',
-            'background-width': '60%',
-            'background-height': '60%',
-            'label': 'data(label)',
-            'font-size': 6,
-            'color': 'gray',
-          }
-        },
-        {
-          selector: 'edge',
-          css: {
-            'line-color': 'data(color)',
-            'width': 1,
-          }
-        },
-        {
-          selector: 'node:selected',
-          css: {
-            'height': 14,
-            'width': 14,
-            'background-color': '#FFFFFF',
-            'border-color': '#4283f1',
-            'border-width': 1,
-            'border-opacity': 0.5,
-            'background-image': 'https://demo.explicatos.com/img/user.png',
-            'background-width': '60%',
-            'background-height': '60%',
-            'label': 'data(label)',
-            'font-size': 11,
-          }
-        }]}
-      layout={{
-        name: 'euler',
-        randomize: true,
-        animate: false,
-      }} />;
-    const networkContent = this.state.showModalCytoscape ? cytoscape : '';
+    
+    if ( this.cytoscape === undefined ) {
+      this.cytoscape = <CytoscapeComponent
+                        elements={source}
+                        cy={(cy) => { this.cy = cy }}
+                        style={{ width: '100%', height: '100%' }}
+                        stylesheet={this.cytoscapeStylesheet}
+                        layout={this.cytoscapeLayout} />;
+    }
+
+    // NetworkContent
+    const networkContent = this.state.showModalCytoscape ? this.cytoscape : '';
 
     const { activeTab } = this.state;
-    const content = (activeTab == TAB.NETWORK)?networkContent:<div>ProfilesConetent</div>
+    const content = (activeTab == TAB.NETWORK)?networkContent:this.generateProfiles()
 
     return (
       <div>
         <CytoscapeComponent
           elements={source}
           style={{ width: '100%', height: '300px' }}
-          stylesheet={
-            [{
-              selector: 'node',
-              css: {
-                'height': 10,
-                'width': 10,
-                'background-color': '#FFFFFF',
-                'border-color': '#4283f1',
-                'border-width': 1,
-                'border-opacity': 0.5,
-                'background-image': 'data(image)',
-                'background-width': '60%',
-                'background-height': '60%',
-                'label': 'data(label)',
-                'font-size': 6,
-                'color': 'gray',
-              }
-            },
-            {
-              selector: 'edge',
-              css: {
-                'line-color': 'data(color)',
-                'width': 1,
-              }
-            },
-            {
-              selector: 'node:selected',
-              css: {
-                'height': 14,
-                'width': 14,
-                'background-color': '#FFFFFF',
-                'border-color': '#4283f1',
-                'border-width': 1,
-                'border-opacity': 0.5,
-                'background-image': 'https://demo.explicatos.com/img/user.png',
-                'background-width': '60%',
-                'background-height': '60%',
-                'label': 'data(label)',
-                'font-size': 11,
-              }
-            }]}
-          layout={{
-            name: 'euler',
-            randomize: true,
-            animate: false,
-          }} />
+          stylesheet={this.cytoscapeStylesheet}
+          layout={this.cytoscapeLayout} />
         <div className="text-right pr-2 pb-1" style={{ cursor: 'pointer' }} onClick={(e) => this.openModal(e)}>
           <FontAwesomeIcon icon={faExpandArrowsAlt} />
         </div>
@@ -166,14 +188,16 @@ class PanelConnections extends React.Component {
           </Modal.Header>
           <Modal.Body>
             <div className="d-flex" style={{ height: '100%'}}>
-              <div style={{ width: '20%'}}>
+              <div style={{ width: '30%'}}>
                 <div style={{ borderRadius: '3px', border: '1px solid #ccc', color: '#555'}}>
                   <div className="font-weight-bold" style={{ paddingLeft: '15%', fontSize: '16px', backgroundColor: '#ddd' }}>FILTERS</div>
                   <div>Here my Content</div>
                 </div>
                 <div className="mt-3" style={{ borderRadius: '3px', border: '1px solid #ccc', color: '#555'}}>
                   <div className="font-weight-bold" style={{ paddingLeft: '15%', fontSize: '16px', backgroundColor: '#ddd' }}>DETAILS</div>
-                  <div>Here my Content</div>
+                  <div className="p-3">
+                    <NodeDetail />
+                  </div>
                 </div>
               </div>
               <div className="ml-3 d-flex h-100 w-100" style={{ flexDirection: 'column'}}>
@@ -190,9 +214,10 @@ class PanelConnections extends React.Component {
                 </Nav>
               </div>
 
-              <div className="h-100" style={{ borderRadius: '0 3px 3px 3px', border: '1px solid #dee2e6 ', borderTop: 0}}>
-                  {content}
+                <div className="h-100" style={{ borderRadius: '0 3px 3px 3px', border: '1px solid #dee2e6 ', borderTop: 0}}>
+                  {content}                  
                 </div>
+
               </div>
             </div>
           </Modal.Body>
