@@ -20,15 +20,8 @@ class ProjectSelector extends React.Component {
     console.log("items ", items)
     return (
       <Row>
-        <Col sm={12} style={{
-          backgroundColor: 'white', border: '1px solid',
-          borderColor: 'transparent #dee2e6 #dee2e6 #dee2e6', borderRadius: '0 .25rem 0 .25rem',
-          minHeight: '50vh', padding: '2em'
-        }}>
-          <div style={{ borderBottom: '1px solid #ccc', color: 'grey'}}>
-            SELECT YOUR PLAN
-          </div>
-
+        <Col sm={12} className='page-container'>
+          <div className="page-title">SELECT YOUR PLAN</div>
           <div className="d-flex flex-wrap" style={{ padding: '2em' }}>
             {items.map((item, id) =>
               <div key={id} style={{ padding: '1em 1em 0 1em', width: '33%', minWidth: '300px'  }} onClick={ (e) => this.props.history.push('/project/123')}>

@@ -136,15 +136,9 @@ class Investigator extends React.Component {
 
     return (
       <Row>
-        <Col sm={12} style={{
-          backgroundColor: 'white', border: '1px solid',
-          borderColor: 'transparent #dee2e6 #dee2e6 #dee2e6', borderRadius: '0 .25rem 0 .25rem',
-          minHeight: '50vh', padding: '2em'
-        }}>
+        <Col sm={12} className='page-container'>
+          <div className="page-title">Professor 123</div>
 
-          <div style={{ borderBottom: '1px solid #ccc', color: 'grey', background: 'white' }}>
-            Professor 123
-          </div>
           <InvestigatorProfile />
           <InvestigatorSnaphot />
 

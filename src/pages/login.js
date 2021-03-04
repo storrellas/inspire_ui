@@ -21,15 +21,8 @@ class Login extends React.Component {
   render() {
     return (
       <Row>
-        <Col sm={12} style={{
-          backgroundColor: 'white', border: '1px solid',
-          borderColor: 'transparent #dee2e6 #dee2e6 #dee2e6', borderRadius: '0 .25rem 0 .25rem',
-          minHeight: '50vh', padding: '2em'
-        }}>
-
-          <div style={{ borderBottom: '1px solid #ccc', color: 'grey'}}>
-            LOGIN
-          </div>
+        <Col sm={12} className='page-container'>
+          <div className="page-title">LOGIN</div>
           <div style={{ margin: '0 auto', padding: '3em 10% 3em 10%', maxWidth: '600px' }}>
 
             <div>
