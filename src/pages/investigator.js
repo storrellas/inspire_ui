@@ -68,6 +68,18 @@ function Panel(props) {
   );
 }
 
+function LoadingOverlayContainer(props) {
+
+  const classNameStr = (props.height === 0) ? "panel-caret mr-2" : "panel-caret active mr-2";
+  return (
+    <LoadingOverlay
+            active
+            spinner
+            text="Loading ...">
+            <div style={{ height: '200px' }}></div>
+    </LoadingOverlay>
+  );
+}
 
 
 const mapDispatchToProps = (dispatch) => {
@@ -81,7 +93,8 @@ class Investigator extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      ... this.getInitialState()
+      ... this.getInitialState(),
+      showPanels: false,
     }
   }
 
@@ -132,6 +145,15 @@ class Investigator extends React.Component {
     this.props.setPanelRendered(panel)
   }
 
+  componentDidMount(){
+    console.log("Showing pannels")
+
+    const that = this;
+    setTimeout(function () { that.setState({showPanels:true}) }, 500);
+
+
+  }
+
   render() {
 
     return (
@@ -143,7 +165,8 @@ class Investigator extends React.Component {
           <InvestigatorSnaphot />
 
 
-          <Suspense fallback={<div>Loading...</div>}>            
+          <Suspense fallback={<div style={{color: 'black' }}>Loading...</div>}>
+            {this.state.showPanels?          
             <Row style={{ marginTop: '1em' }}>
               <Col sm={6}>
                 <Panel title="Connections"
@@ -199,6 +222,7 @@ class Investigator extends React.Component {
                 </Panel>
               </Col>
             </Row>
+            :<LoadingOverlayContainer />}
           </Suspense>
 
 
