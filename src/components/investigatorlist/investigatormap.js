@@ -21,8 +21,8 @@ class InvestigatorMap extends React.Component {
     }
   }
 
-  componentDidMount(){
-
+  generateMap(){
+    console.log("Generating map")
     // Themes end
     var continents = {
       "AF": 0,
@@ -108,6 +108,12 @@ class InvestigatorMap extends React.Component {
 
 
     this.chart = chart
+
+    this.setState({ isOpened: true})
+  }
+
+  componentDidMount(){
+    //this.generateMap()
   }
 
   componentWillUnmount() {
@@ -117,6 +123,12 @@ class InvestigatorMap extends React.Component {
   }
 
   render(){
+    if ( this.state.isOpened == false) {
+      const that = this;
+      setTimeout(function () { that.generateMap() }, 200);
+    }
+
+
     return (
       <div style={{
         backgroundColor: 'white', border: '1px solid',
