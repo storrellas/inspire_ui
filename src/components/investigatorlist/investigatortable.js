@@ -19,6 +19,9 @@ import { faStar, faSearch } from '@fortawesome/free-solid-svg-icons'
 import axios from 'axios';
 import environment from '../../environment.json';
 
+// React Select
+import Select from 'react-select';
+
 // Project Imports
 import InspirePagination from '../shared/pagination'
 
@@ -55,6 +58,7 @@ const SearchHeader = (props) => {
   );
 }
 
+
 class InvestigatorTable extends React.Component {
 
   constructor(props) {
@@ -64,8 +68,12 @@ class InvestigatorTable extends React.Component {
       totalPage: 10,
       take: 100,
       limit: 100,
-      investigatorList: []
+      investigatorList: [],
+      isLoading: false,
+      meshOptions: []
     }
+
+    this.typingTimeout = undefined
   }
 
   async loadInvestigators(page){
@@ -116,8 +124,50 @@ class InvestigatorTable extends React.Component {
     this.loadInvestigators(this.state.currentPage)
   }
 
+  async loadMesh(pattern){
+    console.log("loading mesh")
+    try{
+
+      const token = localStorage.getItem('token')
+      const response = await axios.get(`${environment.base_url}/api/meshs/?limit=10&ordering=name&name=${pattern}`,
+        { headers: { "Authorization": "jwt " + token }
+      })
+
+      // Autocomplete
+      const meshOptions = []
+      for(const mesh of response.data.results ){
+        meshOptions.push({value:mesh.oid, label: mesh.name})
+      }
+      this.setState({meshOptions: meshOptions})
+    }catch(error){
+
+      // Error
+      if (error.response) {
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+          console.log(error.request);
+      } else {
+          console.log('Error', error.message);
+      }
+
+    }   
+  }
+
+  onMeshFill(pattern){
+    const that = this;
+
+    // Clear timeout
+    if ( this.typingTimeout ) {
+      clearTimeout(this.typingTimeout);
+    }
+    this.typingTimeout = 
+      setTimeout(function () {that.loadMesh(pattern);}, 2000)
+  }
+
   render() {
-    const { currentPage, totalPage } = this.state;
+    const { currentPage, totalPage, meshOptions } = this.state;
 
     return (
       <Row style={{ padding: 0, margin: 0 }}>
@@ -126,6 +176,17 @@ class InvestigatorTable extends React.Component {
           borderColor: 'transparent #dee2e6 #dee2e6 #dee2e6', borderRadius: '0 .25rem 0 .25rem',
           minHeight: '50vh', padding: '2em', overflow: 'hidden'
         }}>
+
+        <div className="d-flex justify-content-end pt-3 pb-3">
+          <div style={{ width: '40%'}}>
+          <Select isLoading={this.state.isLoading} isClearable 
+                isSearchable options={meshOptions} 
+                onInputChange={(e) => this.onMeshFill(e)} 
+                onChange={ (e) => console.log("e", e)}
+                />
+          </div>
+        </div>
+
 
           <table className="w-100">
             <thead>
@@ -189,19 +250,7 @@ class InvestigatorTable extends React.Component {
             </tbody>
           </table>
 
-          {/* <div className="w-100 text-right">
-            <div style={{ display: 'inline-block', padding: '1em' }}>
-              <Pagination bsPrefix="inspire-pagination">
-                <Pagination.First disabled={currentPage === 1}
-                  onClick={(e) => this.setState({ currentPage: (currentPage - 1) })} />
-                {items}
-                <Pagination.Last disabled={currentPage === totalPage}
-                  onClick={(e) => this.setState({ currentPage: (currentPage + 1) })} />
-              </Pagination>
-            </div>
-          </div> */}
           <InspirePagination currentPage={currentPage} totalPage={totalPage} onClick={this.navigatePage.bind(this)}/>
-
 
         </Col>
       </Row>
