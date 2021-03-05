@@ -91,27 +91,27 @@ const InvestigatorTable = (props) => {
             </tr>
           </thead>
           <tbody>
-            {props.data.map((item, id) =>
+            {props.investigatorList.map((item, id) =>
               <tr key={id}>
                 <td style={{ cursor: 'pointer' }}>
                   <FontAwesomeIcon icon={faStar} style={{ border: '1px solid grey', fontSize: '2em', color: 'grey' }} />
                 </td>
                 <td>
                   <img src={arrow} width="40"
-                    onClick={(e) => props.history.push('/project/123/investigator/123')}
+                    onClick={(e) => props.history.push(`/project/${props.projectOid}/investigator/${item.oid}`)}
                     style={{ cursor: 'pointer' }}></img>
                 </td>
-                <td>{item.firstName}</td>
-                <td>{item.lastName}</td>
-                <td>{item.specialties}</td>
-                <td>{item.focusArea}</td>
-                <td>{item.city}</td>
-                <td>{item.country}</td>
-                <td>{item.publications}</td>
-                <td>{item.experiments}</td>
-                <td>{item.clinicalTrials}</td>
-                <td>{item.conflicOfInterest}</td>
-                <td></td>
+                <td className="text-center">{item.first_name}</td>
+                <td className="text-center">{item.last_name}</td>
+                <td className="text-center">{item.prop_specialties}</td>
+                <td className="text-center">{item.focus_areas_reasearch_interests}</td>
+                <td className="text-center">{item.city}</td>
+                <td className="text-center">{item.country}</td>
+                <td className="text-center">{item.number_linked_publications}</td>
+                <td className="text-center">{item.number_linked_events}</td>
+                <td className="text-center">{item.number_linked_clinical_trials}</td>
+                <td className="text-center">{item.number_linked_institutions_coi}</td>
+                <td className="text-center">{item.mesh_counter}</td>
               </tr>
             )}
           </tbody>
