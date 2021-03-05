@@ -23,7 +23,7 @@ class InvestigatorList extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      activeTab: TAB.MAP,
+      activeTab: TAB.TABLE,
       map: undefined,
       projectOid: undefined,
     }

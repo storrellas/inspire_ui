@@ -5,7 +5,7 @@ import {  Dropdown, Pagination } from 'react-bootstrap';
 // React Router
 import { withRouter } from 'react-router-dom'
 
-
+import './pagination.scss'
 
 const InspirePagination = (props) => {
   // Generate startPage/endPage

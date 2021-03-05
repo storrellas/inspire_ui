@@ -25,39 +25,64 @@ import Select from 'react-select';
 // Project Imports
 import InspirePagination from '../shared/pagination'
 
+// const SearchHeader = (props) => {
+
+//   const [show, setShow] = useState(false);
+
+//   function handleOpen(e) {
+//     e.preventDefault();
+//     setShow(true);
+//   }
+
+//   function handleClose(e) {
+//     e.preventDefault();
+//     setShow(false);
+//   }
+//   return (
+//     <div className="text-right" style={{ cursor: 'pointer' }}>
+//       <Dropdown
+//         onMouseEnter={(e) => handleOpen(e)}
+//         onMouseLeave={(e) => handleClose(e)}
+//         show={show}>
+//         <Dropdown.Toggle variant="success" id="dropdown-basic" style={{ backgroundColor: 'transparent', border: 0, boxShadow: 'none' }}>
+//           <FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} />
+          
+//         </Dropdown.Toggle>
+//         <Dropdown.Menu>
+//           <Dropdown.Item href="#/action-1">Project1</Dropdown.Item>
+//           <Dropdown.Item href="#/action-1">Project2</Dropdown.Item>
+//           <Dropdown.Item href="#/action-1">Project3</Dropdown.Item>
+//           <Dropdown.Item href="#/action-1">Project4</Dropdown.Item>
+//         </Dropdown.Menu>
+//       </Dropdown>
+//     </div>
+//   );
+// }
+
+
 const SearchHeader = (props) => {
 
-  const [show, setShow] = useState(false);
-
-  function handleOpen(e) {
-    e.preventDefault();
-    setShow(true);
-  }
-
-  function handleClose(e) {
-    e.preventDefault();
-    setShow(false);
-  }
   return (
-    <div className="text-right" style={{ cursor: 'pointer' }}>
-      <Dropdown
-        onMouseEnter={(e) => handleOpen(e)}
-        onMouseLeave={(e) => handleClose(e)}
-        show={show}>
-        <Dropdown.Toggle variant="success" id="dropdown-basic" style={{ backgroundColor: 'transparent', border: 0, boxShadow: 'none' }}>
-          <FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} />
-        </Dropdown.Toggle>
-        <Dropdown.Menu>
-          <Dropdown.Item href="#/action-1">Project1</Dropdown.Item>
-          <Dropdown.Item href="#/action-1">Project2</Dropdown.Item>
-          <Dropdown.Item href="#/action-1">Project3</Dropdown.Item>
-          <Dropdown.Item href="#/action-1">Project4</Dropdown.Item>
-        </Dropdown.Menu>
-      </Dropdown>
+    <div className="d-flex align-items-center pl-2" style={{ cursor: 'pointer' }}>
+      <input className="inspire-table-search" onChange={(e) => props.onChange(e.target.value)}></input>
+      <FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} />
     </div>
   );
 }
 
+const FILTERING = {
+  FIRST_NAME: 'first_name',
+  LAST_NAME: 'last_name',
+  SPECIALITIES: 'prop_specialties',
+  FOCUS_AREA: 'focus_areas_reasearch_interests',
+  CITY: 'city',
+  COUNTRY: 'country',
+  PUBLICATIONS: 'number_linked_publications',
+  EVENTS: 'number_linked_events',
+  CT: 'number_linked_clinical_trials',
+  COI: 'number_linked_institutions_coi',
+  SCORE: 'mesh_counter',
+}
 
 class InvestigatorTable extends React.Component {
 
@@ -179,7 +204,10 @@ class InvestigatorTable extends React.Component {
 
     const { currentPage } = this.state;
     this.loadInvestigators(currentPage, meshOid)
+  }
 
+  loadFilteredInvestigators(key, value){
+    console.log("loadFilteredInvestigators ", key, value)
 
   }
 
@@ -226,17 +254,27 @@ class InvestigatorTable extends React.Component {
               </tr>
               <tr style={{ border: '1px solid grey', borderWidth: '1px 0px 2px 0px' }}>
                 <td></td>
-                <td><SearchHeader /></td>
-                <td><SearchHeader /></td>
-                <td><SearchHeader /></td>
-                <td><SearchHeader /></td>
-                <td><SearchHeader /></td>
-                <td><SearchHeader /></td>
-                <td><SearchHeader /></td>
-                <td><SearchHeader /></td>
-                <td><SearchHeader /></td>
-                <td><SearchHeader /></td>
-                <td><SearchHeader /></td>
+                <td></td>
+                <td><SearchHeader 
+                      onChange={(pattern) => this.loadFilteredInvestigators(FILTERING.FIRST_NAME, pattern)}/></td>
+                <td><SearchHeader 
+                      onChange={(pattern) => this.loadFilteredInvestigators(FILTERING.LAST_NAME, pattern)}/></td>
+                <td><SearchHeader 
+                      onChange={(pattern) => this.loadFilteredInvestigators(FILTERING.SPECIALITIES, pattern)}/></td>
+                <td><SearchHeader 
+                      onChange={(pattern) => this.loadFilteredInvestigators(FILTERING.FOCUS_AREA, pattern)}/></td>
+                <td><SearchHeader 
+                      onChange={(pattern) => this.loadFilteredInvestigators(FILTERING.CITY, pattern)}/></td>
+                <td><SearchHeader 
+                      onChange={(pattern) => this.loadFilteredInvestigators(FILTERING.COUNTRY, pattern)}/></td>
+                <td><SearchHeader 
+                      onChange={(pattern) => this.loadFilteredInvestigators(FILTERING.PUBLICATIONS, pattern)}/></td>
+                <td><SearchHeader 
+                      onChange={(pattern) => this.loadFilteredInvestigators(FILTERING.EVENTS, pattern)}/></td>
+                <td><SearchHeader 
+                      onChange={(pattern) => this.loadFilteredInvestigators(FILTERING.CT, pattern)}/></td>
+                <td><SearchHeader 
+                      onChange={(pattern) => this.loadFilteredInvestigators(FILTERING.COI, pattern)}/></td>
                 <td></td>
               </tr>
             </thead>

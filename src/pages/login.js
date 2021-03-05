@@ -32,7 +32,6 @@ class Login extends React.Component {
         username: this.state.username,
         password: this.state.password
       }
-      console.log("body ", body )
       const response = await axios.post(`${environment.base_url}/api/auth-get-token/`, body)
 
       // Store in localStorage
