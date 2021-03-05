@@ -1,0 +1,29 @@
+.inspire-pagination{
+    display: flex;
+    padding-left: 0;
+    list-style: none;
+    border-radius: .25rem;
+    padding: 1em;
+    margin: 0;
+
+    li{
+        padding: 0.2em 0.4em 0.2em 0.4em;
+        margin: 0.1em;
+        border-radius: 3px;
+        &.active, &:hover{
+            background-color: #4285f4;
+            color: white;
+            
+        }
+    }
+    li.previous{
+        padding: 0.2em 0.4em 0.2em 0.4em;
+        margin: 0.1em;
+        border-radius: 3px;
+        font-weight: bold;
+
+        a::after{
+            content: '<';
+        }
+    }
+}
