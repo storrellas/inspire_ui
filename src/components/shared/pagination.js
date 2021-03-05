@@ -16,6 +16,7 @@ const InspirePagination = (props) => {
   }
   if (props.currentPage + 3 > props.totalPage) {
     startPage = props.totalPage - 4; endPage = props.totalPage;
+    if(startPage < 1) startPage = 1;
   }
   let items = []
   for (let page = startPage; page <= endPage; page++) {

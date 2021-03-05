@@ -70,34 +70,40 @@ class InvestigatorTable extends React.Component {
       limit: 100,
       investigatorList: [],
       isLoading: false,
-      meshOptions: []
+      meshOptions: [],
+      meshOid: undefined
     }
 
     this.typingTimeout = undefined
   }
 
-  async loadInvestigators(page){
+  async loadInvestigators(page = 1, meshOid = undefined){
     try{
       const { match: { params } } = this.props;
       const projectOid = params.id;
       const { take, limit } = this.state;
 
       // Request investigators
-      let skip = this.state.take * this.state.currentPage;
-      let offset = this.state.take * this.state.currentPage;
+      let skip = this.state.take * (this.state.currentPage-1);
+      let offset = this.state.take * (this.state.currentPage -1);
       const token = localStorage.getItem('token')
-      const urlParams = `project=${projectOid}&limit=${limit}&offset=${offset}&skip=${skip}&take=${take}`
+      let urlParams = `project=${projectOid}&limit=${limit}&offset=${offset}&skip=${skip}&take=${take}`
+      if( meshOid !== undefined ){
+        urlParams = `${urlParams}&mesh=${meshOid}`;
+      }
       const response = await axios.get(`${environment.base_url}/api/investigators/?${urlParams}`,
         { headers: { "Authorization": "jwt " + token }
       })
 
       const totalPage = Math.ceil(response.data.count / take);
 
+      clearTimeout(this.typingTimeout);
       this.setState({
         investigatorList: response.data.results, 
         projectOid: projectOid,
         currentPage: page,
-        totalPage: totalPage
+        totalPage: totalPage,
+        meshOid: meshOid
       })
     }catch(error){
 
@@ -120,12 +126,10 @@ class InvestigatorTable extends React.Component {
   }
 
   componentDidMount(){
-    // Load Investigators
-    this.loadInvestigators(this.state.currentPage)
+    this.loadInvestigators()
   }
 
   async loadMesh(pattern){
-    console.log("loading mesh")
     try{
 
       const token = localStorage.getItem('token')
@@ -166,6 +170,19 @@ class InvestigatorTable extends React.Component {
       setTimeout(function () {that.loadMesh(pattern);}, 2000)
   }
 
+  onMeshSelected(mesh){
+
+    // Set selection
+    let meshOid = mesh.value
+    meshOid = meshOid.split('-')[meshOid.split('-').length -1 ]
+    meshOid = parseInt( meshOid )
+
+    const { currentPage } = this.state;
+    this.loadInvestigators(currentPage, meshOid)
+
+
+  }
+
   render() {
     const { currentPage, totalPage, meshOptions } = this.state;
 
@@ -182,7 +199,7 @@ class InvestigatorTable extends React.Component {
           <Select isLoading={this.state.isLoading} isClearable 
                 isSearchable options={meshOptions} 
                 onInputChange={(e) => this.onMeshFill(e)} 
-                onChange={ (e) => console.log("e", e)}
+                onChange={ (e) => this.onMeshSelected(e)}
                 />
           </div>
         </div>
