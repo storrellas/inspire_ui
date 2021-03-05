@@ -17,17 +17,13 @@ import InvestigatorMap from '../components/investigatorlist/investigatormap';
 //const InvestigatorMap = React.lazy(() => import('../components/investigatorlist/investigatormap'));
 
 
-// Axios
-import axios from 'axios';
-import environment from '../environment.json';
-
 const TAB = { TABLE: 1, MAP: 2, }
 class InvestigatorList extends React.Component {
 
   constructor(props) {
     super(props)
     this.state = {
-      activeTab: TAB.TABLE,
+      activeTab: TAB.MAP,
       map: undefined,
       projectOid: undefined,
     }
@@ -36,13 +32,13 @@ class InvestigatorList extends React.Component {
 
   render() {
     
-    const { investigatorList, projectOid } = this.state;
+    const { projectOid } = this.state;
 
 
     // Activate tab
     const { activeTab } = this.state;
     if( this.state.map === undefined && activeTab == TAB.MAP ){
-      this.state.map = <InvestigatorMap />                    
+      this.state.map = <InvestigatorMap projectOid={projectOid} />                    
     }
     return (
       <Row>
@@ -56,7 +52,7 @@ class InvestigatorList extends React.Component {
             </Nav.Item>
           </Nav>
           <div className={activeTab === TAB.TABLE ? '' : 'd-none'}>
-            <InvestigatorTable projectOid={projectOid} />
+            <InvestigatorTable />
           </div>
           <div className={activeTab === TAB.MAP ? '' : 'd-none'}>
             {this.state.map}
