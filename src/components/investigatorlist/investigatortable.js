@@ -15,6 +15,10 @@ import './investigatortable.scss'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faStar, faSearch } from '@fortawesome/free-solid-svg-icons'
 
+// Axios
+import axios from 'axios';
+import environment from '../../environment.json';
+
 // Project Imports
 import InspirePagination from '../shared/pagination'
 
@@ -58,11 +62,58 @@ class InvestigatorTable extends React.Component {
     this.state = {
       currentPage: 1,
       totalPage: 10,
+      take: 100,
+      limit: 100,
+      investigatorList: []
     }
   }
 
+  async loadInvestigators(page){
+    try{
+      const { match: { params } } = this.props;
+      const projectOid = params.id;
+      const { take, limit } = this.state;
+
+      // Request investigators
+      let skip = this.state.take * this.state.currentPage;
+      let offset = this.state.take * this.state.currentPage;
+      const token = localStorage.getItem('token')
+      const urlParams = `project=${projectOid}&limit=${limit}&offset=${offset}&skip=${skip}&take=${take}`
+      const response = await axios.get(`${environment.base_url}/api/investigators/?${urlParams}`,
+        { headers: { "Authorization": "jwt " + token }
+      })
+
+      const totalPage = Math.ceil(response.data.count / take);
+
+      this.setState({
+        investigatorList: response.data.results, 
+        projectOid: projectOid,
+        currentPage: page,
+        totalPage: totalPage
+      })
+    }catch(error){
+
+      // Error
+      if (error.response) {
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+          console.log(error.request);
+      } else {
+          console.log('Error', error.message);
+      }
+
+    }       
+  }
+
   navigatePage(page) {
-    this.setState({ currentPage: page })
+    this.loadInvestigators(page)
+  }
+
+  componentDidMount(){
+    // Load Investigators
+    this.loadInvestigators(this.state.currentPage)
   }
 
   render() {
@@ -112,7 +163,7 @@ class InvestigatorTable extends React.Component {
               </tr>
             </thead>
             <tbody>
-              {this.props.investigatorList.map((item, id) =>
+              {this.state.investigatorList.map((item, id) =>
                 <tr key={id}>
                   <td style={{ cursor: 'pointer' }}>
                     <FontAwesomeIcon icon={faStar} style={{ border: '1px solid grey', fontSize: '2em', color: 'grey' }} />
