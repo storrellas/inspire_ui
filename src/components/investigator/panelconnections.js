@@ -367,13 +367,14 @@ class PanelConnections extends React.Component {
                         <div className="w-100 text-center">Loading...</div>
 
     // Generate maximised cytoscape
-    if (this.cytoscapeMax === undefined) {
-      this.cytoscapeMax = <CytoscapeComponent
-        elements={sourceFile}
-        cy={(cy) => { this.cy = cy }}
-        style={{ width: '100%', height: '100%' }}
-        stylesheet={this.cytoscapeStylesheet}
-        layout={this.cytoscapeLayout} />;
+    if (this.state.showModalCytoscape === true &&
+          this.cytoscapeMax === undefined) {
+        this.cytoscapeMax = <CytoscapeComponent
+                              elements={this.state.source}
+                              cy={(cy) => { this.cy = cy }}
+                              style={{ width: '100%', height: '100%' }}
+                              stylesheet={this.cytoscapeStylesheet}
+                              layout={this.cytoscapeLayout} />;
     }
 
     // NetworkContent
