@@ -10,6 +10,16 @@ import { withRouter } from 'react-router-dom'
 import axios from 'axios';
 import environment from '../../environment.json';
 
+// Redux
+import { setInvestigatorProfile } from "../../redux";
+import { connect } from "react-redux";
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setInvestigatorProfile: (profile) => dispatch(setInvestigatorProfile(profile))
+  };
+}
+
 class InvestigatorProfile extends React.Component {
 
   constructor(props) {
@@ -124,6 +134,12 @@ class InvestigatorProfile extends React.Component {
         this.state.privateEmail = response.data.email      
 
       this.setState(state)
+
+      this.props.setInvestigatorProfile({
+        name: this.state.name,
+        affiliation: this.state.affiliation,
+        picture: this.state.picture
+      })
     }catch(error){
 
       // Error
@@ -252,4 +268,5 @@ class InvestigatorProfile extends React.Component {
 }
 
 
-export default withRouter(InvestigatorProfile);
+export default connect(undefined, mapDispatchToProps)(withRouter(InvestigatorProfile))
+

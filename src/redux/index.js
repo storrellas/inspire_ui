@@ -25,6 +25,8 @@ export const PANEL_PUBLICATIONS_OPENED = "PANEL_PUBLICATIONS_OPENED";
 export const PANEL_EVENTS_OPENED = "PANEL_EVENTS_OPENED";
 export const PANEL_CLINICAL_TRIALS_OPENED = "PANEL_CLINICAL_TRIALS_OPENED";
 
+export const INVESTIGATOR_PROFILE = "INVESTIGATOR_PROFILE";
+
 // Content list
 
 // SubContentList
@@ -43,6 +45,10 @@ export function setPanelRendered(panel) {
     return { type: PANEL_CLINICAL_TRIALS_OPENED }
 };
 
+export function setInvestigatorProfile(payload) {
+  return { type: INVESTIGATOR_PROFILE, payload }
+};
+
 // Reducers
 // ---------------------
 const initialState = {
@@ -52,6 +58,8 @@ const initialState = {
   tabPublicationsOpened: false,
   tabEventsOpened: false,
   tabClinicalTrialsOpened: false,
+
+  investigatorProfile: undefined
 };
 
 export function rootReducer(state = initialState, action) {
@@ -73,7 +81,10 @@ export function rootReducer(state = initialState, action) {
     return {tabClinicalTrialsOpened: true };
   }
 
-  
+  if (action.type === INVESTIGATOR_PROFILE) {
+    return { investigatorProfile: state.investigatorProfile };
+  }
+
   return state;
 }
 
