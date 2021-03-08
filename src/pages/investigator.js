@@ -99,7 +99,7 @@ class Investigator extends React.Component {
 
   getInitialState(){
     return {
-      panelConnectionsActive: false,
+      panelConnectionsActive: true,
       panelCompanyCooperationActive: false,
       panelAffiliationsActive: false,
       tabFeedbackActive: false,
@@ -154,8 +154,6 @@ class Investigator extends React.Component {
     return (
       <Row>
         <Col sm={12} className='page-container'>
-          <div className="page-title">Professor 123</div>
-
           <InvestigatorProfile />
 
           <Suspense fallback={<div style={{color: 'black' }}>Loading...</div>}>

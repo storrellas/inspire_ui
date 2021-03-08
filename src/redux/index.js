@@ -64,25 +64,26 @@ const initialState = {
 
 export function rootReducer(state = initialState, action) {
   if (action.type === PANEL_COMPANY_COOPERATION_OPENED) {
-    return {tabCompanyCooperationOpened: true };
+    return { ...state, tabCompanyCooperationOpened: true };    
   }
 
   
   if (action.type === PANEL_RESEARCH_PROFILE_OPENED) {
-    return {tabResearchProfileOpened: true };
+    return { ...state, tabResearchProfileOpened: true };    
   }
   if (action.type === PANEL_PUBLICATIONS_OPENED) {
-    return {tabPublicationsOpened: true };
+    return { ...state, tabPublicationsOpened: true };    
   }
   if (action.type === PANEL_EVENTS_OPENED) {
-    return {tabEventsOpened: true };
+    return { ...state, tabEventsOpened: true };
   }
   if (action.type === PANEL_CLINICAL_TRIALS_OPENED) {
-    return {tabClinicalTrialsOpened: true };
+    return { ...state, tabClinicalTrialsOpened: true };
   }
 
   if (action.type === INVESTIGATOR_PROFILE) {
-    return { investigatorProfile: state.investigatorProfile };
+    return { ...state, investigatorProfile: action.payload
+    };
   }
 
   return state;

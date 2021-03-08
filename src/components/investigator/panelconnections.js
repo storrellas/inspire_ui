@@ -21,9 +21,23 @@ import euler from 'cytoscape-euler';
 import Select from 'react-select'
 
 // Project imports
-import source from './source'
+import sourceFile from './source'
+
+// Redux
+import { connect } from "react-redux";
+
+// Axios
+import axios from 'axios';
+import environment from '../../environment.json';
 
 cytoscape.use(euler);
+
+const mapStateToProps = state => {
+  return {
+    investigatorProfile: state.investigatorProfile,
+  };
+};
+
 
 function NodeDetail(props) {
 
@@ -66,6 +80,16 @@ export const connectionStregnthOptions = [
 ];
 
 
+const defaultInitYear = 1990;
+const defaultEndYear = (new Date()).getFullYear();
+const defaultFilters = {
+        strength: ['all'],
+        type: ['all'],
+        country: ['all'],
+        from: defaultInitYear,
+        to: defaultEndYear,
+    }
+
 const TAB = { NETWORK: 1, PROFILES: 2, }
 class PanelConnections extends React.Component {
 
@@ -75,7 +99,8 @@ class PanelConnections extends React.Component {
       showModal: false,
       showModalCytoscape: false,
       activeTab: TAB.NETWORK,
-      modalNetwork: undefined
+      modalNetwork: undefined,
+      source: []
     }
     this.cytoscape = undefined
     this.cytoscapeStylesheet = [{
@@ -183,30 +208,182 @@ class PanelConnections extends React.Component {
     console.log("e", e)
   }
 
-  render() {
+  async componentDidMount(){
+    try{
 
-    if (this.cytoscape === undefined) {
-      this.cytoscape = <CytoscapeComponent
-        elements={source}
+      const token = localStorage.getItem('token')
+  
+      const { match: { params } } = this.props;
+      let investigatorId = params.subid;
+      investigatorId = investigatorId.split('-')[investigatorId.split('-').length -1 ]
+      investigatorId = parseInt( investigatorId )
+
+      // Perform request
+      const response = await axios.get(`${environment.base_url}/api/investigator/${investigatorId}/connections/`,
+        { headers: { "Authorization": "jwt " + token }
+      })
+
+      // collection of nodes
+      const investigator_img = "https://demo.explicatos.com/img/user_gray.png";
+      const users = [
+        { 
+          id: 1, 
+          label: this.props.investigatorProfile.name, 
+          affiliation: this.props.investigatorProfile.affiliation,
+          image: this.props.picture || investigator_img, 
+          strength: '' 
+        }
+      ];      
+      let connections = [];
+      for(const [idx, item] of Object.entries(response.data.results) ){
+                
+        // prevent adding the node if for some reason, a medical expert is connected more than once
+        const node = {
+            id: (idx+2), 
+            label: "", 
+            affiliation: "", 
+            image: investigator_img, 
+            strength: item.number_common_objects
+        }
+        users.push(node);
+        connections.push({ 
+          source: 1, 
+          target: node.id, 
+          strength: item.number_common_objects 
+        }); 
+      }
+
+      let filtering = this.getFiltering(users, connections);
+      const sourceGenerated = this.generateSource(filtering.users, filtering.connections)
+
+      const that = this;
+      setTimeout(function(){ that.setState({source:sourceGenerated}) }, 2000);
+    }catch(error){
+
+      // Error
+      if (error.response) {
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+          console.log(error.request);
+      } else {
+          console.log('Error', error.message);
+      }
+
+    }
+  }
+
+  getFiltering(users, connections, filters = defaultFilters){
+
+    filters.from = parseInt(filters.from);
+    filters.to = parseInt(filters.to);
+
+    // Filtering Connections (Strength,Country, Type)
+    // ---------------------
+
+    // Initialise filtered connections
+    let filteredConnections = connections.map(a => Object.assign({}, a))
+
+    //if the strength is specified get only the connections with this value(or greater than 7 if '7+' option selected) and connected users
+    for( let connection of filteredConnections ){
+        connection.id = connection.source + '_' + connection.target;
+        connection.color = (connection.number_objects < 7)?'lightgray':'#4283f1'
+    }
+
+    // Strength
+    // if ( filters.strength.includes('all') == false) {
+
+    //   let filteredConnectionsAux = filteredConnections.map(a => Object.assign({}, a));
+    //   filteredConnections = [] // Empty filtered connections
+    //   for(const connection of filteredConnectionsAux){
+
+    //       // Equal number_objects
+    //       if ( filters.strength.includes( connection.number_objects.toString() ) ) {
+    //           console.log("Adding it")
+    //           filteredConnections.push(connection);
+    //       }                        
+
+    //       // More than 7
+    //       if( filters.strength.includes('7+') ){
+    //           if( connection.number_objects > 7 )
+    //               filteredConnections.push(connection);
+    //       }
+    //   }
+    // }
+
+    // Country    
+    // if ( filters.country.includes('all') === false ) {
+    //   let filteredConnectionsAux = filteredConnections.map(a => Object.assign({}, a));
+    //   filteredConnections = [] // Empty filtered connections
+    //   for(const connection of filteredConnectionsAux){
+    //       if(filters.country.includes ( connection.country_name) )
+    //           filteredConnections.push(connection);            
+    //   }
+    // }
+
+
+    return {
+      connections: filteredConnections,
+      users: users
+    }
+  }
+
+  generateSource(users, connections){
+    const source = [];
+    let sourceIndex = 0;
+    for (var i = 0; i < users.length; i++) {
+        source[sourceIndex] = {};
+        source[sourceIndex].data = users[i];
+        sourceIndex++;
+    }
+
+    for (var i = 0; i < connections.length; i++) {
+        source[sourceIndex] = {};
+        source[sourceIndex].data = connections[i];
+        sourceIndex++;
+    }
+    return source
+  }
+
+  render() {
+    console.log("ReRender connections")
+
+    if (this.cytoscapeMax === undefined) {
+      this.cytoscapeMax = <CytoscapeComponent
+        elements={sourceFile}
         cy={(cy) => { this.cy = cy }}
         style={{ width: '100%', height: '100%' }}
         stylesheet={this.cytoscapeStylesheet}
         layout={this.cytoscapeLayout} />;
     }
 
+    
+    let content_cy = <div>Loading</div>
+    if(this.state.source.length > 0){
+        content_cy = <CytoscapeComponent
+                      elements={this.state.source}
+                      style={{ width: '100%', height: '300px' }}
+                      stylesheet={this.cytoscapeStylesheet}
+                      layout={this.cytoscapeLayout} />
+    }
+
+
     // NetworkContent
-    const networkContent = this.state.showModalCytoscape ? this.cytoscape : '';
+    const networkContent = this.state.showModalCytoscape ? this.cytoscapeMax : '';
 
     const { activeTab } = this.state;
     const content = (activeTab == TAB.NETWORK) ? networkContent : this.generateProfiles()
 
+    // console.log("source imported ")
+    // console.log(source)
+    // console.log("source generated ")
+    // console.log(this.state.source)
+
     return (
       <div>
-        <CytoscapeComponent
-          elements={source}
-          style={{ width: '100%', height: '300px' }}
-          stylesheet={this.cytoscapeStylesheet}
-          layout={this.cytoscapeLayout} />
+
+        {content_cy}
         <div className="text-right pr-2 pb-1" style={{ cursor: 'pointer' }} onClick={(e) => this.openModal(e)}>
           <FontAwesomeIcon icon={faExpandArrowsAlt} />
         </div>
@@ -295,4 +472,5 @@ class PanelConnections extends React.Component {
 }
 
 
-export default withRouter(PanelConnections);
+
+export default connect(mapStateToProps, undefined)(withRouter(PanelConnections))

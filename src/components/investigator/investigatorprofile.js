@@ -79,7 +79,7 @@ class InvestigatorProfile extends React.Component {
       if(response.data.combined_name !== null) 
         this.state.name = response.data.combined_name
       if( response.data.degree !== null )
-        this.state.name = response.data.degree
+        this.state.degree = response.data.degree
       if( response.data.cv !== null)
         this.state.cv = response.data.cv
       if( response.data.photo_url != null)
@@ -161,7 +161,9 @@ class InvestigatorProfile extends React.Component {
   render() {
     return (
       <div>
+        <div className="page-title">{this.state.degree} {this.state.name}</div>
         <Row style={{ padding: '1em' }}>
+        
           <Col sm={3}>
             <img src={this.state.picture} width="150"></img>
           </Col>
