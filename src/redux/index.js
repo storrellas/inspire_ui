@@ -17,6 +17,7 @@ export const PANEL = {
 }
 
 
+export const PANEL_CONNECTIONS_OPENED = "PANEL_CONNECTIONS_OPENED";
 export const PANEL_COMPANY_COOPERATION_OPENED = "PANEL_COMPANY_COOPERATION_OPENED";
 export const PANEL_AFFILIATIONS_OPENED = "PANEL_AFFILIATIONS_OPENED";
 
@@ -32,6 +33,8 @@ export const INVESTIGATOR_PROFILE = "INVESTIGATOR_PROFILE";
 // SubContentList
 export function setPanelRendered(panel) {
 
+  if( panel == PANEL.CONNECTIONS ) 
+    return { type: PANEL_CONNECTIONS_OPENED }
   if( panel == PANEL.COMPANY_COOPERATION ) 
     return { type: PANEL_COMPANY_COOPERATION_OPENED }
 
@@ -52,7 +55,8 @@ export function setInvestigatorProfile(payload) {
 // Reducers
 // ---------------------
 const initialState = {
-  tabCompanyCooperationOpened: false,  
+  tabConnectionsOpened: false,
+  tabCompanyCooperationOpened: false,
   
   tabResearchProfileOpened: false,
   tabPublicationsOpened: false,
@@ -63,6 +67,9 @@ const initialState = {
 };
 
 export function rootReducer(state = initialState, action) {
+  if (action.type === PANEL_CONNECTIONS_OPENED) {
+    return { ...state, tabConnectionsOpened: true };    
+  }
   if (action.type === PANEL_COMPANY_COOPERATION_OPENED) {
     return { ...state, tabCompanyCooperationOpened: true };    
   }

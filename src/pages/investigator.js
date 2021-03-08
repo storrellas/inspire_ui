@@ -99,7 +99,7 @@ class Investigator extends React.Component {
 
   getInitialState(){
     return {
-      panelConnectionsActive: true,
+      panelConnectionsActive: false,
       panelCompanyCooperationActive: false,
       panelAffiliationsActive: false,
       tabFeedbackActive: false,
@@ -136,8 +136,7 @@ class Investigator extends React.Component {
 
   onAnimationEnd(panel){  
     // These panels do not require to trigger action
-    if( panel === PANEL.CONNECTIONS || 
-        panel === PANEL.AFFILIATIONS ||
+    if( panel === PANEL.AFFILIATIONS ||
         panel === PANEL.FEEDBACK ){
           return
     }    

@@ -35,6 +35,7 @@ cytoscape.use(euler);
 const mapStateToProps = state => {
   return {
     investigatorProfile: state.investigatorProfile,
+    tabConnectionsOpened: state.tabConnectionsOpened,
   };
 };
 
@@ -79,7 +80,6 @@ export const connectionStregnthOptions = [
   { value: '7+', label: '7+'},
 ];
 
-
 const defaultInitYear = 1990;
 const defaultEndYear = (new Date()).getFullYear();
 const defaultFilters = {
@@ -96,6 +96,7 @@ class PanelConnections extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      isOpened: false,
       showModal: false,
       showModalCytoscape: false,
       activeTab: TAB.NETWORK,
@@ -103,6 +104,7 @@ class PanelConnections extends React.Component {
       source: []
     }
     this.cytoscape = undefined
+    this.cytoscapeMax = undefined
     this.cytoscapeStylesheet = [{
       selector: 'node',
       css: {
@@ -254,10 +256,12 @@ class PanelConnections extends React.Component {
       }
 
       let filtering = this.getFiltering(users, connections);
-      const sourceGenerated = this.generateSource(filtering.users, filtering.connections)
+      //this.sourceGenerated = this.generateSource(filtering.users, filtering.connections)
+      this.state.source = this.generateSource(filtering.users, filtering.connections)
+      console.log("this.state.source ", this.state.source)
 
-      const that = this;
-      setTimeout(function(){ that.setState({source:sourceGenerated}) }, 2000);
+      //const that = this;
+      //setTimeout(function(){ that.setState({source:sourceGenerated}) }, 2000);
     }catch(error){
 
       // Error
@@ -347,8 +351,22 @@ class PanelConnections extends React.Component {
   }
 
   render() {
-    console.log("ReRender connections")
 
+    // Generate Panel Cytoscape    
+    if( this.props.tabConnectionsOpened == true && 
+        this.state.cytoscape === undefined){
+        this.state.cytoscape = <CytoscapeComponent
+                    elements={this.state.source}
+                    style={{ width: '100%', height: '300px' }}
+                    stylesheet={this.cytoscapeStylesheet}
+                    layout={this.cytoscapeLayout} />
+        
+    }
+    let content_cy = this.state.cytoscape!==undefined?
+                        this.state.cytoscape:
+                        <div className="w-100 text-center">Loading...</div>
+
+    // Generate maximised cytoscape
     if (this.cytoscapeMax === undefined) {
       this.cytoscapeMax = <CytoscapeComponent
         elements={sourceFile}
@@ -358,27 +376,12 @@ class PanelConnections extends React.Component {
         layout={this.cytoscapeLayout} />;
     }
 
-    
-    let content_cy = <div>Loading</div>
-    if(this.state.source.length > 0){
-        content_cy = <CytoscapeComponent
-                      elements={this.state.source}
-                      style={{ width: '100%', height: '300px' }}
-                      stylesheet={this.cytoscapeStylesheet}
-                      layout={this.cytoscapeLayout} />
-    }
-
-
     // NetworkContent
     const networkContent = this.state.showModalCytoscape ? this.cytoscapeMax : '';
 
     const { activeTab } = this.state;
     const content = (activeTab == TAB.NETWORK) ? networkContent : this.generateProfiles()
 
-    // console.log("source imported ")
-    // console.log(source)
-    // console.log("source generated ")
-    // console.log(this.state.source)
 
     return (
       <div>
@@ -470,7 +473,6 @@ class PanelConnections extends React.Component {
       </div>);
   }
 }
-
 
 
 export default connect(mapStateToProps, undefined)(withRouter(PanelConnections))
