@@ -132,6 +132,7 @@ class InvestigatorTable extends React.Component {
     }
 
     this.typingTimeout = undefined
+    this.projectOid = undefined
   }
 
   async loadInvestigators(page = 1, meshOid = undefined, filtering = undefined){
@@ -408,7 +409,7 @@ class InvestigatorTable extends React.Component {
                   </td>
                   <td>
                     <img src={arrow} width="40"
-                      onClick={(e) => this.props.history.push(`/project/${this.props.projectOid}/investigator/${item.oid}`)}
+                      onClick={(e) => this.props.history.push(`/project/${this.state.projectOid}/investigator/${item.oid}`)}
                       style={{ cursor: 'pointer' }}></img>
                   </td>
                   <td className="text-center">{item.first_name}</td>

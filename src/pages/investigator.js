@@ -18,7 +18,6 @@ import { faCaretDown } from '@fortawesome/free-solid-svg-icons'
 
 // Project imports
 import InvestigatorProfile from '../components/investigator/investigatorprofile'
-import InvestigatorSnaphot from '../components/investigator/investigatorsnapshot'
 
 import PanelConnections from '../components/investigator/panelconnections';
 import PanelCompanyCooperation from '../components/investigator/panelcompanycooperation';
@@ -146,12 +145,8 @@ class Investigator extends React.Component {
   }
 
   componentDidMount(){
-    console.log("Showing pannels")
-
     const that = this;
     setTimeout(function () { that.setState({showPanels:true}) }, 500);
-
-
   }
 
   render() {
@@ -162,8 +157,6 @@ class Investigator extends React.Component {
           <div className="page-title">Professor 123</div>
 
           <InvestigatorProfile />
-          <InvestigatorSnaphot />
-
 
           <Suspense fallback={<div style={{color: 'black' }}>Loading...</div>}>
             {this.state.showPanels?          
