@@ -25,6 +25,9 @@ import Select from 'react-select';
 // Project Imports
 import InspirePagination from '../shared/pagination'
 
+// Loading overlay
+import LoadingOverlay from 'react-loading-overlay';
+
 // const SearchHeader = (props) => {
 
 //   const [show, setShow] = useState(false);
@@ -103,9 +106,24 @@ class InvestigatorTable extends React.Component {
       take: 100,
       limit: 100,
       investigatorList: [],
-      isLoading: false,
+      isLoadingMesh: false,
+      isLoading: true,
       meshOptions: [],
-      meshOid: undefined
+      meshOid: undefined,
+      filtering : {
+        firstName: undefined,
+        lastName: undefined, 
+        specialties: undefined,
+        focusArea: undefined,
+        city: undefined,
+        country: undefined,
+        publications: undefined,
+        events: undefined,
+        ct: undefined,
+        coi: undefined,
+        score: undefined
+      }
+
     }
 
     this.typingTimeout = undefined
@@ -113,6 +131,7 @@ class InvestigatorTable extends React.Component {
 
   async loadInvestigators(page = 1, meshOid = undefined){
     try{
+      this.setState({isLoading: true})
       const { match: { params } } = this.props;
       const projectOid = params.id;
       const { take, limit } = this.state;
@@ -137,7 +156,8 @@ class InvestigatorTable extends React.Component {
         projectOid: projectOid,
         currentPage: page,
         totalPage: totalPage,
-        meshOid: meshOid
+        meshOid: meshOid,
+        isLoading: false
       })
     }catch(error){
 
@@ -165,6 +185,7 @@ class InvestigatorTable extends React.Component {
 
   async loadMesh(pattern){
     try{
+      this.setState({isLoadingMesh: true})
 
       const token = localStorage.getItem('token')
       const response = await axios.get(`${environment.base_url}/api/meshs/?limit=10&ordering=name&name=${pattern}`,
@@ -176,7 +197,7 @@ class InvestigatorTable extends React.Component {
       for(const mesh of response.data.results ){
         meshOptions.push({value:mesh.oid, label: mesh.name})
       }
-      this.setState({meshOptions: meshOptions})
+      this.setState({meshOptions: meshOptions, isLoadingMesh:false})
     }catch(error){
 
       // Error
@@ -205,18 +226,26 @@ class InvestigatorTable extends React.Component {
   }
 
   onMeshSelected(mesh){
+    const { currentPage } = this.state;
+
+    // Check if mesh is undefined
+    if( mesh === undefined || mesh === null ){
+      this.loadInvestigators(currentPage)
+      return
+    }
 
     // Set selection
     let meshOid = mesh.value
     meshOid = meshOid.split('-')[meshOid.split('-').length -1 ]
     meshOid = parseInt( meshOid )
 
-    const { currentPage } = this.state;
+
     this.loadInvestigators(currentPage, meshOid)
   }
 
   loadFilteredInvestigators(key, value){
     console.log("loadFilteredInvestigators ", key, value)
+
 
   }
 
@@ -237,19 +266,25 @@ class InvestigatorTable extends React.Component {
 
         <div className="d-flex justify-content-end pt-3 pb-3">
           <div style={{ width: '40%'}}>
-          <Select isLoading={this.state.isLoading} isClearable 
+          <Select isLoading={this.state.isLoadingMesh} isClearable 
                 isSearchable options={meshOptions} 
                 onInputChange={(e) => this.onMeshFill(e)} 
                 onChange={ (e) => this.onMeshSelected(e)}
                 />
           </div>
-        </div>
-          <div className="border-test">Sergi</div>
+        </div>          
 
-          <table className="w-100">
+
+
+
+        <LoadingOverlay
+          active={ this.state.isLoading }
+          spinner>
+
+          <table className="w-100" style={{ display: 'block', minHeight: '200px'}}>
             <thead>
               <tr>
-                <td style={{ cursor: 'pointer' }}>
+                <td style={{ cursor: 'pointer'}}>
                   <FontAwesomeIcon icon={faStar} style={{ border: '1px solid grey', fontSize: '2em', color: 'grey' }} />
                 </td>
                 <td className="text-center">Profile</td>
@@ -291,6 +326,7 @@ class InvestigatorTable extends React.Component {
                 <td></td>
               </tr>
             </thead>
+
             <tbody>
               {this.state.investigatorList.map((item, id) =>
                 <tr key={id}>
@@ -317,8 +353,11 @@ class InvestigatorTable extends React.Component {
               )}
             </tbody>
           </table>
+          </LoadingOverlay>
+
 
           <InspirePagination currentPage={currentPage} totalPage={totalPage} onClick={this.navigatePage.bind(this)}/>
+
 
         </Col>
       </Row>
