@@ -168,13 +168,14 @@ class PanelCompanyCooperation extends React.Component {
 
     let valueAxis = this.chart.xAxes.push(new am4charts.ValueAxis());
     valueAxis.min = 0;
-    valueAxis.renderer.grid.template.opacity = 0;
+    valueAxis.renderer.grid.template.opacity = 1;
     valueAxis.renderer.ticks.template.strokeOpacity = 0.5;
     valueAxis.renderer.ticks.template.stroke = am4core.color("#495C43");
     valueAxis.renderer.ticks.template.length = 10;
     valueAxis.renderer.line.strokeOpacity = 0.5;
     valueAxis.renderer.baseGrid.disabled = true;
-    valueAxis.renderer.minGridDistance = 40;
+    valueAxis.renderer.minGridDistance = 50;
+    valueAxis.renderer.labels.template.rotation = 45;
 
     const that = this;
     function createSeries(field, name) {
@@ -306,7 +307,7 @@ class PanelCompanyCooperation extends React.Component {
         <LoadingOverlay
           active={this.state.isOpened == false}
           spinner>
-          <div id="companycooperationchart" style={{ height: '400px' }}></div>
+          <div id="companycooperationchart" style={{ height: '400px', padding: '1em' }}></div>
           <div className="text-right pr-2 pb-1" style={{ cursor: 'pointer' }} onClick={(e) => this.openModal(e)}>
             View Details ...
           </div>
