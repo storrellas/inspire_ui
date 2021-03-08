@@ -62,10 +62,19 @@ import InspirePagination from '../shared/pagination'
 
 const SearchHeader = (props) => {
 
+  // Declare a new state variable, which we'll call "count"
+  const [active, setActive] = useState(false);
+
   return (
-    <div className="d-flex align-items-center pl-2" style={{ cursor: 'pointer' }}>
-      <input className="inspire-table-search" onChange={(e) => props.onChange(e.target.value)}></input>
-      <FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} />
+    <div>
+      <div className="d-flex align-items-center pl-2 border-test" style={{ position: 'relative', cursor: 'pointer' }}>            
+        <input className="inspire-table-search" 
+                onChange={(e) => props.onChange(e.target.value)} 
+                onMouseEnter={(e) => setActive(true)}
+                onMouseLeave={(e) => setActive(false)}></input>
+        <FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} />
+      </div>
+      <div className={active?"inspire-table-search-border active":"inspire-table-search-border"}></div>
     </div>
   );
 }
@@ -213,6 +222,10 @@ class InvestigatorTable extends React.Component {
 
   render() {
     const { currentPage, totalPage, meshOptions } = this.state;
+    const headers = [
+      'Profile', 'FirstName', 'LastName', 'Specialties',
+      'FocusArea', 'City', 'Country', 'P', 'E', 'CT', 'CoI'
+    ]
 
     return (
       <Row style={{ padding: 0, margin: 0 }}>
@@ -231,7 +244,7 @@ class InvestigatorTable extends React.Component {
                 />
           </div>
         </div>
-
+          <div className="border-test">Sergi</div>
 
           <table className="w-100">
             <thead>

@@ -1,0 +1,32 @@
+.inspire-pagination{
+    display: flex;
+    padding-left: 0;
+    list-style: none;
+    border-radius: .25rem;
+    padding: 1em;
+    margin: 0;
+
+    li{
+        
+        border-radius: 3px;
+        &.active, &:hover{
+            background-color: #4285f4;
+            color: white;            
+        }
+        span{
+            border-radius: 3px;
+            border: 0;
+        }
+        a {
+            border-radius: 3px;
+            color: black;
+            border: 0
+        }
+        a:hover{
+            background-color: #e9ecef;
+            border-radius: 3px;
+            color: grey;
+        }
+    }
+}
+
