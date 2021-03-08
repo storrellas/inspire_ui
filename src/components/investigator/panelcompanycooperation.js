@@ -23,6 +23,10 @@ import LoadingOverlay from 'react-loading-overlay';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch } from '@fortawesome/free-solid-svg-icons'
 
+// Axios
+import axios from 'axios';
+import environment from '../../environment.json';
+
 // Themes begin
 am4core.useTheme(am4themes_animated);
 
@@ -60,45 +64,106 @@ class PanelCompanyCooperation extends React.Component {
 
   }
 
-  generateChart() {
+  // generateChart(data) {
+
+  //   // Create chart instance
+  //   this.chart = am4core.create("companycooperationchart", am4charts.XYChart);
+
+
+  //   // Add data
+  //   this.chart.data = [{
+  //     "year": "2016",
+  //     "europe": 2.5,
+  //     "namerica": 2.5,
+  //     "asia": 2.1,
+  //     "lamerica": 0.3,
+  //     "meast": 0.2,
+  //     "africa": 0.1
+  //   }, {
+  //     "year": "2017",
+  //     "europe": 2.6,
+  //     "namerica": 2.7,
+  //     "asia": 2.2,
+  //     "lamerica": 0.3,
+  //     "meast": 0.3,
+  //     "africa": 0.1
+  //   }, {
+  //     "year": "2018",
+  //     "europe": 2.8,
+  //     "namerica": 2.9,
+  //     "asia": 2.4,
+  //     "lamerica": 0.3,
+  //     "meast": 0.3,
+  //     "africa": 0.1
+  //   }];
+    
+
+  //   // Create axes
+  //   let categoryAxis = this.chart.yAxes.push(new am4charts.CategoryAxis());
+  //   categoryAxis.dataFields.category = "year";
+  //   categoryAxis.renderer.grid.template.opacity = 0;
+
+  //   let valueAxis = this.chart.xAxes.push(new am4charts.ValueAxis());
+  //   valueAxis.min = 0;
+  //   valueAxis.renderer.grid.template.opacity = 0;
+  //   valueAxis.renderer.ticks.template.strokeOpacity = 0.5;
+  //   valueAxis.renderer.ticks.template.stroke = am4core.color("#495C43");
+  //   valueAxis.renderer.ticks.template.length = 10;
+  //   valueAxis.renderer.line.strokeOpacity = 0.5;
+  //   valueAxis.renderer.baseGrid.disabled = true;
+  //   valueAxis.renderer.minGridDistance = 40;
+
+
+  //   this.createSeries("europe", "Europe");
+  //   this.createSeries("namerica", "North America");
+  //   this.createSeries("asia", "Asia");
+  //   this.createSeries("lamerica", "Latin America");
+  //   this.createSeries("meast", "Middle East");
+  //   this.createSeries("africa", "Africa");
+
+  //   // Set state after timeout
+  //   this.setState({ isOpened: true })
+  // }
+
+  generateChart(data) {
+    if(data === undefined) return
 
     // Create chart instance
     this.chart = am4core.create("companycooperationchart", am4charts.XYChart);
 
+    console.log("data ", data)
+    // Generate set
+    let companySet = new Set()
+    let yearSet = new Set()
+    for(const item of data ){
+      let name = item.institution__parent_name
+      companySet.add(name) 
+      yearSet.add(item.year)  
+    }
+    console.log("CompanySet ", companySet )
+    console.log("yearSet ", yearSet )
+
+    const companyList = []
+    for(const item of Array.from(companySet) ){
+      companyList.push({name:item})      
+    }
+    for(const item of data ){
+      const pos = companyList.map((e) => e.name).indexOf(item.institution__parent_name);
+      companyList[pos][item['year']] = item['total_amount']
+    }
+    console.log("CompanySetAfter ", companyList )
 
     // Add data
-    this.chart.data = [{
-      "year": "2016",
-      "europe": 2.5,
-      "namerica": 2.5,
-      "asia": 2.1,
-      "lamerica": 0.3,
-      "meast": 0.2,
-      "africa": 0.1
-    }, {
-      "year": "2017",
-      "europe": 2.6,
-      "namerica": 2.7,
-      "asia": 2.2,
-      "lamerica": 0.3,
-      "meast": 0.3,
-      "africa": 0.1
-    }, {
-      "year": "2018",
-      "europe": 2.8,
-      "namerica": 2.9,
-      "asia": 2.4,
-      "lamerica": 0.3,
-      "meast": 0.3,
-      "africa": 0.1
-    }];
-
-
-
+    this.chart.data = companyList
+    
     // Create axes
     let categoryAxis = this.chart.yAxes.push(new am4charts.CategoryAxis());
-    categoryAxis.dataFields.category = "year";
+    categoryAxis.dataFields.category = "name";
     categoryAxis.renderer.grid.template.opacity = 0;
+    let label = categoryAxis.renderer.labels.template;
+    label.truncate = true;
+    label.maxWidth = 150;
+    label.tooltipText = "{category}";
 
     let valueAxis = this.chart.xAxes.push(new am4charts.ValueAxis());
     valueAxis.min = 0;
@@ -110,13 +175,26 @@ class PanelCompanyCooperation extends React.Component {
     valueAxis.renderer.baseGrid.disabled = true;
     valueAxis.renderer.minGridDistance = 40;
 
+    const that = this;
+    function createSeries(field, name) {
+      let series = that.chart.series.push(new am4charts.ColumnSeries());
+      series.dataFields.valueX = field;
+      series.dataFields.categoryY = "name";
+      series.stacked = true;
+      series.name = name;
+  
+      let labelBullet = series.bullets.push(new am4charts.LabelBullet());
+      labelBullet.locationX = 0.5;
+      labelBullet.label.text = "{valueX}";
+      labelBullet.label.fill = am4core.color("#fff");
+  
+    }
 
-    this.createSeries("europe", "Europe");
-    this.createSeries("namerica", "North America");
-    this.createSeries("asia", "Asia");
-    this.createSeries("lamerica", "Latin America");
-    this.createSeries("meast", "Middle East");
-    this.createSeries("africa", "Africa");
+
+    // Generate series
+    for(const item of Array.from(yearSet) ){
+      createSeries(item, item);
+    }
 
     // Set state after timeout
     this.setState({ isOpened: true })
@@ -172,6 +250,41 @@ class PanelCompanyCooperation extends React.Component {
     this.setState({ showModal: false })
   }
 
+  async componentDidMount(){
+    try{
+
+      const token = localStorage.getItem('token')
+
+      const { match: { params } } = this.props;
+      let investigatorId = params.subid;
+      investigatorId = investigatorId.split('-')[investigatorId.split('-').length -1 ]
+      investigatorId = parseInt( investigatorId )
+
+      // Perform request
+      const response = await axios.get(`${environment.base_url}/api/investigator/${investigatorId}/cooperations-per-company/`,
+        { headers: { "Authorization": "jwt " + token }
+      })
+
+      // Chart data
+      this.generateChart(response.data.results)
+
+
+    }catch(error){
+
+      // Error
+      if (error.response) {
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+          console.log(error.request);
+      } else {
+          console.log('Error', error.message);
+      }
+
+    }
+  }
+
   render() {
     if (this.props.tabCompanyCooperationOpened == true && this.state.isOpened == false) {
       const that = this;
@@ -192,7 +305,7 @@ class PanelCompanyCooperation extends React.Component {
         <LoadingOverlay
           active={this.state.isOpened == false}
           spinner>
-          <div id="companycooperationchart" style={{ height: '200px' }}></div>
+          <div id="companycooperationchart" style={{ height: '400px' }}></div>
           <div className="text-right pr-2 pb-1" style={{ cursor: 'pointer' }} onClick={(e) => this.openModal(e)}>
             View Details ...
           </div>

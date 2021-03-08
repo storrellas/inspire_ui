@@ -258,7 +258,6 @@ class PanelConnections extends React.Component {
       let filtering = this.getFiltering(users, connections);
       //this.sourceGenerated = this.generateSource(filtering.users, filtering.connections)
       this.state.source = this.generateSource(filtering.users, filtering.connections)
-      console.log("this.state.source ", this.state.source)
 
       //const that = this;
       //setTimeout(function(){ that.setState({source:sourceGenerated}) }, 2000);
