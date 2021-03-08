@@ -140,17 +140,18 @@ class PanelCompanyCooperation extends React.Component {
       companySet.add(name) 
       yearSet.add(item.year)  
     }
-    console.log("CompanySet ", companySet )
-    console.log("yearSet ", yearSet )
 
-    const companyList = []
+    // Initialise array
+    let companyList = []
     for(const item of Array.from(companySet) ){
-      companyList.push({name:item})      
+      companyList.push({name:item, total:0})      
     }
     for(const item of data ){
       const pos = companyList.map((e) => e.name).indexOf(item.institution__parent_name);
       companyList[pos][item['year']] = item['total_amount']
+      companyList[pos]['total'] = companyList[pos]['total'] + item['total_amount']
     }
+    companyList.sort((a,b) => (a.total > b.total) ? 1 : ((b.total > a.total) ? -1 : 0) )
     console.log("CompanySetAfter ", companyList )
 
     // Add data
@@ -182,12 +183,12 @@ class PanelCompanyCooperation extends React.Component {
       series.dataFields.categoryY = "name";
       series.stacked = true;
       series.name = name;
+      series.columns.template.tooltipText = "{name}: {valueX}";
   
       let labelBullet = series.bullets.push(new am4charts.LabelBullet());
       labelBullet.locationX = 0.5;
       labelBullet.label.text = "{valueX}";
-      labelBullet.label.fill = am4core.color("#fff");
-  
+      labelBullet.label.fill = am4core.color("#fff");  
     }
 
 
