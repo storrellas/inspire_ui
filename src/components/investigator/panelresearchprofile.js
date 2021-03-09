@@ -40,9 +40,10 @@ class PanelResearchProfile extends React.Component {
     this.state = {
       isOpened: false,
       showModal: false,
-      openedModal: false,      
+      openedModal: false,    
+      data: undefined  
     }
-    this.data = undefined;
+    
   }
 
   async componentDidMount(){
@@ -62,7 +63,7 @@ class PanelResearchProfile extends React.Component {
 
       // Research Profile Data
       let research_profile_data = response.data.results
-      this.data = research_profile_data.slice(0,7)
+      this.state.data = research_profile_data.slice(0,7)
 
     }catch(error){
 
@@ -86,7 +87,7 @@ class PanelResearchProfile extends React.Component {
     let chart = am4core.create("researchprofilechart", am4charts.PieChart);
     chart.hiddenState.properties.opacity = 0; // this creates initial fade-in
   
-    chart.data = this.data;
+    chart.data = this.state.data;
 
     var series = chart.series.push(new am4charts.PieSeries());
     series.radius = "100%"
@@ -131,9 +132,9 @@ class PanelResearchProfile extends React.Component {
   render() {
     if( this.props.tabResearchProfileOpened == true && 
         this.state.isOpened == false &&
-        this.data !== undefined){
+        this.state.data !== undefined){
       const that = this;
-      setTimeout(function(){ that.generateChart(this.data) }, 500);
+      setTimeout(function(){ that.generateChart() }, 500);
     }
 
     const data = [

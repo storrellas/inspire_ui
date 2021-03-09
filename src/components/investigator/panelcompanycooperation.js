@@ -43,12 +43,10 @@ class PanelCompanyCooperation extends React.Component {
     this.state = {
       isOpened: false,
       showModal: false,
+      data: undefined
     }
   }
 
-  componentDidMount() {}
-
-  componentDidUpdate() {}
 
   createSeries(field, name) {
     let series = this.chart.series.push(new am4charts.ColumnSeries());
@@ -64,16 +62,15 @@ class PanelCompanyCooperation extends React.Component {
 
   }
 
-  generateChart(data) {
-    if(data === undefined) return
-
+  generateChart() {
+    
     // Create chart instance
     this.chart = am4core.create("companycooperationchart", am4charts.XYChart);
 
     // Generate set
     let companySet = new Set()
     let yearSet = new Set()
-    for(const item of data ){
+    for(const item of this.state.data ){
       let name = item.institution__parent_name
       companySet.add(name) 
       yearSet.add(item.year)  
@@ -84,12 +81,14 @@ class PanelCompanyCooperation extends React.Component {
     for(const item of Array.from(companySet) ){
       companyList.push({name:item, total:0})      
     }
-    for(const item of data ){
+    for(const item of this.state.data ){
       const pos = companyList.map((e) => e.name).indexOf(item.institution__parent_name);
       companyList[pos][item['year']] = item['total_amount']
       companyList[pos]['total'] = companyList[pos]['total'] + item['total_amount']
     }
     companyList.sort((a,b) => (a.total > b.total) ? 1 : ((b.total > a.total) ? -1 : 0) )
+
+
 
     // Add data
     this.chart.data = companyList
@@ -205,8 +204,7 @@ class PanelCompanyCooperation extends React.Component {
       })
 
       // Chart data
-      this.generateChart(response.data.results)
-
+      this.state.data = response.data.results
 
     }catch(error){
 
@@ -225,7 +223,9 @@ class PanelCompanyCooperation extends React.Component {
   }
 
   render() {
-    if (this.props.tabCompanyCooperationOpened == true && this.state.isOpened == false) {
+    if (this.props.tabCompanyCooperationOpened == true && 
+      this.state.isOpened == false &&
+      this.state.data !== undefined) {
       const that = this;
       setTimeout(function () { that.generateChart() }, 500);
     }
