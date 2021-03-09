@@ -19,6 +19,10 @@ import LoadingOverlay from 'react-loading-overlay';
 // Styles
 import './panelresearchprofile.scss';
 
+// Axios
+import axios from 'axios';
+import environment from '../../environment.json';
+
 // Themes begin
 am4core.useTheme(am4themes_animated);
 
@@ -36,72 +40,53 @@ class PanelResearchProfile extends React.Component {
     this.state = {
       isOpened: false,
       showModal: false,
-      openedModal: false,
+      openedModal: false,      
     }
+    this.data = undefined;
   }
 
-  componentDidMount(){
-  }
+  async componentDidMount(){
+    try{
 
-  componentDidUpdate(){
+      const token = localStorage.getItem('token')
+  
+      const { match: { params } } = this.props;
+      let investigatorId = params.subid;
+      investigatorId = investigatorId.split('-')[investigatorId.split('-').length -1 ]
+      investigatorId = parseInt( investigatorId )
+
+      // Perform request
+      const response = await axios.get(`${environment.base_url}/api/investigator/${investigatorId}/meshs/`,
+        { headers: { "Authorization": "jwt " + token }
+      })
+
+      // Research Profile Data
+      let research_profile_data = response.data.results
+      this.data = research_profile_data.slice(0,7)
+
+    }catch(error){
+
+      // Error
+      if (error.response) {
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+          console.log(error.request);
+      } else {
+          console.log('Error', error.message);
+      }
+
+    }
+  
   }
 
   generateChart(){
-    const data = [
-      {
-        "id":340,
-        "name":"Cardiovascular Diseases",
-        "category_id":27,
-        "category_name":"Diseases",
-        "counter":20
-      },
-      {
-        "id":458,
-        "name":"Cerebrovascular Disorders",
-        "category_id":27,
-        "category_name":"Diseases",
-        "counter":15
-      },
-      {
-        "id":449,
-        "name":"Brain Ischemia",
-        "category_id":27,
-        "category_name":"Diseases",
-        "counter":14
-      },
-      {
-        "id":364,
-        "name":"Anticoagulants",
-        "category_id":5,
-        "category_name":"Chemicals and Drugs",
-        "counter":13
-      },
-      {
-        "id":339,
-        "name":"Atrial Fibrillation",
-        "category_id":27,
-        "category_name":"Diseases",
-        "counter":11
-      },
-      {
-        "id":395,
-        "name":"Fibrinolytic Agents",
-        "category_id":5,
-        "category_name":"Chemicals and Drugs",
-        "counter":11
-      },
-      {
-        "id":355,
-        "name":"Peripheral Vascular Diseases",
-        "category_id":27,
-        "category_name":"Diseases",
-        "counter":10
-      }]
 
     let chart = am4core.create("researchprofilechart", am4charts.PieChart);
     chart.hiddenState.properties.opacity = 0; // this creates initial fade-in
   
-    chart.data = data;
+    chart.data = this.data;
 
     var series = chart.series.push(new am4charts.PieSeries());
     series.radius = "100%"
@@ -144,10 +129,11 @@ class PanelResearchProfile extends React.Component {
   }
 
   render() {
-
-    if( this.props.tabResearchProfileOpened == true && this.state.isOpened == false){
+    if( this.props.tabResearchProfileOpened == true && 
+        this.state.isOpened == false &&
+        this.data !== undefined){
       const that = this;
-      setTimeout(function(){ that.generateChart() }, 500);
+      setTimeout(function(){ that.generateChart(this.data) }, 500);
     }
 
     const data = [

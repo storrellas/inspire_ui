@@ -64,74 +64,12 @@ class PanelCompanyCooperation extends React.Component {
 
   }
 
-  // generateChart(data) {
-
-  //   // Create chart instance
-  //   this.chart = am4core.create("companycooperationchart", am4charts.XYChart);
-
-
-  //   // Add data
-  //   this.chart.data = [{
-  //     "year": "2016",
-  //     "europe": 2.5,
-  //     "namerica": 2.5,
-  //     "asia": 2.1,
-  //     "lamerica": 0.3,
-  //     "meast": 0.2,
-  //     "africa": 0.1
-  //   }, {
-  //     "year": "2017",
-  //     "europe": 2.6,
-  //     "namerica": 2.7,
-  //     "asia": 2.2,
-  //     "lamerica": 0.3,
-  //     "meast": 0.3,
-  //     "africa": 0.1
-  //   }, {
-  //     "year": "2018",
-  //     "europe": 2.8,
-  //     "namerica": 2.9,
-  //     "asia": 2.4,
-  //     "lamerica": 0.3,
-  //     "meast": 0.3,
-  //     "africa": 0.1
-  //   }];
-    
-
-  //   // Create axes
-  //   let categoryAxis = this.chart.yAxes.push(new am4charts.CategoryAxis());
-  //   categoryAxis.dataFields.category = "year";
-  //   categoryAxis.renderer.grid.template.opacity = 0;
-
-  //   let valueAxis = this.chart.xAxes.push(new am4charts.ValueAxis());
-  //   valueAxis.min = 0;
-  //   valueAxis.renderer.grid.template.opacity = 0;
-  //   valueAxis.renderer.ticks.template.strokeOpacity = 0.5;
-  //   valueAxis.renderer.ticks.template.stroke = am4core.color("#495C43");
-  //   valueAxis.renderer.ticks.template.length = 10;
-  //   valueAxis.renderer.line.strokeOpacity = 0.5;
-  //   valueAxis.renderer.baseGrid.disabled = true;
-  //   valueAxis.renderer.minGridDistance = 40;
-
-
-  //   this.createSeries("europe", "Europe");
-  //   this.createSeries("namerica", "North America");
-  //   this.createSeries("asia", "Asia");
-  //   this.createSeries("lamerica", "Latin America");
-  //   this.createSeries("meast", "Middle East");
-  //   this.createSeries("africa", "Africa");
-
-  //   // Set state after timeout
-  //   this.setState({ isOpened: true })
-  // }
-
   generateChart(data) {
     if(data === undefined) return
 
     // Create chart instance
     this.chart = am4core.create("companycooperationchart", am4charts.XYChart);
 
-    console.log("data ", data)
     // Generate set
     let companySet = new Set()
     let yearSet = new Set()
@@ -152,7 +90,6 @@ class PanelCompanyCooperation extends React.Component {
       companyList[pos]['total'] = companyList[pos]['total'] + item['total_amount']
     }
     companyList.sort((a,b) => (a.total > b.total) ? 1 : ((b.total > a.total) ? -1 : 0) )
-    console.log("CompanySetAfter ", companyList )
 
     // Add data
     this.chart.data = companyList
