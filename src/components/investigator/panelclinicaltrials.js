@@ -58,7 +58,7 @@ class PanelClinicalTrials extends React.Component {
     const chart = am4core.create(container, am4charts.PieChart);
 
     // Add data
-    chart.data = conditions;
+    chart.data = this.state.dataConditions;
     chart.innerRadius = am4core.percent(60);
 
     // Add and configure Series
@@ -89,7 +89,7 @@ class PanelClinicalTrials extends React.Component {
     const chart = am4core.create(container, am4charts.PieChart);
 
     // Add data
-    chart.data = interventions;
+    chart.data = this.state.dataInterventions;
     chart.innerRadius = am4core.percent(60);
 
     // Add and configure Series

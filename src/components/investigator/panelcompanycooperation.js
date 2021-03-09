@@ -43,7 +43,8 @@ class PanelCompanyCooperation extends React.Component {
     this.state = {
       isOpened: false,
       showModal: false,
-      data: undefined
+      data: undefined,
+      investigatorId: undefined
     }
   }
 
@@ -188,7 +189,40 @@ class PanelCompanyCooperation extends React.Component {
     this.setState({ showModal: false })
   }
 
-  async componentDidMount(){
+  
+
+  async retrieveCooperationsPerCompany(){
+    try{
+
+      const token = localStorage.getItem('token')
+
+
+
+      // Perform request
+      const response = await axios.get(`${environment.base_url}/api/investigator/${this.state.investigatorId}/cooperations-per-company/`,
+        { headers: { "Authorization": "jwt " + token }
+      })
+
+      // Chart data
+      this.state.data = response.data.results
+
+    }catch(error){
+
+      // Error
+      if (error.response) {
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+          console.log(error.request);
+      } else {
+          console.log('Error', error.message);
+      }
+
+    }
+  }
+
+  async retrieveCooperationsPerCompany(){
     try{
 
       const token = localStorage.getItem('token')
@@ -220,6 +254,15 @@ class PanelCompanyCooperation extends React.Component {
       }
 
     }
+  }
+
+  componentDidMount(){
+    const { match: { params } } = this.props;
+    this.state.investigatorId = params.subid;
+    this.state.investigatorId = this.state.investigatorId.split('-')[this.state.investigatorId.split('-').length -1 ]
+    this.state.investigatorId = parseInt( this.state.investigatorId )
+
+    this.retrieveCooperationsPerCompany()
   }
 
   render() {
