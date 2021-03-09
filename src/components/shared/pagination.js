@@ -8,6 +8,7 @@ import { withRouter } from 'react-router-dom'
 import './pagination.scss'
 
 const InspirePagination = (props) => {
+
   // Generate startPage/endPage
   let startPage = props.currentPage - 1;
   let endPage = props.currentPage + 3;
@@ -31,7 +32,7 @@ const InspirePagination = (props) => {
 
   return (
     <div className="w-100 text-right">
-      <div style={{ display: 'inline-block', padding: '1em' }}>
+      <div style={{ display: 'inline-block', paddingTop: '1em' }}>
         <Pagination bsPrefix="inspire-pagination">
           <Pagination.First disabled={props.currentPage === 1} 
                   onClick={(e) => props.onClick(props.currentPage-1)} />

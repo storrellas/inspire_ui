@@ -22,70 +22,14 @@ import environment from '../../environment.json';
 // React Select
 import Select from 'react-select';
 
-// Project Imports
-import InspirePagination from '../shared/pagination'
 
 // Loading overlay
 import LoadingOverlay from 'react-loading-overlay';
 
-// const SearchHeader = (props) => {
+// Project Imports
+import InspirePagination from '../shared/pagination'
+import SearchHeader, { SEARCH_HEADER } from '../shared/searchheader'
 
-//   const [show, setShow] = useState(false);
-
-//   function handleOpen(e) {
-//     e.preventDefault();
-//     setShow(true);
-//   }
-
-//   function handleClose(e) {
-//     e.preventDefault();
-//     setShow(false);
-//   }
-//   return (
-//     <div className="text-right" style={{ cursor: 'pointer' }}>
-//       <Dropdown
-//         onMouseEnter={(e) => handleOpen(e)}
-//         onMouseLeave={(e) => handleClose(e)}
-//         show={show}>
-//         <Dropdown.Toggle variant="success" id="dropdown-basic" style={{ backgroundColor: 'transparent', border: 0, boxShadow: 'none' }}>
-//           <FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} />
-          
-//         </Dropdown.Toggle>
-//         <Dropdown.Menu>
-//           <Dropdown.Item href="#/action-1">Project1</Dropdown.Item>
-//           <Dropdown.Item href="#/action-1">Project2</Dropdown.Item>
-//           <Dropdown.Item href="#/action-1">Project3</Dropdown.Item>
-//           <Dropdown.Item href="#/action-1">Project4</Dropdown.Item>
-//         </Dropdown.Menu>
-//       </Dropdown>
-//     </div>
-//   );
-// }
-
-const SEARCH_HEADER = {
-  TEXT: 'text',
-  NUMBER: 'number'
-}
-
-const SearchHeader = (props) => {
-
-  // Declare a new state variable, which we'll call "count"
-  const [active, setActive] = useState(false);
-
-  return (
-    <div>
-      <div className="d-flex align-items-center pl-2 border-test" style={{ position: 'relative', cursor: 'pointer' }}>
-
-        <input type={props.type} className="inspire-table-search inspire-table-search-number" 
-                onChange={(e) => props.onChange(e.target.value)} 
-                onMouseEnter={(e) => setActive(true)}
-                onMouseLeave={(e) => setActive(false)}></input>
-        <FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} />
-      </div>
-      <div className={active?"inspire-table-search-border active":"inspire-table-search-border"}></div>
-    </div>
-  );
-}
 
 const FILTERING = {
   FIRST_NAME: 'first_name',
@@ -143,8 +87,8 @@ class InvestigatorTable extends React.Component {
       const { take, limit } = this.state;
 
       // Request investigators
-      let skip = this.state.take * (this.state.currentPage-1);
-      let offset = this.state.take * (this.state.currentPage -1);
+      let skip = this.state.take * (page-1);
+      let offset = this.state.take * (page -1);
       const token = localStorage.getItem('token')
       let urlParams = `project=${projectOid}&limit=${limit}&offset=${offset}&skip=${skip}&take=${take}`
       if( meshOid !== undefined ){

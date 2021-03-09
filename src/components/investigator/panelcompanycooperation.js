@@ -19,13 +19,14 @@ import { connect } from "react-redux";
 // Loading overlay
 import LoadingOverlay from 'react-loading-overlay';
 
-// Font Awesome
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSearch } from '@fortawesome/free-solid-svg-icons'
 
 // Axios
 import axios from 'axios';
 import environment from '../../environment.json';
+
+// Project Imports
+import InspirePagination from '../shared/pagination'
+import SearchHeader, { SEARCH_HEADER } from '../shared/searchheader'
 
 // Themes begin
 am4core.useTheme(am4themes_animated);
@@ -41,10 +42,17 @@ class PanelCompanyCooperation extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      currentPage: 1,
+      totalPage: 10,
+      take: 10,
+      limit: 10,
+      isLoading: false,
       isOpened: false,
       showModal: false,
-      data: undefined,
-      investigatorId: undefined
+      dataPerCompany: undefined,
+      dataPerNature: undefined,
+      investigatorId: undefined,
+      dataCompanyCooperations: []
     }
   }
 
@@ -71,7 +79,7 @@ class PanelCompanyCooperation extends React.Component {
     // Generate set
     let companySet = new Set()
     let yearSet = new Set()
-    for(const item of this.state.data ){
+    for(const item of this.state.dataPerCompany ){
       let name = item.institution__parent_name
       companySet.add(name) 
       yearSet.add(item.year)  
@@ -82,14 +90,12 @@ class PanelCompanyCooperation extends React.Component {
     for(const item of Array.from(companySet) ){
       companyList.push({name:item, total:0})      
     }
-    for(const item of this.state.data ){
+    for(const item of this.state.dataPerCompany ){
       const pos = companyList.map((e) => e.name).indexOf(item.institution__parent_name);
       companyList[pos][item['year']] = item['total_amount']
       companyList[pos]['total'] = companyList[pos]['total'] + item['total_amount']
     }
     companyList.sort((a,b) => (a.total > b.total) ? 1 : ((b.total > a.total) ? -1 : 0) )
-
-
 
     // Add data
     this.chart.data = companyList
@@ -144,20 +150,7 @@ class PanelCompanyCooperation extends React.Component {
     // Create chart instance
     this.maxchart = am4core.create("companycooperationmaxchart", am4charts.PieChart);
 
-    // Add data
-    this.maxchart.data = [
-      {
-        "nature_of_payment__name": "Travel and Lodging",
-        "total_amount": 194
-      },
-      {
-        "nature_of_payment__name": "Expenses",
-        "total_amount": 2523.09
-      },
-      {
-        "nature_of_payment__name": "Honoraria",
-        "total_amount": 19417
-      }]
+    this.maxchart.data = this.state.dataPerNature
 
     // Add and configure Series
     var pieSeries = this.maxchart.series.push(new am4charts.PieSeries());
@@ -189,22 +182,20 @@ class PanelCompanyCooperation extends React.Component {
     this.setState({ showModal: false })
   }
 
-  
-
   async retrieveCooperationsPerCompany(){
     try{
 
       const token = localStorage.getItem('token')
 
-
-
       // Perform request
-      const response = await axios.get(`${environment.base_url}/api/investigator/${this.state.investigatorId}/cooperations-per-company/`,
+      const url = `${environment.base_url}/api/investigator/${this.state.investigatorId}/cooperations-per-company/`
+      const response = await axios.get(url,
         { headers: { "Authorization": "jwt " + token }
       })
 
       // Chart data
-      this.state.data = response.data.results
+      this.state.dataPerCompany = response.data.results
+
 
     }catch(error){
 
@@ -222,23 +213,19 @@ class PanelCompanyCooperation extends React.Component {
     }
   }
 
-  async retrieveCooperationsPerCompany(){
+  async retrieveCooperationsPerNatureOfPayment(){
     try{
 
       const token = localStorage.getItem('token')
 
-      const { match: { params } } = this.props;
-      let investigatorId = params.subid;
-      investigatorId = investigatorId.split('-')[investigatorId.split('-').length -1 ]
-      investigatorId = parseInt( investigatorId )
-
       // Perform request
-      const response = await axios.get(`${environment.base_url}/api/investigator/${investigatorId}/cooperations-per-company/`,
+      const url = `${environment.base_url}/api/investigator/${this.state.investigatorId}/cooperations-per-nature-of-payment/`;
+      const response = await axios.get(url,
         { headers: { "Authorization": "jwt " + token }
       })
 
       // Chart data
-      this.state.data = response.data.results
+      this.state.dataPerNature = response.data.results
 
     }catch(error){
 
@@ -255,6 +242,49 @@ class PanelCompanyCooperation extends React.Component {
 
     }
   }
+
+  async retrieveCompanyCooperations(page = 1){
+    try{
+
+      this.setState({isLoading: true})
+
+      const token = localStorage.getItem('token')
+      const { take, limit } = this.state;
+
+      // Perform request
+      let skip = this.state.take * (page-1);
+      let offset = this.state.take * (page-1);
+      const urlParams = `limit=${limit}&offset=${offset}&skip=${skip}&take=${take}`
+      const url = `${environment.base_url}/api/investigator/${this.state.investigatorId}/company-cooperations/?${urlParams}`;
+      const response = await axios.get(url,
+        { headers: { "Authorization": "jwt " + token }
+      })
+
+      // Set State
+      const totalPage = Math.ceil(response.data.count / take);      
+      this.setState({
+        dataCompanyCooperations: response.data.results, 
+        currentPage: page,
+        totalPage: totalPage,
+        isLoading: false,
+      })
+
+    }catch(error){
+
+      // Error
+      if (error.response) {
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+          console.log(error.request);
+      } else {
+          console.log('Error', error.message);
+      }
+
+    }
+  }
+
 
   componentDidMount(){
     const { match: { params } } = this.props;
@@ -263,25 +293,24 @@ class PanelCompanyCooperation extends React.Component {
     this.state.investigatorId = parseInt( this.state.investigatorId )
 
     this.retrieveCooperationsPerCompany()
+    this.retrieveCooperationsPerNatureOfPayment()
+    this.retrieveCompanyCooperations()
   }
+
+  navigatePage(page) {
+    this.retrieveCompanyCooperations(page)
+  }
+
 
   render() {
     if (this.props.tabCompanyCooperationOpened == true && 
       this.state.isOpened == false &&
-      this.state.data !== undefined) {
+      this.state.dataPerCompany !== undefined) {
       const that = this;
       setTimeout(function () { that.generateChart() }, 500);
     }
 
-    const item = {
-      type: 'Honoraria',
-      year: '2015',
-      company: 'Bristol-Myers Squibb GmbH & Co. KGaA',
-      amount: '2017.00',
-      currency: 'EUR'
-    }
-    const data = Array(10).fill(item);
-
+    const {dataCompanyCooperations, currentPage, totalPage} = this.state;
     return (
       <div>
         <LoadingOverlay
@@ -307,6 +336,9 @@ class PanelCompanyCooperation extends React.Component {
                 <div id="companycooperationmaxchart" style={{ height: '70%' }}></div>
               </div>
               <div style={{ width: '70%' }}>
+              <LoadingOverlay
+                active={ this.state.isLoading }
+                spinner>
 
                 <table className="w-100">
                   <thead>
@@ -318,26 +350,38 @@ class PanelCompanyCooperation extends React.Component {
                       <td className="text-center">Currency</td>
                     </tr>
                     <tr style={{ border: '1px solid grey', borderWidth: '1px 0px 2px 0px' }}>
-                      <td><FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} /></td>
-                      <td><FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} /></td>
-                      <td><FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} /></td>
-                      <td><FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} /></td>
-                      <td><FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} /></td>
-                      <td></td>
+                      <td>
+                        <SearchHeader onChange={(e) => console.log("event", e)} type={SEARCH_HEADER.TEXT} />
+                      </td>
+                      <td>
+                        <SearchHeader onChange={(e) => console.log("event", e)} type={SEARCH_HEADER.TEXT} />
+                      </td>
+                      <td>
+                        <SearchHeader onChange={(e) => console.log("event", e)} type={SEARCH_HEADER.TEXT} />
+                      </td>
+                      <td>
+                        <SearchHeader onChange={(e) => console.log("event", e)} type={SEARCH_HEADER.TEXT} />
+                      </td>
+                      <td>
+                        <SearchHeader onChange={(e) => console.log("event", e)} type={SEARCH_HEADER.TEXT} />
+                      </td>
+                      
                     </tr>
                   </thead>
                   <tbody>
-                    {data.map((item, id) =>
+                    {dataCompanyCooperations.map((item, id) =>
                       <tr key={id}>
-                        <td>{item.type}</td>
-                        <td>{item.year}</td>
-                        <td>{item.company}</td>
-                        <td>{item.amount}</td>
-                        <td>{item.currency}</td>
+                        <td style={{ width: '20%'}}>{item.nature_of_payment}</td>
+                        <td style={{ width: '10%'}}>{item.year}</td>
+                        <td style={{ width: '40%'}}>{item.institution}</td>
+                        <td style={{ width: '20%'}}>{item.amount}</td>
+                        <td style={{ width: '10%'}}>{item.currency}</td>
                       </tr>
                     )}
                   </tbody>
                 </table>
+                </LoadingOverlay>
+                <InspirePagination currentPage={currentPage} totalPage={totalPage} onClick={this.navigatePage.bind(this)}/>
 
               </div>
             </div>
