@@ -141,7 +141,6 @@ class PanelResearchProfile extends React.Component {
   generateModalData(){
     const { data } = this.state;
 
-    console.log("data ", data)
 
     // Get List of categories
     const category_set = new Set()
@@ -153,28 +152,19 @@ class PanelResearchProfile extends React.Component {
     let research_profile_data = []
     let main_item_counter = 0
     for(let category of category_list){
-      main_item_counter = 0
-      const children = []
 
+
+      // Generate ChildrenList and compute relatives
       const childrenList = data.filter( x => x.category_name == category)
       const maxValue = 
         Math.max.apply(Math, childrenList.map((o) => o.counter ) )
       for(const item of childrenList){
         item['relative'] = (item.counter*100 / maxValue);
-      }
-      /*
-      console.log("category ", category, maxValue)      
-      for(let item of data){
-        if( item.category_name == category ){
-          children.push({'name': item.name, 'value': (item.counter)})
-          main_item_counter = main_item_counter + item.counter            
-        }
-      } 
-      /**/          
-      research_profile_data.push({'name': category, 'value': main_item_counter, 'children': children, 'childrenList': childrenList})
+      }     
+      research_profile_data.push({'name': category, 'childrenList': childrenList})
     }
 
-    console.log("research_profile_data ", research_profile_data)
+
 
     return research_profile_data
   }
