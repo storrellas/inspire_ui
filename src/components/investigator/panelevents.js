@@ -111,7 +111,7 @@ class PanelEvents extends React.Component {
     const chart = am4core.create(container, am4charts.PieChart);
 
     // Add data
-    chart.data = eventType;
+    chart.data = this.state.dataTypes;
     chart.innerRadius = am4core.percent(60);
 
     // Add and configure Series
@@ -162,9 +162,10 @@ class PanelEvents extends React.Component {
     // Create chart instance
     const chart = am4core.create(container, am4charts.XYChart);
 
-    chart.data = [
-      { "state": "", "Organizer": 3, "Chairperson": 11, "Speaker": 13 }
-    ]
+    // chart.data = [
+    //   { "state": "", "Organizer": 3, "Chairperson": 11, "Speaker": 13 }
+    // ]
+    chart.data = this.state.dataRoles;
 
     // Create axes
     let categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
@@ -307,6 +308,14 @@ class PanelEvents extends React.Component {
       })
       this.state.dataRoles = response.data.results;
 
+
+      // Process Data
+      const dataRoles = {"state": "event"}
+      for(const item of response.data.results){
+        dataRoles[ item['position__name'] ] = item['total']
+      }
+      this.state.dataRoles = [dataRoles];
+    
     }catch(error){
 
       // Error
@@ -323,18 +332,11 @@ class PanelEvents extends React.Component {
   }
 
   async componentDidMount() {
-    // https://demo.explicatos.com/api/investigator/345536/events-per-type/
-    // https://demo.explicatos.com/api/investigator/345536/events-per-position/
     this.retrieveEventTypes()
-    this.retrieveEventPosition()
-
-    
+    this.retrieveEventPosition()   
   }
 
   generateChart() {
-    //console.log("panelevents ", this.state.dataRoles, this.state.dataTypes)
-
-
     this.generateEventTypeChart()
     this.generateEventRoleChart()
 
@@ -384,7 +386,10 @@ class PanelEvents extends React.Component {
   }
 
   render() {
-    if (this.props.tabEventsOpened == true && this.state.isOpened == false) {
+    if (this.props.tabEventsOpened == true && 
+        this.state.isOpened == false &&
+        this.state.dataRoles !== undefined &&
+        this.state.dataTypes !== undefined) {
       const that = this;
       setTimeout(function () { that.generateChart() }, 500);
     }
