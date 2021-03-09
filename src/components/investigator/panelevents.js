@@ -106,42 +106,32 @@ class PanelEvents extends React.Component {
     }    
   }
 
-  generateEventTypeChart() {
+  generateEventType(container){
     // Create chart instance
-    this.eventTypeChart = am4core.create("eventTypeChart", am4charts.PieChart);
+    const chart = am4core.create(container, am4charts.PieChart);
 
     // Add data
-    this.eventTypeChart.data = eventType;
-    this.eventTypeChart.innerRadius = am4core.percent(60);
+    chart.data = eventType;
+    chart.innerRadius = am4core.percent(60);
 
     // Add and configure Series
-    var pieSeries = this.eventTypeChart.series.push(new am4charts.PieSeries());
+    var pieSeries = chart.series.push(new am4charts.PieSeries());
     pieSeries.labels.template.disabled = true;
     pieSeries.dataFields.value = "total";
     pieSeries.dataFields.category = "name";
     pieSeries.dataFields.tooltipText = "{category}{value}";
     pieSeries.hiddenState.properties.endAngle = -90;
 
+    return chart;
+  }
+
+  generateEventTypeChart() {
+    this.eventTypeChart = this.generateEventType("eventTypeChart")
   }
 
   generateEventTypeMaxChart() {
-    // Create chart instance
-    this.eventTypeMaxChart = am4core.create("eventTypeMaxChart", am4charts.PieChart);
-
-    // Add data
-    this.eventTypeMaxChart.data = eventType;
-    this.eventTypeMaxChart.innerRadius = am4core.percent(60);
-
-    // Add and configure Series
-    var pieSeries = this.eventTypeMaxChart.series.push(new am4charts.PieSeries());
-    pieSeries.labels.template.disabled = true;
-    pieSeries.dataFields.value = "total";
-    pieSeries.dataFields.category = "name";
-    pieSeries.dataFields.tooltipText = "{category}{value}";
-    pieSeries.hiddenState.properties.endAngle = -90;
-
-    this.eventTypeMaxChart.legend = new am4charts.Legend();    
-
+    this.eventTypeMaxChart = this.generateEventType("eventTypeMaxChart")
+    this.eventTypeMaxChart.legend = new am4charts.Legend();
   }
 
   createSeries(chart, field, name){
@@ -168,55 +158,38 @@ class PanelEvents extends React.Component {
       return series;
   }
 
-  generateEventRoleChart() {
+  generateEventRole(container) {
     // Create chart instance
-    this.eventRoleChart = am4core.create("eventRoleChart", am4charts.XYChart);
+    const chart = am4core.create(container, am4charts.XYChart);
 
-    this.eventRoleChart.data = [
+    chart.data = [
       { "state": "", "Organizer": 3, "Chairperson": 11, "Speaker": 13 }
     ]
 
     // Create axes
-    let categoryAxis = this.eventRoleChart.xAxes.push(new am4charts.CategoryAxis());
+    let categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
     categoryAxis.dataFields.category = "state";
     categoryAxis.renderer.grid.template.location = 0;
 
 
-    let valueAxis = this.eventRoleChart.yAxes.push(new am4charts.ValueAxis());
+    let valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
     valueAxis.renderer.inside = true;
     valueAxis.renderer.labels.template.disabled = true;
     valueAxis.min = 0;
 
-    this.createSeries(this.eventRoleChart, "Organizer", "Organizer");
-    this.createSeries(this.eventRoleChart, "Chairperson", "Chairperson");
-    this.createSeries(this.eventRoleChart, "Speaker", "Speaker");
-   
+    this.createSeries(chart, "Organizer", "Organizer");
+    this.createSeries(chart, "Chairperson", "Chairperson");
+    this.createSeries(chart, "Speaker", "Speaker");
+
+    return chart;   
+  }
+
+  generateEventRoleChart() {
+    this.eventRoleChart = this.generateEventRole("eventRoleChart")
   }
 
   generateEventRoleMaxChart() {
-    // Create chart instance
-    this.eventRoleMaxChart = am4core.create("eventRoleMaxChart", am4charts.XYChart);
-
-    this.eventRoleMaxChart.data = [
-      { "state": "", "Organizer": 3, "Chairperson": 11, "Speaker": 13 }
-    ]
-
-    // Create axes
-    let categoryAxis = this.eventRoleMaxChart.xAxes.push(new am4charts.CategoryAxis());
-    categoryAxis.dataFields.category = "state";
-    categoryAxis.renderer.grid.template.location = 0;
-
-
-    let valueAxis = this.eventRoleMaxChart.yAxes.push(new am4charts.ValueAxis());
-    valueAxis.renderer.inside = true;
-    valueAxis.renderer.labels.template.disabled = true;
-    valueAxis.min = 0;
-
-    this.createSeries(this.eventRoleMaxChart, "Organizer", "Organizer");
-    this.createSeries(this.eventRoleMaxChart, "Chairperson", "Chairperson");
-    this.createSeries(this.eventRoleMaxChart, "Speaker", "Speaker");
-
-    // Legend
+    this.eventRoleMaxChart = this.generateEventRole("eventRoleMaxChart")
     this.eventRoleMaxChart.legend = new am4charts.Legend();    
   }
 
