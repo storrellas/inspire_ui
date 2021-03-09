@@ -140,46 +140,38 @@ class PanelPublications extends React.Component {
     }
   }
 
-  generatePublicationTypeChart() {
+  generatePublicationType(container) {
     // Create chart instance
-    this.publicationTypeChart = am4core.create("publicationTypeChart", am4charts.PieChart);
+    let chart = am4core.create(container, am4charts.PieChart);
 
     // Add data
-    this.publicationTypeChart.data = publicationTypes;
-    this.publicationTypeChart.innerRadius = am4core.percent(60);
+    chart.data = publicationTypes;
+    chart.innerRadius = am4core.percent(60);
 
     // Add and configure Series
-    var pieSeries = this.publicationTypeChart.series.push(new am4charts.PieSeries());
+    var pieSeries = chart.series.push(new am4charts.PieSeries());
     pieSeries.labels.template.disabled = true;
     pieSeries.dataFields.value = "total";
     pieSeries.dataFields.category = "name";
     pieSeries.dataFields.tooltipText = "{category}{value}";
   
-    this.publicationTypeChart.hiddenState.properties.radius = am4core.percent(0);
+    chart.hiddenState.properties.radius = am4core.percent(0);
+
+    return chart;
+  }
+
+  generatePublicationTypeChart() {
+    this.publicationTypeChart = this.generatePublicationType("publicationTypeChart")
   }
 
   generatePublicationTypeMaxChart() {
-    // Create chart instance
-    this.publicationTypeMaxChart = am4core.create("publicationTypeMaxChart", am4charts.PieChart);
-
-    // Add data
-    this.publicationTypeMaxChart.data = publicationTypes;
-    this.publicationTypeMaxChart.innerRadius = am4core.percent(60);
-
-    // Add and configure Series
-    var pieSeries = this.publicationTypeMaxChart.series.push(new am4charts.PieSeries());
-    pieSeries.labels.template.disabled = true;
-    pieSeries.dataFields.value = "total";
-    pieSeries.dataFields.category = "name";
-    pieSeries.dataFields.tooltipText = "{category}{value}";
-  
-    this.publicationTypeMaxChart.hiddenState.properties.radius = am4core.percent(0);
+    this.publicationTypeMaxChart = this.generatePublicationType("publicationTypeMaxChart")
     this.publicationTypeMaxChart.legend = new am4charts.Legend();
   }
 
-  generatePublicationYearsChart() {
+  generatePublicationYears(container) {
     // Create chart instance
-    let chart = am4core.create("publicationYearsChart", am4charts.XYChart);
+    let chart = am4core.create(container, am4charts.XYChart);
 
     // Add data
     chart.data = publicationYear;
@@ -199,32 +191,15 @@ class PanelPublications extends React.Component {
     series.dataFields.categoryX = "publication_year";
 
 
-    this.publicationYearsChart = chart;
+    return chart;
+  }
+
+  generatePublicationYearsChart() {
+    this.publicationYearsChart = this.generatePublicationYears("publicationYearsChart")
   }
 
   generatePublicationYearsMaxChart() {
-    // Create chart instance
-    let chart = am4core.create("publicationYearsMaxChart", am4charts.XYChart);
-
-    // Add data
-    chart.data = publicationYear;
-
-    let categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
-    categoryAxis.dataFields.category = "publication_year";
-    let valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
-
-    // Create series
-    let series = chart.series.push(new am4charts.LineSeries());
-    series.dataFields.valueY = "value";
-    series.dataFields.dateX = "date";
-    series.tooltipText = "{value}"
-    series.strokeWidth = 2;
-    series.minBulletDistance = 15;
-    series.dataFields.valueY = "total";
-    series.dataFields.categoryX = "publication_year";
-
-
-    this.publicationYearsMaxChart = chart;
+    this.publicationYearsMaxChart = this.generatePublicationYears("publicationYearsMaxChart")
     this.publicationYearsMaxChart.legend = new am4charts.Legend();
   }
 
@@ -283,6 +258,8 @@ class PanelPublications extends React.Component {
   }
 
   componentDidMount(){
+    //https://demo.explicatos.com/api/investigator/345536/publications-per-type/
+    //https://demo.explicatos.com/api/investigator/345536/publications-per-year/
   }
 
   componentDidUpdate(){
