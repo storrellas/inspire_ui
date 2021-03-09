@@ -39,60 +39,6 @@ const mapStateToProps = state => {
   };
 };
 
-const conditions = [
-  {
-    "name": "Carotid Stenosis",
-    "total": 1
-  },
-  {
-    "name": "Cerebral Infarction",
-    "total": 1
-  },
-  {
-    "name": "Infarction",
-    "total": 1
-  },
-  {
-    "name": "Ischemic Stroke",
-    "total": 1
-  },
-  {
-    "name": "Stroke",
-    "total": 2
-  }]
-
-
-const interventions = [
-  {
-    "intervention__name": "Aspirin",
-    "total": 1
-  },
-  {
-    "intervention__name": "Best Medical Care",
-    "total": 1
-  },
-  {
-    "intervention__name": "Citicoline",
-    "total": 1
-  },
-  {
-    "intervention__name": "Clopidogrel",
-    "total": 1
-  },
-  {
-    "intervention__name": "Placebo",
-    "total": 1
-  },
-  {
-    "intervention__name": "Thrombectomy",
-    "total": 1
-  },
-  {
-    "intervention__name": "Ticagrelor",
-    "total": 1
-  }]
-
-
 class PanelClinicalTrials extends React.Component {
 
   constructor(props) {
@@ -181,7 +127,8 @@ class PanelClinicalTrials extends React.Component {
       const response = await axios.get(`${environment.base_url}/api/investigator/${investigatorId}/clinical-trials-per-condition/`,
         { headers: { "Authorization": "jwt " + token }
       })
-      this.state.dataConitions = response.data.results;
+      this.state.dataConditions = response.data.results;
+
 
     }catch(error){
 
@@ -229,8 +176,6 @@ class PanelClinicalTrials extends React.Component {
   }
 
   componentDidMount() {
-    //https://demo.explicatos.com/api/investigator/345536/clinical-trials-per-condition/
-    //https://demo.explicatos.com/api/investigator/345536/clinical-trials-per-intervention/
     this.retrieveConditions()
     this.retrieveInterventions()
   }
@@ -337,7 +282,9 @@ class PanelClinicalTrials extends React.Component {
 
   render() {
     if( this.props.tabClinicalTrialsOpened == true && 
-        this.state.isOpened == false){
+        this.state.isOpened == false &&
+        this.state.dataConditions !== undefined &&
+        this.state.dataInterventions !== undefined){
       const that = this;
       setTimeout(function(){ that.generateChart() }, 500);
     }
