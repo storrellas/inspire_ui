@@ -287,8 +287,6 @@ class PanelAffiliations extends React.Component {
       nAssociations = affiliations.filter(x => x.affiliation_type === 'associations')[0].total
     }
 
-    console.log("dataTable ", dataTable)
-
     return (
       <div>
         <div className="d-flex" style={{ margin: '0 0.2em 0 0.2em'}}>

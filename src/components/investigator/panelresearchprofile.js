@@ -41,12 +41,13 @@ class PanelResearchProfile extends React.Component {
       isOpened: false,
       showModal: false,
       openedModal: false,    
-      data: undefined  
+      data: []  
     }
     
   }
 
-  async componentDidMount(){
+
+  async retrieveMesh(){
     try{
 
       const token = localStorage.getItem('token')
@@ -63,7 +64,7 @@ class PanelResearchProfile extends React.Component {
 
       // Research Profile Data
       let research_profile_data = response.data.results
-      this.state.data = research_profile_data.slice(0,7)
+      this.setState({data: research_profile_data})
 
     }catch(error){
 
@@ -79,6 +80,14 @@ class PanelResearchProfile extends React.Component {
       }
 
     }
+  }
+
+  async componentDidMount(){
+    try{
+      await this.retrieveMesh()
+    }catch(error){
+      console.log(error.request);
+    }
   
   }
 
@@ -87,7 +96,7 @@ class PanelResearchProfile extends React.Component {
     let chart = am4core.create("researchprofilechart", am4charts.PieChart);
     chart.hiddenState.properties.opacity = 0; // this creates initial fade-in
   
-    chart.data = this.state.data;
+    chart.data = this.state.data.slice(0,7);
 
     var series = chart.series.push(new am4charts.PieSeries());
     series.radius = "100%"
@@ -129,6 +138,49 @@ class PanelResearchProfile extends React.Component {
     this.setState({openedModal: true})
   }
 
+  generateModalData(){
+    const { data } = this.state;
+
+    console.log("data ", data)
+
+    // Get List of categories
+    const category_set = new Set()
+    for(let item of data)
+      category_set.add(item.category_name)
+    const category_list = Array.from(category_set)
+
+    // Iterate on category list
+    let research_profile_data = []
+    let main_item_counter = 0
+    for(let category of category_list){
+      main_item_counter = 0
+      const children = []
+
+      const childrenList = data.filter( x => x.category_name == category)
+      const maxValue = 
+        Math.max.apply(Math, childrenList.map((o) => o.counter ) )
+      for(const item of childrenList){
+        item['relative'] = (item.counter*100 / maxValue);
+      }
+      /*
+      console.log("category ", category, maxValue)      
+      for(let item of data){
+        if( item.category_name == category ){
+          children.push({'name': item.name, 'value': (item.counter)})
+          main_item_counter = main_item_counter + item.counter            
+        }
+      } 
+      /**/          
+      research_profile_data.push({'name': category, 'value': main_item_counter, 'children': children, 'childrenList': childrenList})
+    }
+
+    console.log("research_profile_data ", research_profile_data)
+
+    return research_profile_data
+  }
+
+
+
   render() {
     if( this.props.tabResearchProfileOpened == true && 
         this.state.isOpened == false &&
@@ -142,6 +194,7 @@ class PanelResearchProfile extends React.Component {
       { label: 'test1', width: '20%', value: 3},
       { label: 'test2', width: '40%', value: 6},
     ]
+    const researchProfileData = this.generateModalData()
 
     return (
       <div>    
@@ -162,22 +215,24 @@ class PanelResearchProfile extends React.Component {
           <Modal.Header closeButton>
             <Modal.Title>Research Profile</Modal.Title>
           </Modal.Header>
-          <Modal.Body>
-      
-            <div id="category-page-3" className="category" style={{ marginTop: '1em', width: '100%'}}>
-              <h4><b>Anatomy</b></h4>
+          <Modal.Body style={{ overflow: 'hidden'}}>
+            <div className="h-100" style={{ overflowY:'auto', overflowX: 'none'}}>
+            {researchProfileData.map( (item, key) => 
+            <div key={key} id="category-page-3" className="category" style={{ marginTop: '1em', width: '100%'}}>
+              <h4><b>{item.name}</b></h4>
               <div className="d-flex flex-wrap">
-                {data.map( (item, key) => 
-                  <div key={key} className="w-50 p-2">
-                    {item.label}
-                    <div className={this.state.openedModal ? "bar ready" : "bar"}>
-                      <div className="rowshadow text-rigth pl-3" style={{ width: item.width }}>{item.value}</div>
+                {item.childrenList.map( (item, key) => 
+                    <div key={key} className="w-50 p-2">
+                      {item.label}
+                      <div className={this.state.openedModal ? "bar ready" : "bar"}>
+                        <div className="rowshadow text-rigth pl-3" style={{ width: item.relative + "%" }}>{item.counter}</div>
+                      </div>
                     </div>
-                  </div>
-                )}
-              </div>
+                  )}
+                </div>
             </div>
-
+            )}
+            </div>
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={(e) => this.closeModal(e)}>
