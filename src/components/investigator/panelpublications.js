@@ -202,7 +202,7 @@ class PanelPublications extends React.Component {
     }
   }
 
-  async retrievePublicationYears(){    
+  async retrievePublicationYears(){
     try{      
       const token = localStorage.getItem('token')
   

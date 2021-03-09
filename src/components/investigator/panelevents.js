@@ -24,9 +24,12 @@ import './panelevents.scss';
 // Animate Height
 import AnimateHeight from 'react-animate-height';
 
+// Axios
+import axios from 'axios';
+import environment from '../../environment.json';
+
 // Themes begin
 am4core.useTheme(am4themes_animated);
-
 
 const mapStateToProps = state => {
   return {
@@ -97,12 +100,10 @@ class PanelEvents extends React.Component {
       showModalEventType: false,
       showModalEventRole: false,
       showModal: false,
-      tableData: Array(10).fill(item)
-    }
-
-
-
-    
+      tableData: Array(10).fill(item),
+      dataTypes: undefined,
+      dataRoles: undefined
+    }    
   }
 
   generateEventTypeChart() {
@@ -288,10 +289,79 @@ class PanelEvents extends React.Component {
     </div>)
   }
 
+  async retrieveEventTypes(){
+    try{      
+      const token = localStorage.getItem('token')
+  
+      const { match: { params } } = this.props;
+      let investigatorId = params.subid;
+      investigatorId = investigatorId.split('-')[investigatorId.split('-').length -1 ]
+      investigatorId = parseInt( investigatorId )
 
-  componentDidMount() {}
+      // Perform request
+      const response = await axios.get(`${environment.base_url}/api/investigator/${investigatorId}/events-per-type/`,
+        { headers: { "Authorization": "jwt " + token }
+      })
+      this.state.dataTypes = response.data.results;
+
+    }catch(error){
+
+      // Error
+      if (error.response) {
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+          console.log(error.request);
+      } else {
+          console.log('Error', error.message);
+      }
+    }
+  }
+
+  async retrieveEventPosition(){
+    try{      
+      const token = localStorage.getItem('token')
+  
+      const { match: { params } } = this.props;
+      let investigatorId = params.subid;
+      investigatorId = investigatorId.split('-')[investigatorId.split('-').length -1 ]
+      investigatorId = parseInt( investigatorId )
+
+      // Perform request
+      const response = await axios.get(`${environment.base_url}/api/investigator/${investigatorId}/events-per-position/`,
+        { headers: { "Authorization": "jwt " + token }
+      })
+      this.state.dataRoles = response.data.results;
+
+    }catch(error){
+
+      // Error
+      if (error.response) {
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+          console.log(error.request);
+      } else {
+          console.log('Error', error.message);
+      }
+    }
+  }
+
+  async componentDidMount() {
+    // https://demo.explicatos.com/api/investigator/345536/events-per-type/
+    // https://demo.explicatos.com/api/investigator/345536/events-per-position/
+    this.retrieveEventTypes()
+    this.retrieveEventPosition()
+
+    
+  }
 
   generateChart() {
+    //console.log("panelevents ", this.state.dataRoles, this.state.dataTypes)
+
+
     this.generateEventTypeChart()
     this.generateEventRoleChart()
 
