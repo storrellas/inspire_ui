@@ -38,45 +38,6 @@ const mapStateToProps = state => {
 };
 
 
-const eventType = [
-  {
-    "name": "Symposium",
-    "total": 1
-  },
-  {
-    "name": "Course",
-    "total": 2
-  },
-  {
-    "name": "Forum",
-    "total": 2
-  },
-  {
-    "name": "Satellite Symposium",
-    "total": 2
-  },
-  {
-    "name": "Workshop",
-    "total": 2
-  },
-  {
-    "name": "Seminar",
-    "total": 3
-  },
-  {
-    "name": "Conference",
-    "total": 5
-  },
-  {
-    "name": "Congress",
-    "total": 10
-  }]
-
-const eventRole = [
-  { "state": "event", "Organizer": 3, "Chairperson": 11, "Speaker": 13 }
-]
-
-
 class PanelEvents extends React.Component {
 
   constructor(props) {
@@ -307,7 +268,6 @@ class PanelEvents extends React.Component {
         { headers: { "Authorization": "jwt " + token }
       })
       this.state.dataRoles = response.data.results;
-
 
       // Process Data
       const dataRoles = {"state": "event"}

@@ -20,6 +20,10 @@ import { connect } from "react-redux";
 // Loading Overlay
 import LoadingOverlay from 'react-loading-overlay';
 
+// Axios
+import axios from 'axios';
+import environment from '../../environment.json';
+
 // Themes begin
 am4core.useTheme(am4themes_animated);
 
@@ -97,20 +101,22 @@ class PanelClinicalTrials extends React.Component {
       isOpened: false,
       showModalConditions: false, 
       showModalInterventions: false, 
-      showModal: false
+      showModal: false,
+      dataConditions: undefined,
+      dataInterventions: undefined
     }
   }
 
-  generateConditionsChart() {
+  generateConditions(container) {
     // Create chart instance
-    this.conditionsChart = am4core.create("conditionsChart", am4charts.PieChart);
+    const chart = am4core.create(container, am4charts.PieChart);
 
     // Add data
-    this.conditionsChart.data = conditions;
-    this.conditionsChart.innerRadius = am4core.percent(60);
+    chart.data = conditions;
+    chart.innerRadius = am4core.percent(60);
 
     // Add and configure Series
-    var pieSeries = this.conditionsChart.series.push(new am4charts.PieSeries());
+    var pieSeries = chart.series.push(new am4charts.PieSeries());
     pieSeries.labels.template.disabled = true;
     pieSeries.dataFields.value = "total";
     pieSeries.dataFields.category = "name";
@@ -120,40 +126,28 @@ class PanelClinicalTrials extends React.Component {
     pieSeries.slices.template.showOnInit = true;
     pieSeries.slices.template.hiddenState.properties.shiftRadius = 1;
 
+    return chart
+  }
+
+  generateConditionsChart() {
+    this.conditionsChart = this.generateConditions("conditionsChart")
   }
 
   generateConditionsMaxChart() {
-    // Create chart instance
-    this.conditionsMaxChart = am4core.create("conditionsMaxChart", am4charts.PieChart);
-
-    // Add data
-    this.conditionsMaxChart.data = conditions;
-    this.conditionsMaxChart.innerRadius = am4core.percent(60);
-
-    // Add and configure Series
-    var pieSeries = this.conditionsMaxChart.series.push(new am4charts.PieSeries());
-    pieSeries.labels.template.disabled = true;
-    pieSeries.dataFields.value = "total";
-    pieSeries.dataFields.category = "name";
-    pieSeries.dataFields.tooltipText = "{category}{value}";
-
-    
-    pieSeries.slices.template.showOnInit = true;
-    pieSeries.slices.template.hiddenState.properties.shiftRadius = 1;
-
+    this.conditionsMaxChart = this.generateConditions("conditionsMaxChart")
     this.conditionsMaxChart.legend = new am4charts.Legend();
   }
 
-  generateInterventionsChart() {
+  generateInterventions(container) {
     // Create chart instance
-    this.interventionsChart = am4core.create("interventionsChart", am4charts.PieChart);
+    const chart = am4core.create(container, am4charts.PieChart);
 
     // Add data
-    this.interventionsChart.data = interventions;
-    this.interventionsChart.innerRadius = am4core.percent(60);
+    chart.data = interventions;
+    chart.innerRadius = am4core.percent(60);
 
     // Add and configure Series
-    var pieSeries = this.interventionsChart.series.push(new am4charts.PieSeries());
+    var pieSeries = chart.series.push(new am4charts.PieSeries());
     pieSeries.labels.template.disabled = true;
     pieSeries.dataFields.value = "total";
     pieSeries.dataFields.category = "intervention__name";
@@ -161,32 +155,84 @@ class PanelClinicalTrials extends React.Component {
 
     pieSeries.slices.template.showOnInit = true;
     pieSeries.slices.template.hiddenState.properties.shiftRadius = 1;
+
+    return chart
+  }
+
+  generateInterventionsChart() {
+    this.interventionsChart = this.generateInterventions("interventionsChart")
   }
 
   generateInterventionsMaxChart() {
-    // Create chart instance
-    this.interventionsMaxChart = am4core.create("interventionsMaxChart", am4charts.PieChart);
-
-    // Add data
-    this.interventionsMaxChart.data = interventions;
-    this.interventionsMaxChart.innerRadius = am4core.percent(60);
-
-    
-
-    // Add and configure Series
-    var pieSeries = this.interventionsMaxChart.series.push(new am4charts.PieSeries());
-    pieSeries.labels.template.disabled = true;
-    pieSeries.dataFields.value = "total";
-    pieSeries.dataFields.category = "intervention__name";
-    pieSeries.dataFields.tooltipText = "{category}{intervention__name}";
-
-    pieSeries.slices.template.showOnInit = true;
-    pieSeries.slices.template.hiddenState.properties.shiftRadius = 1;
-
+    this.interventionsMaxChart = this.generateInterventions("interventionsMaxChart")
     this.interventionsMaxChart.legend = new am4charts.Legend();
   }
 
+  async retrieveConditions(){
+    try{      
+      const token = localStorage.getItem('token')
+  
+      const { match: { params } } = this.props;
+      let investigatorId = params.subid;
+      investigatorId = investigatorId.split('-')[investigatorId.split('-').length -1 ]
+      investigatorId = parseInt( investigatorId )
+
+      // Perform request
+      const response = await axios.get(`${environment.base_url}/api/investigator/${investigatorId}/clinical-trials-per-condition/`,
+        { headers: { "Authorization": "jwt " + token }
+      })
+      this.state.dataConitions = response.data.results;
+
+    }catch(error){
+
+      // Error
+      if (error.response) {
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+          console.log(error.request);
+      } else {
+          console.log('Error', error.message);
+      }
+    }
+  }
+
+  async retrieveInterventions(){
+    try{      
+      const token = localStorage.getItem('token')
+  
+      const { match: { params } } = this.props;
+      let investigatorId = params.subid;
+      investigatorId = investigatorId.split('-')[investigatorId.split('-').length -1 ]
+      investigatorId = parseInt( investigatorId )
+
+      // Perform request
+      const response = await axios.get(`${environment.base_url}/api/investigator/${investigatorId}/clinical-trials-per-intervention/`,
+        { headers: { "Authorization": "jwt " + token }
+      })
+      this.state.dataInterventions = response.data.results;
+
+    }catch(error){
+
+      // Error
+      if (error.response) {
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+          console.log(error.request);
+      } else {
+          console.log('Error', error.message);
+      }
+    }
+  }
+
   componentDidMount() {
+    //https://demo.explicatos.com/api/investigator/345536/clinical-trials-per-condition/
+    //https://demo.explicatos.com/api/investigator/345536/clinical-trials-per-intervention/
+    this.retrieveConditions()
+    this.retrieveInterventions()
   }
 
   generateModalContent(){
@@ -290,7 +336,8 @@ class PanelClinicalTrials extends React.Component {
   }
 
   render() {
-    if( this.props.tabClinicalTrialsOpened == true && this.state.isOpened == false){
+    if( this.props.tabClinicalTrialsOpened == true && 
+        this.state.isOpened == false){
       const that = this;
       setTimeout(function(){ that.generateChart() }, 500);
     }
