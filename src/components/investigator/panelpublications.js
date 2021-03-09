@@ -20,6 +20,10 @@ import { connect } from "react-redux";
 // Loading Overlay
 import LoadingOverlay from 'react-loading-overlay';
 
+// Axios
+import axios from 'axios';
+import environment from '../../environment.json';
+
 // Themes begin
 am4core.useTheme(am4themes_animated);
 
@@ -137,6 +141,8 @@ class PanelPublications extends React.Component {
       showModalPublicationType: false,
       showModalPublicationYears: false,
       showModal: false,
+      dataType: undefined,
+      dataYears: undefined,
     }
   }
 
@@ -145,7 +151,8 @@ class PanelPublications extends React.Component {
     let chart = am4core.create(container, am4charts.PieChart);
 
     // Add data
-    chart.data = publicationTypes;
+    //chart.data = publicationTypes;
+    chart.data = this.state.dataType;
     chart.innerRadius = am4core.percent(60);
 
     // Add and configure Series
@@ -174,7 +181,7 @@ class PanelPublications extends React.Component {
     let chart = am4core.create(container, am4charts.XYChart);
 
     // Add data
-    chart.data = publicationYear;
+    chart.data = this.state.dataYears;
 
     let categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
     categoryAxis.dataFields.category = "publication_year";
@@ -257,12 +264,69 @@ class PanelPublications extends React.Component {
     this.setState({isOpened: true})
   }
 
-  componentDidMount(){
-    //https://demo.explicatos.com/api/investigator/345536/publications-per-type/
-    //https://demo.explicatos.com/api/investigator/345536/publications-per-year/
+  async retrievePublicationType(){    
+    try{
+      const token = localStorage.getItem('token')
+  
+      const { match: { params } } = this.props;
+      let investigatorId = params.subid;
+      investigatorId = investigatorId.split('-')[investigatorId.split('-').length -1 ]
+      investigatorId = parseInt( investigatorId )
+
+      // Perform request
+      const response = await axios.get(`${environment.base_url}/api/investigator/${investigatorId}/publications-per-type/`,
+        { headers: { "Authorization": "jwt " + token }
+      })
+      this.state.dataType = response.data.results;
+
+    }catch(error){
+
+      // Error
+      if (error.response) {
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+          console.log(error.request);
+      } else {
+          console.log('Error', error.message);
+      }
+    }
   }
 
-  componentDidUpdate(){
+  async retrievePublicationYears(){    
+    try{      
+      const token = localStorage.getItem('token')
+  
+      const { match: { params } } = this.props;
+      let investigatorId = params.subid;
+      investigatorId = investigatorId.split('-')[investigatorId.split('-').length -1 ]
+      investigatorId = parseInt( investigatorId )
+
+      // Perform request
+      const response = await axios.get(`${environment.base_url}/api/investigator/${investigatorId}/publications-per-year/`,
+        { headers: { "Authorization": "jwt " + token }
+      })
+      this.state.dataYears = response.data.results;
+
+    }catch(error){
+
+      // Error
+      if (error.response) {
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+          console.log(error.request);
+      } else {
+          console.log('Error', error.message);
+      }
+    }
+  }
+
+  componentDidMount(){
+    this.retrievePublicationType()
+    this.retrievePublicationYears()
   }
 
   componentWillUnmount() {
@@ -311,7 +375,10 @@ class PanelPublications extends React.Component {
   }
 
   render() {
-    if( this.props.tabPublicationsOpened == true && this.state.isOpened == false){
+    if( this.props.tabPublicationsOpened == true && 
+        this.state.isOpened == false &&
+        this.state.dataType !== undefined &&
+        this.state.dataYears !== undefined){
       const that = this;
       setTimeout(function(){ that.generateChart() }, 500);
     }
