@@ -24,6 +24,10 @@ import LoadingOverlay from 'react-loading-overlay';
 import axios from 'axios';
 import environment from '../../environment.json';
 
+// Project Imports
+import InspirePagination from '../shared/pagination'
+import SearchHeader, { SEARCH_HEADER } from '../shared/searchheader'
+
 // Themes begin
 am4core.useTheme(am4themes_animated);
 
@@ -49,7 +53,13 @@ class PanelClinicalTrials extends React.Component {
       showModalInterventions: false, 
       showModal: false,
       dataConditions: undefined,
-      dataInterventions: undefined
+      dataInterventions: undefined,
+      dataTable: [],
+      currentPage: 1,
+      totalPage: 10,
+      take: 10,
+      limit: 10,
+      isLoading: false,
     }
   }
 
@@ -117,14 +127,9 @@ class PanelClinicalTrials extends React.Component {
   async retrieveConditions(){
     try{      
       const token = localStorage.getItem('token')
-  
-      const { match: { params } } = this.props;
-      let investigatorId = params.subid;
-      investigatorId = investigatorId.split('-')[investigatorId.split('-').length -1 ]
-      investigatorId = parseInt( investigatorId )
 
       // Perform request
-      const response = await axios.get(`${environment.base_url}/api/investigator/${investigatorId}/clinical-trials-per-condition/`,
+      const response = await axios.get(`${environment.base_url}/api/investigator/${this.investigatorId}/clinical-trials-per-condition/`,
         { headers: { "Authorization": "jwt " + token }
       })
       this.state.dataConditions = response.data.results;
@@ -149,13 +154,8 @@ class PanelClinicalTrials extends React.Component {
     try{      
       const token = localStorage.getItem('token')
   
-      const { match: { params } } = this.props;
-      let investigatorId = params.subid;
-      investigatorId = investigatorId.split('-')[investigatorId.split('-').length -1 ]
-      investigatorId = parseInt( investigatorId )
-
       // Perform request
-      const response = await axios.get(`${environment.base_url}/api/investigator/${investigatorId}/clinical-trials-per-intervention/`,
+      const response = await axios.get(`${environment.base_url}/api/investigator/${this.investigatorId}/clinical-trials-per-intervention/`,
         { headers: { "Authorization": "jwt " + token }
       })
       this.state.dataInterventions = response.data.results;
@@ -175,10 +175,62 @@ class PanelClinicalTrials extends React.Component {
     }
   }
 
+  async retrieveCT(page = 1){
+    try{
+      this.setState({isLoading: true})
+
+      const token = localStorage.getItem('token')
+      const { take, limit } = this.state;
+
+      // Perform request
+      let skip = this.state.take * (page-1);
+      let offset = this.state.take * (page-1);
+      const urlParams = `limit=${limit}&offset=${offset}&skip=${skip}&take=${take}`
+      const url = `${environment.base_url}/api/investigator/${this.state.investigatorId}/clinical-trials/?${urlParams}`;
+      const response = await axios.get(url,
+        { headers: { "Authorization": "jwt " + token }
+      })
+
+      // Set State
+      const totalPage = Math.ceil(response.data.count / take);      
+      this.setState({
+        dataTable: response.data.results, 
+        currentPage: page,
+        totalPage: totalPage,
+        isLoading: false,
+      })
+
+    }catch(error){
+
+      // Error
+      if (error.response) {
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+          console.log(error.request);
+      } else {
+          console.log('Error', error.message);
+      }
+
+    }
+  }
+
   componentDidMount() {
+    const { match: { params } } = this.props;
+    this.investigatorId = params.subid;
+    this.investigatorId = this.investigatorId.split('-')[this.investigatorId.split('-').length -1 ]
+    this.investigatorId = parseInt( this.investigatorId )
+
     this.retrieveConditions()
     this.retrieveInterventions()
+    this.retrieveCT()
   }
+
+  navigatePage(page) {
+    console.log("page", page)
+  }
+
 
   generateModalContent(){
 
@@ -186,52 +238,48 @@ class PanelClinicalTrials extends React.Component {
       "Name", "Condition", "Status", "Start Year", 
       "End Year", "Phase", "Study Type", "Enrolment", "Intervention"
     ]
-
-    const item = {
-      name: 'Ticagrelor Versus Clopidogrel in Carotid Artery Stenting	',
-      condition: 'Carotid Stenosis',
-      status: 'Recruiting',
-      startYear: '2016',
-      endYear: '2019',
-      phase: 'Phase 2',
-      studyType: 'Interventional',
-      enrolment: '',
-      intervention: 'Drug: Ticagrelor|Drug: Clopidogrel|Drug: Aspirin',
-    }
-    const data = Array(10).fill(item);
+    const { currentPage, totalPage, dataTable } = this.state;
 
     return (
     <div className="p-3">
-      <table className="w-100" style={{ fontSize: '12px'}}>
-        <thead>
-          <tr>
-            {headers.map((item, id) =>
-              <td key={id} className="text-center">{item}</td>
-            )}
-          </tr>
-          <tr style={{ border: '1px solid grey', borderWidth: '1px 0px 2px 0px' }}>
-            {headers.map((item, id) =>
-              <td key={id} ><FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} /></td>
-            )}
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((item, id) =>
-            <tr key={id}>
-              <td>{item.name}</td>
-              <td>{item.condition}</td>
-              <td>{item.status}</td>
-              <td>{item.startYear}</td>
-              <td>{item.endYear}</td>
-              <td>{item.phase}</td>
-              <td>{item.studyType}</td>
-              <td>{item.enrolment}</td>
-              <td>{item.intervention}</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-    </div>)
+        <LoadingOverlay
+          active={this.state.isLoading}
+          spinner>
+          <table className="w-100" style={{ fontSize: '12px' }}>
+            <thead>
+              <tr>
+                {headers.map((item, id) =>
+                  <td key={id} className="text-center">{item}</td>
+                )}
+              </tr>
+              <tr style={{ border: '1px solid grey', borderWidth: '1px 0px 2px 0px' }}>
+                {headers.map((item, id) =>
+                  <td key={id} >
+                    <SearchHeader onChange={(e) => console.log("event", e)} type={SEARCH_HEADER.TEXT} />
+                  </td>
+                )}
+              </tr>
+            </thead>
+            <tbody>
+              {dataTable.map((item, id) =>
+                <tr key={id}>
+                  <td>{item.name}</td>
+                  <td>{item.condition}</td>
+                  <td>{item.status}</td>
+                  <td>{item.startYear}</td>
+                  <td>{item.endYear}</td>
+                  <td>{item.phase}</td>
+                  <td>{item.studyType}</td>
+                  <td>{item.enrolment}</td>
+                  <td>{item.intervention}</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </LoadingOverlay>
+        <InspirePagination currentPage={currentPage} totalPage={totalPage} onClick={this.navigatePage.bind(this)} />
+
+      </div>)
   }
 
   generateChart() {
