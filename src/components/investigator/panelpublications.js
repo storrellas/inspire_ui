@@ -24,6 +24,10 @@ import LoadingOverlay from 'react-loading-overlay';
 import axios from 'axios';
 import environment from '../../environment.json';
 
+// Project Imports
+import InspirePagination from '../shared/pagination'
+import SearchHeader, { SEARCH_HEADER } from '../shared/searchheader'
+
 // Themes begin
 am4core.useTheme(am4themes_animated);
 
@@ -31,7 +35,7 @@ am4core.useTheme(am4themes_animated);
 
 // Assets
 
-// Project imports
+
 
 const mapStateToProps = state => {
   return { 
@@ -51,6 +55,12 @@ class PanelPublications extends React.Component {
       showModal: false,
       dataType: undefined,
       dataYears: undefined,
+      dataTable: undefined,
+      currentPage: 1,
+      totalPage: 10,
+      take: 10,
+      limit: 10,
+      isLoading: false,
     }
   }
 
@@ -105,7 +115,6 @@ class PanelPublications extends React.Component {
     series.dataFields.valueY = "total";
     series.dataFields.categoryX = "publication_year";
 
-
     return chart;
   }
 
@@ -119,22 +128,18 @@ class PanelPublications extends React.Component {
   }
 
   generateModalContent(){
+    const { dataTable, totalPage, currentPage } = this.state;
+
     const headers = [
       "Name", "Year", "Position", "Type"
     ]
 
-    const item = {
-      position: 'Head of',
-      name: 'Predictive value of the Essen Stroke Risk Score and Ankle Brachial Index in acute ischaemic stroke patients from 85 German stroke units.',
-      year: '2008',
-      position: 'Coauthor',
-      type: 'Journal Article',
-    }
-    const data = Array(10).fill(item);
-
     return (
     <div className="p-3">
-      <table className="w-100">
+      <LoadingOverlay
+          active={ this.state.isLoading }
+          spinner>
+      <table className="w-100" style={{ fontSize: '13px'}}>
         <thead>
           <tr>
             <td className="text-center">WebLink</td>
@@ -150,17 +155,23 @@ class PanelPublications extends React.Component {
           </tr>
         </thead>
         <tbody>
-          {data.map((item, id) =>
+          {dataTable.map((item, id) =>
             <tr key={id}>
-              <td><img src="https://demo.explicatos.com/img/Internet.png" style={{ height:'25px' }}></img></td>
-              <td>{item.name}</td>
-              <td>{item.year}</td>
-              <td>{item.position}</td>
-              <td>{item.type}</td>
+              <td style={{ width: '5%'}}>
+                <a href={item.weblink}>
+                  <img src="https://demo.explicatos.com/img/Internet.png" style={{ height:'25px' }}></img>
+                </a>
+              </td>
+              <td style={{ width: '70%'}}>{item.name}</td>
+              <td style={{ width: '5%'}}>{item.publication_year}</td>
+              <td style={{ width: '10%'}}>{item.position}</td>
+              <td style={{ width: '10%'}}>{item.publication_subtype}</td>
             </tr>
           )}
         </tbody>
       </table>
+      </LoadingOverlay>
+      <InspirePagination currentPage={currentPage} totalPage={totalPage} onClick={this.navigatePage.bind(this)}/>
     </div>)
   }
 
@@ -176,13 +187,8 @@ class PanelPublications extends React.Component {
     try{
       const token = localStorage.getItem('token')
   
-      const { match: { params } } = this.props;
-      let investigatorId = params.subid;
-      investigatorId = investigatorId.split('-')[investigatorId.split('-').length -1 ]
-      investigatorId = parseInt( investigatorId )
-
       // Perform request
-      const response = await axios.get(`${environment.base_url}/api/investigator/${investigatorId}/publications-per-type/`,
+      const response = await axios.get(`${environment.base_url}/api/investigator/${this.investigatorId}/publications-per-type/`,
         { headers: { "Authorization": "jwt " + token }
       })
       this.state.dataType = response.data.results;
@@ -232,9 +238,56 @@ class PanelPublications extends React.Component {
     }
   }
 
+  async retrievePublicationList(page = 1){
+    try{      
+      this.setState({isLoading: true})
+      const token = localStorage.getItem('token')
+      const { take, limit } = this.state;
+
+      // Perform request
+      let skip = this.state.take * (page-1);
+      let offset = this.state.take * (page-1);
+      const urlParams = `limit=${limit}&offset=${offset}&skip=${skip}&take=${take}`      
+      const response = await axios.get(`${environment.base_url}/api/investigator/${this.investigatorId}/publications/?${urlParams}`,
+        { headers: { "Authorization": "jwt " + token }
+      })
+
+      // Set State
+      const totalPage = Math.ceil(response.data.count / take);      
+      this.setState({
+        dataTable: response.data.results, 
+        currentPage: page,
+        totalPage: totalPage,
+        isLoading: false,
+      })
+    }catch(error){
+
+      // Error
+      if (error.response) {
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+          console.log(error.request);
+      } else {
+          console.log('Error', error.message);
+      }
+    }
+  }
+
+  navigatePage(page) {
+    this.retrievePublicationList(page)
+  }
+
   componentDidMount(){
+    const { match: { params } } = this.props;
+    this.investigatorId = params.subid;
+    this.investigatorId = this.investigatorId.split('-')[this.investigatorId.split('-').length -1 ]
+    this.investigatorId = parseInt( this.investigatorId )
+
     this.retrievePublicationType()
     this.retrievePublicationYears()
+    this.retrievePublicationList()
   }
 
   componentWillUnmount() {
@@ -301,6 +354,9 @@ class PanelPublications extends React.Component {
     }else if( showModalPublicationYears ){
       modalContent = <div id="publicationYearsMaxChart" style={{ width:'100%', height:'100%', marginTop:'20px'}}></div>
     }
+
+
+
 
     return (
       <div>

@@ -245,7 +245,6 @@ class PanelCompanyCooperation extends React.Component {
 
   async retrieveCompanyCooperations(page = 1){
     try{
-
       this.setState({isLoading: true})
 
       const token = localStorage.getItem('token')

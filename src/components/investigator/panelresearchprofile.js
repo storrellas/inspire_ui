@@ -150,7 +150,6 @@ class PanelResearchProfile extends React.Component {
 
     // Iterate on category list
     let research_profile_data = []
-    let main_item_counter = 0
     for(let category of category_list){
 
 
