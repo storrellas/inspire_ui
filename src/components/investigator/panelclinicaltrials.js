@@ -240,6 +240,8 @@ class PanelClinicalTrials extends React.Component {
     ]
     const { currentPage, totalPage, dataTable } = this.state;
 
+    console.log("dataTable ", dataTable)
+
     return (
     <div className="p-3">
         <LoadingOverlay
@@ -263,14 +265,14 @@ class PanelClinicalTrials extends React.Component {
             <tbody>
               {dataTable.map((item, id) =>
                 <tr key={id}>
-                  <td>{item.name}</td>
-                  <td>{item.condition}</td>
-                  <td>{item.status}</td>
-                  <td>{item.startYear}</td>
-                  <td>{item.endYear}</td>
-                  <td>{item.phase}</td>
-                  <td>{item.studyType}</td>
-                  <td>{item.enrolment}</td>
+                  <td>{item.brief_public_title}</td>
+                  <td>{item.prop_conditions}</td>
+                  <td>{item.recruitment_status}</td>
+                  <td>{item.start_date_year}</td>
+                  <td>{item.end_date_year}</td>
+                  <td>{item.prop_study_phases}</td>
+                  <td>{item.study_type}</td>
+                  <td>{item.enrollment}</td>
                   <td>{item.intervention}</td>
                 </tr>
               )}
