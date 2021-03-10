@@ -28,6 +28,10 @@ import AnimateHeight from 'react-animate-height';
 import axios from 'axios';
 import environment from '../../environment.json';
 
+// Project Imports
+import InspirePagination from '../shared/pagination'
+import SearchHeader, { SEARCH_HEADER } from '../shared/searchheader'
+
 // Themes begin
 am4core.useTheme(am4themes_animated);
 
@@ -43,27 +47,21 @@ class PanelEvents extends React.Component {
   constructor(props) {
     super(props)
 
-    const item = {
-      name: 'Update Neurologie der Kliniken Schmieder 2017',
-      position: 'Speaker',
-      subtype: 'Congress',
-      year: '2008',
-      city: 'Allensbach',
-      country: 'Germany',
-      talks: 'Schlaganfall – Sekundärprophylaxe',
-      sessions: '1. Themenblock: Autoimmunentzündliche Prozesse',
-      posters: '1. Themenblock: Autoimmunentzündliche Prozesse',
-      show: false,      
-    }
+
 
     this.state = {
       isOpened: false,
       showModalEventType: false,
       showModalEventRole: false,
       showModal: false,
-      tableData: Array(10).fill(item),
+      dataTable: [],
       dataTypes: undefined,
-      dataRoles: undefined
+      dataRoles: undefined,
+      currentPage: 1,
+      totalPage: 10,
+      take: 10,
+      limit: 10,
+      isLoading: false,
     }    
   }
 
@@ -155,12 +153,12 @@ class PanelEvents extends React.Component {
     this.eventRoleMaxChart.legend = new am4charts.Legend();    
   }
 
-  onClickedDetail(id){    
-    let { tableData } = this.state;    
-    const target = !tableData[id].show
-    tableData = tableData.map( item => { return {...item, show: false} })
-    tableData[id].show = target;
-    this.setState({ tableData: tableData })
+  onClickedTableDetail(id){    
+    let { dataTable } = this.state;    
+    const target = !dataTable[id].show
+    dataTable = dataTable.map( item => { return {...item, show: false} })
+    dataTable[id].show = target;
+    this.setState({ dataTable: dataTable })
   }
 
   generateModalContent(){
@@ -168,11 +166,17 @@ class PanelEvents extends React.Component {
       "Name", "Position", "Subtype", "Year", 
       "City", "Country"
     ]
+    const { currentPage, totalPage } = this.state;
+
 
 
     return (
     <div className="p-3">
-      <table className="w-100">
+      <LoadingOverlay
+        active={ this.state.isLoading }
+        spinner>
+
+      <table className="w-100" style={{ fontSize: '12px'}}>
         <thead>
           <tr>
             <td></td>
@@ -183,33 +187,36 @@ class PanelEvents extends React.Component {
           <tr style={{ border: '1px solid grey', borderWidth: '1px 0px 2px 0px' }}>
             <td></td>
             {headers.map((item, id) =>
-              <td key={id} ><FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} /></td>
+              <td key={id} >
+                <SearchHeader onChange={(e) => console.log("event", e)} type={SEARCH_HEADER.TEXT} />
+              </td>
             )}
           </tr>
         </thead>
         <tbody>
-          {this.state.tableData.map((item, id) =>
+          {this.state.dataTable.map((item, id) =>
             [
-            <tr>
-              <td className="text-center" >
+            <tr key={id}>
+              <td className="text-center" style={{ width: '5%'}}>
                 <FontAwesomeIcon className={item.show?'table-caret active':'table-caret'} icon={faCaretRight} 
                   style={{ fontSize: '1em', color: 'grey', cursor:'pointer' }} 
-                  onClick={(e) => this.onClickedDetail(id)} />
+                  onClick={(e) => this.onClickedTableDetail(id)} />
               </td>
-              <td>{item.name}</td>
-              <td>{item.position}</td>
-              <td>{item.subtype}</td>
-              <td>{item.year}</td>
-              <td>{item.city}</td>              
-              <td>{item.country}</td>
+              <td style={{ width: '35%'}}>{item.name}</td>
+              <td style={{ width: '10%'}}>{item.position}</td>
+              <td style={{ width: '10%'}}>{item.subtype}</td>
+              <td style={{ width: '15%'}}>{item.year}</td>
+              <td style={{ width: '15%'}}>{item.city}</td>              
+              <td style={{ width: '15%'}}>{item.country}</td>
             </tr>,
-            <tr>
+            <tr key={id+"_"}>
               <td colSpan="7">
               <AnimateHeight
                 id="example-panel"
                 height={ item.show?'auto':0}
                 duration={250}>
-                <div style={{ border: '1px solid grey', borderWidth: '1px 0px 1px 0px', padding: '0.5em', paddingLeft: '2em', backgroundColor: '#fafafa'}}>
+                <div style={{ border: '1px solid grey', borderWidth: '1px 0px 1px 0px', 
+                              padding: '0.5em', paddingLeft: '2em', backgroundColor: '#fafafa'}}>
                   <div><span className="font-weight-bold">Talks:</span> {item.talks}</div>
                   <div><span className="font-weight-bold">Sesions:</span> {item.sessions}</div>
                   <div><span className="font-weight-bold">Posters:</span> {item.posters}</div>
@@ -221,20 +228,18 @@ class PanelEvents extends React.Component {
           )}
         </tbody>
       </table>
+      </LoadingOverlay>
+      <InspirePagination currentPage={currentPage} totalPage={totalPage} onClick={this.navigatePage.bind(this)}/>
     </div>)
   }
 
   async retrieveEventTypes(){
     try{      
       const token = localStorage.getItem('token')
-  
-      const { match: { params } } = this.props;
-      let investigatorId = params.subid;
-      investigatorId = investigatorId.split('-')[investigatorId.split('-').length -1 ]
-      investigatorId = parseInt( investigatorId )
+
 
       // Perform request
-      const response = await axios.get(`${environment.base_url}/api/investigator/${investigatorId}/events-per-type/`,
+      const response = await axios.get(`${environment.base_url}/api/investigator/${this.investigatorId}/events-per-type/`,
         { headers: { "Authorization": "jwt " + token }
       })
       this.state.dataTypes = response.data.results;
@@ -258,13 +263,10 @@ class PanelEvents extends React.Component {
     try{      
       const token = localStorage.getItem('token')
   
-      const { match: { params } } = this.props;
-      let investigatorId = params.subid;
-      investigatorId = investigatorId.split('-')[investigatorId.split('-').length -1 ]
-      investigatorId = parseInt( investigatorId )
+
 
       // Perform request
-      const response = await axios.get(`${environment.base_url}/api/investigator/${investigatorId}/events-per-position/`,
+      const response = await axios.get(`${environment.base_url}/api/investigator/${this.investigatorId}/events-per-position/`,
         { headers: { "Authorization": "jwt " + token }
       })
       this.state.dataRoles = response.data.results;
@@ -291,9 +293,56 @@ class PanelEvents extends React.Component {
     }
   }
 
+  async retrieveEvents(page = 1){
+    try{
+      this.setState({isLoading: true})
+
+      const token = localStorage.getItem('token')
+      const { take, limit } = this.state;
+
+      // Perform request
+      let skip = this.state.take * (page-1);
+      let offset = this.state.take * (page-1);
+      const urlParams = `limit=${limit}&offset=${offset}&skip=${skip}&take=${take}`
+      const url = `${environment.base_url}/api/investigator/${this.investigatorId}/events/?${urlParams}`;
+      const response = await axios.get(url,
+        { headers: { "Authorization": "jwt " + token }
+      })
+
+      // Set State
+      const totalPage = Math.ceil(response.data.count / take);      
+      this.setState({
+        dataTable: response.data.results, 
+        currentPage: page,
+        totalPage: totalPage,
+        isLoading: false,
+      })
+
+    }catch(error){
+
+      // Error
+      if (error.response) {
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+          console.log(error.request);
+      } else {
+          console.log('Error', error.message);
+      }
+    }
+  }
+
+
   async componentDidMount() {
+    const { match: { params } } = this.props;
+    this.investigatorId = params.subid;
+    this.investigatorId = this.investigatorId.split('-')[this.investigatorId.split('-').length -1 ]
+    this.investigatorId = parseInt( this.investigatorId )
+
     this.retrieveEventTypes()
     this.retrieveEventPosition()   
+    this.retrieveEvents()
   }
 
   generateChart() {
@@ -320,6 +369,10 @@ class PanelEvents extends React.Component {
       showModalEventRole: false, 
       showModal: false
     })
+  }
+
+  navigatePage(page) {
+    this.retrieveEvents(page)
   }
 
   openedModal(){

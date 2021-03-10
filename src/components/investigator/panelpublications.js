@@ -135,7 +135,7 @@ class PanelPublications extends React.Component {
     ]
 
     return (
-    <div className="p-3">
+    <div className="p-3" style={{ fontSize:'12px', overflowY: 'scroll', height: '100%'}}>
       <LoadingOverlay
           active={ this.state.isLoading }
           spinner>
@@ -150,7 +150,9 @@ class PanelPublications extends React.Component {
           <tr style={{ border: '1px solid grey', borderWidth: '1px 0px 2px 0px' }}>
             <td></td>
             {headers.map((item, id) =>
-              <td key={id}><FontAwesomeIcon icon={faSearch} style={{ fontSize: '1em', color: 'grey' }} /></td>
+              <td key={id}>
+                <SearchHeader onChange={(e) => console.log("event", e)} type={SEARCH_HEADER.TEXT} />
+              </td>
             )}
           </tr>
         </thead>
