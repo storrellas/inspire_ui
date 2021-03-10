@@ -210,6 +210,29 @@ class PanelConnections extends React.Component {
     console.log("e", e)
   }
 
+  isValid(value) {
+    return (value != null && value.trim().length > 0);
+  }
+
+  get_affiliation(item) {
+    let affiliation = '';
+    if (this.isValid(item.parent_name)) {
+        affiliation += item.parent_name;
+    }
+
+    if (this.isValid(item.department) || this.isValid(item.division)) {
+        affiliation += ', '
+        if (this.isValid(item.department) && this.isValid(item.division)) {
+            affiliation += item.department + ' - ' + item.division;
+        } else if (this.isValid(item.department)) {
+            affiliation += item.department;
+        } else {
+            affiliation += item.division
+        }
+    }
+    return affiliation;
+  }
+
   async componentDidMount(){
     try{
 
@@ -239,25 +262,48 @@ class PanelConnections extends React.Component {
       let connections = [];
       for(const [idx, item] of Object.entries(response.data.results) ){
                 
+        // Get data
+        const middle_name = (this.isValid(item.middle_name))?item.middle_name:'';
+        const combined_name = `${item.first_name} ${middle_name} ${item.last_name}`
+        const affiliation = this.get_affiliation(item)
+
         // prevent adding the node if for some reason, a medical expert is connected more than once
-        const node = {
+        const user = {
             id: (idx+2), 
-            label: "", 
-            affiliation: "", 
+            label: combined_name, 
+            medical_expert_oid: item.medical_expert_oid.replace(/think-me-000-/g, ''),
+            affiliation: affiliation, 
             image: investigator_img, 
-            strength: item.number_common_objects
+            strength: item.number_common_objects,
+            common_project: item.common_project
         }
-        users.push(node);
-        connections.push({ 
+        users.push(user);
+        connections.push({           
+          id: 1 + '_' + user.id,
           source: 1, 
-          target: node.id, 
-          strength: item.number_common_objects 
+
+          target: user.id, 
+          strength: item.number_common_objects,
+          number_events: item.number_common_events,
+          first_year_common_events: item.first_year_common_events,
+          last_year_common_events: item.last_year_common_events,
+          number_clinical_trials: item.number_common_clinical_trials,
+          first_year_common_clinical_trials: item.first_year_common_clinical_trials,
+          last_year_common_clinical_trials: item.last_year_common_clinical_trials,
+          number_publications: item.number_common_publications,
+          first_year_common_publications: item.first_year_common_publications,
+          last_year_common_publications: item.last_year_common_publications,
+          number_institutions_past: item.number_common_institutions_past,
+          number_institutions_present: item.number_common_institutions_present,
+          number_objects: item.number_common_objects, 
+          country_name: item.country_name,
+          color: (item.number_objects < 7)?'lightgray':'#4283f1'
         }); 
       }
 
-      let filtering = this.getFiltering(users, connections);
+      //let filtering = this.getFiltering(users, connections);
       //this.sourceGenerated = this.generateSource(filtering.users, filtering.connections)
-      this.state.source = this.generateSource(filtering.users, filtering.connections)
+      this.state.source = this.generateSource(users, connections)
 
       //const that = this;
       //setTimeout(function(){ that.setState({source:sourceGenerated}) }, 2000);
@@ -276,7 +322,7 @@ class PanelConnections extends React.Component {
 
     }
   }
-
+  /*
   getFiltering(users, connections, filters = defaultFilters){
 
     filters.from = parseInt(filters.from);
@@ -284,15 +330,6 @@ class PanelConnections extends React.Component {
 
     // Filtering Connections (Strength,Country, Type)
     // ---------------------
-
-    // Initialise filtered connections
-    let filteredConnections = connections.map(a => Object.assign({}, a))
-
-    //if the strength is specified get only the connections with this value(or greater than 7 if '7+' option selected) and connected users
-    for( let connection of filteredConnections ){
-        connection.id = connection.source + '_' + connection.target;
-        connection.color = (connection.number_objects < 7)?'lightgray':'#4283f1'
-    }
 
     // Strength
     // if ( filters.strength.includes('all') == false) {
@@ -331,7 +368,7 @@ class PanelConnections extends React.Component {
       users: users
     }
   }
-
+  /**/
   generateSource(users, connections){
     const source = [];
     let sourceIndex = 0;

@@ -128,7 +128,7 @@ class PanelClinicalTrials extends React.Component {
     try{      
       const token = localStorage.getItem('token')
 
-      // Perform request
+      // Perform request      
       const response = await axios.get(`${environment.base_url}/api/investigator/${this.investigatorId}/clinical-trials-per-condition/`,
         { headers: { "Authorization": "jwt " + token }
       })
@@ -186,7 +186,7 @@ class PanelClinicalTrials extends React.Component {
       let skip = this.state.take * (page-1);
       let offset = this.state.take * (page-1);
       const urlParams = `limit=${limit}&offset=${offset}&skip=${skip}&take=${take}`
-      const url = `${environment.base_url}/api/investigator/${this.state.investigatorId}/clinical-trials/?${urlParams}`;
+      const url = `${environment.base_url}/api/investigator/${this.investigatorId}/clinical-trials/?${urlParams}`;
       const response = await axios.get(url,
         { headers: { "Authorization": "jwt " + token }
       })
