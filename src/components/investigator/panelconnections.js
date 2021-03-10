@@ -101,7 +101,8 @@ class PanelConnections extends React.Component {
       showModalCytoscape: false,
       activeTab: TAB.NETWORK,
       modalNetwork: undefined,
-      source: []
+      users: [],
+      connections: []
     }
     this.cytoscape = undefined
     this.cytoscapeMax = undefined
@@ -161,17 +162,14 @@ class PanelConnections extends React.Component {
   }
 
   generateProfiles() {
-    const base =
-    {
-      label: 'Roman',
-      affiliation: 'Charité Universitätsmedizin Berlin (Campus Benjamin Franklin), Klinik für Neurologie mit Experimenteller Neurologie',
-      url: '/project/${user.medical_expert_oid}/'
-    }
-    const data = Array(10).fill(base);
+
+    const { users } = this.state;
+    // remove first user
+    const usersLocal = users.slice(1);
 
     return <div style={{ display: "flex", flexWrap: "wrap" }}>
-      {data.map((item, id) =>
-        <div style={{ width: "33%", padding: '1em' }}>
+      {usersLocal.map((item, id) =>
+        <div key={id} style={{ width: "33%", padding: '1em' }}>
           {item.url === '' ?
             <p style={{ fontSize: '18px', color: "#337ab7" }}>{item.label}</p>
             :
@@ -244,7 +242,7 @@ class PanelConnections extends React.Component {
       investigatorId = parseInt( investigatorId )
 
       // Perform request
-      const response = await axios.get(`${environment.base_url}/api/investigator/${investigatorId}/connections/`,
+      const response = await axios.get(`${environment.base_url}/api/investigator/${investigatorId}/connections/?affiliations=true`,
         { headers: { "Authorization": "jwt " + token }
       })
 
@@ -303,7 +301,10 @@ class PanelConnections extends React.Component {
 
       //let filtering = this.getFiltering(users, connections);
       //this.sourceGenerated = this.generateSource(filtering.users, filtering.connections)
-      this.state.source = this.generateSource(users, connections)
+
+
+      this.state.users = users
+      this.state.connections = connections
 
       //const that = this;
       //setTimeout(function(){ that.setState({source:sourceGenerated}) }, 2000);
@@ -387,12 +388,13 @@ class PanelConnections extends React.Component {
   }
 
   render() {
-
+    const { users, connections } = this.state;
+    const source = this.generateSource(users, connections)
     // Generate Panel Cytoscape    
     if( this.props.tabConnectionsOpened == true && 
         this.state.cytoscape === undefined){
         this.state.cytoscape = <CytoscapeComponent
-                    elements={this.state.source}
+                    elements={source}
                     style={{ width: '100%', height: '300px' }}
                     stylesheet={this.cytoscapeStylesheet}
                     layout={this.cytoscapeLayout} />
@@ -406,7 +408,7 @@ class PanelConnections extends React.Component {
     if (this.state.showModalCytoscape === true &&
           this.cytoscapeMax === undefined) {
         this.cytoscapeMax = <CytoscapeComponent
-                              elements={this.state.source}
+                              elements={source}
                               cy={(cy) => { this.cy = cy }}
                               style={{ width: '100%', height: '100%' }}
                               stylesheet={this.cytoscapeStylesheet}
