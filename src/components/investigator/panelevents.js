@@ -46,9 +46,6 @@ class PanelEvents extends React.Component {
 
   constructor(props) {
     super(props)
-
-
-
     this.state = {
       isOpened: false,
       showModalEventType: false,
@@ -166,7 +163,7 @@ class PanelEvents extends React.Component {
     const { currentPage, totalPage } = this.state;
 
     return (
-    <div className="p-3 h-100" style={{ fontSize:'14px', overflowY: 'scroll'}}>
+    <div className="p-3 h-100" style={{ fontSize:'14px'}}>
       <LoadingOverlay
         active={ this.state.isLoading }
         spinner>
@@ -454,7 +451,7 @@ class PanelEvents extends React.Component {
           <Modal.Header closeButton>
             <Modal.Title>Events</Modal.Title>
           </Modal.Header>
-          <Modal.Body>
+          <Modal.Body style={{ overflowY: 'scroll', height: '100%'}}>
             {modalContent}
           </Modal.Body>
           <Modal.Footer>

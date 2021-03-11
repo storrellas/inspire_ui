@@ -135,7 +135,7 @@ class PanelPublications extends React.Component {
     ]
 
     return (
-    <div className="p-3 h-100" style={{ fontSize:'14px', overflowY: 'scroll'}}>
+    <div className="p-3 h-100" style={{ fontSize:'14px'}}>
       <LoadingOverlay
           active={ this.state.isLoading }
           spinner>
@@ -398,7 +398,7 @@ class PanelPublications extends React.Component {
           <Modal.Header closeButton>
             <Modal.Title>Publications</Modal.Title>
           </Modal.Header>
-          <Modal.Body>
+          <Modal.Body style={{ overflowY: 'scroll', height: '100%'}}>
             {modalContent}
           </Modal.Body>
           <Modal.Footer>

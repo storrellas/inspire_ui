@@ -240,8 +240,6 @@ class PanelClinicalTrials extends React.Component {
     ]
     const { currentPage, totalPage, dataTable } = this.state;
 
-    console.log("dataTable ", dataTable)
-
     return (
     <div className="p-3">
         <LoadingOverlay
@@ -390,7 +388,7 @@ class PanelClinicalTrials extends React.Component {
           <Modal.Header closeButton>
             <Modal.Title>Clinical Trials</Modal.Title>
           </Modal.Header>
-          <Modal.Body>
+          <Modal.Body style={{ overflowY: 'scroll', height: '100%'}}>
             {modalContent}
           </Modal.Body>
           <Modal.Footer>
