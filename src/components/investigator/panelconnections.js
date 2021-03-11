@@ -64,11 +64,6 @@ function NodeDetail(props) {
   );
 }
 
-const options = [
-  { value: 'chocolate', label: 'Chocolate' },
-  { value: 'strawberry', label: 'Strawberry' },
-  { value: 'vanilla', label: 'Vanilla' }
-]
 
 export const connectionStregnthOptions = [  
   { value: 'All', label: 'All'},
@@ -80,21 +75,32 @@ export const connectionStregnthOptions = [
   { value: '7+', label: '7+'},
 ];
 
-const defaultInitYear = 1990;
-const defaultEndYear = (new Date()).getFullYear();
-const defaultFilters = {
-        strength: ['all'],
-        type: ['all'],
-        country: ['all'],
-        from: defaultInitYear,
-        to: defaultEndYear,
-    }
+
+const connectionTypeOptions = [  
+  { value: 'all', label: 'All'},
+  { value: 'trials', label: 'Trials'},
+  { value: 'events', label: 'Events'},
+  { value: 'publications', label: 'Publications'},
+  { value: 'affiliations_past', label: 'Affiliations (past)'},
+  { value: 'affiliations_present', label: 'Affiliations (present)'},
+];
+
 
 const TAB = { NETWORK: 1, PROFILES: 2, }
 class PanelConnections extends React.Component {
 
   constructor(props) {
     super(props)
+
+    // generate yearRange
+    const init = 1990;
+    const end = (new Date()).getFullYear();
+    let yearList = [...Array(end-init).keys()].map(i => i + init)
+    yearList = yearList.map( x => {return {label: x, value: x}})
+
+    
+    
+
     this.state = {
       isOpened: false,
       showModal: false,
@@ -102,7 +108,18 @@ class PanelConnections extends React.Component {
       activeTab: TAB.NETWORK,
       modalNetwork: undefined,
       users: [],
-      connections: []
+      connections: [],
+      usersMaximised: [],
+      connectionsMaximised: [],
+      yearList: yearList,
+      countryList: [],
+      filters: {
+        yearFrom: 1990,
+        yearTo: (new Date()).getFullYear(),
+        strength: [],
+        type: [],
+        country: []
+      }
     }
     this.cytoscape = undefined
     this.cytoscapeMax = undefined
@@ -174,7 +191,7 @@ class PanelConnections extends React.Component {
           {item.url === '' ?
             <p style={{ fontSize: '18px', color: "#337ab7" }}>{item.label}</p>
             :
-            <a href="#" target="_blank" >
+            <a href="#" target="_blank" style={{ fontSize: '18px', color: "#337ab7" }} >
               <b>{item.label}</b>
             </a>
           }
@@ -198,15 +215,23 @@ class PanelConnections extends React.Component {
 
 
   onFilterConnectionStrength(e){
-    console.log("e", e)
+    console.log("onFilterConnectionStrength", e)
   }
 
   onFilterCountry(e){
-    console.log("e", e)
+    console.log("onFilterCountry", e)
   }
 
   onFilterConnectionType(e){
-    console.log("e", e)
+    console.log("onFilterConnectionType", e)
+  }
+
+  onYearFrom(e){
+    console.log("onYearFrom", e)
+  }
+
+  onYearTo(e){
+    console.log("onYearTo", e)
   }
 
   isValid(value) {
@@ -246,6 +271,8 @@ class PanelConnections extends React.Component {
       const response = await axios.get(`${environment.base_url}/api/investigator/${investigatorId}/connections/?affiliations=true`,
         { headers: { "Authorization": "jwt " + token }
       })
+
+      const countrySet = new Set()
 
       // collection of nodes
       const investigator_img = "https://demo.explicatos.com/img/user_gray.png";
@@ -298,14 +325,29 @@ class PanelConnections extends React.Component {
           country_name: item.country_name,
           color: (item.number_objects < 7)?'lightgray':'#4283f1'
         }); 
+
+        if(item.country_name)
+          countrySet.add(item.country_name)
       }
 
-      //let filtering = this.getFiltering(users, connections);
-      //this.sourceGenerated = this.generateSource(filtering.users, filtering.connections)
+      const filtering = this.getFiltering(users, connections);
 
 
       this.state.users = users
       this.state.connections = connections
+
+      this.state.usersMaximised = filtering.users
+      this.state.connectionsMaximised = filtering.connections
+
+
+      // Append countries
+      const countryList = []
+      for( const country of countrySet )
+        countryList.push({label: country, value: country})
+      
+
+      this.setState({ countryList: countryList} )
+
 
       //const that = this;
       //setTimeout(function(){ that.setState({source:sourceGenerated}) }, 2000);
@@ -324,11 +366,18 @@ class PanelConnections extends React.Component {
 
     }
   }
-  /*
-  getFiltering(users, connections, filters = defaultFilters){
+  
+  getFiltering(users, connections){
 
-    filters.from = parseInt(filters.from);
-    filters.to = parseInt(filters.to);
+    // Initialise filtered connections/users
+    let filteredUsers = users.map(a => Object.assign({}, a))
+    let filteredConnections = connections.map(a => Object.assign({}, a))    
+    
+
+
+
+    // filters.from = parseInt(filters.from);
+    // filters.to = parseInt(filters.to);
 
     // Filtering Connections (Strength,Country, Type)
     // ---------------------
@@ -366,11 +415,11 @@ class PanelConnections extends React.Component {
 
 
     return {
+      users: filteredUsers,
       connections: filteredConnections,
-      users: users
     }
   }
-  /**/
+
   generateSource(users, connections){
     const source = [];
     let sourceIndex = 0;
@@ -387,6 +436,8 @@ class PanelConnections extends React.Component {
     }
     return source
   }
+
+
 
   render() {
     const { users, connections } = this.state;
@@ -419,9 +470,8 @@ class PanelConnections extends React.Component {
     // NetworkContent
     const networkContent = this.state.showModalCytoscape ? this.cytoscapeMax : '';
 
-    const { activeTab } = this.state;
+    const { activeTab, countryList, yearList, filters } = this.state;
     const content = (activeTab == TAB.NETWORK) ? networkContent : this.generateProfiles()
-
 
     return (
       <div>
@@ -452,23 +502,27 @@ class PanelConnections extends React.Component {
                     />
                     <div className="font-weight-bold">Country</div>
                     <Select defaultValue={null} 
-                      isMulti name="colors" options={connectionStregnthOptions}
+                      isMulti name="colors" options={countryList}
                       onChange={ (e) => this.onFilterCountry(e)}
                     />
 
                     <div className="font-weight-bold">Connection Type</div>
                     <Select defaultValue={null} 
-                      isMulti name="colors" options={connectionStregnthOptions}
+                      isMulti name="colors" options={connectionTypeOptions}
                       onChange={ (e) => this.onFilterConnectionType(e)}
                     />
                     <div className="d-flex">
                       <div className="w-50 mr-1">
                         <div className="font-weight-bold">From</div>
-                        <Select options={options} />
+                        <Select options={yearList} 
+                          onChange={ (e) => this.onYearFrom(e)}
+                          defaultValue={yearList[0]}/>
                       </div>
                       <div className="w-50 ml-1">
                         <div className="font-weight-bold">To</div>
-                        <Select options={options} />
+                        <Select options={yearList} 
+                          onChange={ (e) => this.onYearTo(e)}
+                          defaultValue={yearList[yearList.length-1]}/>
                       </div>
 
                     </div>
