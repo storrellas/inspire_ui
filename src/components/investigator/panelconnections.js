@@ -66,7 +66,7 @@ function NodeDetail(props) {
 
 
 export const connectionStregnthOptions = [  
-  { value: 'All', label: 'All'},
+  { value: 'all', label: 'All'},
   { value: '2', label: '2'},
   { value: '3', label: '3'},
   { value: '4', label: '4'},
@@ -116,9 +116,9 @@ class PanelConnections extends React.Component {
       filters: {
         yearFrom: 1990,
         yearTo: (new Date()).getFullYear(),
-        strength: [],
-        type: [],
-        country: []
+        strengthList: ['all'],
+        connectionTypeList: ['all'],
+        countryList: ['all']
       }
     }
     this.cytoscape = undefined
@@ -213,27 +213,126 @@ class PanelConnections extends React.Component {
 
   }
 
+  getIntersection(a, b){
+    return new Set([...a].filter(x => b.has(x)));
+  }
+
+  getFiltering(users, connections){
+
+    const { filters } = this.state;
+
+    // Initialise filtered connections/users
+    let filteredUsers = users.map(x => Object.assign({}, x))
+    let connectionsIdList = connections.map(x => x.id)    
+    
+
+    console.log("filters ", filters)
+    console.log("filters ", connections)
+
+    let filteredStrengthConnectionSet = new Set()
+    // Filtering Strength
+    if( filters.strengthList.includes('all') == false ){
+
+      for(const connection of connections){
+
+        // Equal number_objects
+        if ( filters.strengthList.includes( connection.number_objects.toString() ) ) {
+          filteredStrengthConnectionSet.add(connection.id);
+        }                        
+
+        // More than 7
+        if( filters.strengthList.includes('7+') ){
+            if( connection.number_objects > 7 )
+              filteredStrengthConnectionSet.add(connection.id);
+        }
+      }
+    }else{
+      
+      filteredStrengthConnectionSet = new Set(connectionsIdList)
+      console.log("Adding all - Strength", filteredStrengthConnectionSet)
+    }
+
+    
+    // Country    
+    let filteredCountryConnectionSet = new Set()
+    if ( filters.countryList.includes('all') === false ) {
+      // Iterate on connections
+      for(const connection of connections){
+          if(filters.countryList.includes( connection.country_name) )
+            filteredCountryConnectionSet.add(connection.id);            
+      }
+    }else{      
+      filteredCountryConnectionSet = new Set(connectionsIdList)      
+    }
+
+    // ConnectionType
+    // NOTE: This is still a bit dark
+    let filteredConnectionTypeConnectionSet = new Set()
+    if ( filters.connectionTypeList.includes('all') === false ) {
+      // if($.inArray('all', filters.type) == -1) {
+      //     for (var connIndex = filteredConnections.length - 1; connIndex >= 0; connIndex--) {
+      //         var remove = true;
+      //         for (var typeIndex = 0; typeIndex < filters.type.length; typeIndex++) {
+      //             if (parseInt(filteredConnections[connIndex]['number_' + filters.type[typeIndex]]) > 0 )
+      //                 remove = false;
+      //         }
+      //         if (remove) {
+      //             filteredConnections.splice(connIndex, 1);
+      //         }
+      //     }
+      // }
+    }else{
+
+    }
+    
+
+    let intersection = this.getIntersection(filteredStrengthConnectionSet, filteredCountryConnectionSet)
+
+
+    const filteredConnections = connections.filter( x => intersection.has(x.id) )
+    console.log("filteredConnections ", filteredConnections)
+
+    return {
+      users: filteredUsers,
+      connections: filteredConnections,
+    }
+  }
+
+
+  updateCytoscape(){
+    const { users, connections } = this.state;
+    const filtering = this.getFiltering(users, connections)
+
+
+    // Force cytoscapeMax to reload
+    this.cytoscapeMax = undefined;
+    this.setState({ usersMaximised: filtering.users, connectionsMaximised: filtering.connections})
+  }
 
   onFilterConnectionStrength(e){
-    console.log("onFilterConnectionStrength", e)
-    this.state.filters.strength = e.map( x => x.label )
-    console.log("onFilterConnectionStrength", this.state.filters.strength)
+    this.state.filters.strengthList = e.map( x => x.value )    
+    console.log("e ", e)
+    this.updateCytoscape()
   }
 
   onFilterCountry(e){
-    console.log("onFilterCountry", e)
+    this.state.filters.countryList = e.map( x => x.value )
+    this.updateCytoscape()
   }
 
   onFilterConnectionType(e){
-    console.log("onFilterConnectionType", e)
+    this.state.filters.connectioTypeList = e.map( x => x.value )
+    this.updateCytoscape()
   }
 
   onYearFrom(e){
-    console.log("onYearFrom", e)
+    this.state.filters.yearFrom = e.value
+    this.updateCytoscape()
   }
 
   onYearTo(e){
-    console.log("onYearTo", e)
+    this.state.filters.yearTo = e.value
+    this.updateCytoscape()
   }
 
   isValid(value) {
@@ -321,7 +420,7 @@ class PanelConnections extends React.Component {
           number_publications: item.number_common_publications,
           first_year_common_publications: item.first_year_common_publications,
           last_year_common_publications: item.last_year_common_publications,
-          number_institutions_past: item.number_common_institutions_past,
+          number_institutions_past: item.numaber_common_institutions_past,
           number_institutions_present: item.number_common_institutions_present,
           number_objects: item.number_common_objects, 
           country_name: item.country_name,
@@ -332,14 +431,13 @@ class PanelConnections extends React.Component {
           countrySet.add(item.country_name)
       }
 
-      const filtering = this.getFiltering(users, connections);
 
-
+      // For panel cytoscape
       this.state.users = users
       this.state.connections = connections
-
-      this.state.usersMaximised = filtering.users
-      this.state.connectionsMaximised = filtering.connections
+      // For maximised cytoscape
+      this.state.usersMaximised = users
+      this.state.connectionsMaximised = connections
 
 
       // Append countries
@@ -347,12 +445,9 @@ class PanelConnections extends React.Component {
       for( const country of countrySet )
         countryList.push({label: country, value: country})
       
-
+      // Initialise countries
       this.setState({ countryList: countryList} )
 
-
-      //const that = this;
-      //setTimeout(function(){ that.setState({source:sourceGenerated}) }, 2000);
     }catch(error){
 
       // Error
@@ -369,58 +464,6 @@ class PanelConnections extends React.Component {
     }
   }
   
-  getFiltering(users, connections){
-
-    // Initialise filtered connections/users
-    let filteredUsers = users.map(a => Object.assign({}, a))
-    let filteredConnections = connections.map(a => Object.assign({}, a))    
-    
-
-
-
-    // filters.from = parseInt(filters.from);
-    // filters.to = parseInt(filters.to);
-
-    // Filtering Connections (Strength,Country, Type)
-    // ---------------------
-
-    // Strength
-    // if ( filters.strength.includes('all') == false) {
-
-    //   let filteredConnectionsAux = filteredConnections.map(a => Object.assign({}, a));
-    //   filteredConnections = [] // Empty filtered connections
-    //   for(const connection of filteredConnectionsAux){
-
-    //       // Equal number_objects
-    //       if ( filters.strength.includes( connection.number_objects.toString() ) ) {
-    //           console.log("Adding it")
-    //           filteredConnections.push(connection);
-    //       }                        
-
-    //       // More than 7
-    //       if( filters.strength.includes('7+') ){
-    //           if( connection.number_objects > 7 )
-    //               filteredConnections.push(connection);
-    //       }
-    //   }
-    // }
-
-    // Country    
-    // if ( filters.country.includes('all') === false ) {
-    //   let filteredConnectionsAux = filteredConnections.map(a => Object.assign({}, a));
-    //   filteredConnections = [] // Empty filtered connections
-    //   for(const connection of filteredConnectionsAux){
-    //       if(filters.country.includes ( connection.country_name) )
-    //           filteredConnections.push(connection);            
-    //   }
-    // }
-
-
-    return {
-      users: filteredUsers,
-      connections: filteredConnections,
-    }
-  }
 
   generateSource(users, connections){
     const source = [];
@@ -443,10 +486,12 @@ class PanelConnections extends React.Component {
 
   render() {
     const { users, connections } = this.state;
-    const source = this.generateSource(users, connections)
+    const { usersMaximised, connectionsMaximised } = this.state;
+    
     // Generate Panel Cytoscape    
     if( this.props.tabConnectionsOpened == true && 
         this.state.cytoscape === undefined){
+        const source = this.generateSource(users, connections)
         this.state.cytoscape = <CytoscapeComponent
                     elements={source}
                     style={{ width: '100%', height: '300px' }}
@@ -461,12 +506,14 @@ class PanelConnections extends React.Component {
     // Generate maximised cytoscape
     if (this.state.showModalCytoscape === true &&
           this.cytoscapeMax === undefined) {
+        const source = this.generateSource(usersMaximised, connectionsMaximised)
         this.cytoscapeMax = <CytoscapeComponent
-                              elements={source}
-                              cy={(cy) => { this.cy = cy }}
-                              style={{ width: '100%', height: '100%' }}
-                              stylesheet={this.cytoscapeStylesheet}
-                              layout={this.cytoscapeLayout} />;
+                            elements={source}
+                            cy={(cy) => { this.cy = cy }}
+                            style={{ width: '100%', height: '100%' }}
+                            stylesheet={this.cytoscapeStylesheet}
+                            layout={this.cytoscapeLayout} />;
+
     }
 
     // NetworkContent
