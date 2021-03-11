@@ -330,7 +330,7 @@ class PanelAffiliations extends React.Component {
             <Modal.Title>{modalTitle}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <div className="p-3">
+            <div className="p-3 h-100" style={{ overflowY: 'scroll', fontSize: '14px'}}>
                 <LoadingOverlay
                     active={ this.state.isLoading }
                     spinner>
@@ -375,7 +375,7 @@ class PanelAffiliations extends React.Component {
                   </thead>
                   <tbody>
                     {dataTable.map((item, id) =>
-                      <tr key={id} style={{ fontSize: '14px'}}>
+                      <tr key={id}>
                         <td style={{ width: '10%'}}>{item.position__name}</td>
                         <td style={{ width: '20%'}}>{item.institution__parent_name}</td>
                         <td style={{ width: '20%'}}>{item.institution__department}</td>
