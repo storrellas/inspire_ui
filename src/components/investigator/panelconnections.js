@@ -216,6 +216,8 @@ class PanelConnections extends React.Component {
 
   onFilterConnectionStrength(e){
     console.log("onFilterConnectionStrength", e)
+    this.state.filters.strength = e.map( x => x.label )
+    console.log("onFilterConnectionStrength", this.state.filters.strength)
   }
 
   onFilterCountry(e){
@@ -341,7 +343,7 @@ class PanelConnections extends React.Component {
 
 
       // Append countries
-      const countryList = []
+      const countryList = [{value:'all', label: 'All'}]
       for( const country of countrySet )
         countryList.push({label: country, value: country})
       
@@ -496,19 +498,25 @@ class PanelConnections extends React.Component {
                   <div className="font-weight-bold" style={{ padding: '0.5em', paddingLeft: '15%', fontSize: '16px', backgroundColor: '#ddd' }}>FILTERS</div>
                   <div className="p-2">
                     <div className="font-weight-bold">Connection Strength</div>
-                    <Select defaultValue={null} 
-                      isMulti name="colors" options={connectionStregnthOptions}
+                    <Select
+                      isMulti name="colors" 
+                      options={connectionStregnthOptions}
+                      defaultValue={connectionStregnthOptions[0]}
                       onChange={ (e) => this.onFilterConnectionStrength(e)}
                     />
                     <div className="font-weight-bold">Country</div>
-                    <Select defaultValue={null} 
-                      isMulti name="colors" options={countryList}
+                    <Select
+                      isMulti name="colors" 
+                      options={countryList}
+                      defaultValue={countryList[0]}
                       onChange={ (e) => this.onFilterCountry(e)}
                     />
 
                     <div className="font-weight-bold">Connection Type</div>
-                    <Select defaultValue={null} 
-                      isMulti name="colors" options={connectionTypeOptions}
+                    <Select
+                      isMulti name="colors" 
+                      options={connectionTypeOptions}
+                      defaultValue={connectionTypeOptions[0]}
                       onChange={ (e) => this.onFilterConnectionType(e)}
                     />
                     <div className="d-flex">
