@@ -329,7 +329,7 @@ class PanelCompanyCooperation extends React.Component {
           <Modal.Header closeButton>
             <Modal.Title>Company Cooperation</Modal.Title>
           </Modal.Header>
-          <Modal.Body>
+          <Modal.Body style={{ overflowY: 'scroll', height: '100%'}}>
             <div className="d-flex" style={{ height: '100%' }}>
               <div className="d-flex justify-content-center flex-column" style={{ width: '30%' }}>
                 <div id="companycooperationmaxchart" style={{ height: '70%' }}></div>
