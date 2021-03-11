@@ -439,7 +439,7 @@ class PanelConnections extends React.Component {
           <Modal.Header closeButton>
             <Modal.Title>Connections</Modal.Title>
           </Modal.Header>
-          <Modal.Body>
+          <Modal.Body style={{ overflowY: 'scroll', height: '100%'}}>
             <div className="d-flex" style={{ height: '100%' }}>
               <div style={{ width: '30%' }}>
                 <div style={{ borderRadius: '3px', border: '1px solid #ccc', color: '#555' }}>

@@ -135,7 +135,7 @@ class PanelPublications extends React.Component {
     ]
 
     return (
-    <div className="p-3" style={{ fontSize:'12px', overflowY: 'scroll', height: '100%'}}>
+    <div className="p-3 h-100" style={{ fontSize:'14px', overflowY: 'scroll'}}>
       <LoadingOverlay
           active={ this.state.isLoading }
           spinner>

@@ -121,9 +121,6 @@ class PanelEvents extends React.Component {
     // Create chart instance
     const chart = am4core.create(container, am4charts.XYChart);
 
-    // chart.data = [
-    //   { "state": "", "Organizer": 3, "Chairperson": 11, "Speaker": 13 }
-    // ]
     chart.data = this.state.dataRoles;
 
     // Create axes
@@ -168,10 +165,8 @@ class PanelEvents extends React.Component {
     ]
     const { currentPage, totalPage } = this.state;
 
-
-
     return (
-    <div className="p-3">
+    <div className="p-3 h-100" style={{ fontSize:'14px', overflowY: 'scroll'}}>
       <LoadingOverlay
         active={ this.state.isLoading }
         spinner>
