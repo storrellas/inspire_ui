@@ -155,9 +155,10 @@ class PanelConnections extends React.Component {
     this.setState({ showModal: true })
   }
 
-  closeModal(e) {
-    this.cy.resize()
-    this.cy.fit();
+  closeModal(e) {    
+    // this.cy.resize()
+    // this.cy.fit();
+    // this.cy.destroy();
     this.setState({ showModal: false, showModalCytoscape: false })
   }
 
@@ -167,7 +168,7 @@ class PanelConnections extends React.Component {
     // remove first user
     const usersLocal = users.slice(1);
 
-    return <div style={{ display: "flex", flexWrap: "wrap" }}>
+    return <div className="h-100" style={{ display: "flex", flexWrap: "wrap", overflowY: 'scroll' }}>
       {usersLocal.map((item, id) =>
         <div key={id} style={{ width: "33%", padding: '1em' }}>
           {item.url === '' ?
@@ -495,7 +496,7 @@ class PanelConnections extends React.Component {
                   </Nav>
                 </div>
 
-                <div className="h-100" style={{ borderRadius: '0 3px 3px 3px', border: '1px solid #dee2e6 ', borderTop: 0 }}>
+                <div style={{ borderRadius: '0 3px 3px 3px', border: '1px solid #dee2e6 ', borderTop: 0, flexGrow: 1, height:'10px' }}>
                   {content}
                 </div>
 
