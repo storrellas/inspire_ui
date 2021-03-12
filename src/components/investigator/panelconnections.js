@@ -255,12 +255,14 @@ class PanelConnections extends React.Component {
     
     let filteredStrengthConnectionSet = new Set(connectionsIdList)
     // Filtering Strength
+    console.log("filters ", filters)
     if( filters.strengthList.includes('all') == false ){
       filteredStrengthConnectionSet = new Set()
       for(const connection of connections){
 
         // Equal number_objects
         if ( filters.strengthList.includes( connection.number_objects.toString() ) ) {
+          console.log("adding ", connection.number_objects.toString())
           filteredStrengthConnectionSet.add(connection.id);
         }                        
 
@@ -336,8 +338,15 @@ class PanelConnections extends React.Component {
     intersection = this.getIntersection(intersection, filteredConnectionTypeConnectionSet)
     intersection = this.getIntersection(intersection, filteredYearsSet)
 
-
     const filteredConnections = connections.filter( x => intersection.has(x.id) )
+
+    // Fitering user using connections
+    filteredUsers = []
+    for(const user of users){
+      if( filteredConnections.filter( x => x.source == user.id || x.target == user.id).length > 0 ){
+        filteredUsers.push(user)
+      }
+    }
 
     return {
       users: filteredUsers,
@@ -357,37 +366,36 @@ class PanelConnections extends React.Component {
   }
 
   onFilterConnectionStrength(e){
-    this.state.filters.strengthList = e.map( x => x.value )    
+      
 
     // If all and some other remove all
     if( e.filter( x => x.value == 'all').length > 0 && e.length > 1){
       e = e.filter( x =>  x.value !== 'all')
     }
     this.state.connectionStrengthSelected = e
+    this.state.filters.strengthList = e.map( x => x.value )  
 
     this.updateCytoscape()
   }
 
   onFilterCountry(e){
-    this.state.filters.countryList = e.map( x => x.value )
-
     // If all and some other remove all
     if( e.filter( x => x.value == 'all').length > 0 && e.length > 1){
       e = e.filter( x =>  x.value !== 'all')
     }
     this.state.countrySelected = e
+    this.state.filters.countryList = e.map( x => x.value )
 
     this.updateCytoscape()
   }
 
   onFilterConnectionType(e){
-    this.state.filters.connectionTypeList = e.map( x => x.value )
-
     // If all and some other remove all
     if( e.filter( x => x.value == 'all').length > 0 && e.length > 1){
       e = e.filter( x =>  x.value !== 'all')
     }
     this.state.connectionTypeSelected = e
+    this.state.filters.connectionTypeList = e.map( x => x.value )
 
     this.updateCytoscape()
   }
