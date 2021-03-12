@@ -135,9 +135,11 @@ class InvestigatorProfile extends React.Component {
 
       this.setState(state)
 
+      console.log("this.state ", this.state)
+
       this.props.setInvestigatorProfile({
         name: this.state.name,
-        affiliation: this.state.affiliation,
+        affiliationInstitution: this.state.affiliationInsititution,
         picture: this.state.picture
       })
     }catch(error){

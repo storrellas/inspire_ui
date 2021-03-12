@@ -88,6 +88,8 @@ export function rootReducer(state = initialState, action) {
     return { ...state, tabClinicalTrialsOpened: true };
   }
 
+
+  console.log("profile ", action.payload, action.type)
   if (action.type === INVESTIGATOR_PROFILE) {
     return { ...state, investigatorProfile: action.payload
     };

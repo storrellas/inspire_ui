@@ -42,10 +42,14 @@ const mapStateToProps = state => {
 
 function NodeDetail(props) {
 
+
+  console.log("props ", props)
   return (
     <div style={{ fontSize: '14px', color: "#000000" }}>
-      <div style={{ fontSize: '18px', color: "#337ab7" }}>Joachim Rother</div>
-      <div>Asklepios Kliniken - Asklepios Klinik Altona, Abteilung für Neurologie</div>
+      <div style={{ fontSize: '18px', color: "#337ab7" }}>
+        <a href={props.data.link} style={{color: "#337ab7"}}>{props.data.label}</a>
+      </div>
+      <div>{props.data.affiliation}</div>
       <div>
         <FontAwesomeIcon icon={faFolder} />
         <span className="ml-2">All</span>
@@ -78,11 +82,11 @@ export const connectionStregnthOptions = [
 
 const connectionTypeOptions = [  
   { value: 'all', label: 'All'},
-  { value: 'trials', label: 'Trials'},
-  { value: 'events', label: 'Events'},
-  { value: 'publications', label: 'Publications'},
-  { value: 'affiliations_past', label: 'Affiliations (past)'},
-  { value: 'affiliations_present', label: 'Affiliations (present)'},
+  { value: 'number_clinical_trials', label: 'Trials'},
+  { value: 'number_events', label: 'Events'},
+  { value: 'number_publications', label: 'Publications'},
+  { value: 'number_institutions_past', label: 'Affiliations (past)'},
+  { value: 'number_institutions_present', label: 'Affiliations (present)'},
 ];
 
 
@@ -99,8 +103,6 @@ class PanelConnections extends React.Component {
     yearList = yearList.map( x => {return {label: x, value: x}})
 
     
-    
-
     this.state = {
       isOpened: false,
       showModal: false,
@@ -113,13 +115,25 @@ class PanelConnections extends React.Component {
       connectionsMaximised: [],
       yearList: yearList,
       countryList: [],
+      connectionStrengthSelected: [connectionStregnthOptions[0]],
+      countrySelected: [],
+      connectionTypeSelected: [connectionTypeOptions[0]],
       filters: {
         yearFrom: 1990,
         yearTo: (new Date()).getFullYear(),
         strengthList: ['all'],
         connectionTypeList: ['all'],
         countryList: ['all']
-      }
+      },
+      cytoscapeInvestigator: {
+        id: '', 
+        label: '', 
+        medical_expert_oid: '',
+        affiliation: '', 
+        image: '', 
+        strength: '',
+        common_project: ''
+      },
     }
     this.cytoscape = undefined
     this.cytoscapeMax = undefined
@@ -205,6 +219,7 @@ class PanelConnections extends React.Component {
 
   componentDidUpdate() {
     if (this.cy !== undefined) {
+      const that = this.setState()
       this.cy.on('select', 'node', function (evt) {
         var data = evt.target[0].data();
         console.log(data)
@@ -225,14 +240,10 @@ class PanelConnections extends React.Component {
     let filteredUsers = users.map(x => Object.assign({}, x))
     let connectionsIdList = connections.map(x => x.id)    
     
-
-    console.log("filters ", filters)
-    console.log("filters ", connections)
-
-    let filteredStrengthConnectionSet = new Set()
+    let filteredStrengthConnectionSet = new Set(connectionsIdList)
     // Filtering Strength
     if( filters.strengthList.includes('all') == false ){
-
+      filteredStrengthConnectionSet = new Set()
       for(const connection of connections){
 
         // Equal number_objects
@@ -246,51 +257,74 @@ class PanelConnections extends React.Component {
               filteredStrengthConnectionSet.add(connection.id);
         }
       }
-    }else{
-      
-      filteredStrengthConnectionSet = new Set(connectionsIdList)
-      console.log("Adding all - Strength", filteredStrengthConnectionSet)
     }
 
     
     // Country    
-    let filteredCountryConnectionSet = new Set()
+    let filteredCountryConnectionSet = new Set(connectionsIdList)
     if ( filters.countryList.includes('all') === false ) {
+      filteredCountryConnectionSet = new Set()   
       // Iterate on connections
       for(const connection of connections){
           if(filters.countryList.includes( connection.country_name) )
             filteredCountryConnectionSet.add(connection.id);            
       }
-    }else{      
-      filteredCountryConnectionSet = new Set(connectionsIdList)      
     }
 
     // ConnectionType
-    // NOTE: This is still a bit dark
-    let filteredConnectionTypeConnectionSet = new Set()
+    let filteredConnectionTypeConnectionSet = new Set(connectionsIdList)
     if ( filters.connectionTypeList.includes('all') === false ) {
-      // if($.inArray('all', filters.type) == -1) {
-      //     for (var connIndex = filteredConnections.length - 1; connIndex >= 0; connIndex--) {
-      //         var remove = true;
-      //         for (var typeIndex = 0; typeIndex < filters.type.length; typeIndex++) {
-      //             if (parseInt(filteredConnections[connIndex]['number_' + filters.type[typeIndex]]) > 0 )
-      //                 remove = false;
-      //         }
-      //         if (remove) {
-      //             filteredConnections.splice(connIndex, 1);
-      //         }
-      //     }
-      // }
-    }else{
+      filteredConnectionTypeConnectionSet = new Set()
+      // Iterate on connections
+      for(const connection of connections){
+        // Iterate on connectionType
+        for( const connectionType of connectionTypeOptions ) {
+          if( connection[connectionType] > 0 )
+            filteredCountryConnectionSet.add(connection.id);          
+        } // End for connection Type
 
+      } // End For connections
     }
-    
 
+    // Years
+    const yearFrom = filters.yearFrom;
+    const yearTo = filters.yearTo;
+
+    const checkEventsDate = filters.connectionTypeList.includes('number_events')
+    const checkTrialsDate = filters.connectionTypeList.includes('number_clinical_trials')
+    const checkPublicationDate = filters.connectionTypeList.includes('number_publications')
+    let filteredYearsSet = new Set(connectionsIdList)
+    if(checkEventsDate || checkTrialsDate || checkPublicationDate){
+      filteredYearsSet = new Set()
+      for(const connection of connections){
+        if(checkEventsDate){
+          const { first_year_common_events } = connection;
+          if( yearFrom > first_year_common_events && first_year_common_events < yearTo ){
+            filteredYearsSet.add(connection.id);
+          }
+        }
+        if(checkTrialsDate){
+          const { first_year_common_clinical_trials } = connection;
+          if( yearFrom > first_year_common_clinical_trials && first_year_common_clinical_trials < yearTo ){
+            filteredYearsSet.add(connection.id);
+          }
+        }
+        if(checkPublicationDate){
+          const { first_year_common_publications } = connection;
+          if( yearFrom > first_year_common_publications && first_year_common_publications < yearTo ){
+            filteredYearsSet.add(connection.id);
+          }
+        }
+      }
+    }
+
+    // Get Ids intersection
     let intersection = this.getIntersection(filteredStrengthConnectionSet, filteredCountryConnectionSet)
+    intersection = this.getIntersection(intersection, filteredConnectionTypeConnectionSet)
+    intersection = this.getIntersection(intersection, filteredYearsSet)
 
 
     const filteredConnections = connections.filter( x => intersection.has(x.id) )
-    console.log("filteredConnections ", filteredConnections)
 
     return {
       users: filteredUsers,
@@ -311,17 +345,37 @@ class PanelConnections extends React.Component {
 
   onFilterConnectionStrength(e){
     this.state.filters.strengthList = e.map( x => x.value )    
-    console.log("e ", e)
+
+    // If all and some other remove all
+    if( e.filter( x => x.value == 'all').length > 0 && e.length > 1){
+      e = e.filter( x =>  x.value !== 'all')
+    }
+    this.state.connectionStrengthSelected = e
+
     this.updateCytoscape()
   }
 
   onFilterCountry(e){
     this.state.filters.countryList = e.map( x => x.value )
+
+    // If all and some other remove all
+    if( e.filter( x => x.value == 'all').length > 0 && e.length > 1){
+      e = e.filter( x =>  x.value !== 'all')
+    }
+    this.state.countrySelected = e
+
     this.updateCytoscape()
   }
 
   onFilterConnectionType(e){
-    this.state.filters.connectioTypeList = e.map( x => x.value )
+    this.state.filters.connectionTypeList = e.map( x => x.value )
+
+    // If all and some other remove all
+    if( e.filter( x => x.value == 'all').length > 0 && e.length > 1){
+      e = e.filter( x =>  x.value !== 'all')
+    }
+    this.state.connectionTypeSelected = e
+
     this.updateCytoscape()
   }
 
@@ -367,6 +421,7 @@ class PanelConnections extends React.Component {
       let investigatorId = params.subid;
       investigatorId = investigatorId.split('-')[investigatorId.split('-').length -1 ]
       investigatorId = parseInt( investigatorId )
+      let projectOid = params.id;
 
       // Perform request
       const response = await axios.get(`${environment.base_url}/api/investigator/${investigatorId}/connections/?affiliations=true`,
@@ -375,17 +430,24 @@ class PanelConnections extends React.Component {
 
       const countrySet = new Set()
 
+      
+      
+      
+
       // collection of nodes
       const investigator_img = "https://demo.explicatos.com/img/user_gray.png";
       const users = [
         { 
           id: 1, 
           label: this.props.investigatorProfile.name, 
-          affiliation: this.props.investigatorProfile.affiliation,
+          affiliation: this.props.investigatorProfile.affiliationInstitution,
           image: this.props.picture || investigator_img, 
-          strength: '' 
+          strength: '',
+          link: `/project/${params.id}/investigator/${params.subid}`
         }
       ];      
+
+
       let connections = [];
       for(const [idx, item] of Object.entries(response.data.results) ){
                 
@@ -398,11 +460,11 @@ class PanelConnections extends React.Component {
         const user = {
             id: (idx+2), 
             label: combined_name, 
-            medical_expert_oid: item.medical_expert_oid.replace(/think-me-000-/g, ''),
             affiliation: affiliation, 
             image: investigator_img, 
             strength: item.number_common_objects,
-            common_project: item.common_project
+            common_project: item.common_project,
+            link: `/project/${projectOid}/investigator/${item.medical_expert_oid}`
         }
         users.push(user);
         connections.push({           
@@ -439,14 +501,16 @@ class PanelConnections extends React.Component {
       this.state.usersMaximised = users
       this.state.connectionsMaximised = connections
 
+      this.state.cytoscapeInvestigator = users[0]
 
       // Append countries
       const countryList = [{value:'all', label: 'All'}]
       for( const country of countrySet )
         countryList.push({label: country, value: country})
-      
+      const countrySelected = [ countryList[0] ]
+
       // Initialise countries
-      this.setState({ countryList: countryList} )
+      this.setState({ countryList: countryList, countrySelected:countrySelected} )
 
     }catch(error){
 
@@ -519,8 +583,15 @@ class PanelConnections extends React.Component {
     // NetworkContent
     const networkContent = this.state.showModalCytoscape ? this.cytoscapeMax : '';
 
-    const { activeTab, countryList, yearList, filters } = this.state;
+    const { activeTab, countryList, yearList } = this.state;
+    const { connectionStrengthSelected, countrySelected, connectionTypeSelected } = this.state;
+    const { cytoscapeInvestigator } = this.state;
     const content = (activeTab == TAB.NETWORK) ? networkContent : this.generateProfiles()
+
+    console.log("cytoscapeInvestigator ", cytoscapeInvestigator)
+
+  
+
 
     return (
       <div>
@@ -548,14 +619,14 @@ class PanelConnections extends React.Component {
                     <Select
                       isMulti name="colors" 
                       options={connectionStregnthOptions}
-                      defaultValue={connectionStregnthOptions[0]}
+                      value={connectionStrengthSelected}
                       onChange={ (e) => this.onFilterConnectionStrength(e)}
                     />
                     <div className="font-weight-bold">Country</div>
                     <Select
                       isMulti name="colors" 
                       options={countryList}
-                      defaultValue={countryList[0]}
+                      value={countrySelected}
                       onChange={ (e) => this.onFilterCountry(e)}
                     />
 
@@ -563,7 +634,7 @@ class PanelConnections extends React.Component {
                     <Select
                       isMulti name="colors" 
                       options={connectionTypeOptions}
-                      defaultValue={connectionTypeOptions[0]}
+                      value={connectionTypeSelected}
                       onChange={ (e) => this.onFilterConnectionType(e)}
                     />
                     <div className="d-flex">
@@ -587,7 +658,7 @@ class PanelConnections extends React.Component {
                 <div className="mt-3" style={{ borderRadius: '3px', border: '1px solid #ccc', color: '#555' }}>
                   <div className="font-weight-bold" style={{ padding: '0.5em', paddingLeft: '15%', fontSize: '16px', backgroundColor: '#ddd' }}>DETAILS</div>
                   <div className="p-3">
-                    <NodeDetail />
+                    <NodeDetail data={cytoscapeInvestigator} />
                   </div>
                 </div>
               </div>
