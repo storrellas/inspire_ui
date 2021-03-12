@@ -44,15 +44,15 @@ const mapStateToProps = state => {
 };
 
 const FILTERING = {
-  NAME: 'brief_public_title',
-  CONDITION: 'prop_conditions',
-  STATUS: 'recruitment_status',
-  START_YEAR: 'start_date_year',
-  END_YEAR: 'end_date_year',
-  PHASE: 'prop_study_phases',
-  STUDY_TYPE: 'study_type',
-  ENROLLMENT: 'enrollment',
-  INTERVENTION: 'intervention',
+  NAME:         { dataField:'brief_public_title', caption: 'name', type: SEARCH_HEADER.TEXT },
+  CONDITION:    { dataField:'prop_conditions', caption: 'condition', type: SEARCH_HEADER.TEXT},
+  STATUS:       { dataField:'recruitment_status', caption: 'status', type: SEARCH_HEADER.TEXT},
+  START_YEAR:   { dataField:'start_date_year', caption: 'startYear', type: SEARCH_HEADER.NUMBER},
+  END_YEAR:     { dataField:'end_date_year', caption: 'endYear', type: SEARCH_HEADER.NUMBER},
+  PHASE:        { dataField:'prop_study_phases', caption: 'phase', type: SEARCH_HEADER.TEXT},
+  STUDY_TYPE:   { dataField:'study_type', caption: 'studyType', type: SEARCH_HEADER.TEXT},
+  ENROLLMENT:   { dataField:'enrollment', caption: 'enrollement', type: SEARCH_HEADER.TEXT},
+  INTERVENTION: { dataField:'intervention', caption: 'intervention', type: SEARCH_HEADER.TEXT},
 }
 
 class PanelClinicalTrials extends React.Component {
@@ -210,29 +210,13 @@ class PanelClinicalTrials extends React.Component {
       let offset = this.state.take * (page-1);
       let urlParams = `limit=${limit}&offset=${offset}&skip=${skip}&take=${take}`
 
-      console.log("filtering ", filtering)
-
       // Add filtering
       if( filtering !== undefined ){
-        if( filtering.name !== '' )
-          urlParams = `${urlParams}&${FILTERING.NAME}=${filtering.name}`;
-        if( filtering.condition !== '' )
-          urlParams = `${urlParams}&${FILTERING.CONDITION}=${filtering.condition}`;        
-        if( filtering.status !== '' )
-          urlParams = `${urlParams}&${FILTERING.STATUS}=${filtering.status}`;        
-        if( filtering.startYear !== '' )
-          urlParams = `${urlParams}&${FILTERING.START_YEAR}=${filtering.startYear}`;        
-        if( filtering.endYear !== '' )
-          urlParams = `${urlParams}&${FILTERING.END_YEAR}=${filtering.endYear}`;        
-        if( filtering.phase !== '' )
-          urlParams = `${urlParams}&${FILTERING.PHASE}=${filtering.phase}`;        
-          if( filtering.studyType !== '' )
-          urlParams = `${urlParams}&${FILTERING.STUDY_TYPE}=${filtering.studyType}`;        
-        if( filtering.enrollment !== '' )
-          urlParams = `${urlParams}&${FILTERING.ENROLLMENT}=${filtering.enrollment}`;        
-        if( filtering.intervention !== '' )
-          urlParams = `${urlParams}&${FILTERING.INTERVENTION}=${filtering.intervention}`;        
-
+        for(const [key, value] of Object.entries(FILTERING) ){
+          if( filtering[value.caption] !== '' ){
+            urlParams = `${urlParams}&${value.dataField}=${filtering[value.caption]}`;
+          }
+        }
       }
       
       const url = `${environment.base_url}/api/investigator/${this.investigatorId}/clinical-trials/?${urlParams}`;
@@ -282,24 +266,10 @@ class PanelClinicalTrials extends React.Component {
 
   retrieveCTFiltered(key, value){
     let { currentPage, filtering } = this.state;
-    if( key === FILTERING.NAME ){
-      filtering.name = value;
-    }else if( key === FILTERING.CONDITION ){
-      filtering.condition = value;
-    }else if( key === FILTERING.STATUS ){
-      filtering.status = value;
-    }else if( key === FILTERING.START_YEAR ){
-      filtering.startYear = value;
-    }else if( key === FILTERING.END_YEAR ){
-      filtering.endYear = value;
-    }else if( key === FILTERING.PHASE ){
-      filtering.phase = value;
-    }else if( key === FILTERING.STUDY_TYPE ){
-      filtering.studyType = value;
-    }else if( key === FILTERING.ENROLLMENT ){
-      filtering.enrollment = value;
-    }else if( key === FILTERING.INTERVENTION ){
-      filtering.intervention = value;
+    for(const [candidate_key, candidate_value] of Object.entries(FILTERING) ){
+      if( key === candidate_value.caption ){
+        filtering[candidate_value.caption] = value
+      }
     }
 
     // Clear timeout
@@ -319,6 +289,9 @@ class PanelClinicalTrials extends React.Component {
     ]
     const { currentPage, totalPage, dataTable } = this.state;
 
+    const filteringArray = Object.values(FILTERING)
+    console.log( filteringArray)
+
     return (
     <div className="p-3">
         <LoadingOverlay
@@ -332,51 +305,13 @@ class PanelClinicalTrials extends React.Component {
                 )}
               </tr>
               <tr style={{ border: '1px solid grey', borderWidth: '1px 0px 2px 0px' }}>
-                <td>
+              {filteringArray.map((item, id) =>
+                <td key={id}>
                   <SearchHeader 
-                    onChange={(pattern) => this.retrieveCTFiltered(FILTERING.NAME, pattern)} 
-                    type={SEARCH_HEADER.TEXT} />
+                    onChange={(pattern) => this.retrieveCTFiltered(item.caption, pattern)} 
+                    type={item.type} />
                 </td>
-                <td>
-                  <SearchHeader 
-                    onChange={(pattern) => this.retrieveCTFiltered(FILTERING.CONDITION, pattern)} 
-                    type={SEARCH_HEADER.TEXT} />
-                </td>
-                <td>
-                  <SearchHeader 
-                    onChange={(pattern) => this.retrieveCTFiltered(FILTERING.STATUS, pattern)} 
-                    type={SEARCH_HEADER.TEXT} />
-                </td>
-                <td>
-                  <SearchHeader 
-                    onChange={(pattern) => this.retrieveCTFiltered(FILTERING.START_YEAR, pattern)} 
-                    type={SEARCH_HEADER.NUMBER} />
-                </td>
-                <td>
-                  <SearchHeader 
-                    onChange={(pattern) => this.retrieveCTFiltered(FILTERING.END_YEAR, pattern)} 
-                    type={SEARCH_HEADER.NUMBER} />
-                </td>
-                <td>
-                  <SearchHeader 
-                    onChange={(pattern) => this.retrieveCTFiltered(FILTERING.PHASE, pattern)} 
-                    type={SEARCH_HEADER.TEXT} />
-                </td>
-                <td>
-                  <SearchHeader 
-                    onChange={(pattern) => this.retrieveCTFiltered(FILTERING.STUDY_TYPE, pattern)} 
-                    type={SEARCH_HEADER.TEXT} />
-                </td>
-                <td>
-                  <SearchHeader 
-                    onChange={(pattern) => this.retrieveCTFiltered(FILTERING.ENROLLMENT, pattern)} 
-                    type={SEARCH_HEADER.TEXT} />
-                </td>
-                <td>
-                  <SearchHeader 
-                    onChange={(pattern) => this.retrieveCTFiltered(FILTERING.INTERVENTION, pattern)} 
-                    type={SEARCH_HEADER.TEXT} />
-                </td>
+              )}
               </tr>
             </thead>
             <tbody>
