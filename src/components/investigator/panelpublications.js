@@ -35,12 +35,17 @@ am4core.useTheme(am4themes_animated);
 
 // Assets
 
-
+const FILTERING = {
+  NAME: 'name',
+  YEAR: 'publication_year',
+  POSITION: 'position',
+  TYPE: 'publication_subtype'
+}
 
 const mapStateToProps = state => {
-  return { 
+  return {
     tabPublicationsOpened: state.tabPublicationsOpened,
-    };
+  };
 };
 
 
@@ -61,7 +66,15 @@ class PanelPublications extends React.Component {
       take: 10,
       limit: 10,
       isLoading: false,
+      filtering: {
+        name: '',
+        year: '',
+        position: '',
+        type: ''
+      }
     }
+
+    this.typingTimeout = undefined
   }
 
   generatePublicationType(container) {
@@ -79,7 +92,7 @@ class PanelPublications extends React.Component {
     pieSeries.dataFields.value = "total";
     pieSeries.dataFields.category = "name";
     pieSeries.dataFields.tooltipText = "{category}{value}";
-  
+
     chart.hiddenState.properties.radius = am4core.percent(0);
 
     return chart;
@@ -127,7 +140,7 @@ class PanelPublications extends React.Component {
     this.publicationYearsMaxChart.legend = new am4charts.Legend();
   }
 
-  generateModalContent(){
+  generateModalContent() {
     const { dataTable, totalPage, currentPage } = this.state;
 
     const headers = [
@@ -135,67 +148,83 @@ class PanelPublications extends React.Component {
     ]
 
     return (
-    <div className="p-3 h-100" style={{ fontSize:'14px'}}>
-      <LoadingOverlay
-          active={ this.state.isLoading }
+      <div className="p-3 h-100" style={{ fontSize: '14px' }}>
+        <LoadingOverlay
+          active={this.state.isLoading}
           spinner>
-      <table className="w-100" style={{ fontSize: '13px'}}>
-        <thead>
-          <tr>
-            <td className="text-center">WebLink</td>
-            {headers.map((item, id) =>
-              <td key={id} className="text-center">{item}</td>
-            )}
-          </tr>
-          <tr style={{ border: '1px solid grey', borderWidth: '1px 0px 2px 0px' }}>
-            <td></td>
-            {headers.map((item, id) =>
-              <td key={id}>
-                <SearchHeader onChange={(e) => console.log("event", e)} type={SEARCH_HEADER.TEXT} />
-              </td>
-            )}
-          </tr>
-        </thead>
-        <tbody>
-          {dataTable.map((item, id) =>
-            <tr key={id}>
-              <td style={{ width: '5%'}}>
-                <a href={item.weblink}>
-                  <img src="https://demo.explicatos.com/img/Internet.png" style={{ height:'25px' }}></img>
-                </a>
-              </td>
-              <td style={{ width: '70%'}}>{item.name}</td>
-              <td style={{ width: '5%'}}>{item.publication_year}</td>
-              <td style={{ width: '10%'}}>{item.position}</td>
-              <td style={{ width: '10%'}}>{item.publication_subtype}</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-      </LoadingOverlay>
-      <InspirePagination currentPage={currentPage} totalPage={totalPage} onClick={this.navigatePage.bind(this)}/>
-    </div>)
+          <table className="w-100" style={{ fontSize: '13px' }}>
+            <thead>
+              <tr>
+                <td className="text-center">WebLink</td>
+                {headers.map((item, id) =>
+                  <td key={id} className="text-center">{item}</td>
+                )}
+              </tr>
+              <tr style={{ border: '1px solid grey', borderWidth: '1px 0px 2px 0px' }}>
+                <td></td>
+                <td>
+                  <SearchHeader 
+                      onChange={(pattern) => this.retrievePublicationListFiltered(FILTERING.NAME, pattern)} 
+                      type={SEARCH_HEADER.TEXT} />
+                </td>
+                <td>
+                  <SearchHeader 
+                    onChange={(pattern) => this.retrievePublicationListFiltered(FILTERING.YEAR, pattern)} 
+                    type={SEARCH_HEADER.TEXT} />
+                </td>
+                <td>
+                  <SearchHeader 
+                    onChange={(pattern) => this.retrievePublicationListFiltered(FILTERING.POSITION, pattern)} 
+                    type={SEARCH_HEADER.NUMBER} />
+                </td>
+                <td>
+                  <SearchHeader 
+                    onChange={(pattern) => this.retrievePublicationListFiltered(FILTERING.TYPE, pattern)} 
+                    type={SEARCH_HEADER.TEXT} />
+                </td>
+              </tr>
+            </thead>
+            <tbody>
+              {dataTable.map((item, id) =>
+                <tr key={id}>
+                  <td style={{ width: '5%' }}>
+                    <a href={item.weblink}>
+                      <img src="https://demo.explicatos.com/img/Internet.png" style={{ height: '25px' }}></img>
+                    </a>
+                  </td>
+                  <td style={{ width: '70%' }}>{item.name}</td>
+                  <td style={{ width: '5%' }}>{item.publication_year}</td>
+                  <td style={{ width: '10%' }}>{item.position}</td>
+                  <td style={{ width: '10%' }}>{item.publication_subtype}</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </LoadingOverlay>
+        <InspirePagination currentPage={currentPage} totalPage={totalPage} onClick={this.navigatePage.bind(this)} />
+      </div>)
   }
 
-  generateChart(){
+  generateChart() {
     this.generatePublicationTypeChart()
     this.generatePublicationYearsChart()
 
     // Set state after timeout
-    this.setState({isOpened: true})
+    this.setState({ isOpened: true })
   }
 
-  async retrievePublicationType(){    
-    try{
+  async retrievePublicationType() {
+    try {
       const token = localStorage.getItem('token')
-  
+
       // Perform request
       const response = await axios.get(`${environment.base_url}/api/investigator/${this.investigatorId}/publications-per-type/`,
-        { headers: { "Authorization": "jwt " + token }
-      })
+        {
+          headers: { "Authorization": "jwt " + token }
+        })
       this.state.dataType = response.data.results;
 
-    }catch(error){
+    } catch (error) {
 
       // Error
       if (error.response) {
@@ -203,29 +232,30 @@ class PanelPublications extends React.Component {
         console.log(error.response.status);
         console.log(error.response.headers);
       } else if (error.request) {
-          console.log(error.request);
+        console.log(error.request);
       } else {
-          console.log('Error', error.message);
+        console.log('Error', error.message);
       }
     }
   }
 
-  async retrievePublicationYears(){
-    try{      
+  async retrievePublicationYears() {
+    try {
       const token = localStorage.getItem('token')
-  
+
       const { match: { params } } = this.props;
       let investigatorId = params.subid;
-      investigatorId = investigatorId.split('-')[investigatorId.split('-').length -1 ]
-      investigatorId = parseInt( investigatorId )
+      investigatorId = investigatorId.split('-')[investigatorId.split('-').length - 1]
+      investigatorId = parseInt(investigatorId)
 
       // Perform request
       const response = await axios.get(`${environment.base_url}/api/investigator/${investigatorId}/publications-per-year/`,
-        { headers: { "Authorization": "jwt " + token }
-      })
+        {
+          headers: { "Authorization": "jwt " + token }
+        })
       this.state.dataYears = response.data.results;
 
-    }catch(error){
+    } catch (error) {
 
       // Error
       if (error.response) {
@@ -233,36 +263,52 @@ class PanelPublications extends React.Component {
         console.log(error.response.status);
         console.log(error.response.headers);
       } else if (error.request) {
-          console.log(error.request);
+        console.log(error.request);
       } else {
-          console.log('Error', error.message);
+        console.log('Error', error.message);
       }
     }
   }
 
-  async retrievePublicationList(page = 1){
-    try{      
-      this.setState({isLoading: true})
+  async retrievePublicationList(page = 1, filtering = undefined) {
+    try {
+      this.setState({ isLoading: true })
       const token = localStorage.getItem('token')
       const { take, limit } = this.state;
 
       // Perform request
-      let skip = this.state.take * (page-1);
-      let offset = this.state.take * (page-1);
-      const urlParams = `limit=${limit}&offset=${offset}&skip=${skip}&take=${take}`      
+      let skip = this.state.take * (page - 1);
+      let offset = this.state.take * (page - 1);
+      let urlParams = `limit=${limit}&offset=${offset}&skip=${skip}&take=${take}`
+
+
+      // Add filtering
+      if( filtering !== undefined ){
+        if( filtering.name !== '' )
+          urlParams = `${urlParams}&${FILTERING.NAME}=${filtering.name}`;
+        if( filtering.year !== '' )
+          urlParams = `${urlParams}&${FILTERING.YEAR}=${filtering.year}`;        
+        if( filtering.position !== '' )
+          urlParams = `${urlParams}&${FILTERING.COMPANY}=${filtering.position}`;        
+        if( filtering.type !== '' )
+          urlParams = `${urlParams}&${FILTERING.TYPE}=${filtering.type}`;        
+      }
+
+
       const response = await axios.get(`${environment.base_url}/api/investigator/${this.investigatorId}/publications/?${urlParams}`,
-        { headers: { "Authorization": "jwt " + token }
-      })
+        {
+          headers: { "Authorization": "jwt " + token }
+        })
 
       // Set State
-      const totalPage = Math.ceil(response.data.count / take);      
+      const totalPage = Math.ceil(response.data.count / take);
       this.setState({
-        dataTable: response.data.results, 
+        dataTable: response.data.results,
         currentPage: page,
         totalPage: totalPage,
         isLoading: false,
       })
-    }catch(error){
+    } catch (error) {
 
       // Error
       if (error.response) {
@@ -270,9 +316,9 @@ class PanelPublications extends React.Component {
         console.log(error.response.status);
         console.log(error.response.headers);
       } else if (error.request) {
-          console.log(error.request);
+        console.log(error.request);
       } else {
-          console.log('Error', error.message);
+        console.log('Error', error.message);
       }
     }
   }
@@ -281,11 +327,38 @@ class PanelPublications extends React.Component {
     this.retrievePublicationList(page)
   }
 
-  componentDidMount(){
+
+
+
+  retrievePublicationListFiltered(key, value) {
+    let { currentPage, filtering } = this.state;
+    if (key === FILTERING.NAME) {
+      filtering.name = value;
+    } else if (key === FILTERING.YEAR) {
+      filtering.year = value;
+    } else if (key === FILTERING.POSITION) {
+      filtering.position = value;
+    } else if (key === FILTERING.TYPE) {
+      filtering.type = value;
+    }
+
+    console.log("filtering ", filtering)
+
+    // Clear timeout
+    const that = this;
+    if ( this.typingTimeout ) {
+      clearTimeout(this.typingTimeout);
+    }
+    this.typingTimeout = 
+      setTimeout(function () { that.retrievePublicationList(currentPage, filtering) }, 2000)
+
+  }
+
+  componentDidMount() {
     const { match: { params } } = this.props;
     this.investigatorId = params.subid;
-    this.investigatorId = this.investigatorId.split('-')[this.investigatorId.split('-').length -1 ]
-    this.investigatorId = parseInt( this.investigatorId )
+    this.investigatorId = this.investigatorId.split('-')[this.investigatorId.split('-').length - 1]
+    this.investigatorId = parseInt(this.investigatorId)
 
     this.retrievePublicationType()
     this.retrievePublicationYears()
@@ -307,28 +380,28 @@ class PanelPublications extends React.Component {
     }
   }
 
-  closeModal(){
-    this.setState({ 
-      showModalPublicationType: false, 
-      showModalPublicationYears: false, 
+  closeModal() {
+    this.setState({
+      showModalPublicationType: false,
+      showModalPublicationYears: false,
       showModal: false
     })
   }
 
 
-  openedModal(){
-    const {showModal, showModalPublicationType, showModalPublicationYears} = this.state;
+  openedModal() {
+    const { showModal, showModalPublicationType, showModalPublicationYears } = this.state;
 
-    if( showModal ){
+    if (showModal) {
       // Do nothing      
-    }else if( showModalPublicationType ){
+    } else if (showModalPublicationType) {
       this.generatePublicationTypeMaxChart()
-    }else if( showModalPublicationYears ){
+    } else if (showModalPublicationYears) {
       this.generatePublicationYearsMaxChart()
     }
   }
 
-  closedModal(){
+  closedModal() {
     if (this.publicationYearsMaxChart) {
       this.publicationYearsMaxChart.dispose();
     }
@@ -338,23 +411,23 @@ class PanelPublications extends React.Component {
   }
 
   render() {
-    if( this.props.tabPublicationsOpened == true && 
-        this.state.isOpened == false &&
-        this.state.dataType !== undefined &&
-        this.state.dataYears !== undefined){
+    if (this.props.tabPublicationsOpened == true &&
+      this.state.isOpened == false &&
+      this.state.dataType !== undefined &&
+      this.state.dataYears !== undefined) {
       const that = this;
-      setTimeout(function(){ that.generateChart() }, 500);
+      setTimeout(function () { that.generateChart() }, 500);
     }
-      
+
     const { showModal, showModalPublicationType, showModalPublicationYears } = this.state;
     const isModal = showModal || showModalPublicationType || showModalPublicationYears;
     let modalContent = <div>Unknown</div>
-    if( showModal ){
-      modalContent = this.generateModalContent()      
-    }else if( showModalPublicationType ){
-      modalContent = <div id="publicationTypeMaxChart" style={{ width:'100%', height:'100%', marginTop:'20px'}}></div>
-    }else if( showModalPublicationYears ){
-      modalContent = <div id="publicationYearsMaxChart" style={{ width:'100%', height:'100%', marginTop:'20px'}}></div>
+    if (showModal) {
+      modalContent = this.generateModalContent()
+    } else if (showModalPublicationType) {
+      modalContent = <div id="publicationTypeMaxChart" style={{ width: '100%', height: '100%', marginTop: '20px' }}></div>
+    } else if (showModalPublicationYears) {
+      modalContent = <div id="publicationYearsMaxChart" style={{ width: '100%', height: '100%', marginTop: '20px' }}></div>
     }
 
 
@@ -398,7 +471,7 @@ class PanelPublications extends React.Component {
           <Modal.Header closeButton>
             <Modal.Title>Publications</Modal.Title>
           </Modal.Header>
-          <Modal.Body style={{ overflowY: 'scroll', height: '100%'}}>
+          <Modal.Body style={{ overflowY: 'scroll', height: '100%' }}>
             {modalContent}
           </Modal.Body>
           <Modal.Footer>
