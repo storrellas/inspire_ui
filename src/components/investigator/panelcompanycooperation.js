@@ -37,6 +37,14 @@ const mapStateToProps = state => {
   };
 };
 
+const FILTERING = {
+  TYPE: 'nature_of_payment',
+  YEAR: 'year',
+  COMPANY: 'institution',
+  AMOUNT: 'amount',
+  CURRENCY: 'currency'
+}
+
 class PanelCompanyCooperation extends React.Component {
 
   constructor(props) {
@@ -52,8 +60,18 @@ class PanelCompanyCooperation extends React.Component {
       dataPerCompany: undefined,
       dataPerNature: undefined,
       investigatorId: undefined,
-      dataCompanyCooperations: []
+      dataCompanyCooperations: [],
+      filtering : {
+        type: '',
+        year: '', 
+        company: '',
+        amount: '',
+        currency: ''
+      }
     }
+
+    this.typingTimeout = undefined
+
   }
 
 
@@ -243,7 +261,7 @@ class PanelCompanyCooperation extends React.Component {
     }
   }
 
-  async retrieveCompanyCooperations(page = 1){
+  async retrieveCompanyCooperations(page = 1, filtering = undefined){
     try{
       this.setState({isLoading: true})
 
@@ -253,7 +271,22 @@ class PanelCompanyCooperation extends React.Component {
       // Perform request
       let skip = this.state.take * (page-1);
       let offset = this.state.take * (page-1);
-      const urlParams = `limit=${limit}&offset=${offset}&skip=${skip}&take=${take}`
+      let urlParams = `limit=${limit}&offset=${offset}&skip=${skip}&take=${take}`
+
+      // Add filtering
+      if( filtering !== undefined ){
+        if( filtering.type !== '' )
+          urlParams = `${urlParams}&${FILTERING.TYPE}=${filtering.type}`;
+        if( filtering.year !== '' )
+          urlParams = `${urlParams}&${FILTERING.YEAR}=${filtering.year}`;        
+        if( filtering.company !== '' )
+          urlParams = `${urlParams}&${FILTERING.COMPANY}=${filtering.company}`;        
+        if( filtering.amount !== '' )
+          urlParams = `${urlParams}&${FILTERING.AMOUNT}=${filtering.amount}`;        
+        if( filtering.currency !== '' )
+          urlParams = `${urlParams}&${FILTERING.CURRENCY}=${filtering.currency}`;        
+      }
+
       const url = `${environment.base_url}/api/investigator/${this.state.investigatorId}/company-cooperations/?${urlParams}`;
       const response = await axios.get(url,
         { headers: { "Authorization": "jwt " + token }
@@ -300,6 +333,29 @@ class PanelCompanyCooperation extends React.Component {
     this.retrieveCompanyCooperations(page)
   }
 
+  retrieveCompanyCooperationsFiltered(key, value){
+    let { currentPage, filtering } = this.state;
+    if( key === FILTERING.TYPE ){
+      filtering.type = value;
+    }else if( key === FILTERING.YEAR ){
+      filtering.year = value;
+    }else if( key === FILTERING.COMPANY ){
+      filtering.company = value;
+    }else if( key === FILTERING.AMOUNT ){
+      filtering.amount = value;
+    }else if( key === FILTERING.CURRENCY ){
+      filtering.currency = value;
+    }
+
+    // Clear timeout
+    const that = this;
+    if ( this.typingTimeout ) {
+      clearTimeout(this.typingTimeout);
+    }
+    this.typingTimeout = 
+      setTimeout(function () { that.retrieveCompanyCooperations(currentPage, filtering) }, 2000)
+
+  }
 
   render() {
     if (this.props.tabCompanyCooperationOpened == true && 
@@ -350,19 +406,29 @@ class PanelCompanyCooperation extends React.Component {
                     </tr>
                     <tr style={{ border: '1px solid grey', borderWidth: '1px 0px 2px 0px' }}>
                       <td>
-                        <SearchHeader onChange={(e) => console.log("event", e)} type={SEARCH_HEADER.TEXT} />
+                        <SearchHeader 
+                          onChange={(pattern) => this.retrieveCompanyCooperationsFiltered(FILTERING.TYPE, pattern)} 
+                          type={SEARCH_HEADER.TEXT} />
                       </td>
                       <td>
-                        <SearchHeader onChange={(e) => console.log("event", e)} type={SEARCH_HEADER.TEXT} />
+                        <SearchHeader 
+                          onChange={(pattern) => this.retrieveCompanyCooperationsFiltered(FILTERING.YEAR, pattern)} 
+                          type={SEARCH_HEADER.NUMBER} />
                       </td>
                       <td>
-                        <SearchHeader onChange={(e) => console.log("event", e)} type={SEARCH_HEADER.TEXT} />
+                        <SearchHeader 
+                          onChange={(pattern) => this.retrieveCompanyCooperationsFiltered(FILTERING.COMPANY, pattern)} 
+                         type={SEARCH_HEADER.TEXT} />
                       </td>
                       <td>
-                        <SearchHeader onChange={(e) => console.log("event", e)} type={SEARCH_HEADER.TEXT} />
+                        <SearchHeader 
+                          onChange={(pattern) => this.retrieveCompanyCooperationsFiltered(FILTERING.AMOUNT, pattern)} 
+                          type={SEARCH_HEADER.NUMBER} />
                       </td>
                       <td>
-                        <SearchHeader onChange={(e) => console.log("event", e)} type={SEARCH_HEADER.TEXT} />
+                        <SearchHeader 
+                          onChange={(pattern) => this.retrieveCompanyCooperationsFiltered(FILTERING.CURRENCY, pattern)} 
+                          type={SEARCH_HEADER.NUMBER} />
                       </td>
                       
                     </tr>
