@@ -41,6 +41,15 @@ const mapStateToProps = state => {
   };
 };
 
+const FILTERING = {
+  NAME: 'name',
+  POSITION: 'position',
+  SUBTYPE: 'event_subtype',
+  YEAR: 'start_date_year',
+  CITY: 'city',
+  COUNTRY: 'country',
+}
+
 
 class PanelEvents extends React.Component {
 
@@ -59,6 +68,14 @@ class PanelEvents extends React.Component {
       take: 10,
       limit: 10,
       isLoading: false,
+      filtering : {
+        name: '',
+        position: '', 
+        subtype: '',
+        year: '',
+        city: '',
+        country: '',
+      }
     }    
   }
 
@@ -162,6 +179,7 @@ class PanelEvents extends React.Component {
     ]
     const { currentPage, totalPage } = this.state;
 
+
     return (
     <div className="p-3 h-100" style={{ fontSize:'14px'}}>
       <LoadingOverlay
@@ -178,11 +196,37 @@ class PanelEvents extends React.Component {
           </tr>
           <tr style={{ border: '1px solid grey', borderWidth: '1px 0px 2px 0px' }}>
             <td></td>
-            {headers.map((item, id) =>
-              <td key={id} >
-                <SearchHeader onChange={(e) => console.log("event", e)} type={SEARCH_HEADER.TEXT} />
-              </td>
-            )}
+            <td>
+              <SearchHeader 
+                onChange={(pattern) => this.retrieveEventsFiltered(FILTERING.NAME, pattern)} 
+                type={SEARCH_HEADER.TEXT} />
+            </td>
+            <td>
+              <SearchHeader 
+                onChange={(pattern) => this.retrieveEventsFiltered(FILTERING.POSITION, pattern)} 
+                type={SEARCH_HEADER.TEXT} />
+            </td>
+            <td>
+              <SearchHeader 
+                onChange={(pattern) => this.retrieveEventsFiltered(FILTERING.SUBTYPE, pattern)} 
+                type={SEARCH_HEADER.TEXT} />
+            </td>
+            <td>
+              <SearchHeader 
+                onChange={(pattern) => this.retrieveEventsFiltered(FILTERING.YEAR, pattern)} 
+                type={SEARCH_HEADER.NUMBER} />
+            </td>
+            <td>
+              <SearchHeader 
+                onChange={(pattern) => this.retrieveEventsFiltered(FILTERING.CITY, pattern)} 
+                type={SEARCH_HEADER.TEXT} />
+            </td>
+            <td>
+              <SearchHeader 
+                onChange={(pattern) => this.retrieveEventsFiltered(FILTERING.COUNTRY, pattern)} 
+                type={SEARCH_HEADER.TEXT} />
+            </td>
+
           </tr>
         </thead>
         <tbody>
@@ -194,10 +238,10 @@ class PanelEvents extends React.Component {
                   style={{ fontSize: '1em', color: 'grey', cursor:'pointer' }} 
                   onClick={(e) => this.onClickedTableDetail(id)} />
               </td>
-              <td style={{ width: '35%'}}>{item.name}</td>
+              <td style={{ width: '45%'}}>{item.name}</td>
               <td style={{ width: '10%'}}>{item.position}</td>
-              <td style={{ width: '10%'}}>{item.subtype}</td>
-              <td style={{ width: '15%'}}>{item.year}</td>
+              <td style={{ width: '10%'}}>{item.event_subtype}</td>
+              <td style={{ width: '5%'}}>{item.start_date_year}</td>
               <td style={{ width: '15%'}}>{item.city}</td>              
               <td style={{ width: '15%'}}>{item.country}</td>
             </tr>,
@@ -285,7 +329,7 @@ class PanelEvents extends React.Component {
     }
   }
 
-  async retrieveEvents(page = 1){
+  async retrieveEvents(page = 1, filtering = undefined){
     try{
       this.setState({isLoading: true})
 
@@ -295,7 +339,24 @@ class PanelEvents extends React.Component {
       // Perform request
       let skip = this.state.take * (page-1);
       let offset = this.state.take * (page-1);
-      const urlParams = `limit=${limit}&offset=${offset}&skip=${skip}&take=${take}`
+      let urlParams = `limit=${limit}&offset=${offset}&skip=${skip}&take=${take}`
+
+      // Add filtering
+      if( filtering !== undefined ){
+        if( filtering.name !== '' )
+          urlParams = `${urlParams}&${FILTERING.NAME}=${filtering.name}`;
+        if( filtering.position !== '' )
+          urlParams = `${urlParams}&${FILTERING.POSITION}=${filtering.position}`;        
+        if( filtering.subtype !== '' )
+          urlParams = `${urlParams}&${FILTERING.SUBTYPE}=${filtering.subtype}`;        
+        if( filtering.year !== '' )
+          urlParams = `${urlParams}&${FILTERING.YEAR}=${filtering.year}`;        
+        if( filtering.city !== '' )
+          urlParams = `${urlParams}&${FILTERING.CITY}=${filtering.city}`;        
+        if( filtering.country !== '' )
+          urlParams = `${urlParams}&${FILTERING.COUNTRY}=${filtering.country}`;        
+      }
+
       const url = `${environment.base_url}/api/investigator/${this.investigatorId}/events/?${urlParams}`;
       const response = await axios.get(url,
         { headers: { "Authorization": "jwt " + token }
@@ -325,6 +386,32 @@ class PanelEvents extends React.Component {
     }
   }
 
+  retrieveEventsFiltered(key, value){
+    let { currentPage, filtering } = this.state;
+    if( key === FILTERING.NAME ){
+      filtering.name = value;
+    }else if( key === FILTERING.POSITION ){
+      filtering.position = value;
+    }else if( key === FILTERING.SUBTYPE ){
+      filtering.subtype = value;
+    }else if( key === FILTERING.YEAR ){
+      filtering.year = value;
+    }else if( key === FILTERING.CITY ){
+      filtering.city = value;
+    }else if( key === FILTERING.COUNTRY ){
+      filtering.country = value;
+    }
+
+
+    // Clear timeout
+    const that = this;
+    if ( this.typingTimeout ) {
+      clearTimeout(this.typingTimeout);
+    }
+    this.typingTimeout = 
+      setTimeout(function () { that.retrieveEvents(currentPage, filtering) }, 2000)
+
+  }
 
   async componentDidMount() {
     const { match: { params } } = this.props;
