@@ -42,8 +42,8 @@ const mapStateToProps = state => {
 
 function NodeDetail(props) {
 
-
   console.log("props ", props)
+
   return (
     <div style={{ fontSize: '14px', color: "#000000" }}>
       <div style={{ fontSize: '18px', color: "#337ab7" }}>
@@ -52,18 +52,27 @@ function NodeDetail(props) {
       <div>{props.data.affiliation}</div>
       <div>
         <FontAwesomeIcon icon={faFolder} />
-        <span className="ml-2">All</span>
+        <span className="ml-2">All ({props.data.all})</span>
       </div>
       <div><FontAwesomeIcon icon={faFolder} />
-        <span className="ml-2">Trials</span>
+        <span className="ml-2">Trials ({props.data.clinicalTrials})</span>
       </div>
       <div>
         <FontAwesomeIcon icon={faCalendarWeek} />
-        <span className="ml-2">Events</span>
+        <span className="ml-2">Events ({props.data.events})</span>
       </div>
-      <div><FontAwesomeIcon icon={faBook} /><span className="ml-2">Publications</span></div>
-      <div><FontAwesomeIcon icon={faHome} /><span className="ml-2">Affiliations (past)</span></div>
-      <div><FontAwesomeIcon icon={faHome} /><span className="ml-2">Affiliations (present)</span></div>
+      <div>
+        <FontAwesomeIcon icon={faBook} />
+        <span className="ml-2">Publications ({props.data.publications})</span>
+      </div>
+      <div>
+        <FontAwesomeIcon icon={faHome} />
+        <span className="ml-2">Affiliations (past) ({props.data.institutionsPast})</span>
+      </div>
+      <div>
+        <FontAwesomeIcon icon={faHome} />
+        <span className="ml-2">Affiliations (present) ({props.data.institutionsPresent})</span>
+      </div>
     </div>
   );
 }
@@ -132,7 +141,13 @@ class PanelConnections extends React.Component {
         affiliation: '', 
         image: '', 
         strength: '',
-        common_project: ''
+        common_project: '',
+        all : 0, 
+        clicalTrials: 0, 
+        events: 0,
+        publications: 0, 
+        institutionsPast: 0, 
+        institutionsPresent: 0
       },
     }
     this.cytoscape = undefined
@@ -430,15 +445,11 @@ class PanelConnections extends React.Component {
 
       const countrySet = new Set()
 
-      
-      
-      
-
       // collection of nodes
       const investigator_img = "https://demo.explicatos.com/img/user_gray.png";
       const users = [
         { 
-          id: 1, 
+          id: "1", 
           label: this.props.investigatorProfile.name, 
           affiliation: this.props.investigatorProfile.affiliationInstitution,
           image: this.props.picture || investigator_img, 
@@ -547,6 +558,33 @@ class PanelConnections extends React.Component {
   }
 
 
+  getNodeDesc(id) {
+
+    // Calculate figures
+    let clicalTrials = 0;
+    let events = 0;
+    let publications = 0;
+    let institutionsPast = 0;
+    let institutionsPresent = 0;
+    let connectionList = this.state.connections;
+
+    if (id !== "1" )            
+      connectionList = [this.state.connections.find(p => ((p.source == "1") && (p.target == id)))];
+    for(const connection of connectionList){
+      clicalTrials += connection.number_clinical_trials || 0;
+      events += connection.number_events || 0;
+      publications += connection.number_publications || 0;
+      institutionsPast += connection.number_institutions_past || 0;
+      institutionsPresent += connection.number_institutions_present || 0;
+    }
+    let all = clicalTrials + events + publications + 
+                institutionsPast + institutionsPresent;
+    return{
+      all, clicalTrials, events,
+      publications, institutionsPast, institutionsPresent
+    };
+}
+
 
   render() {
     const { users, connections } = this.state;
@@ -587,11 +625,13 @@ class PanelConnections extends React.Component {
     const { connectionStrengthSelected, countrySelected, connectionTypeSelected } = this.state;
     const { cytoscapeInvestigator } = this.state;
     const content = (activeTab == TAB.NETWORK) ? networkContent : this.generateProfiles()
-
-    console.log("cytoscapeInvestigator ", cytoscapeInvestigator)
-
   
+    console.log("cytoscapeInvestigator ", cytoscapeInvestigator)
+    let nodeDesc = {}
+    if( cytoscapeInvestigator.id !== '' )
+      nodeDesc = this.getNodeDesc(cytoscapeInvestigator.id)
 
+    const nodeData = { ...cytoscapeInvestigator, ...nodeDesc}
 
     return (
       <div>
@@ -658,7 +698,7 @@ class PanelConnections extends React.Component {
                 <div className="mt-3" style={{ borderRadius: '3px', border: '1px solid #ccc', color: '#555' }}>
                   <div className="font-weight-bold" style={{ padding: '0.5em', paddingLeft: '15%', fontSize: '16px', backgroundColor: '#ddd' }}>DETAILS</div>
                   <div className="p-3">
-                    <NodeDetail data={cytoscapeInvestigator} />
+                    <NodeDetail data={nodeData} />
                   </div>
                 </div>
               </div>
