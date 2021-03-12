@@ -42,14 +42,13 @@ const mapStateToProps = state => {
 };
 
 const FILTERING = {
-  NAME: 'name',
-  POSITION: 'position',
-  SUBTYPE: 'event_subtype',
-  YEAR: 'start_date_year',
-  CITY: 'city',
-  COUNTRY: 'country',
+  NAME:     { dataField:'name', caption: 'name', type: SEARCH_HEADER.TEXT },
+  POSITION: { dataField:'position', caption: 'position', type: SEARCH_HEADER.TEXT},
+  SUBTYPE:  { dataField:'event_subtype', caption: 'subtype', type: SEARCH_HEADER.TEXT},
+  YEAR:     { dataField:'start_date_year', caption: 'year', type: SEARCH_HEADER.NUMBER},
+  CITY:     { dataField:'city', caption: 'city', type: SEARCH_HEADER.TEXT},
+  COUNTRY:  { dataField:'country', caption: 'country', type: SEARCH_HEADER.TEXT},
 }
-
 
 class PanelEvents extends React.Component {
 
@@ -179,6 +178,7 @@ class PanelEvents extends React.Component {
     ]
     const { currentPage, totalPage } = this.state;
 
+    const filteringArray = Object.values(FILTERING)
 
     return (
     <div className="p-3 h-100" style={{ fontSize:'14px'}}>
@@ -196,37 +196,13 @@ class PanelEvents extends React.Component {
           </tr>
           <tr style={{ border: '1px solid grey', borderWidth: '1px 0px 2px 0px' }}>
             <td></td>
-            <td>
-              <SearchHeader 
-                onChange={(pattern) => this.retrieveEventsFiltered(FILTERING.NAME, pattern)} 
-                type={SEARCH_HEADER.TEXT} />
-            </td>
-            <td>
-              <SearchHeader 
-                onChange={(pattern) => this.retrieveEventsFiltered(FILTERING.POSITION, pattern)} 
-                type={SEARCH_HEADER.TEXT} />
-            </td>
-            <td>
-              <SearchHeader 
-                onChange={(pattern) => this.retrieveEventsFiltered(FILTERING.SUBTYPE, pattern)} 
-                type={SEARCH_HEADER.TEXT} />
-            </td>
-            <td>
-              <SearchHeader 
-                onChange={(pattern) => this.retrieveEventsFiltered(FILTERING.YEAR, pattern)} 
-                type={SEARCH_HEADER.NUMBER} />
-            </td>
-            <td>
-              <SearchHeader 
-                onChange={(pattern) => this.retrieveEventsFiltered(FILTERING.CITY, pattern)} 
-                type={SEARCH_HEADER.TEXT} />
-            </td>
-            <td>
-              <SearchHeader 
-                onChange={(pattern) => this.retrieveEventsFiltered(FILTERING.COUNTRY, pattern)} 
-                type={SEARCH_HEADER.TEXT} />
-            </td>
-
+            {filteringArray.map((item, id) =>
+                <td key={id}>
+                  <SearchHeader 
+                    onChange={(pattern) => this.retrieveEventsFiltered(item.caption, pattern)} 
+                    type={item.type} />
+                </td>
+              )}
           </tr>
         </thead>
         <tbody>
@@ -343,18 +319,11 @@ class PanelEvents extends React.Component {
 
       // Add filtering
       if( filtering !== undefined ){
-        if( filtering.name !== '' )
-          urlParams = `${urlParams}&${FILTERING.NAME}=${filtering.name}`;
-        if( filtering.position !== '' )
-          urlParams = `${urlParams}&${FILTERING.POSITION}=${filtering.position}`;        
-        if( filtering.subtype !== '' )
-          urlParams = `${urlParams}&${FILTERING.SUBTYPE}=${filtering.subtype}`;        
-        if( filtering.year !== '' )
-          urlParams = `${urlParams}&${FILTERING.YEAR}=${filtering.year}`;        
-        if( filtering.city !== '' )
-          urlParams = `${urlParams}&${FILTERING.CITY}=${filtering.city}`;        
-        if( filtering.country !== '' )
-          urlParams = `${urlParams}&${FILTERING.COUNTRY}=${filtering.country}`;        
+        for(const [key, value] of Object.entries(FILTERING) ){
+          if( filtering[value.caption] !== '' ){
+            urlParams = `${urlParams}&${value.dataField}=${filtering[value.caption]}`;
+          }
+        }      
       }
 
       const url = `${environment.base_url}/api/investigator/${this.investigatorId}/events/?${urlParams}`;
@@ -388,18 +357,10 @@ class PanelEvents extends React.Component {
 
   retrieveEventsFiltered(key, value){
     let { currentPage, filtering } = this.state;
-    if( key === FILTERING.NAME ){
-      filtering.name = value;
-    }else if( key === FILTERING.POSITION ){
-      filtering.position = value;
-    }else if( key === FILTERING.SUBTYPE ){
-      filtering.subtype = value;
-    }else if( key === FILTERING.YEAR ){
-      filtering.year = value;
-    }else if( key === FILTERING.CITY ){
-      filtering.city = value;
-    }else if( key === FILTERING.COUNTRY ){
-      filtering.country = value;
+    for(const [candidate_key, candidate_value] of Object.entries(FILTERING) ){
+      if( key === candidate_value.caption ){
+        filtering[candidate_value.caption] = value
+      }
     }
 
 
