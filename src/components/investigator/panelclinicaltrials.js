@@ -290,7 +290,6 @@ class PanelClinicalTrials extends React.Component {
     const { currentPage, totalPage, dataTable } = this.state;
 
     const filteringArray = Object.values(FILTERING)
-    console.log( filteringArray)
 
     return (
     <div className="p-3">

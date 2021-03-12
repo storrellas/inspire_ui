@@ -36,10 +36,10 @@ am4core.useTheme(am4themes_animated);
 // Assets
 
 const FILTERING = {
-  NAME: 'name',
-  YEAR: 'publication_year',
-  POSITION: 'position',
-  TYPE: 'publication_subtype'
+  NAME:     { dataField:'name', caption: 'name', type: SEARCH_HEADER.TEXT },
+  YEAR:     { dataField:'publication_year', caption: 'year', type: SEARCH_HEADER.TEXT},
+  POSITION: { dataField:'position', caption: 'position', type: SEARCH_HEADER.NUMBER},
+  TYPE:     { dataField:'publication_subtype', caption: 'type', type: SEARCH_HEADER.TEXT}
 }
 
 const mapStateToProps = state => {
@@ -147,6 +147,8 @@ class PanelPublications extends React.Component {
       "Name", "Year", "Position", "Type"
     ]
 
+    const filteringArray = Object.values(FILTERING)
+
     return (
       <div className="p-3 h-100" style={{ fontSize: '14px' }}>
         <LoadingOverlay
@@ -162,26 +164,13 @@ class PanelPublications extends React.Component {
               </tr>
               <tr style={{ border: '1px solid grey', borderWidth: '1px 0px 2px 0px' }}>
                 <td></td>
-                <td>
+                {filteringArray.map((item, id) =>
+                <td key={id}>
                   <SearchHeader 
-                      onChange={(pattern) => this.retrievePublicationListFiltered(FILTERING.NAME, pattern)} 
-                      type={SEARCH_HEADER.TEXT} />
+                    onChange={(pattern) => this.retrievePublicationListFiltered(item.caption, pattern)} 
+                    type={item.type} />
                 </td>
-                <td>
-                  <SearchHeader 
-                    onChange={(pattern) => this.retrievePublicationListFiltered(FILTERING.YEAR, pattern)} 
-                    type={SEARCH_HEADER.TEXT} />
-                </td>
-                <td>
-                  <SearchHeader 
-                    onChange={(pattern) => this.retrievePublicationListFiltered(FILTERING.POSITION, pattern)} 
-                    type={SEARCH_HEADER.NUMBER} />
-                </td>
-                <td>
-                  <SearchHeader 
-                    onChange={(pattern) => this.retrievePublicationListFiltered(FILTERING.TYPE, pattern)} 
-                    type={SEARCH_HEADER.TEXT} />
-                </td>
+              )}
               </tr>
             </thead>
             <tbody>
@@ -284,14 +273,11 @@ class PanelPublications extends React.Component {
 
       // Add filtering
       if( filtering !== undefined ){
-        if( filtering.name !== '' )
-          urlParams = `${urlParams}&${FILTERING.NAME}=${filtering.name}`;
-        if( filtering.year !== '' )
-          urlParams = `${urlParams}&${FILTERING.YEAR}=${filtering.year}`;        
-        if( filtering.position !== '' )
-          urlParams = `${urlParams}&${FILTERING.COMPANY}=${filtering.position}`;        
-        if( filtering.type !== '' )
-          urlParams = `${urlParams}&${FILTERING.TYPE}=${filtering.type}`;        
+        for(const [key, value] of Object.entries(FILTERING) ){
+          if( filtering[value.caption] !== '' ){
+            urlParams = `${urlParams}&${value.dataField}=${filtering[value.caption]}`;
+          }
+        }
       }
 
 
@@ -332,17 +318,11 @@ class PanelPublications extends React.Component {
 
   retrievePublicationListFiltered(key, value) {
     let { currentPage, filtering } = this.state;
-    if (key === FILTERING.NAME) {
-      filtering.name = value;
-    } else if (key === FILTERING.YEAR) {
-      filtering.year = value;
-    } else if (key === FILTERING.POSITION) {
-      filtering.position = value;
-    } else if (key === FILTERING.TYPE) {
-      filtering.type = value;
+    for(const [candidate_key, candidate_value] of Object.entries(FILTERING) ){
+      if( key === candidate_value.caption ){
+        filtering[candidate_value.caption] = value
+      }
     }
-
-    console.log("filtering ", filtering)
 
     // Clear timeout
     const that = this;
