@@ -37,12 +37,20 @@ const mapStateToProps = state => {
   };
 };
 
+// const FILTERING = {
+//   TYPE: 'nature_of_payment',
+//   YEAR: 'year',
+//   COMPANY: 'institution',
+//   AMOUNT: 'amount',
+//   CURRENCY: 'currency'
+// }
+
 const FILTERING = {
-  TYPE: 'nature_of_payment',
-  YEAR: 'year',
-  COMPANY: 'institution',
-  AMOUNT: 'amount',
-  CURRENCY: 'currency'
+  TYPE:     { dataField:'nature_of_payment', caption: 'type', type: SEARCH_HEADER.TEXT },
+  YEAR:     { dataField:'year', caption: 'year', type: SEARCH_HEADER.NUMBER},
+  COMPANY:  { dataField:'institution', caption: 'company', type: SEARCH_HEADER.TEXT},
+  AMOUNT:   { dataField:'amount', caption: 'amount', type: SEARCH_HEADER.NUMBER},
+  CURRENCY: { dataField:'currency', caption: 'currency', type: SEARCH_HEADER.NUMBER},
 }
 
 class PanelCompanyCooperation extends React.Component {
@@ -275,16 +283,11 @@ class PanelCompanyCooperation extends React.Component {
 
       // Add filtering
       if( filtering !== undefined ){
-        if( filtering.type !== '' )
-          urlParams = `${urlParams}&${FILTERING.TYPE}=${filtering.type}`;
-        if( filtering.year !== '' )
-          urlParams = `${urlParams}&${FILTERING.YEAR}=${filtering.year}`;        
-        if( filtering.company !== '' )
-          urlParams = `${urlParams}&${FILTERING.COMPANY}=${filtering.company}`;        
-        if( filtering.amount !== '' )
-          urlParams = `${urlParams}&${FILTERING.AMOUNT}=${filtering.amount}`;        
-        if( filtering.currency !== '' )
-          urlParams = `${urlParams}&${FILTERING.CURRENCY}=${filtering.currency}`;        
+        for(const [key, value] of Object.entries(FILTERING) ){
+          if( filtering[value.caption] !== '' ){
+            urlParams = `${urlParams}&${value.dataField}=${filtering[value.caption]}`;
+          }
+        }     
       }
 
       const url = `${environment.base_url}/api/investigator/${this.state.investigatorId}/company-cooperations/?${urlParams}`;
@@ -335,16 +338,10 @@ class PanelCompanyCooperation extends React.Component {
 
   retrieveCompanyCooperationsFiltered(key, value){
     let { currentPage, filtering } = this.state;
-    if( key === FILTERING.TYPE ){
-      filtering.type = value;
-    }else if( key === FILTERING.YEAR ){
-      filtering.year = value;
-    }else if( key === FILTERING.COMPANY ){
-      filtering.company = value;
-    }else if( key === FILTERING.AMOUNT ){
-      filtering.amount = value;
-    }else if( key === FILTERING.CURRENCY ){
-      filtering.currency = value;
+    for(const [candidate_key, candidate_value] of Object.entries(FILTERING) ){
+      if( key === candidate_value.caption ){
+        filtering[candidate_value.caption] = value
+      }
     }
 
     // Clear timeout
@@ -366,6 +363,8 @@ class PanelCompanyCooperation extends React.Component {
     }
 
     const {dataCompanyCooperations, currentPage, totalPage} = this.state;
+    const filteringArray = Object.values(FILTERING)
+
     return (
       <div>
         <LoadingOverlay
@@ -405,31 +404,14 @@ class PanelCompanyCooperation extends React.Component {
                       <td className="text-center">Currency</td>
                     </tr>
                     <tr style={{ border: '1px solid grey', borderWidth: '1px 0px 2px 0px' }}>
-                      <td>
+                    {filteringArray.map((item, id) =>
+                      <td key={id}>
                         <SearchHeader 
-                          onChange={(pattern) => this.retrieveCompanyCooperationsFiltered(FILTERING.TYPE, pattern)} 
-                          type={SEARCH_HEADER.TEXT} />
+                          onChange={(pattern) => this.retrieveCompanyCooperationsFiltered(item.caption, pattern)} 
+                          type={item.type} />
                       </td>
-                      <td>
-                        <SearchHeader 
-                          onChange={(pattern) => this.retrieveCompanyCooperationsFiltered(FILTERING.YEAR, pattern)} 
-                          type={SEARCH_HEADER.NUMBER} />
-                      </td>
-                      <td>
-                        <SearchHeader 
-                          onChange={(pattern) => this.retrieveCompanyCooperationsFiltered(FILTERING.COMPANY, pattern)} 
-                         type={SEARCH_HEADER.TEXT} />
-                      </td>
-                      <td>
-                        <SearchHeader 
-                          onChange={(pattern) => this.retrieveCompanyCooperationsFiltered(FILTERING.AMOUNT, pattern)} 
-                          type={SEARCH_HEADER.NUMBER} />
-                      </td>
-                      <td>
-                        <SearchHeader 
-                          onChange={(pattern) => this.retrieveCompanyCooperationsFiltered(FILTERING.CURRENCY, pattern)} 
-                          type={SEARCH_HEADER.NUMBER} />
-                      </td>
+                    )}
+
                       
                     </tr>
                   </thead>
