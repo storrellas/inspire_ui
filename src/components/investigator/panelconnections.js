@@ -42,8 +42,6 @@ const mapStateToProps = state => {
 
 function NodeDetail(props) {
 
-  console.log("props ", props)
-
   return (
     <div style={{ fontSize: '14px', color: "#000000" }}>
       <div style={{ fontSize: '18px', color: "#337ab7" }}>
@@ -234,10 +232,10 @@ class PanelConnections extends React.Component {
 
   componentDidUpdate() {
     if (this.cy !== undefined) {
-      const that = this.setState()
+      const that = this;
       this.cy.on('select', 'node', function (evt) {
         var data = evt.target[0].data();
-        console.log(data)
+        that.setState({cytoscapeInvestigator:data})
       });
     }
 
@@ -561,7 +559,7 @@ class PanelConnections extends React.Component {
   getNodeDesc(id) {
 
     // Calculate figures
-    let clicalTrials = 0;
+    let clinicalTrials = 0;
     let events = 0;
     let publications = 0;
     let institutionsPast = 0;
@@ -571,16 +569,16 @@ class PanelConnections extends React.Component {
     if (id !== "1" )            
       connectionList = [this.state.connections.find(p => ((p.source == "1") && (p.target == id)))];
     for(const connection of connectionList){
-      clicalTrials += connection.number_clinical_trials || 0;
+      clinicalTrials += connection.number_clinical_trials || 0;
       events += connection.number_events || 0;
       publications += connection.number_publications || 0;
       institutionsPast += connection.number_institutions_past || 0;
       institutionsPresent += connection.number_institutions_present || 0;
     }
-    let all = clicalTrials + events + publications + 
+    let all = clinicalTrials + events + publications + 
                 institutionsPast + institutionsPresent;
     return{
-      all, clicalTrials, events,
+      all, clinicalTrials, events,
       publications, institutionsPast, institutionsPresent
     };
 }
@@ -625,12 +623,11 @@ class PanelConnections extends React.Component {
     const { connectionStrengthSelected, countrySelected, connectionTypeSelected } = this.state;
     const { cytoscapeInvestigator } = this.state;
     const content = (activeTab == TAB.NETWORK) ? networkContent : this.generateProfiles()
-  
-    console.log("cytoscapeInvestigator ", cytoscapeInvestigator)
+
+    // Calculate nodeData
     let nodeDesc = {}
     if( cytoscapeInvestigator.id !== '' )
       nodeDesc = this.getNodeDesc(cytoscapeInvestigator.id)
-
     const nodeData = { ...cytoscapeInvestigator, ...nodeDesc}
 
     return (
