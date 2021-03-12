@@ -43,6 +43,18 @@ const mapStateToProps = state => {
   };
 };
 
+const FILTERING = {
+  NAME: 'brief_public_title',
+  CONDITION: 'prop_conditions',
+  STATUS: 'recruitment_status',
+  START_YEAR: 'start_date_year',
+  END_YEAR: 'end_date_year',
+  PHASE: 'prop_study_phases',
+  STUDY_TYPE: 'study_type',
+  ENROLLMENT: 'enrollment',
+  INTERVENTION: 'intervention',
+}
+
 class PanelClinicalTrials extends React.Component {
 
   constructor(props) {
@@ -60,6 +72,17 @@ class PanelClinicalTrials extends React.Component {
       take: 10,
       limit: 10,
       isLoading: false,
+      filtering : {
+        name: '',
+        condition: '', 
+        status: '',
+        startYear: '',
+        endYear: '',
+        phase: '', 
+        studyType: '',
+        enrollment: '',
+        intervention: '',
+      }
     }
   }
 
@@ -175,7 +198,7 @@ class PanelClinicalTrials extends React.Component {
     }
   }
 
-  async retrieveCT(page = 1){
+  async retrieveCT(page = 1, filtering = undefined){
     try{
       this.setState({isLoading: true})
 
@@ -185,7 +208,33 @@ class PanelClinicalTrials extends React.Component {
       // Perform request
       let skip = this.state.take * (page-1);
       let offset = this.state.take * (page-1);
-      const urlParams = `limit=${limit}&offset=${offset}&skip=${skip}&take=${take}`
+      let urlParams = `limit=${limit}&offset=${offset}&skip=${skip}&take=${take}`
+
+      console.log("filtering ", filtering)
+
+      // Add filtering
+      if( filtering !== undefined ){
+        if( filtering.name !== '' )
+          urlParams = `${urlParams}&${FILTERING.NAME}=${filtering.name}`;
+        if( filtering.condition !== '' )
+          urlParams = `${urlParams}&${FILTERING.CONDITION}=${filtering.condition}`;        
+        if( filtering.status !== '' )
+          urlParams = `${urlParams}&${FILTERING.STATUS}=${filtering.status}`;        
+        if( filtering.startYear !== '' )
+          urlParams = `${urlParams}&${FILTERING.START_YEAR}=${filtering.startYear}`;        
+        if( filtering.endYear !== '' )
+          urlParams = `${urlParams}&${FILTERING.END_YEAR}=${filtering.endYear}`;        
+        if( filtering.phase !== '' )
+          urlParams = `${urlParams}&${FILTERING.PHASE}=${filtering.phase}`;        
+          if( filtering.studyType !== '' )
+          urlParams = `${urlParams}&${FILTERING.STUDY_TYPE}=${filtering.studyType}`;        
+        if( filtering.enrollment !== '' )
+          urlParams = `${urlParams}&${FILTERING.ENROLLMENT}=${filtering.enrollment}`;        
+        if( filtering.intervention !== '' )
+          urlParams = `${urlParams}&${FILTERING.INTERVENTION}=${filtering.intervention}`;        
+
+      }
+      
       const url = `${environment.base_url}/api/investigator/${this.investigatorId}/clinical-trials/?${urlParams}`;
       const response = await axios.get(url,
         { headers: { "Authorization": "jwt " + token }
@@ -228,9 +277,39 @@ class PanelClinicalTrials extends React.Component {
   }
 
   navigatePage(page) {
-    console.log("page", page)
+    this.retrieveCT(page)
   }
 
+  retrieveCTFiltered(key, value){
+    let { currentPage, filtering } = this.state;
+    if( key === FILTERING.NAME ){
+      filtering.name = value;
+    }else if( key === FILTERING.CONDITION ){
+      filtering.condition = value;
+    }else if( key === FILTERING.STATUS ){
+      filtering.status = value;
+    }else if( key === FILTERING.START_YEAR ){
+      filtering.startYear = value;
+    }else if( key === FILTERING.END_YEAR ){
+      filtering.endYear = value;
+    }else if( key === FILTERING.PHASE ){
+      filtering.phase = value;
+    }else if( key === FILTERING.STUDY_TYPE ){
+      filtering.studyType = value;
+    }else if( key === FILTERING.ENROLLMENT ){
+      filtering.enrollment = value;
+    }else if( key === FILTERING.INTERVENTION ){
+      filtering.intervention = value;
+    }
+
+    // Clear timeout
+    const that = this;
+    if ( this.typingTimeout ) {
+      clearTimeout(this.typingTimeout);
+    }
+    this.typingTimeout = 
+      setTimeout(function () { that.retrieveCT(currentPage, filtering) }, 2000)
+  }
 
   generateModalContent(){
 
@@ -253,25 +332,65 @@ class PanelClinicalTrials extends React.Component {
                 )}
               </tr>
               <tr style={{ border: '1px solid grey', borderWidth: '1px 0px 2px 0px' }}>
-                {headers.map((item, id) =>
-                  <td key={id} >
-                    <SearchHeader onChange={(e) => console.log("event", e)} type={SEARCH_HEADER.TEXT} />
-                  </td>
-                )}
+                <td>
+                  <SearchHeader 
+                    onChange={(pattern) => this.retrieveCTFiltered(FILTERING.NAME, pattern)} 
+                    type={SEARCH_HEADER.TEXT} />
+                </td>
+                <td>
+                  <SearchHeader 
+                    onChange={(pattern) => this.retrieveCTFiltered(FILTERING.CONDITION, pattern)} 
+                    type={SEARCH_HEADER.TEXT} />
+                </td>
+                <td>
+                  <SearchHeader 
+                    onChange={(pattern) => this.retrieveCTFiltered(FILTERING.STATUS, pattern)} 
+                    type={SEARCH_HEADER.TEXT} />
+                </td>
+                <td>
+                  <SearchHeader 
+                    onChange={(pattern) => this.retrieveCTFiltered(FILTERING.START_YEAR, pattern)} 
+                    type={SEARCH_HEADER.NUMBER} />
+                </td>
+                <td>
+                  <SearchHeader 
+                    onChange={(pattern) => this.retrieveCTFiltered(FILTERING.END_YEAR, pattern)} 
+                    type={SEARCH_HEADER.NUMBER} />
+                </td>
+                <td>
+                  <SearchHeader 
+                    onChange={(pattern) => this.retrieveCTFiltered(FILTERING.PHASE, pattern)} 
+                    type={SEARCH_HEADER.TEXT} />
+                </td>
+                <td>
+                  <SearchHeader 
+                    onChange={(pattern) => this.retrieveCTFiltered(FILTERING.STUDY_TYPE, pattern)} 
+                    type={SEARCH_HEADER.TEXT} />
+                </td>
+                <td>
+                  <SearchHeader 
+                    onChange={(pattern) => this.retrieveCTFiltered(FILTERING.ENROLLMENT, pattern)} 
+                    type={SEARCH_HEADER.TEXT} />
+                </td>
+                <td>
+                  <SearchHeader 
+                    onChange={(pattern) => this.retrieveCTFiltered(FILTERING.INTERVENTION, pattern)} 
+                    type={SEARCH_HEADER.TEXT} />
+                </td>
               </tr>
             </thead>
             <tbody>
               {dataTable.map((item, id) =>
                 <tr key={id}>
-                  <td>{item.brief_public_title}</td>
-                  <td>{item.prop_conditions}</td>
-                  <td>{item.recruitment_status}</td>
-                  <td>{item.start_date_year}</td>
-                  <td>{item.end_date_year}</td>
-                  <td>{item.prop_study_phases}</td>
-                  <td>{item.study_type}</td>
-                  <td>{item.enrollment}</td>
-                  <td>{item.intervention}</td>
+                  <td style={{ width: '20%'}}>{item.brief_public_title}</td>
+                  <td style={{ width: '10%'}}>{item.prop_conditions}</td>
+                  <td style={{ width: '5%'}}>{item.recruitment_status}</td>
+                  <td style={{ width: '5%'}}>{item.start_date_year}</td>
+                  <td style={{ width: '5%'}}>{item.end_date_year}</td>
+                  <td style={{ width: '10%'}}>{item.prop_study_phases}</td>
+                  <td style={{ width: '10%'}}>{item.study_type}</td>
+                  <td style={{ width: '5%'}}>{item.enrollment}</td>
+                  <td style={{ width: '20%'}}>{item.intervention}</td>
                 </tr>
               )}
             </tbody>
