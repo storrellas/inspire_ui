@@ -35,12 +35,12 @@ am4core.useTheme(am4themes_animated);
 
 // Assets
 
-const FILTERING = {
-  NAME:     { dataField:'name', caption: 'name', type: SEARCH_HEADER.TEXT },
-  YEAR:     { dataField:'publication_year', caption: 'year', type: SEARCH_HEADER.TEXT},
-  POSITION: { dataField:'position', caption: 'position', type: SEARCH_HEADER.NUMBER},
-  TYPE:     { dataField:'publication_subtype', caption: 'type', type: SEARCH_HEADER.TEXT}
-}
+const FILTERING = [
+  { dataField:'name', caption: 'name', type: SEARCH_HEADER.TEXT },
+  { dataField:'publication_year', caption: 'year', type: SEARCH_HEADER.TEXT},
+  { dataField:'position', caption: 'position', type: SEARCH_HEADER.NUMBER},
+  { dataField:'publication_subtype', caption: 'type', type: SEARCH_HEADER.TEXT}
+]
 
 const mapStateToProps = state => {
   return {
@@ -147,7 +147,6 @@ class PanelPublications extends React.Component {
       "Name", "Year", "Position", "Type"
     ]
 
-    const filteringArray = Object.values(FILTERING)
 
     return (
       <div className="p-3 h-100" style={{ fontSize: '14px' }}>
@@ -164,7 +163,7 @@ class PanelPublications extends React.Component {
               </tr>
               <tr style={{ border: '1px solid grey', borderWidth: '1px 0px 2px 0px' }}>
                 <td></td>
-                {filteringArray.map((item, id) =>
+                {FILTERING.map((item, id) =>
                 <td key={id}>
                   <SearchHeader 
                     onChange={(pattern) => this.retrievePublicationListFiltered(item.caption, pattern)} 
@@ -273,9 +272,9 @@ class PanelPublications extends React.Component {
 
       // Add filtering
       if( filtering !== undefined ){
-        for(const [key, value] of Object.entries(FILTERING) ){
-          if( filtering[value.caption] !== '' ){
-            urlParams = `${urlParams}&${value.dataField}=${filtering[value.caption]}`;
+        for(const item of FILTERING ){
+          if( filtering[item.caption] !== '' ){
+            urlParams = `${urlParams}&${item.dataField}=${filtering[item.caption]}`;
           }
         }
       }
@@ -318,9 +317,9 @@ class PanelPublications extends React.Component {
 
   retrievePublicationListFiltered(key, value) {
     let { currentPage, filtering } = this.state;
-    for(const [candidate_key, candidate_value] of Object.entries(FILTERING) ){
-      if( key === candidate_value.caption ){
-        filtering[candidate_value.caption] = value
+    for(const item_canidate of FILTERING ){
+      if( key === item_canidate.caption ){
+        filtering[item_canidate.caption] = value
       }
     }
 

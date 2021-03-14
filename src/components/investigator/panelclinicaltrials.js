@@ -43,17 +43,17 @@ const mapStateToProps = state => {
   };
 };
 
-const FILTERING = {
-  NAME:         { dataField:'brief_public_title', caption: 'name', type: SEARCH_HEADER.TEXT },
-  CONDITION:    { dataField:'prop_conditions', caption: 'condition', type: SEARCH_HEADER.TEXT},
-  STATUS:       { dataField:'recruitment_status', caption: 'status', type: SEARCH_HEADER.TEXT},
-  START_YEAR:   { dataField:'start_date_year', caption: 'startYear', type: SEARCH_HEADER.NUMBER},
-  END_YEAR:     { dataField:'end_date_year', caption: 'endYear', type: SEARCH_HEADER.NUMBER},
-  PHASE:        { dataField:'prop_study_phases', caption: 'phase', type: SEARCH_HEADER.TEXT},
-  STUDY_TYPE:   { dataField:'study_type', caption: 'studyType', type: SEARCH_HEADER.TEXT},
-  ENROLLMENT:   { dataField:'enrollment', caption: 'enrollement', type: SEARCH_HEADER.TEXT},
-  INTERVENTION: { dataField:'intervention', caption: 'intervention', type: SEARCH_HEADER.TEXT},
-}
+const FILTERING = [
+  { dataField:'brief_public_title', caption: 'name', type: SEARCH_HEADER.TEXT },
+  { dataField:'prop_conditions', caption: 'condition', type: SEARCH_HEADER.TEXT},
+  { dataField:'recruitment_status', caption: 'status', type: SEARCH_HEADER.TEXT},
+  { dataField:'start_date_year', caption: 'startYear', type: SEARCH_HEADER.NUMBER},
+  { dataField:'end_date_year', caption: 'endYear', type: SEARCH_HEADER.NUMBER},
+  { dataField:'prop_study_phases', caption: 'phase', type: SEARCH_HEADER.TEXT},
+  { dataField:'study_type', caption: 'studyType', type: SEARCH_HEADER.TEXT},
+  { dataField:'enrollment', caption: 'enrollement', type: SEARCH_HEADER.TEXT},
+  { dataField:'intervention', caption: 'intervention', type: SEARCH_HEADER.TEXT},
+]
 
 class PanelClinicalTrials extends React.Component {
 
@@ -212,9 +212,9 @@ class PanelClinicalTrials extends React.Component {
 
       // Add filtering
       if( filtering !== undefined ){
-        for(const [key, value] of Object.entries(FILTERING) ){
-          if( filtering[value.caption] !== '' ){
-            urlParams = `${urlParams}&${value.dataField}=${filtering[value.caption]}`;
+        for(const item of FILTERING ){
+          if( filtering[item.caption] !== '' ){
+            urlParams = `${urlParams}&${item.dataField}=${filtering[item.caption]}`;
           }
         }
       }
@@ -266,9 +266,9 @@ class PanelClinicalTrials extends React.Component {
 
   retrieveCTFiltered(key, value){
     let { currentPage, filtering } = this.state;
-    for(const [candidate_key, candidate_value] of Object.entries(FILTERING) ){
-      if( key === candidate_value.caption ){
-        filtering[candidate_value.caption] = value
+    for(const item_candidate of FILTERING ){
+      if( key === item_candidate.caption ){
+        filtering[item_candidate.caption] = value
       }
     }
 
@@ -289,7 +289,6 @@ class PanelClinicalTrials extends React.Component {
     ]
     const { currentPage, totalPage, dataTable } = this.state;
 
-    const filteringArray = Object.values(FILTERING)
 
     return (
     <div className="p-3">
@@ -304,7 +303,7 @@ class PanelClinicalTrials extends React.Component {
                 )}
               </tr>
               <tr style={{ border: '1px solid grey', borderWidth: '1px 0px 2px 0px' }}>
-              {filteringArray.map((item, id) =>
+              {FILTERING.map((item, id) =>
                 <td key={id}>
                   <SearchHeader 
                     onChange={(pattern) => this.retrieveCTFiltered(item.caption, pattern)} 

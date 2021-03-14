@@ -37,21 +37,13 @@ const mapStateToProps = state => {
   };
 };
 
-// const FILTERING = {
-//   TYPE: 'nature_of_payment',
-//   YEAR: 'year',
-//   COMPANY: 'institution',
-//   AMOUNT: 'amount',
-//   CURRENCY: 'currency'
-// }
-
-const FILTERING = {
-  TYPE:     { dataField:'nature_of_payment', caption: 'type', type: SEARCH_HEADER.TEXT },
-  YEAR:     { dataField:'year', caption: 'year', type: SEARCH_HEADER.NUMBER},
-  COMPANY:  { dataField:'institution', caption: 'company', type: SEARCH_HEADER.TEXT},
-  AMOUNT:   { dataField:'amount', caption: 'amount', type: SEARCH_HEADER.NUMBER},
-  CURRENCY: { dataField:'currency', caption: 'currency', type: SEARCH_HEADER.NUMBER},
-}
+const FILTERING = [
+  { dataField:'nature_of_payment', caption: 'type', type: SEARCH_HEADER.TEXT },
+  { dataField:'year', caption: 'year', type: SEARCH_HEADER.NUMBER},
+  { dataField:'institution', caption: 'company', type: SEARCH_HEADER.TEXT},
+  { dataField:'amount', caption: 'amount', type: SEARCH_HEADER.NUMBER},
+  { dataField:'currency', caption: 'currency', type: SEARCH_HEADER.NUMBER},
+]
 
 class PanelCompanyCooperation extends React.Component {
 
@@ -283,9 +275,9 @@ class PanelCompanyCooperation extends React.Component {
 
       // Add filtering
       if( filtering !== undefined ){
-        for(const [key, value] of Object.entries(FILTERING) ){
-          if( filtering[value.caption] !== '' ){
-            urlParams = `${urlParams}&${value.dataField}=${filtering[value.caption]}`;
+        for(const item of FILTERING ){
+          if( filtering[item.caption] !== '' ){
+            urlParams = `${urlParams}&${item.dataField}=${filtering[item.caption]}`;
           }
         }     
       }
@@ -338,9 +330,9 @@ class PanelCompanyCooperation extends React.Component {
 
   retrieveCompanyCooperationsFiltered(key, value){
     let { currentPage, filtering } = this.state;
-    for(const [candidate_key, candidate_value] of Object.entries(FILTERING) ){
-      if( key === candidate_value.caption ){
-        filtering[candidate_value.caption] = value
+    for(const item_candidate of FILTERING ){
+      if( key === item_candidate.caption ){
+        filtering[item_candidate.caption] = value
       }
     }
 
@@ -363,7 +355,6 @@ class PanelCompanyCooperation extends React.Component {
     }
 
     const {dataCompanyCooperations, currentPage, totalPage} = this.state;
-    const filteringArray = Object.values(FILTERING)
 
     return (
       <div>
@@ -404,7 +395,7 @@ class PanelCompanyCooperation extends React.Component {
                       <td className="text-center">Currency</td>
                     </tr>
                     <tr style={{ border: '1px solid grey', borderWidth: '1px 0px 2px 0px' }}>
-                    {filteringArray.map((item, id) =>
+                    {FILTERING.map((item, id) =>
                       <td key={id}>
                         <SearchHeader 
                           onChange={(pattern) => this.retrieveCompanyCooperationsFiltered(item.caption, pattern)} 
