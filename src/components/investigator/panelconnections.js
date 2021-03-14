@@ -255,14 +255,12 @@ class PanelConnections extends React.Component {
     
     let filteredStrengthConnectionSet = new Set(connectionsIdList)
     // Filtering Strength
-    console.log("filters ", filters)
     if( filters.strengthList.includes('all') == false ){
       filteredStrengthConnectionSet = new Set()
       for(const connection of connections){
 
         // Equal number_objects
         if ( filters.strengthList.includes( connection.number_objects.toString() ) ) {
-          console.log("adding ", connection.number_objects.toString())
           filteredStrengthConnectionSet.add(connection.id);
         }                        
 
@@ -612,16 +610,14 @@ class PanelConnections extends React.Component {
                         <div className="w-100 text-center">Loading...</div>
 
     // Generate maximised cytoscape
-    if (this.state.showModalCytoscape === true &&
-          this.cytoscapeMax === undefined) {
+    if (this.state.showModalCytoscape === true ) {
         const source = this.generateSource(usersMaximised, connectionsMaximised)
-        this.cytoscapeMax = <CytoscapeComponent
+        this.cytoscapeMax = <CytoscapeComponent key={this.childKey}
                             elements={source}
-                            cy={(cy) => { this.cy = cy }}
+                            cy={(cy) => { this.cy = cy; cy.layout(this.cytoscapeLayout).run() }}
                             style={{ width: '100%', height: '100%' }}
                             stylesheet={this.cytoscapeStylesheet}
-                            layout={this.cytoscapeLayout} />;
-
+                            layout={this.cytoscapeLayout} />;        
     }
 
     // NetworkContent
