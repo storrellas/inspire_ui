@@ -23,6 +23,7 @@ import Login from './login';
 import ProjectSelector from './projectselector';
 import InvestigatorList from './investigatorlist';
 import Investigator from './investigator';
+import { height } from '@amcharts/amcharts4/.internal/core/utils/Utils';
 
 
 class AppReloaded extends React.Component {
@@ -30,7 +31,8 @@ class AppReloaded extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            isToggled: true
+            isToggled: true,
+            height: undefined
         }
     }
 
@@ -39,22 +41,39 @@ class AppReloaded extends React.Component {
         this.props.history.push('/')
     }
 
+    componentDidMount() {
+        const height = document.getElementById('page-content-wrapper').clientHeight;
+        this.setState({ height });
+    }
+
     render() {
-        console.log("ReRender")
+        console.log("ReRender ")
         const { isToggled } = this.state;
         return (
             <div style={{ position: 'relative', backgroundColor: 'yellow' }}>
                 <div className="hamburguer" style={{ backgroundColor: 'green' }}>
                     <Button className="w-100" variant="primary" onClick={(e) => this.setState({ isToggled: !isToggled })}>Primary</Button>
                 </div>
+                
                 <div id="wrapper" className={isToggled ? "d-flex" : "d-flex toggled"}
                     style={{ backgroundColor: 'yellow' }}>
-                        
-                    <div id="sidebar-wrapper" style={{ backgroundColor: 'purple' }}>
+                    <div id="overlay"></div>
+
+                    <div id="sidebar-wrapper" style={{ backgroundColor: 'purple', height: this.state.height + 'px' }}>
                         My Header
                     </div>
-                    <div id="page-content-wrapper" style={{ paddingTop: '10em', backgroundColor: 'blue' }}>
-                        MyContent
+                    <div id="page-content-wrapper" style={{ paddingTop: '3em', backgroundColor: 'blue' }}>
+                        <div style={{ padding: '3em'}}>MyContent</div>
+                        <div style={{ padding: '3em'}}>MyContent</div>
+                        <div style={{ padding: '3em'}}>MyContent</div>
+                        <div style={{ padding: '3em'}}>MyContent</div>
+                        <div style={{ padding: '3em'}}>MyContent</div>
+                        <div style={{ padding: '3em'}}>MyContent</div>
+                        <div style={{ padding: '3em'}}>MyContent</div>
+                        <div style={{ padding: '3em'}}>MyContent</div>
+                        <div style={{ padding: '3em'}}>MyContent</div>
+                        
+
                     </div>
                 </div>
             </div>);
