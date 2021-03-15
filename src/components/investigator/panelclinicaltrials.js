@@ -44,15 +44,42 @@ const mapStateToProps = state => {
 };
 
 const FILTERING = [
-  { dataField:'brief_public_title', caption: 'name', type: SEARCH_HEADER.TEXT },
-  { dataField:'prop_conditions', caption: 'condition', type: SEARCH_HEADER.TEXT},
-  { dataField:'recruitment_status', caption: 'status', type: SEARCH_HEADER.TEXT},
-  { dataField:'start_date_year', caption: 'startYear', type: SEARCH_HEADER.NUMBER},
-  { dataField:'end_date_year', caption: 'endYear', type: SEARCH_HEADER.NUMBER},
-  { dataField:'prop_study_phases', caption: 'phase', type: SEARCH_HEADER.TEXT},
-  { dataField:'study_type', caption: 'studyType', type: SEARCH_HEADER.TEXT},
-  { dataField:'enrollment', caption: 'enrollement', type: SEARCH_HEADER.TEXT},
-  { dataField:'intervention', caption: 'intervention', type: SEARCH_HEADER.TEXT},
+  { 
+    dataField: 'brief_public_title', caption: 'name', 
+    label: 'Name', type: SEARCH_HEADER.TEXT 
+  },
+  { 
+    dataField: 'prop_conditions', caption: 'condition',  
+    label: 'Condition', type: SEARCH_HEADER.TEXT 
+  },
+  { 
+    dataField: 'recruitment_status', caption: 'status', 
+    label: 'Status', type: SEARCH_HEADER.TEXT 
+  },
+  { 
+    dataField: 'start_date_year', caption: 'startYear', 
+    label: 'Start Year', type: SEARCH_HEADER.NUMBER 
+  },
+  { 
+    dataField: 'end_date_year', caption: 'endYear', 
+    label: 'End Year', type: SEARCH_HEADER.NUMBER 
+  },
+  { 
+    dataField: 'prop_study_phases', caption: 'phase', 
+    label: 'Phase', type: SEARCH_HEADER.TEXT 
+  },
+  { 
+    dataField: 'study_type', caption: 'studyType', 
+    label: 'Study Type', type: SEARCH_HEADER.TEXT 
+  },
+  { 
+    dataField: 'enrollment', caption: 'enrollement', 
+    label: 'Enrolment', type: SEARCH_HEADER.TEXT 
+  },
+  { 
+    dataField: 'intervention', caption: 'intervention', 
+    label: 'Intervention', type: SEARCH_HEADER.TEXT 
+  },
 ]
 
 class PanelClinicalTrials extends React.Component {
@@ -283,12 +310,7 @@ class PanelClinicalTrials extends React.Component {
 
   generateModalContent(){
 
-    const headers = [
-      "Name", "Condition", "Status", "Start Year", 
-      "End Year", "Phase", "Study Type", "Enrolment", "Intervention"
-    ]
     const { currentPage, totalPage, dataTable } = this.state;
-
 
     return (
     <div className="p-3">
@@ -298,8 +320,8 @@ class PanelClinicalTrials extends React.Component {
           <table className="w-100" style={{ fontSize: '12px' }}>
             <thead>
               <tr>
-                {headers.map((item, id) =>
-                  <td key={id} className="text-center">{item}</td>
+                {FILTERING.map((item, id) =>
+                  <td key={id} className="text-center">{item.label}</td>
                 )}
               </tr>
               <tr style={{ border: '1px solid grey', borderWidth: '1px 0px 2px 0px' }}>
@@ -315,6 +337,11 @@ class PanelClinicalTrials extends React.Component {
             <tbody>
               {dataTable.map((item, id) =>
                 <tr key={id}>
+                  {FILTERING.map( (header, id ) => 
+                    <td style={{ width: '20%'}}>{item[header.dataField]}</td>
+                  )}
+                  
+                  {/*
                   <td style={{ width: '20%'}}>{item.brief_public_title}</td>
                   <td style={{ width: '10%'}}>{item.prop_conditions}</td>
                   <td style={{ width: '5%'}}>{item.recruitment_status}</td>
@@ -323,7 +350,7 @@ class PanelClinicalTrials extends React.Component {
                   <td style={{ width: '10%'}}>{item.prop_study_phases}</td>
                   <td style={{ width: '10%'}}>{item.study_type}</td>
                   <td style={{ width: '5%'}}>{item.enrollment}</td>
-                  <td style={{ width: '20%'}}>{item.intervention}</td>
+                  <td style={{ width: '20%'}}>{item.intervention}</td> */}
                 </tr>
               )}
             </tbody>

@@ -38,11 +38,26 @@ const mapStateToProps = state => {
 };
 
 const FILTERING = [
-  { dataField:'nature_of_payment', caption: 'type', type: SEARCH_HEADER.TEXT },
-  { dataField:'year', caption: 'year', type: SEARCH_HEADER.NUMBER},
-  { dataField:'institution', caption: 'company', type: SEARCH_HEADER.TEXT},
-  { dataField:'amount', caption: 'amount', type: SEARCH_HEADER.NUMBER},
-  { dataField:'currency', caption: 'currency', type: SEARCH_HEADER.NUMBER},
+  { 
+    dataField:'nature_of_payment', caption: 'type', 
+    label: 'Type', type: SEARCH_HEADER.TEXT 
+  },
+  { 
+    dataField:'year', caption: 'year', 
+    label: 'Year', type: SEARCH_HEADER.NUMBER
+  },
+  { 
+    dataField:'institution', caption: 'company', 
+    label: 'Company', type: SEARCH_HEADER.TEXT
+  },
+  { 
+    dataField:'amount', caption: 'amount', 
+    label: 'Amount', type: SEARCH_HEADER.NUMBER
+  },
+  { 
+    dataField:'currency', caption: 'currency', 
+    label: 'Currency', type: SEARCH_HEADER.NUMBER
+  },
 ]
 
 class PanelCompanyCooperation extends React.Component {
@@ -388,11 +403,9 @@ class PanelCompanyCooperation extends React.Component {
                 <table className="w-100">
                   <thead>
                     <tr>
-                      <td className="text-center">Type</td>
-                      <td className="text-center">Year</td>
-                      <td className="text-center">Company</td>
-                      <td className="text-center">Amount</td>
-                      <td className="text-center">Currency</td>
+                    {FILTERING.map((item, id) =>
+                      <td key={id}>{item.label}</td>
+                    )}
                     </tr>
                     <tr style={{ border: '1px solid grey', borderWidth: '1px 0px 2px 0px' }}>
                     {FILTERING.map((item, id) =>
@@ -402,8 +415,6 @@ class PanelCompanyCooperation extends React.Component {
                           type={item.type} />
                       </td>
                     )}
-
-                      
                     </tr>
                   </thead>
                   <tbody>

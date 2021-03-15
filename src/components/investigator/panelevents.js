@@ -42,12 +42,30 @@ const mapStateToProps = state => {
 };
 
 const FILTERING = [
-  { dataField:'name', caption: 'name', type: SEARCH_HEADER.TEXT },
-  { dataField:'position', caption: 'position', type: SEARCH_HEADER.TEXT},
-  { dataField:'event_subtype', caption: 'subtype', type: SEARCH_HEADER.TEXT},
-  { dataField:'start_date_year', caption: 'year', type: SEARCH_HEADER.NUMBER},
-  { dataField:'city', caption: 'city', type: SEARCH_HEADER.TEXT},
-  { dataField:'country', caption: 'country', type: SEARCH_HEADER.TEXT},
+  { 
+    dataField:'name', caption: 'name', 
+    label: 'Name', type: SEARCH_HEADER.TEXT 
+  },
+  { 
+    dataField:'position', caption: 'position', 
+    label: 'Position', type: SEARCH_HEADER.TEXT
+  },
+  { 
+    dataField:'event_subtype', caption: 'subtype', 
+    label: 'Subtype', type: SEARCH_HEADER.TEXT
+  },
+  { 
+    dataField:'start_date_year', caption: 'year', 
+    label: 'Year', type: SEARCH_HEADER.NUMBER
+  },
+  { 
+    dataField:'city', caption: 'city', 
+    label: 'City', type: SEARCH_HEADER.TEXT
+  },
+  { 
+    dataField:'country', caption: 'country', 
+    label: 'Country', type: SEARCH_HEADER.TEXT
+  },
 ]
 
 class PanelEvents extends React.Component {
@@ -172,12 +190,7 @@ class PanelEvents extends React.Component {
   }
 
   generateModalContent(){
-    const headers = [
-      "Name", "Position", "Subtype", "Year", 
-      "City", "Country"
-    ]
     const { currentPage, totalPage } = this.state;
-
 
     return (
     <div className="p-3 h-100" style={{ fontSize:'14px'}}>
@@ -189,8 +202,8 @@ class PanelEvents extends React.Component {
         <thead>
           <tr>
             <td></td>
-            {headers.map((item, id) =>
-              <td key={id} className="text-center">{item}</td>
+            {FILTERING.map((item, id) =>
+              <td key={id} className="text-center">{item.label}</td>
             )}
           </tr>
           <tr style={{ border: '1px solid grey', borderWidth: '1px 0px 2px 0px' }}>

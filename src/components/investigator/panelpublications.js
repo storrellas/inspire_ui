@@ -36,10 +36,22 @@ am4core.useTheme(am4themes_animated);
 // Assets
 
 const FILTERING = [
-  { dataField:'name', caption: 'name', type: SEARCH_HEADER.TEXT },
-  { dataField:'publication_year', caption: 'year', type: SEARCH_HEADER.TEXT},
-  { dataField:'position', caption: 'position', type: SEARCH_HEADER.NUMBER},
-  { dataField:'publication_subtype', caption: 'type', type: SEARCH_HEADER.TEXT}
+  { 
+    dataField:'name', caption: 'name', 
+    label: 'Name', type: SEARCH_HEADER.TEXT 
+  },
+  { 
+    dataField:'publication_year', caption: 'year', 
+    label: 'Year', type: SEARCH_HEADER.TEXT
+  },
+  { 
+    dataField:'position', caption: 'position',  
+    label: 'Position', type: SEARCH_HEADER.NUMBER
+  },
+  { 
+    dataField:'publication_subtype', caption: 'type', 
+    label: 'Type', type: SEARCH_HEADER.TEXT
+  }
 ]
 
 const mapStateToProps = state => {
@@ -142,12 +154,6 @@ class PanelPublications extends React.Component {
 
   generateModalContent() {
     const { dataTable, totalPage, currentPage } = this.state;
-
-    const headers = [
-      "Name", "Year", "Position", "Type"
-    ]
-
-
     return (
       <div className="p-3 h-100" style={{ fontSize: '14px' }}>
         <LoadingOverlay
@@ -157,8 +163,8 @@ class PanelPublications extends React.Component {
             <thead>
               <tr>
                 <td className="text-center">WebLink</td>
-                {headers.map((item, id) =>
-                  <td key={id} className="text-center">{item}</td>
+                {FILTERING.map((item, id) =>
+                  <td key={id} className="text-center">{item.label}</td>
                 )}
               </tr>
               <tr style={{ border: '1px solid grey', borderWidth: '1px 0px 2px 0px' }}>

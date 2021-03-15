@@ -16,6 +16,18 @@ import environment from '../../environment.json';
 import InspirePagination from '../shared/pagination'
 import SearchHeader, { SEARCH_HEADER } from '../shared/searchheader'
 
+const FILTERING = [
+  { dataField:'position__name', caption: 'position', type: SEARCH_HEADER.TEXT },
+  { dataField:'institution__parent_name', caption: 'name', type: SEARCH_HEADER.TEXT},
+  { dataField:'institution__department', caption: 'department', type: SEARCH_HEADER.TEXT},
+  { dataField:'institution__institution_subtype__name', caption: 'subtype', type: SEARCH_HEADER.TEXT},
+  { dataField:'past_position', caption: 'pastPosition', type: SEARCH_HEADER.TEXT},
+  { dataField:'year', caption: 'year', type: SEARCH_HEADER.TEXT},
+  { dataField:'institution__city', caption: 'city', type: SEARCH_HEADER.TEXT},
+  { dataField:'institution__country__name', caption: 'country', type: SEARCH_HEADER.TEXT},
+]
+
+
 class PanelAffiliations extends React.Component {
 
   constructor(props) {
