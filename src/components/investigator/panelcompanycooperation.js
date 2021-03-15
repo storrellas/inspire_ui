@@ -151,7 +151,8 @@ class PanelCompanyCooperation extends React.Component {
     valueAxis.renderer.line.strokeOpacity = 0.5;
     valueAxis.renderer.baseGrid.disabled = true;
     valueAxis.renderer.minGridDistance = 50;
-    valueAxis.renderer.labels.template.rotation = 45;
+    valueAxis.numberFormatter = new am4core.NumberFormatter();
+    valueAxis.numberFormatter.numberFormat = "#a"; 
 
     const that = this;
     function createSeries(field, name) {

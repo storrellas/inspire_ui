@@ -42,8 +42,7 @@ class PanelResearchProfile extends React.Component {
       showModal: false,
       openedModal: false,    
       data: []  
-    }
-    
+    }    
   }
 
 
@@ -115,6 +114,8 @@ class PanelResearchProfile extends React.Component {
   
     //chart.legend = new am4charts.Legend();
     this.chart = chart
+    this.chart.legend = new am4charts.Legend();
+    this.chart.legend.fontSize = 12;
 
     // Set state after timeout
     this.setState({isOpened: true})
@@ -190,7 +191,7 @@ class PanelResearchProfile extends React.Component {
         <LoadingOverlay
           active={this.state.isOpened == false}
           spinner>
-          <div id="researchprofilechart" style={{ height:'100%', height: '300px' }}></div>
+          <div id="researchprofilechart" style={{ height:'100%', height: '500px' }}></div>
           <div className="text-right pr-2 pb-1" style={{ cursor: 'pointer' }} onClick={(e) => this.openModal()}>
               View Details ...
           </div>

@@ -229,15 +229,16 @@ class PanelConnections extends React.Component {
     </div>
   }
 
-  componentDidUpdate() {
-    if (this.cy !== undefined) {
-      const that = this;
-      this.cy.on('select', 'node', function (evt) {
-        var data = evt.target[0].data();
-        that.setState({cytoscapeInvestigator:data})
-      });
-    }
-
+  renderedMaximised(cy){
+    this.cy = cy
+    const that = this;
+    this.cy.removeAllListeners()
+    this.cy.on('select', 'node', function (evt) {
+      evt.preventDefault()
+      var data = evt.target[0].data();
+      that.setState({cytoscapeInvestigator:data})
+    });
+    this.cy.layout(this.cytoscapeLayout).run() 
   }
 
   getIntersection(a, b){
@@ -549,16 +550,18 @@ class PanelConnections extends React.Component {
 
   getNodeDesc(id) {
 
+    const { connectionsMaximised } = this.state;
+
     // Calculate figures
     let clinicalTrials = 0;
     let events = 0;
     let publications = 0;
     let institutionsPast = 0;
     let institutionsPresent = 0;
-    let connectionList = this.state.connections;
+    let connectionList = connectionsMaximised;
 
     if (id !== "1" )            
-      connectionList = [this.state.connections.find(p => ((p.source == "1") && (p.target == id)))];
+      connectionList = [connectionsMaximised.find(p => ((p.source == "1") && (p.target == id)))];
     for(const connection of connectionList){
       clinicalTrials += connection.number_clinical_trials || 0;
       events += connection.number_events || 0;
@@ -578,7 +581,6 @@ class PanelConnections extends React.Component {
   render() {
     const { users, connections } = this.state;
     const { usersMaximised, connectionsMaximised } = this.state;
-    
     // Generate Panel Cytoscape    
     if( this.props.tabConnectionsOpened == true && 
         this.state.cytoscape === undefined){
@@ -599,7 +601,7 @@ class PanelConnections extends React.Component {
         const source = this.generateSource(usersMaximised, connectionsMaximised)
         this.cytoscapeMax = <CytoscapeComponent key={this.childKey}
                             elements={source}
-                            cy={(cy) => { this.cy = cy; cy.layout(this.cytoscapeLayout).run() }}
+                            cy={(cy) => this.renderedMaximised(cy) }
                             style={{ width: '100%', height: '100%' }}
                             stylesheet={this.cytoscapeStylesheet}
                             layout={this.cytoscapeLayout} />;        
