@@ -42,7 +42,7 @@ class AppReloaded extends React.Component {
     }
 
     componentDidMount() {
-        const height = document.getElementById('page-content-wrapper').clientHeight;
+        const height = document.getElementsByClassName('inspire-page-content').clientHeight;
         this.setState({ height });
     }
 
@@ -55,14 +55,14 @@ class AppReloaded extends React.Component {
                     <Button className="w-100" variant="primary" onClick={(e) => this.setState({ isToggled: !isToggled })}>Primary</Button>
                 </div>
                 
-                <div id="wrapper" className={isToggled ? "d-flex" : "d-flex toggled"}
+                <div className={isToggled ? "d-flex inspire-wrapper" : "d-flex inspire-wrapper toggled"}
                     style={{ backgroundColor: 'yellow' }}>
-                    <div id="overlay"></div>
+                    <div className="inspire-overlay"></div>
 
-                    <div id="sidebar-wrapper" style={{ backgroundColor: 'purple', height: this.state.height + 'px' }}>
-                        My Header
+                    <div className="inspire-sidebar" style={{ backgroundColor: 'purple', height: this.state.height + 'px' }}>
+                        <img src={inspire_logo} alt="logo" style={{ height: '50px' }}></img>
                     </div>
-                    <div id="page-content-wrapper" style={{ paddingTop: '3em', backgroundColor: 'blue' }}>
+                    <div className="inspire-page-content" style={{ paddingTop: '3em', backgroundColor: 'blue' }}>
                         <div style={{ padding: '3em'}}>MyContent</div>
                         <div style={{ padding: '3em'}}>MyContent</div>
                         <div style={{ padding: '3em'}}>MyContent</div>

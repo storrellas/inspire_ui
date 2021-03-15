@@ -164,14 +164,14 @@ $sidebar-width: 15rem;
   z-index: 4;
 }
 
-#wrapper {
+.inspire-wrapper {
   overflow-x: hidden;
   min-height: 100vh;
   align-items: stretch;
   position: relative;
 }
 
-#sidebar-wrapper {
+.inspire-sidebar {
   width: $sidebar-width;
 
   position: absolute;
@@ -188,26 +188,15 @@ $sidebar-width: 15rem;
   transition: margin .25s ease-out;
 }
 
-/*
-#sidebar-wrapper .sidebar-heading {
-padding: 0.875rem 1.25rem;
-font-size: 1.2rem;
-}
-
-#sidebar-wrapper .list-group {
-width: 15rem;
-}
-/**/
-
-#page-content-wrapper {
+.inspire-page-content {
   flex-grow: 1;
 }
 
-#wrapper.toggled #sidebar-wrapper {
+.inspire-wrapper.toggled .inspire-sidebar {
   margin-left: 0;
 }
 
-#overlay {
+.inspire-overlay {
   position: fixed; /* Sit on top of the page content */
   display: none; /* Hidden by default */
   width: 100%; /* Full width (cover the whole page) */
@@ -221,25 +210,25 @@ width: 15rem;
   cursor: pointer; /* Add a pointer on hover */
 }
 
-#wrapper.toggled #overlay {
+.inspire-wrapper.toggled .inspire-overlay {
   display: block; /* Hidden by default */
 }
 
 @media (min-width: 768px) {
-  #sidebar-wrapper {
+  .inspire-sidebar {
     margin-left: 0;
     position: relative;
   }
 
-  #page-content-wrapper {
+  .inspire-page-content {
     min-width: 0;
   }
 
-  #wrapper.toggled #sidebar-wrapper {
+  .inspire-wrapper.toggled .inspire-sidebar {
     margin-left: -1*$sidebar-width;
   }
 
-  #wrapper.toggled #overlay {
+  .inspire-wrapper.toggled .inspire-overlay {
     display: none;
   }
 }
