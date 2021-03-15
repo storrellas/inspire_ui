@@ -83,7 +83,7 @@ export const connectionStregnthOptions = [
   { value: '4', label: '4'},
   { value: '5', label: '5'},
   { value: '6', label: '6'},
-  { value: '7+', label: '7+'},
+  { value: '7', label: '7'},
 ];
 
 
@@ -122,13 +122,12 @@ class PanelConnections extends React.Component {
       connectionsMaximised: [],
       yearList: yearList,
       countryList: [],
-      connectionStrengthSelected: [connectionStregnthOptions[0]],
       countrySelected: [],
       connectionTypeSelected: [connectionTypeOptions[0]],
       filters: {
         yearFrom: 1990,
         yearTo: (new Date()).getFullYear(),
-        strengthList: ['all'],
+        strength: ['all'],
         connectionTypeList: ['all'],
         countryList: ['all']
       },
@@ -253,21 +252,17 @@ class PanelConnections extends React.Component {
     let filteredUsers = users.map(x => Object.assign({}, x))
     let connectionsIdList = connections.map(x => x.id)    
     
+    console.log("filters ", filters)
+
     let filteredStrengthConnectionSet = new Set(connectionsIdList)
     // Filtering Strength
-    if( filters.strengthList.includes('all') == false ){
+    if( filters.strength !== 'all' ){
       filteredStrengthConnectionSet = new Set()
       for(const connection of connections){
 
         // Equal number_objects
-        if ( filters.strengthList.includes( connection.number_objects.toString() ) ) {
+        if ( parseInt( filters.strength) <= connection.number_objects ) {
           filteredStrengthConnectionSet.add(connection.id);
-        }                        
-
-        // More than 7
-        if( filters.strengthList.includes('7+') ){
-            if( connection.number_objects > 7 )
-              filteredStrengthConnectionSet.add(connection.id);
         }
       }
     }
@@ -364,15 +359,7 @@ class PanelConnections extends React.Component {
   }
 
   onFilterConnectionStrength(e){
-      
-
-    // If all and some other remove all
-    if( e.filter( x => x.value == 'all').length > 0 && e.length > 1){
-      e = e.filter( x =>  x.value !== 'all')
-    }
-    this.state.connectionStrengthSelected = e
-    this.state.filters.strengthList = e.map( x => x.value )  
-
+    this.state.filters.strength = e.value
     this.updateCytoscape()
   }
 
@@ -624,7 +611,7 @@ class PanelConnections extends React.Component {
     const networkContent = this.state.showModalCytoscape ? this.cytoscapeMax : '';
 
     const { activeTab, countryList, yearList } = this.state;
-    const { connectionStrengthSelected, countrySelected, connectionTypeSelected } = this.state;
+    const { countrySelected, connectionTypeSelected } = this.state;
     const { cytoscapeInvestigator } = this.state;
     const content = (activeTab == TAB.NETWORK) ? networkContent : this.generateProfiles()
 
@@ -656,16 +643,15 @@ class PanelConnections extends React.Component {
                 <div style={{ borderRadius: '3px', border: '1px solid #ccc', color: '#555' }}>
                   <div className="font-weight-bold" style={{ padding: '0.5em', paddingLeft: '15%', fontSize: '16px', backgroundColor: '#ddd' }}>FILTERS</div>
                   <div className="p-2">
-                    <div className="font-weight-bold">Connection Strength</div>
+                    <div className="font-weight-bold">Connection Minimum Strength</div>
                     <Select
-                      isMulti name="colors" 
                       options={connectionStregnthOptions}
-                      value={connectionStrengthSelected}
+                      defaultValue={connectionStregnthOptions[0]}
                       onChange={ (e) => this.onFilterConnectionStrength(e)}
                     />
                     <div className="font-weight-bold">Country</div>
                     <Select
-                      isMulti name="colors" 
+                      isMulti
                       options={countryList}
                       value={countrySelected}
                       onChange={ (e) => this.onFilterCountry(e)}
@@ -673,7 +659,7 @@ class PanelConnections extends React.Component {
 
                     <div className="font-weight-bold">Connection Type</div>
                     <Select
-                      isMulti name="colors" 
+                      isMulti
                       options={connectionTypeOptions}
                       value={connectionTypeSelected}
                       onChange={ (e) => this.onFilterConnectionType(e)}

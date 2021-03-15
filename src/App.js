@@ -40,6 +40,11 @@ class App extends React.Component {
 
   render() {
     console.log("ReRender")
+    const username = localStorage.getItem('username');
+    const projectList = JSON.parse(localStorage.getItem('project_permissions'));
+
+
+
     const isLogin = this.props.location.pathname == '/'
     return (
       <div className='inspire-main'>
@@ -68,11 +73,10 @@ class App extends React.Component {
               }
 
               {isLogin ? '' :
-                <NavDropdown title="Project" bsPrefix="inspire-reponsive-dropdown">
-                  <NavDropdown.Item href="/project/123">Project1</NavDropdown.Item>
-                  <NavDropdown.Item href="/project/123">Project2</NavDropdown.Item>
-                  <NavDropdown.Item href="/project/123">Project3</NavDropdown.Item>
-                  <NavDropdown.Item href="/project/123">Project4</NavDropdown.Item>
+                <NavDropdown title="Project" bsPrefix="inspire-reponsive-dropdown">                  
+                  {projectList.map((item, id) => 
+                    <NavDropdown.Item key={id} href={`/project/${item.oid}`}>{item.name}</NavDropdown.Item>
+                  )}
                 </NavDropdown>
               }
               {isLogin ? '' :
@@ -92,7 +96,7 @@ class App extends React.Component {
                     </Dropdown.Toggle>
 
                     <Dropdown.Menu align="right">
-                      <Dropdown.Item href="#">Sergi Torrellas</Dropdown.Item>
+                      <Dropdown.Item href="#">{username}</Dropdown.Item>
                       <Dropdown.Item href="#" onClick={(e) => this.logout(e)}>Logout</Dropdown.Item>
                     </Dropdown.Menu>
                   </div>
