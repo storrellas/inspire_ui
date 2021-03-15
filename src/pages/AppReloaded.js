@@ -11,12 +11,13 @@ import { withRouter } from 'react-router-dom'
 // Styles
 import "./AppReloaded.scss"
 
-// Assets
-import inspire_logo from '../assets/logo.png';
-
 // Font Awesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUser, faStar, faDirections } from '@fortawesome/free-solid-svg-icons'
+import { faBars } from '@fortawesome/free-solid-svg-icons'
+
+// Assets
+import inspire_logo from '../assets/logo2.png';
+
 
 // Project imports
 import Login from './login';
@@ -50,19 +51,23 @@ class AppReloaded extends React.Component {
         console.log("ReRender ")
         const { isToggled } = this.state;
         return (
-            <div style={{ position: 'relative', backgroundColor: 'yellow' }}>
-                <div className="hamburguer" style={{ backgroundColor: 'green' }}>
-                    <Button className="w-100" variant="primary" onClick={(e) => this.setState({ isToggled: !isToggled })}>Primary</Button>
+            <div style={{ position: 'relative' }}>
+                <div className="hamburguer">
+                    <FontAwesomeIcon icon={faBars}  
+                        onClick={(e) => this.setState({ isToggled: !isToggled })}/>
                 </div>
                 
                 <div className={isToggled ? "d-flex inspire-wrapper" : "d-flex inspire-wrapper toggled"}
                     style={{ backgroundColor: 'yellow' }}>
                     <div className="inspire-overlay"></div>
 
-                    <div className="inspire-sidebar" style={{ backgroundColor: 'purple', height: this.state.height + 'px' }}>
-                        <img src={inspire_logo} alt="logo" style={{ height: '50px' }}></img>
+                    <div className="inspire-sidebar" style={{ height: this.state.height + 'px' }}>
+                        <div className="d-flex justify-content-center">
+                            <img src={inspire_logo} alt="logo" style={{ height: '100px' }}></img>
+
+                        </div>
                     </div>
-                    <div className="inspire-page-content" style={{ paddingTop: '3em', backgroundColor: 'blue' }}>
+                    <div className="inspire-page-content" style={{ paddingTop: '3em' }}>
                         <div style={{ padding: '3em'}}>MyContent</div>
                         <div style={{ padding: '3em'}}>MyContent</div>
                         <div style={{ padding: '3em'}}>MyContent</div>

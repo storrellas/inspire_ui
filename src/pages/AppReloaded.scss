@@ -155,6 +155,8 @@ $navbar-bg-hover: #4285f4;
 
 
 $sidebar-width: 15rem;
+$sidebar-bg-color: #343547;
+$page-content-bg-color: #ECEFF8;
 
 .hamburguer{
   width: $sidebar-width;
@@ -162,6 +164,11 @@ $sidebar-width: 15rem;
   top: 0;
   left: 0;
   z-index: 4;
+  background-color: transparent;
+  font-size: 25px;
+  padding-left: 0.5em;
+  color: grey;
+  cursor: pointer;
 }
 
 .inspire-wrapper {
@@ -173,12 +180,13 @@ $sidebar-width: 15rem;
 
 .inspire-sidebar {
   width: $sidebar-width;
+  background-color: $sidebar-bg-color;
 
+  padding-top: 3em;
   position: absolute;
   top: 0;
   left: 0;
   z-index: 3;
-  width: 15rem;
   min-height: 100vh;
 
   margin-left: -1*$sidebar-width;
@@ -190,6 +198,7 @@ $sidebar-width: 15rem;
 
 .inspire-page-content {
   flex-grow: 1;
+  background-color: $page-content-bg-color;
 }
 
 .inspire-wrapper.toggled .inspire-sidebar {
@@ -218,6 +227,7 @@ $sidebar-width: 15rem;
   .inspire-sidebar {
     margin-left: 0;
     position: relative;
+    
   }
 
   .inspire-page-content {
