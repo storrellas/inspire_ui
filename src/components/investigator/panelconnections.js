@@ -252,8 +252,6 @@ class PanelConnections extends React.Component {
     let filteredUsers = users.map(x => Object.assign({}, x))
     let connectionsIdList = connections.map(x => x.id)    
     
-    console.log("filters ", filters)
-
     let filteredStrengthConnectionSet = new Set(connectionsIdList)
     // Filtering Strength
     if( filters.strength !== 'all' ){

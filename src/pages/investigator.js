@@ -33,7 +33,8 @@ import PanelClinicalTrials from '../components/investigator/panelclinicaltrials'
 // Redux
 import { 
   setPanelRendered,
-  PANEL
+  PANEL,
+  resetPanel
 } from "../redux";
 import { connect } from "react-redux";
 
@@ -68,8 +69,6 @@ function Panel(props) {
 }
 
 function LoadingOverlayContainer(props) {
-
-  const classNameStr = (props.height === 0) ? "panel-caret mr-2" : "panel-caret active mr-2";
   return (
     <LoadingOverlay
             active
@@ -83,7 +82,8 @@ function LoadingOverlayContainer(props) {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    setPanelRendered: (panel) => dispatch(setPanelRendered(panel))
+    setPanelRendered: (panel) => dispatch(setPanelRendered(panel)),
+    resetPanel: () => dispatch(resetPanel())
   };
 }
 
@@ -144,6 +144,7 @@ class Investigator extends React.Component {
   }
 
   componentDidMount(){
+    this.props.resetPanel()
     const that = this;
     setTimeout(function () { that.setState({showPanels:true}) }, 500);
   }

@@ -17,6 +17,8 @@ export const PANEL = {
 }
 
 
+export const PANEL_RESET = "PANEL_RESET";
+
 export const PANEL_CONNECTIONS_OPENED = "PANEL_CONNECTIONS_OPENED";
 export const PANEL_COMPANY_COOPERATION_OPENED = "PANEL_COMPANY_COOPERATION_OPENED";
 export const PANEL_AFFILIATIONS_OPENED = "PANEL_AFFILIATIONS_OPENED";
@@ -48,9 +50,15 @@ export function setPanelRendered(panel) {
     return { type: PANEL_CLINICAL_TRIALS_OPENED }
 };
 
+export function resetPanel() {
+  return { type: PANEL_RESET }
+};
+
 export function setInvestigatorProfile(payload) {
   return { type: INVESTIGATOR_PROFILE, payload }
 };
+
+
 
 // Reducers
 // ---------------------
@@ -86,6 +94,18 @@ export function rootReducer(state = initialState, action) {
   }
   if (action.type === PANEL_CLINICAL_TRIALS_OPENED) {
     return { ...state, tabClinicalTrialsOpened: true };
+  }
+
+  if (action.type === PANEL_RESET) {
+    return { ...state, 
+      tabConnectionsOpened: false,
+      tabCompanyCooperationOpened: false,
+      
+      tabResearchProfileOpened: false,
+      tabPublicationsOpened: false,
+      tabEventsOpened: false,
+      tabClinicalTrialsOpened: false,    
+    };
   }
 
 

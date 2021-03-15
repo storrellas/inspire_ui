@@ -56,7 +56,6 @@ class ProjectSelector extends React.Component {
   render() {
 
     const items = Array(10).fill(0)
-    console.log("items ", this.state.projectList)
     const { projectList } = this.state;
     return (
       <Row>
