@@ -43,8 +43,6 @@ class App extends React.Component {
     const username = localStorage.getItem('username');
     const projectList = JSON.parse(localStorage.getItem('project_permissions'));
 
-
-
     const isLogin = this.props.location.pathname == '/'
     return (
       <div className='inspire-main'>

@@ -2,15 +2,24 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
+import AppReloaded from './pages/AppReloaded'
 import reportWebVitals from './reportWebVitals';
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, Switch, Route } from "react-router-dom";
 import { store } from "./redux";
 import { Provider } from 'react-redux'
+
+
 
 ReactDOM.render(
   <BrowserRouter>
     <Provider store={store}>
-      <App />
+
+      <Switch>
+        <Route path="/reloaded/" component={AppReloaded} />
+
+        <Route path="/" component={App} />
+      </Switch>
+
     </Provider>
   </BrowserRouter>,
   document.getElementById('root')
