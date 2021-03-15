@@ -166,15 +166,23 @@ $page-content-bg-color: #ECEFF8;
   z-index: 4;
   background-color: transparent;
   font-size: 25px;
-  padding-left: 0.5em;
+
   color: grey;
   cursor: pointer;
+}
+
+.hamburguer-container{
+  background-color: '#343547';
+  margin: '0.5em';
+  padding: '0.1em 0.4em 0.1em 0.4em';
+  border-radius: '20px'; 
+  border: '2px solid grey';
+  display: 'inline-block';
 }
 
 .inspire-wrapper {
   overflow-x: hidden;
   min-height: 100vh;
-  align-items: stretch;
   position: relative;
 }
 
@@ -182,7 +190,7 @@ $page-content-bg-color: #ECEFF8;
   width: $sidebar-width;
   background-color: $sidebar-bg-color;
 
-  padding-top: 3em;
+  padding-top: 5em;
   position: absolute;
   top: 0;
   left: 0;
@@ -199,6 +207,9 @@ $page-content-bg-color: #ECEFF8;
 .inspire-page-content {
   flex-grow: 1;
   background-color: $page-content-bg-color;
+  overflow-y: scroll;
+  height: 100vh;
+  max-height: 100vh;
 }
 
 .inspire-wrapper.toggled .inspire-sidebar {

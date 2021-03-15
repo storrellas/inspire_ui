@@ -13,7 +13,7 @@ import "./AppReloaded.scss"
 
 // Font Awesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBars } from '@fortawesome/free-solid-svg-icons'
+import { faUser, faBars, faStar, faQuestionCircle, faTasks } from '@fortawesome/free-solid-svg-icons'
 
 // Assets
 import inspire_logo from '../assets/logo2.png';
@@ -24,7 +24,6 @@ import Login from './login';
 import ProjectSelector from './projectselector';
 import InvestigatorList from './investigatorlist';
 import Investigator from './investigator';
-import { height } from '@amcharts/amcharts4/.internal/core/utils/Utils';
 
 
 class AppReloaded extends React.Component {
@@ -42,43 +41,90 @@ class AppReloaded extends React.Component {
         this.props.history.push('/')
     }
 
-    componentDidMount() {
-        const height = document.getElementsByClassName('inspire-page-content').clientHeight;
-        this.setState({ height });
-    }
-
     render() {
         console.log("ReRender ")
         const { isToggled } = this.state;
         return (
             <div style={{ position: 'relative' }}>
                 <div className="hamburguer">
-                    <FontAwesomeIcon icon={faBars}  
-                        onClick={(e) => this.setState({ isToggled: !isToggled })}/>
-                </div>
-                
-                <div className={isToggled ? "d-flex inspire-wrapper" : "d-flex inspire-wrapper toggled"}
-                    style={{ backgroundColor: 'yellow' }}>
-                    <div className="inspire-overlay"></div>
-
-                    <div className="inspire-sidebar" style={{ height: this.state.height + 'px' }}>
-                        <div className="d-flex justify-content-center">
-                            <img src={inspire_logo} alt="logo" style={{ height: '100px' }}></img>
-
-                        </div>
+                    <div style={{
+                        backgroundColor: '#343547', margin: '0.5em',
+                        padding: '0.1em 0.4em 0.1em 0.4em', borderRadius: '20px',
+                        border: '2px solid grey', display: 'inline-block'
+                    }}>
+                        <FontAwesomeIcon icon={faBars}
+                            onClick={(e) => this.setState({ isToggled: !isToggled })} />
                     </div>
-                    <div className="inspire-page-content" style={{ paddingTop: '3em' }}>
-                        <div style={{ padding: '3em'}}>MyContent</div>
-                        <div style={{ padding: '3em'}}>MyContent</div>
-                        <div style={{ padding: '3em'}}>MyContent</div>
-                        <div style={{ padding: '3em'}}>MyContent</div>
-                        <div style={{ padding: '3em'}}>MyContent</div>
-                        <div style={{ padding: '3em'}}>MyContent</div>
-                        <div style={{ padding: '3em'}}>MyContent</div>
-                        <div style={{ padding: '3em'}}>MyContent</div>
-                        <div style={{ padding: '3em'}}>MyContent</div>
-                        
 
+                </div>
+
+                <div className={isToggled ? "d-flex inspire-wrapper" : "d-flex inspire-wrapper toggled"}>
+                    <div className="inspire-overlay"
+                        onClick={(e) => this.setState({ isToggled: !isToggled })}></div>
+
+                    <div className="inspire-sidebar">
+                        <div className="h-100 d-flex flex-column justify-content-between" style={{ color: 'white', fontSize: '18px', alignItems: 'center' }}>
+                            <div>
+                                <div>
+                                    <img src={inspire_logo} alt="logo" style={{ height: '100px' }}></img>
+                                </div>
+                                <div style={{ marginTop: '3em', cursor: 'pointer' }}>
+                                    <div className="d-flex">
+                                        <div><FontAwesomeIcon icon={faUser} /></div>
+                                        <span className="align-self-end ml-2" style={{ flexGrow: 1 }}>Project Home</span>
+                                    </div>
+                                </div>
+                                <div className="mt-3" style={{ cursor: 'pointer' }}>
+                                    <div className="d-flex">
+                                        <div><FontAwesomeIcon icon={faStar} /></div>
+                                        <span className="align-self-end ml-2" style={{ flexGrow: 1 }}>My Favories</span>
+                                    </div>
+                                </div>
+
+                                <div className="mt-3" style={{ cursor: 'pointer' }}>
+                                    <div className="d-flex">
+                                        <div><FontAwesomeIcon icon={faQuestionCircle} /></div>
+                                        <span className="align-self-end ml-2" style={{ flexGrow: 1 }}>Navigation3</span>
+                                    </div>
+                                </div>
+
+                                <div className="mt-3" style={{ cursor: 'pointer' }}>
+                                    <div className="d-flex">
+                                        <div><FontAwesomeIcon icon={faTasks} /></div>
+                                        <span className="align-self-end ml-2" style={{ flexGrow: 1 }}>Navigation4</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="pb-3">
+
+                                <div className="mt-3" style={{ cursor: 'pointer' }}>
+                                    <div className="d-flex">
+                                        <div><FontAwesomeIcon icon={faQuestionCircle} /></div>
+                                        <span className="align-self-end ml-2" style={{ flexGrow: 1 }}>Navigation3</span>
+                                    </div>
+                                </div>
+                                <div className="mt-3" style={{ cursor: 'pointer' }}>
+                                    <div className="d-flex">
+                                        <div><FontAwesomeIcon icon={faUser} /></div>
+                                        <span className="align-self-end ml-2" style={{ flexGrow: 1 }}>User Name</span>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div className="inspire-page-content">
+                        <Container>
+                            <Row className="inspire-content">
+                                <Col sm={12}>
+                                    <Route path={`${this.props.match.path}/`} exact component={Login} />
+                                    <Route path={`${this.props.match.path}project`} exact component={ProjectSelector} />
+                                    <Route path={`${this.props.match.path}project/:id`} exact component={InvestigatorList} />
+                                    <Route path={`${this.props.match.path}project/:id/investigator/:subid`} exact component={Investigator} />
+                                </Col>
+                            </Row>
+                        </Container>
                     </div>
                 </div>
             </div>);
