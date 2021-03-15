@@ -17,14 +17,38 @@ import InspirePagination from '../shared/pagination'
 import SearchHeader, { SEARCH_HEADER } from '../shared/searchheader'
 
 const FILTERING = [
-  { dataField:'position__name', caption: 'position', type: SEARCH_HEADER.TEXT },
-  { dataField:'institution__parent_name', caption: 'name', type: SEARCH_HEADER.TEXT},
-  { dataField:'institution__department', caption: 'department', type: SEARCH_HEADER.TEXT},
-  { dataField:'institution__institution_subtype__name', caption: 'subtype', type: SEARCH_HEADER.TEXT},
-  { dataField:'past_position', caption: 'pastPosition', type: SEARCH_HEADER.TEXT},
-  { dataField:'year', caption: 'year', type: SEARCH_HEADER.TEXT},
-  { dataField:'institution__city', caption: 'city', type: SEARCH_HEADER.TEXT},
-  { dataField:'institution__country__name', caption: 'country', type: SEARCH_HEADER.TEXT},
+  { 
+    dataField:'position__name', caption: 'position', 
+    label: 'Position', type: SEARCH_HEADER.TEXT 
+  },
+  { 
+    dataField:'institution__parent_name', caption: 'name', 
+    label: 'Name', type: SEARCH_HEADER.TEXT
+  },
+  { 
+    dataField:'institution__department', caption: 'department', 
+    label: 'Department', type: SEARCH_HEADER.TEXT
+  },
+  { 
+    dataField:'institution__institution_subtype__name', caption: 'subtype', 
+    label: 'Subtype', type: SEARCH_HEADER.TEXT
+  },
+  { 
+    dataField:'past_position', caption: 'pastPosition', 
+    label: 'Past Position', type: SEARCH_HEADER.TEXT
+  },
+  { 
+    dataField:'year', caption: 'year', 
+    label: 'Year', type: SEARCH_HEADER.TEXT
+  },
+  { 
+    dataField:'institution__city', caption: 'city', 
+    label: 'City', type: SEARCH_HEADER.TEXT
+  },
+  { 
+    dataField:'institution__country__name', caption: 'country',
+    label: 'Country', type: SEARCH_HEADER.TEXT
+  },
 ]
 
 
@@ -47,7 +71,17 @@ class PanelAffiliations extends React.Component {
       take: 10,
       limit: 10,
       isLoading: false,
-      dataTable: []
+      dataTable: [],
+      filtering : {
+        position: '',
+        name: '',
+        department: '', 
+        subtype: '',
+        pastPosition: '',
+        year: '',
+        city: '',
+        country: '',
+      }
     }
   }
 
@@ -89,7 +123,7 @@ class PanelAffiliations extends React.Component {
     }
   }
 
-  async retrieveAffiliationsUniversities(page = 1) {
+  async retrieveAffiliationsUniversities(page = 1, filtering = undefined) {
     try{
       this.setState({isLoading: true})
 
@@ -99,7 +133,17 @@ class PanelAffiliations extends React.Component {
       // Perform request
       let skip = this.state.take * (page-1);
       let offset = this.state.take * (page-1);
-      const urlParams = `limit=${limit}&offset=${offset}&skip=${skip}&take=${take}`
+      let urlParams = `limit=${limit}&offset=${offset}&skip=${skip}&take=${take}`
+
+      // Add filtering
+      if( filtering !== undefined ){
+        for(const item of FILTERING ){
+          if( filtering[item.caption] !== '' ){
+            urlParams = `${urlParams}&${item.dataField}=${filtering[item.caption]}`;
+          }
+        }      
+      }
+
       const url = `${environment.base_url}/api/investigator/${this.state.investigatorId}/affiliations-universities/?${urlParams}`
       const response = await axios.get(url,
         { headers: { "Authorization": "jwt " + token }
@@ -130,7 +174,7 @@ class PanelAffiliations extends React.Component {
     }
   }
 
-  async retrieveAffiliationsHospitals(page = 1) {
+  async retrieveAffiliationsHospitals(page = 1, filtering = undefined) {
     try{
       this.setState({isLoading: true})
 
@@ -140,7 +184,17 @@ class PanelAffiliations extends React.Component {
       // Perform request
       let skip = this.state.take * (page-1);
       let offset = this.state.take * (page-1);
-      const urlParams = `limit=${limit}&offset=${offset}&skip=${skip}&take=${take}`
+      let urlParams = `limit=${limit}&offset=${offset}&skip=${skip}&take=${take}`
+
+      // Add filtering
+      if( filtering !== undefined ){
+        for(const item of FILTERING ){
+          if( filtering[item.caption] !== '' ){
+            urlParams = `${urlParams}&${item.dataField}=${filtering[item.caption]}`;
+          }
+        }      
+      }
+
       const url = `${environment.base_url}/api/investigator/${this.state.investigatorId}/affiliations-hospitals/?${urlParams}`
       const response = await axios.get(url,
         { headers: { "Authorization": "jwt " + token }
@@ -170,7 +224,7 @@ class PanelAffiliations extends React.Component {
     }
   }
 
-  async retrieveAffiliationsAssociations(page = 1) {
+  async retrieveAffiliationsAssociations(page = 1, filtering = undefined) {
     try{
       this.setState({isLoading: true})
 
@@ -180,7 +234,17 @@ class PanelAffiliations extends React.Component {
       // Perform request
       let skip = this.state.take * (page-1);
       let offset = this.state.take * (page-1);
-      const urlParams = `limit=${limit}&offset=${offset}&skip=${skip}&take=${take}`
+      let urlParams = `limit=${limit}&offset=${offset}&skip=${skip}&take=${take}`
+
+      // Add filtering
+      if( filtering !== undefined ){
+        for(const item of FILTERING ){
+          if( filtering[item.caption] !== '' ){
+            urlParams = `${urlParams}&${item.dataField}=${filtering[item.caption]}`;
+          }
+        }      
+      }
+
       const url = `${environment.base_url}/api/investigator/${this.state.investigatorId}/affiliations-associations/?${urlParams}`
       const response = await axios.get(url,
         { headers: { "Authorization": "jwt " + token }
@@ -249,6 +313,33 @@ class PanelAffiliations extends React.Component {
       isLoading: false,
     })
     this.retrieveAffiliationsAssociations(1) 
+  }
+
+  retrieveAffiliationsFiltered(key, value){
+    
+    let { currentPage, filtering } = this.state;
+    for(const candidate_item of FILTERING ){
+      if( key === candidate_item.caption ){
+        filtering[candidate_item.caption] = value
+      }
+    }
+
+    // Clear timeout
+    const that = this;
+    if ( this.typingTimeout ) {
+      clearTimeout(this.typingTimeout);
+    }
+    this.typingTimeout = 
+      setTimeout(function () { 
+        if( that.state.showModalUniversities ){
+          that.retrieveAffiliationsUniversities(currentPage, filtering) 
+        }else if( that.state.showModalHospitals ){
+          that.retrieveAffiliationsHospitals(currentPage, filtering) 
+        }else if( that.state.showModalAssociations ){
+          that.retrieveAffiliationsAssociations(currentPage, filtering) 
+        }
+      }, 2000)
+
   }
 
   componentDidMount(){
@@ -349,40 +440,18 @@ class PanelAffiliations extends React.Component {
                 <table className="w-100">
                   <thead>
                     <tr>
-                      <td className="text-center">Position</td>
-                      <td className="text-center">Name</td>
-                      <td className="text-center">Department</td>
-                      <td className="text-center">Subtype</td>
-                      <td className="text-center">Past Position</td>
-                      <td className="text-center">Year</td>
-                      <td className="text-center">City</td>
-                      <td className="text-center">Country</td>
+                      {FILTERING.map((item, id) =>
+                        <td key={id} className="text-center">{item.label}</td>
+                      )}
                     </tr>
                     <tr style={{ border: '1px solid grey', borderWidth: '1px 0px 2px 0px' }}>
-                      <td>
-                        <SearchHeader onChange={(e) => console.log("event", e)} type={SEARCH_HEADER.TEXT} />
-                      </td>
-                      <td>
-                        <SearchHeader onChange={(e) => console.log("event", e)} type={SEARCH_HEADER.TEXT} />
-                      </td>
-                      <td>
-                        <SearchHeader onChange={(e) => console.log("event", e)} type={SEARCH_HEADER.TEXT} />
-                      </td>
-                      <td>
-                        <SearchHeader onChange={(e) => console.log("event", e)} type={SEARCH_HEADER.TEXT} />
-                      </td>
-                      <td>
-                        <SearchHeader onChange={(e) => console.log("event", e)} type={SEARCH_HEADER.TEXT} />
-                      </td>
-                      <td>
-                        <SearchHeader onChange={(e) => console.log("event", e)} type={SEARCH_HEADER.TEXT} />
-                      </td>
-                      <td>
-                        <SearchHeader onChange={(e) => console.log("event", e)} type={SEARCH_HEADER.TEXT} />
-                      </td>
-                      <td>
-                        <SearchHeader onChange={(e) => console.log("event", e)} type={SEARCH_HEADER.TEXT} />
-                      </td>
+                      {FILTERING.map((item, id) =>
+                        <td key={id}>
+                          <SearchHeader 
+                            onChange={(pattern) => this.retrieveAffiliationsFiltered(item.caption, pattern)} 
+                            type={item.type} />
+                        </td>
+                      )}
                     </tr>
                   </thead>
                   <tbody>

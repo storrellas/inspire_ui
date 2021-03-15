@@ -208,7 +208,7 @@ class PanelEvents extends React.Component {
           </tr>
           <tr style={{ border: '1px solid grey', borderWidth: '1px 0px 2px 0px' }}>
             <td></td>
-            {FILTERING.map((item, id) =>
+              {FILTERING.map((item, id) =>
                 <td key={id}>
                   <SearchHeader 
                     onChange={(pattern) => this.retrieveEventsFiltered(item.caption, pattern)} 
@@ -287,8 +287,6 @@ class PanelEvents extends React.Component {
     try{      
       const token = localStorage.getItem('token')
   
-
-
       // Perform request
       const response = await axios.get(`${environment.base_url}/api/investigator/${this.investigatorId}/events-per-position/`,
         { headers: { "Authorization": "jwt " + token }
