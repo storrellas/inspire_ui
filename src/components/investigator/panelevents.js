@@ -13,6 +13,9 @@ import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faExpandArrowsAlt, faSearch, faCaretRight } from '@fortawesome/free-solid-svg-icons'
 
+// EllipsisWithTooltip
+import EllipsisWithTooltip from 'react-ellipsis-with-tooltip'
+
 // Redux
 import { connect } from "react-redux";
 
@@ -226,7 +229,11 @@ class PanelEvents extends React.Component {
                   style={{ fontSize: '1em', color: 'grey', cursor:'pointer' }} 
                   onClick={(e) => this.onClickedTableDetail(id)} />
               </td>
-              <td  className="text-left" style={{ width: '45%'}}>{item.name}</td>
+              <td  className="text-left" style={{ width: '45%'}}>
+                <EllipsisWithTooltip placement="bottom" style={{ width: '500px'}}>
+                {item.name}
+                </EllipsisWithTooltip>
+              </td>
               <td  className="text-center" style={{ width: '10%'}}>{item.position}</td>
               <td  className="text-center" style={{ width: '10%'}}>{item.event_subtype}</td>
               <td  className="text-center" style={{ width: '5%'}}>{item.start_date_year}</td>

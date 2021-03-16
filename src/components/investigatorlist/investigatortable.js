@@ -11,6 +11,9 @@ import arrow from '../../assets/arrow.png';
 
 import './investigatortable.scss'
 
+// EllipsisWithTooltip
+import EllipsisWithTooltip from 'react-ellipsis-with-tooltip'
+
 // Project imports
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faStar, faSearch } from '@fortawesome/free-solid-svg-icons'
@@ -29,22 +32,6 @@ import LoadingOverlay from 'react-loading-overlay';
 // Project Imports
 import InspirePagination from '../shared/pagination'
 import SearchHeader, { SEARCH_HEADER } from '../shared/searchheader'
-
-/*
-const FILTERING = {
-  FIRST_NAME: 'first_name',
-  LAST_NAME: 'last_name',
-  SPECIALITIES: 'prop_specialties',
-  FOCUS_AREA: 'focus_areas_reasearch_interests',
-  CITY: 'city',
-  COUNTRY: 'country',
-  PUBLICATIONS: 'number_linked_publications',
-  EVENTS: 'number_linked_events',
-  CT: 'number_linked_clinical_trials',
-  COI: 'number_linked_institutions_coi',
-  SCORE: 'mesh_counter',
-}
-/**/
 
 const FILTERING = [
   { 
@@ -232,7 +219,7 @@ class InvestigatorTable extends React.Component {
       clearTimeout(this.typingTimeout);
     }
     this.typingTimeout = 
-      setTimeout(function () {that.loadMesh(pattern);}, 2000)
+      setTimeout(function () {that.loadMesh(pattern);}, 1000)
   }
 
   onMeshSelected(mesh){
@@ -339,19 +326,45 @@ class InvestigatorTable extends React.Component {
                       onClick={(e) => this.props.history.push(`${reloaded?'/reloaded':''}/project/${this.state.projectOid}/investigator/${item.oid}`)}
                       style={{ cursor: 'pointer' }}></img>
                   </td>
-                  {FILTERING.map( (header, id ) => 
-                    <td key={id} className="text-center" 
-                        style={{ width: '20%'}}>{item[header.dataField]}</td>
-                  )}
+
+                  <td className="text-center" 
+                        style={{ width: '20%'}}>{item.first_name}</td>
+                  <td className="text-center" 
+                        style={{ width: '20%'}}>{item.last_name}</td>
+                  <td className="text-center" 
+                        style={{ width: '20%'}}>
+                          <EllipsisWithTooltip placement="bottom" style={{ width: '150px'}}>
+                          {item.prop_specialties}
+                          </EllipsisWithTooltip>
+                  </td>
+                  <td className="text-center" 
+                        style={{ width: '20%'}}>
+                        <EllipsisWithTooltip placement="bottom" style={{ width: '150px'}}>
+                          {item.focus_areas_reasearch_interests}
+                        </EllipsisWithTooltip>
+                  </td>
+                  <td className="text-center" 
+                        style={{ width: '20%'}}>{item.city}</td>
+                  <td className="text-center" 
+                        style={{ width: '20%'}}>{item.country}</td>
+                  <td className="text-center" 
+                        style={{ width: '20%'}}>{item.number_linked_publications}</td>
+                  <td className="text-center" 
+                        style={{ width: '20%'}}>{item.number_linked_events}</td>
+                  <td className="text-center" 
+                        style={{ width: '20%'}}>{item.number_linked_clinical_trials}</td>
+                  <td className="text-center" 
+                        style={{ width: '20%'}}>{item.number_linked_institutions_coi}</td>
+                  <td className="text-center" 
+                        style={{ width: '20%'}}>{item.mesh_counter}</td>
+
                 </tr>
               )}
             </tbody>
           </table>
           </LoadingOverlay>
 
-
           <InspirePagination currentPage={currentPage} totalPage={totalPage} onClick={this.navigatePage.bind(this)}/>
-
 
         </Col>
       </Row>

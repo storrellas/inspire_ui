@@ -10,6 +10,9 @@ import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 
+// EllipsisWithTooltip
+import EllipsisWithTooltip from 'react-ellipsis-with-tooltip'
+
 // Styles
 import './modal.scss';
 
@@ -423,7 +426,11 @@ class PanelCompanyCooperation extends React.Component {
                       <tr key={id}>
                         <td className="text-center" style={{ width: '20%'}}>{item.nature_of_payment}</td>
                         <td className="text-center" style={{ width: '10%'}}>{item.year}</td>
-                        <td className="text-center" style={{ width: '40%'}}>{item.institution}</td>
+                        <td className="text-center" style={{ width: '40%'}}>
+                          <EllipsisWithTooltip placement="bottom" style={{ width: '300px'}}>
+                          {item.institution}
+                          </EllipsisWithTooltip>
+                        </td>
                         <td className="text-center" style={{ width: '20%'}}>{item.amount}</td>
                         <td className="text-center" style={{ width: '10%'}}>{item.currency}</td>
                       </tr>

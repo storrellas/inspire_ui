@@ -8,6 +8,9 @@ import { withRouter } from 'react-router-dom'
 // Loading overlay
 import LoadingOverlay from 'react-loading-overlay';
 
+// EllipsisWithTooltip
+import EllipsisWithTooltip from 'react-ellipsis-with-tooltip'
+
 // Axios
 import axios from 'axios';
 import environment from '../../environment.json';
@@ -445,8 +448,16 @@ class PanelAffiliations extends React.Component {
                     {dataTable.map((item, id) =>
                       <tr key={id}>
                         <td  className="text-center" style={{ width: '10%'}}>{item.position__name}</td>
-                        <td  className="text-center" style={{ width: '20%'}}>{item.institution__parent_name}</td>
-                        <td  className="text-center" style={{ width: '20%'}}>{item.institution__department}</td>
+                        <td  className="text-center" style={{ width: '200px'}}>
+                          <EllipsisWithTooltip placement="bottom" style={{ width: '300px'}}>
+                          {item.institution__parent_name}
+                          </EllipsisWithTooltip>
+                        </td>
+                        <td  className="text-center" style={{ width: '20%'}}>
+                          <EllipsisWithTooltip placement="bottom" style={{ width: '100px'}}>
+                          {item.institution__department}
+                          </EllipsisWithTooltip>
+                        </td>
                         <td  className="text-center" style={{ width: '20%'}}>{item.institution__institution_subtype__name}</td>
                         <td  className="text-center" style={{ width: '10%'}}>{item.past_position}</td>
                         <td  className="text-center" style={{ width: '10%'}}>{item.year}</td>
