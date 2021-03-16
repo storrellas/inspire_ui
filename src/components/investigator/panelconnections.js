@@ -361,14 +361,20 @@ class PanelConnections extends React.Component {
   }
 
   onFilterConnectionStrength(e){
+    
     this.state.filters.strength = e.value
     this.updateCytoscape()
   }
 
   onFilterCountry(e){
+    console.log("Change", e)
     // If all and some other remove all
     if( e.filter( x => x.value == 'all').length > 0 && e.length > 1){
       e = e.filter( x =>  x.value !== 'all')
+    }
+    // If none set all
+    if( e.length == 0 ){
+      e = [this.state.countryList[0]]
     }
     this.state.countrySelected = e
     this.state.filters.countryList = e.map( x => x.value )
@@ -380,6 +386,10 @@ class PanelConnections extends React.Component {
     // If all and some other remove all
     if( e.filter( x => x.value == 'all').length > 0 && e.length > 1){
       e = e.filter( x =>  x.value !== 'all')
+    }
+    // If none set all
+    if( e.length == 0 ){
+      e = [this.state.countryList[0]]
     }
     this.state.connectionTypeSelected = e
     this.state.filters.connectionTypeList = e.map( x => x.value )
