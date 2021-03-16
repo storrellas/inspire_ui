@@ -30,7 +30,7 @@ import LoadingOverlay from 'react-loading-overlay';
 import InspirePagination from '../shared/pagination'
 import SearchHeader, { SEARCH_HEADER } from '../shared/searchheader'
 
-
+/*
 const FILTERING = {
   FIRST_NAME: 'first_name',
   LAST_NAME: 'last_name',
@@ -44,6 +44,54 @@ const FILTERING = {
   COI: 'number_linked_institutions_coi',
   SCORE: 'mesh_counter',
 }
+/**/
+
+const FILTERING = [
+  { 
+    dataField:'first_name', caption: 'firstName', 
+    label: 'First Name', type: SEARCH_HEADER.TEXT 
+  },
+  { 
+    dataField:'last_name', caption: 'lastName', 
+    label: 'Last Name', type: SEARCH_HEADER.TEXT 
+  },
+  { 
+    dataField:'prop_specialties', caption: 'specialties', 
+    label: 'Specialties', type: SEARCH_HEADER.TEXT 
+  },
+  { 
+    dataField:'focus_areas_reasearch_interests', caption: 'focusArea', 
+    label: 'Focus Area', type: SEARCH_HEADER.TEXT 
+  },
+  { 
+    dataField:'city', caption: 'city', 
+    label: 'City', type: SEARCH_HEADER.TEXT 
+  },
+  { 
+    dataField:'country', caption: 'country', 
+    label: 'Country', type: SEARCH_HEADER.NUMBER 
+  },
+  { 
+    dataField:'number_linked_publications', caption: 'publications', 
+    label: 'P', type: SEARCH_HEADER.NUMBER 
+  },
+  { 
+    dataField:'number_linked_events', caption: 'events', 
+    label: 'E', type: SEARCH_HEADER.NUMBER 
+  },
+  { 
+    dataField:'number_linked_clinical_trials', caption: 'ct', 
+    label: 'CT', type: SEARCH_HEADER.NUMBER 
+  },
+  { 
+    dataField:'number_linked_institutions_coi', caption: 'coi', 
+    label: 'COI', type: SEARCH_HEADER.NUMBER 
+  },
+  { 
+    dataField:'mesh_counter', caption: 'score', 
+    label: 'Score', type: SEARCH_HEADER.TEXT 
+  },
+]
 
 class InvestigatorTable extends React.Component {
 
@@ -97,30 +145,12 @@ class InvestigatorTable extends React.Component {
 
       // Add filtering
       if( filtering !== undefined ){
-        if( filtering.firstName !== '' )
-          urlParams = `${urlParams}&${FILTERING.FIRST_NAME}=${filtering.firstName}`;        
-        if( filtering.lastName !== '' )
-          urlParams = `${urlParams}&${FILTERING.LAST_NAME}=${filtering.lastName}`;        
-        if( filtering.specialties !== '' )
-          urlParams = `${urlParams}&${FILTERING.SPECIALITIES}=${filtering.specialties}`;        
-        if( filtering.focusArea !== '' )
-          urlParams = `${urlParams}&${FILTERING.FOCUS_AREA}=${filtering.focusArea}`;        
-        if( filtering.city !== '' )
-          urlParams = `${urlParams}&${FILTERING.CITY}=${filtering.city}`;        
-        if( filtering.country !== '' )
-          urlParams = `${urlParams}&${FILTERING.COUNTRY}=${filtering.country}`;        
-        if( filtering.publications !== '' )
-          urlParams = `${urlParams}&${FILTERING.PUBLICATIONS}=${filtering.publications}`;        
-        if( filtering.events !== '' )
-          urlParams = `${urlParams}&${FILTERING.EVENTS}=${filtering.events}`;
-        if( filtering.ct !== '' )
-          urlParams = `${urlParams}&${FILTERING.CT}=${filtering.ct}`;        
-        if( filtering.coi !== '' )
-          urlParams = `${urlParams}&${FILTERING.COI}=${filtering.coi}`;        
-        if( filtering.score !== '' )
-          urlParams = `${urlParams}&${FILTERING.SCORE}=${filtering.score}`;        
+        for(const item of FILTERING ){
+          if( filtering[item.caption] !== '' ){
+            urlParams = `${urlParams}&${item.dataField}=${filtering[item.caption]}`;
+          }
+        }
       }
-
 
       // Perform request
       const response = await axios.get(`${environment.base_url}/api/investigators/?${urlParams}`,
@@ -225,28 +255,10 @@ class InvestigatorTable extends React.Component {
 
   loadFilteredInvestigators(key, value){
     let { currentPage, meshOid, filtering } = this.state;
-    if( key === FILTERING.FIRST_NAME ){
-      filtering.firstName = value;
-    }else if( key === FILTERING.LAST_NAME ){
-      filtering.lastName = value;
-    }else if( key === FILTERING.SPECIALITIES ){
-      filtering.specialties = value;
-    }else if( key === FILTERING.FOCUS_AREA ){
-      filtering.focusArea = value;
-    }else if( key === FILTERING.CITY ){
-      filtering.city = value;
-    }else if( key === FILTERING.COUNTRY ){
-      filtering.city = value;
-    }else if( key === FILTERING.PUBLICATIONS ){
-      filtering.publications = value;
-    }else if( key === FILTERING.EVENTS ){
-      filtering.events = value;
-    }else if( key === FILTERING.CT ){
-      filtering.ct = value;
-    }else if( key === FILTERING.COI ){
-      filtering.coi = value;
-    }else if( key === FILTERING.SCORE ){
-      filtering.score = value;
+    for(const item_candidate of FILTERING ){
+      if( key === item_candidate.caption ){
+        filtering[item_candidate.caption] = value
+      }
     }
 
 
@@ -298,52 +310,21 @@ class InvestigatorTable extends React.Component {
                   <FontAwesomeIcon icon={faStar} style={{ border: '1px solid grey', fontSize: '2em', color: 'grey' }} />
                 </td>
                 <td className="text-center" style={{ width: '50px' }}>Profile</td>
-                <td className="text-center" style={{ width: '50px' }}>FirstName</td>
-                <td className="text-center" style={{ width: '50px' }}>LastName</td>
-                <td className="text-center" style={{ width: '50px' }}>Specialties</td>
-                <td className="text-center" style={{ width: '50px' }}>FocusArea</td>
-                <td className="text-center" style={{ width: '50px' }}>City</td>
-                <td className="text-center" style={{ width: '50px' }}>Country</td>
-                <td className="text-center" style={{ width: '50px' }}>P</td>
-                <td className="text-center" style={{ width: '50px' }}>E</td>
-                <td className="text-center" style={{ width: '50px' }}>CT</td>
-                <td className="text-center" style={{ width: '50px' }}>Col</td>
-                <td className="text-center" style={{ width: '50px' }}>Score</td>
+                {FILTERING.map((item, id) =>
+                  <td key={id} className="text-center">{item.label}</td>
+                )}
               </tr>
               <tr style={{ border: '1px solid grey', borderWidth: '1px 0px 2px 0px' }}>
                 <td></td>
                 <td></td>
-                <td><SearchHeader 
-                      onChange={(pattern) => this.loadFilteredInvestigators(FILTERING.FIRST_NAME, pattern)}
-                      type={SEARCH_HEADER.TEXT} /></td>
-                <td><SearchHeader 
-                      onChange={(pattern) => this.loadFilteredInvestigators(FILTERING.LAST_NAME, pattern)}
-                      type={SEARCH_HEADER.TEXT} /></td>
-                <td><SearchHeader 
-                      onChange={(pattern) => this.loadFilteredInvestigators(FILTERING.SPECIALITIES, pattern)}
-                      type={SEARCH_HEADER.TEXT} /></td>
-                <td><SearchHeader 
-                      onChange={(pattern) => this.loadFilteredInvestigators(FILTERING.FOCUS_AREA, pattern)}
-                      type={SEARCH_HEADER.TEXT} /></td>
-                <td><SearchHeader 
-                      onChange={(pattern) => this.loadFilteredInvestigators(FILTERING.CITY, pattern)}
-                      type={SEARCH_HEADER.TEXT} /></td>
-                <td><SearchHeader 
-                      onChange={(pattern) => this.loadFilteredInvestigators(FILTERING.COUNTRY, pattern)}
-                      type={SEARCH_HEADER.TEXT} /></td>
-                <td><SearchHeader 
-                      onChange={(pattern) => this.loadFilteredInvestigators(FILTERING.PUBLICATIONS, pattern)}
-                      type={SEARCH_HEADER.NUMBER} /></td>
-                <td><SearchHeader 
-                      onChange={(pattern) => this.loadFilteredInvestigators(FILTERING.EVENTS, pattern)}
-                      type={SEARCH_HEADER.NUMBER} /></td>
-                <td><SearchHeader 
-                      onChange={(pattern) => this.loadFilteredInvestigators(FILTERING.CT, pattern)}
-                      type={SEARCH_HEADER.NUMBER} /></td>
-                <td><SearchHeader 
-                      onChange={(pattern) => this.loadFilteredInvestigators(FILTERING.COI, pattern)}
-                      type={SEARCH_HEADER.NUMBER} /></td>
-                <td></td>
+
+                {FILTERING.map((item, id) =>
+                <td key={id}>
+                  <SearchHeader 
+                    onChange={(pattern) => this.loadFilteredInvestigators(item.caption, pattern)} 
+                    type={item.type} />
+                </td>
+                )}
               </tr>
             </thead>
 
@@ -358,17 +339,10 @@ class InvestigatorTable extends React.Component {
                       onClick={(e) => this.props.history.push(`${reloaded?'/reloaded':''}/project/${this.state.projectOid}/investigator/${item.oid}`)}
                       style={{ cursor: 'pointer' }}></img>
                   </td>
-                  <td className="text-center">{item.first_name}</td>
-                  <td className="text-center">{item.last_name}</td>
-                  <td className="text-center">{item.prop_specialties}</td>
-                  <td className="text-center">{item.focus_areas_reasearch_interests}</td>
-                  <td className="text-center">{item.city}</td>
-                  <td className="text-center">{item.country}</td>
-                  <td className="text-center">{item.number_linked_publications}</td>
-                  <td className="text-center">{item.number_linked_events}</td>
-                  <td className="text-center">{item.number_linked_clinical_trials}</td>
-                  <td className="text-center">{item.number_linked_institutions_coi}</td>
-                  <td className="text-center">{item.mesh_counter}</td>
+                  {FILTERING.map( (header, id ) => 
+                    <td key={id} className="text-center" 
+                        style={{ width: '20%'}}>{item[header.dataField]}</td>
+                  )}
                 </tr>
               )}
             </tbody>

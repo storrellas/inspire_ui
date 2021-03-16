@@ -338,19 +338,8 @@ class PanelClinicalTrials extends React.Component {
               {dataTable.map((item, id) =>
                 <tr key={id}>
                   {FILTERING.map( (header, id ) => 
-                    <td style={{ width: '20%'}}>{item[header.dataField]}</td>
+                    <td key={id} style={{ width: '20%'}}>{item[header.dataField]}</td>
                   )}
-                  
-                  {/*
-                  <td style={{ width: '20%'}}>{item.brief_public_title}</td>
-                  <td style={{ width: '10%'}}>{item.prop_conditions}</td>
-                  <td style={{ width: '5%'}}>{item.recruitment_status}</td>
-                  <td style={{ width: '5%'}}>{item.start_date_year}</td>
-                  <td style={{ width: '5%'}}>{item.end_date_year}</td>
-                  <td style={{ width: '10%'}}>{item.prop_study_phases}</td>
-                  <td style={{ width: '10%'}}>{item.study_type}</td>
-                  <td style={{ width: '5%'}}>{item.enrollment}</td>
-                  <td style={{ width: '20%'}}>{item.intervention}</td> */}
                 </tr>
               )}
             </tbody>
