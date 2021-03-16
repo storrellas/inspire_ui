@@ -275,7 +275,7 @@ class InvestigatorReloaded extends React.Component {
             </div>
           </Col>
           <Col sm={4}>
-            <div className="inspire-panel">
+            <div className="inspire-panel" style={{ maxHeight: '400px', overflowY:'scroll',   scrollbarWidth: 'thin'}}>
 
               <Row>
                 <Col sm={6}>
@@ -317,6 +317,9 @@ class InvestigatorReloaded extends React.Component {
                         icon={faAngleDown}/>
                     </div>
                     <div className="text-justify">
+                        <div className={this.state.snapshotFocusArea?'d-none':''} style={{ width:'100%', textOverflow: 'ellipsis', overflow:'hidden', whiteSpace: 'nowrap'}}>
+                          {this.state.focusArea}
+                        </div>
                         <AnimateHeight
                           height={this.state.snapshotFocusArea?'auto':0}
                           duration={500}>  
@@ -327,6 +330,78 @@ class InvestigatorReloaded extends React.Component {
                 </Col>
               </Row>
 
+              <Row>
+                <Col sm={12}>
+                  <div className="mt-3 inspire-snapshot-section">
+                    <b>Publications</b>
+                    <Row>
+                      <Col sm={6}>
+                        <div className="inspire-text-secondary" style={{ fontSize: '12px'}}>FIRST AUTHOR</div>
+                        <div style={{ fontSize: '12px'}}>{this.state.publicationsFirstAuthor}</div>
+                      </Col>
+                      <Col sm={6}>
+                        <div className="inspire-text-secondary" style={{ fontSize: '12px'}}>TOTAL</div>
+                        <div style={{ fontSize: '12px'}}>{this.state.publications}</div>
+                      </Col>
+                    </Row>
+                  </div>
+                </Col>
+              </Row>
+
+              <Row>
+                <Col sm={12}>
+                  <div className="mt-3 inspire-snapshot-section">
+                    <b>Coauthors</b>
+                    <Row>
+                      <Col sm={6}>
+                        <div className="inspire-text-secondary" style={{ fontSize: '12px'}}>SAME PA</div>
+                        <div style={{ fontSize: '12px'}}>{this.state.coauthorsSamePA}</div>
+                      </Col>
+                      <Col sm={6}>
+                        <div className="inspire-text-secondary" style={{ fontSize: '12px'}}>TOTAL</div>
+                        <div style={{ fontSize: '12px'}}>{this.state.coauthors}</div>
+                      </Col>
+                    </Row>
+                  </div>
+                </Col>
+              </Row>
+
+
+              <Row>
+                <Col sm={12}>
+                  <div className="mt-3 inspire-snapshot-section">
+                    <b>Events</b>
+                    <Row>
+                      <Col sm={6}>
+                        <div className="inspire-text-secondary" style={{ fontSize: '12px'}}>CHAIR PERSON</div>
+                        <div style={{ fontSize: '12px'}}>{this.state.eventsChairPerson}</div>
+                      </Col>
+                      <Col sm={6}>
+                        <div className="inspire-text-secondary" style={{ fontSize: '12px'}}>TOTAL</div>
+                        <div style={{ fontSize: '12px'}}>{this.state.events}</div>
+                      </Col>
+                    </Row>
+                  </div>
+                </Col>
+              </Row>
+
+              <Row>
+                <Col sm={12}>
+                  <div className="mt-3 inspire-snapshot-section">
+                    <b>Clinical Trials</b>
+                    <Row>
+                      <Col sm={6}>
+                        <div className="inspire-text-secondary" style={{ fontSize: '12px'}}>RECRUITING</div>
+                        <div style={{ fontSize: '12px'}}>{this.state.ctRecruiting}</div>
+                      </Col>
+                      <Col sm={6}>
+                        <div className="inspire-text-secondary" style={{ fontSize: '12px'}}>TOTAL</div>
+                        <div style={{ fontSize: '12px'}}>{this.state.ct}</div>
+                      </Col>
+                    </Row>
+                  </div>
+                </Col>
+              </Row>
 
             </div>
         </Col>
