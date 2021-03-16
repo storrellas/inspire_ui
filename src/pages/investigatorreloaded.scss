@@ -46,3 +46,25 @@ $inspire-text-secondary: #8A8A8A;
 .inspire-text-secondary{
     color: $inspire-text-secondary;
 }
+
+.inspire-snapshot-section{
+    border-bottom: 1px solid #8A8A8A;
+    padding-bottom: 1em;
+}
+
+
+
+.inspire-snapshot-section{
+    border-bottom: 1px solid #8A8A8A;
+    padding-bottom: 1em;
+    .folded{
+        transition: all 0.5s;
+        transform: rotate(0deg);
+    }
+    .unfolded{
+        transition: all 0.5s;
+        transform: rotate(180deg);
+    }
+
+}
+

@@ -11,10 +11,11 @@ import LoadingOverlay from 'react-loading-overlay';
 // Styles
 import "./investigatorreloaded.scss"
 
+import AnimateHeight from 'react-animate-height';
 
 // Font Awesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faAngleRight, faStar, faSearch, faArrowCircleDown } from '@fortawesome/free-solid-svg-icons'
+import { faAngleRight, faAngleDown, faStar, faSearch, faArrowCircleDown, faNewspaper } from '@fortawesome/free-solid-svg-icons'
 
 
 
@@ -23,6 +24,7 @@ import axios from 'axios';
 import environment from '../environment.json';
 
 
+const PROFILE_SNAPSHOT = { SPECIALTIES: 1,  FOCUS_AREA: 2 }
 class InvestigatorReloaded extends React.Component {
 
   constructor(props) {
@@ -58,6 +60,9 @@ class InvestigatorReloaded extends React.Component {
 
       ctRecruiting: '',
       ct: '',
+
+      snapshotSpecialties: false,
+      snapshotFocusArea: false,
     }
   }
 
@@ -159,8 +164,15 @@ class InvestigatorReloaded extends React.Component {
       }
 
     }
+  }
 
-
+  onClickSnaphot(type){
+    const { snapshotSpecialties, snapshotFocusArea } = this.state;
+    if( type == PROFILE_SNAPSHOT.SPECIALTIES ){
+      this.setState({snapshotFocusArea: false, snapshotSpecialties: !snapshotSpecialties})      
+    }else if (type == PROFILE_SNAPSHOT.FOCUS_AREA){
+      this.setState({snapshotFocusArea: !snapshotFocusArea, snapshotSpecialties: false})
+    }
   }
 
   render() {
@@ -221,7 +233,7 @@ class InvestigatorReloaded extends React.Component {
           </Col>
         </Row>
         <Row className="mt-3">
-          <Col sm={6}>
+          <Col sm={7}>
             <div className="inspire-panel">
               <Row>
                 <Col sm={2}>
@@ -244,7 +256,7 @@ class InvestigatorReloaded extends React.Component {
               </Row>
             
               <Row style={{ marginTop: '3em'}}>
-                <Col sm={4}>
+                <Col sm={5}>
                   <div className="inspire-text-secondary" style={{ fontSize: '12px'}}>POSITION</div>
                   <div>{this.state.affiliationPosition}</div>
                   <div className="inspire-text-secondary" style={{ fontSize: '12px'}}>CAREER STAGE</div>
@@ -262,9 +274,60 @@ class InvestigatorReloaded extends React.Component {
 
             </div>
           </Col>
-          <Col sm={6}>
+          <Col sm={4}>
             <div className="inspire-panel">
-              
+
+              <Row>
+                <Col sm={6}>
+                  <b>Profile Snapshot</b>
+                  <div>Last Update: {this.state.lastUpdated}</div>
+                </Col>
+                <Col sm={6} className="text-right">
+                  <div>
+                    <a href={this.state.cv} className={this.state.cv===''?'d-none':''}>                  
+                      Go To CV
+                      <FontAwesomeIcon className="ml-2" icon={faNewspaper} />
+                    </a>
+                  </div>
+                </Col>
+              </Row>
+              <Row className="mt-3">
+                <Col>
+                  <div className="inspire-snapshot-section">
+                    <div className="inspire-text-secondary"  style={{ cursor: 'pointer' }}
+                      onClick={(e) => this.onClickSnaphot(PROFILE_SNAPSHOT.SPECIALTIES)}>
+                      SPECIALTIES
+                      <FontAwesomeIcon className={this.state.snapshotSpecialties?'ml-2 unfolded':"ml-2 folded" }
+                        icon={faAngleDown}/>
+                    </div>
+                    <div className="text-justify">
+                      <AnimateHeight
+                          height={this.state.snapshotSpecialties?'auto':0}
+                          duration={500}>  
+                      {this.state.specialties}
+                      </AnimateHeight> 
+                    </div>
+
+                  </div>
+                  <div className="mt-3 inspire-snapshot-section">
+                    <div className="inspire-text-secondary" style={{ cursor: 'pointer' }}
+                     onClick={(e) => this.onClickSnaphot(PROFILE_SNAPSHOT.FOCUS_AREA)}>
+                      FOCUS AREA
+                      <FontAwesomeIcon className={this.state.snapshotFocusArea?'ml-2 unfolded':"ml-2 folded" }
+                        icon={faAngleDown}/>
+                    </div>
+                    <div className="text-justify">
+                        <AnimateHeight
+                          height={this.state.snapshotFocusArea?'auto':0}
+                          duration={500}>  
+                        {this.state.focusArea}
+                        </AnimateHeight> 
+                    </div>
+                  </div>
+                </Col>
+              </Row>
+
+
             </div>
         </Col>
         </Row>
