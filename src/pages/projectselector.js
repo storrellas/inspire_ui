@@ -54,16 +54,16 @@ class ProjectSelector extends React.Component {
   }
 
   render() {
-
-    const items = Array(10).fill(0)
     const { projectList } = this.state;
+    const { reloaded } = this.props;
     return (
       <Row>
         <Col sm={12} className='page-container'>
           <div className="page-title">SELECT YOUR PLAN</div>
           <div className="d-flex flex-wrap" style={{ padding: '2em' }}>
             {projectList.map((item, id) =>
-              <div key={id} style={{ padding: '1em 1em 0 1em', width: '33%', minWidth: '300px'  }} onClick={ (e) => this.props.history.push(`/project/${item.oid}`)}>
+              <div key={id} style={{ padding: '1em 1em 0 1em', width: '33%', minWidth: '300px'  }} 
+                onClick={ (e) => this.props.history.push(`${reloaded?'/reloaded':''}/project/${item.oid}`)}>
                 <div className="landBtn project project-container btnActive"
                   style={{ height: '10em' }}>
                   <div className="top-triangle project"></div>

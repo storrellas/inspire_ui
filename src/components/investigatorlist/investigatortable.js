@@ -267,6 +267,8 @@ class InvestigatorTable extends React.Component {
       'FocusArea', 'City', 'Country', 'P', 'E', 'CT', 'CoI'
     ]
 
+    const { reloaded } = this.props;
+
     return (
       <Row style={{ padding: 0, margin: 0 }}>
         <Col sm={12} style={{
@@ -353,7 +355,7 @@ class InvestigatorTable extends React.Component {
                   </td>
                   <td>
                     <img src={arrow} width="40"
-                      onClick={(e) => this.props.history.push(`/project/${this.state.projectOid}/investigator/${item.oid}`)}
+                      onClick={(e) => this.props.history.push(`${reloaded?'/reloaded':''}/project/${this.state.projectOid}/investigator/${item.oid}`)}
                       style={{ cursor: 'pointer' }}></img>
                   </td>
                   <td className="text-center">{item.first_name}</td>

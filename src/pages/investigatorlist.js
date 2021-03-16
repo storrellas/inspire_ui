@@ -33,7 +33,7 @@ class InvestigatorList extends React.Component {
   render() {
     
     const { projectOid } = this.state;
-
+    const { reloaded } = this.props;
 
     // Activate tab
     const { activeTab } = this.state;
@@ -52,7 +52,7 @@ class InvestigatorList extends React.Component {
             </Nav.Item>
           </Nav>
           <div className={activeTab === TAB.TABLE ? '' : 'd-none'}>
-            <InvestigatorTable />
+            <InvestigatorTable reloaded={reloaded} />
           </div>
           <div className={activeTab === TAB.MAP ? '' : 'd-none'}>
             {this.state.map}
