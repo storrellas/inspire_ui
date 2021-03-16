@@ -127,7 +127,7 @@ class PanelConnections extends React.Component {
       filters: {
         yearFrom: 1990,
         yearTo: (new Date()).getFullYear(),
-        strength: ['all'],
+        strength: 'all',
         connectionTypeList: ['all'],
         countryList: ['all']
       },
@@ -285,13 +285,16 @@ class PanelConnections extends React.Component {
       // Iterate on connections
       for(const connection of connections){
         // Iterate on connectionType
-        for( const connectionType of connectionTypeOptions ) {
-          if( connection[connectionType] > 0 )
-            filteredCountryConnectionSet.add(connection.id);          
+        for( const connectionType of filters.connectionTypeList ) {
+          if( connection[connectionType] > 0 ){
+            filteredConnectionTypeConnectionSet.add(connection.id);          
+          }          
+            
         } // End for connection Type
 
       } // End For connections
     }
+
 
     // Years
     const yearFrom = filters.yearFrom;
