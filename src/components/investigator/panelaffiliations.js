@@ -11,6 +11,10 @@ import LoadingOverlay from 'react-loading-overlay';
 // EllipsisWithTooltip
 import EllipsisWithTooltip from 'react-ellipsis-with-tooltip'
 
+// Project imports
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faLongArrowAltUp, faLongArrowAltDown } from '@fortawesome/free-solid-svg-icons'
+
 // Axios
 import axios from 'axios';
 import environment from '../../environment.json';
@@ -59,6 +63,7 @@ class PanelAffiliations extends React.Component {
 
   constructor(props) {
     super(props)
+    const filteringList = FILTERING.reduce((acc,curr)=> (acc[curr.caption]='',acc),{});    
     this.state = {
       showModalUniversities: false,
       showModalHospitals: false,
@@ -75,16 +80,8 @@ class PanelAffiliations extends React.Component {
       limit: 10,
       isLoading: false,
       dataTable: [],
-      filtering : {
-        position: '',
-        name: '',
-        department: '', 
-        subtype: '',
-        pastPosition: '',
-        year: '',
-        city: '',
-        country: '',
-      }
+      filtering : {...filteringList},
+      sorting: ''
     }
   }
 
@@ -126,12 +123,12 @@ class PanelAffiliations extends React.Component {
     }
   }
 
-  async retrieveAffiliationsUniversities(page = 1, filtering = undefined) {
+  async retrieveAffiliationsInstitution(base_url, page = 1) {
     try{
       this.setState({isLoading: true})
 
       const token = localStorage.getItem('token')
-      const { take, limit } = this.state;
+      const { take, limit, filtering, sorting } = this.state;
 
       // Perform request
       let skip = this.state.take * (page-1);
@@ -147,7 +144,12 @@ class PanelAffiliations extends React.Component {
         }      
       }
 
-      const url = `${environment.base_url}/api/investigator/${this.state.investigatorId}/affiliations-universities/?${urlParams}`
+      // Add sorting
+      if( sorting !== ''){
+        urlParams = `${urlParams}&ordering=${sorting}`;
+      }
+
+      const url = `${base_url}?${urlParams}`
       const response = await axios.get(url,
         { headers: { "Authorization": "jwt " + token }
       })
@@ -177,105 +179,19 @@ class PanelAffiliations extends React.Component {
     }
   }
 
-  async retrieveAffiliationsHospitals(page = 1, filtering = undefined) {
-    try{
-      this.setState({isLoading: true})
-
-      const token = localStorage.getItem('token')
-      const { take, limit } = this.state;
-
-      // Perform request
-      let skip = this.state.take * (page-1);
-      let offset = this.state.take * (page-1);
-      let urlParams = `limit=${limit}&offset=${offset}&skip=${skip}&take=${take}`
-
-      // Add filtering
-      if( filtering !== undefined ){
-        for(const item of FILTERING ){
-          if( filtering[item.caption] !== '' ){
-            urlParams = `${urlParams}&${item.dataField}=${filtering[item.caption]}`;
-          }
-        }      
-      }
-
-      const url = `${environment.base_url}/api/investigator/${this.state.investigatorId}/affiliations-hospitals/?${urlParams}`
-      const response = await axios.get(url,
-        { headers: { "Authorization": "jwt " + token }
-      })
-
-      // Set State
-      const totalPage = Math.ceil(response.data.count / take);      
-      this.setState({
-        dataTable: response.data.results, 
-        currentPage: page,
-        totalPage: totalPage,
-        isLoading: false,
-      })
-
-    }catch(error){
-
-      // Error
-      if (error.response) {
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
-      } else if (error.request) {
-          console.log(error.request);
-      } else {
-          console.log('Error', error.message);
-      }
-    }
+  async retrieveAffiliationsUniversities(page = 1) {
+    const base_url = `${environment.base_url}/api/investigator/${this.state.investigatorId}/affiliations-universities/`
+    this.retrieveAffiliationsInstitution(base_url, page)
   }
 
-  async retrieveAffiliationsAssociations(page = 1, filtering = undefined) {
-    try{
-      this.setState({isLoading: true})
+  async retrieveAffiliationsHospitals(page = 1) {
+    const base_url = `${environment.base_url}/api/investigator/${this.state.investigatorId}/affiliations-hospitals/`
+    this.retrieveAffiliationsInstitution(base_url, page)
+  }
 
-      const token = localStorage.getItem('token')
-      const { take, limit } = this.state;
-
-      // Perform request
-      let skip = this.state.take * (page-1);
-      let offset = this.state.take * (page-1);
-      let urlParams = `limit=${limit}&offset=${offset}&skip=${skip}&take=${take}`
-
-      // Add filtering
-      if( filtering !== undefined ){
-        for(const item of FILTERING ){
-          if( filtering[item.caption] !== '' ){
-            urlParams = `${urlParams}&${item.dataField}=${filtering[item.caption]}`;
-          }
-        }      
-      }
-
-      const url = `${environment.base_url}/api/investigator/${this.state.investigatorId}/affiliations-associations/?${urlParams}`
-      const response = await axios.get(url,
-        { headers: { "Authorization": "jwt " + token }
-      })
-
-      // Set State
-      const totalPage = Math.ceil(response.data.count / take);      
-      this.setState({
-        dataTable: response.data.results, 
-        currentPage: page,
-        totalPage: totalPage,
-        isLoading: false,
-      })
-
-    }catch(error){
-
-      // Error
-      if (error.response) {
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
-      } else if (error.request) {
-          console.log(error.request);
-      } else {
-          console.log('Error', error.message);
-      }
-
-    }
+  async retrieveAffiliationsAssociations(page = 1) {
+    const base_url = `${environment.base_url}/api/investigator/${this.state.investigatorId}/affiliations-associations/`
+    this.retrieveAffiliationsInstitution(base_url, page)
   }
 
   showModalUniversities(){
@@ -327,6 +243,7 @@ class PanelAffiliations extends React.Component {
       }
     }
 
+    this.state.filtering = filtering;
     // Clear timeout
     const that = this;
     if ( this.typingTimeout ) {
@@ -335,11 +252,11 @@ class PanelAffiliations extends React.Component {
     this.typingTimeout = 
       setTimeout(function () { 
         if( that.state.showModalUniversities ){
-          that.retrieveAffiliationsUniversities(currentPage, filtering) 
+          that.retrieveAffiliationsUniversities(currentPage) 
         }else if( that.state.showModalHospitals ){
-          that.retrieveAffiliationsHospitals(currentPage, filtering) 
+          that.retrieveAffiliationsHospitals(currentPage) 
         }else if( that.state.showModalAssociations ){
-          that.retrieveAffiliationsAssociations(currentPage, filtering) 
+          that.retrieveAffiliationsAssociations(currentPage) 
         }
       }, 2000)
 
@@ -366,10 +283,29 @@ class PanelAffiliations extends React.Component {
     
   }
 
+  onSetSorting(field){
+    let { currentPage, sorting } = this.state;
+    let target = '';
+    if( sorting == '' || sorting.includes(field) == false){
+      target = field
+    }else if( sorting === field ){
+     target =  `-${field}`
+    }
+    this.state.sorting = target;
+
+    if( this.state.showModalUniversities ){
+      this.retrieveAffiliationsUniversities(currentPage) 
+    }else if( this.state.showModalHospitals ){
+      this.retrieveAffiliationsHospitals(currentPage) 
+    }else if( this.state.showModalAssociations ){
+      this.retrieveAffiliationsAssociations(currentPage) 
+    }
+  }
+
   render() {
 
     const { affiliations, modalTitle, dataTable } = this.state;
-    const { currentPage, totalPage} = this.state;
+    const { currentPage, totalPage, sorting } = this.state;
 
     let nUniversities = "-";
     let nHospitals = "-";
@@ -431,7 +367,12 @@ class PanelAffiliations extends React.Component {
                   <thead>
                     <tr>
                       {FILTERING.map((item, id) =>
-                        <td key={id} className="text-center">{item.label}</td>
+                      <td key={id} className="text-center" style={{ cursor: 'pointer' }}
+                        onClick={(e) => this.onSetSorting(item.dataField)}>
+                        {item.label}
+                        <FontAwesomeIcon icon={faLongArrowAltUp} className={sorting == item.dataField ? "ml-1" : "ml-1 d-none"} style={{ color: 'grey' }} />
+                        <FontAwesomeIcon icon={faLongArrowAltDown} className={sorting == `-${item.dataField}` ? "ml-1" : "ml-1 d-none"} style={{ color: 'grey' }} />
+                      </td>
                       )}
                     </tr>
                     <tr style={{ border: '1px solid grey', borderWidth: '1px 0px 2px 0px' }}>
