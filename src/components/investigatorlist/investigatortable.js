@@ -16,7 +16,7 @@ import EllipsisWithTooltip from 'react-ellipsis-with-tooltip'
 
 // Project imports
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faStar, faSearch } from '@fortawesome/free-solid-svg-icons'
+import { faStar, faLongArrowAltUp, faLongArrowAltDown } from '@fortawesome/free-solid-svg-icons'
 
 // Axios
 import axios from 'axios';
@@ -80,10 +80,14 @@ const FILTERING = [
   },
 ]
 
+const TAB = { NONE: 1, ASC: 2, DESC: 3 }
 class InvestigatorTable extends React.Component {
 
   constructor(props) {
     super(props)
+
+    const filteringList = FILTERING.reduce((acc,curr)=> (acc[curr.caption]='',acc),{});
+    
     this.state = {
       currentPage: 1,
       totalPage: 10,
@@ -94,32 +98,21 @@ class InvestigatorTable extends React.Component {
       isLoading: true,
       meshOptions: [],
       meshOid: undefined,
-      filtering : {
-        firstName: '',
-        lastName: '', 
-        specialties: '',
-        focusArea: '',
-        city: '',
-        country: '',
-        publications: '',
-        events: '',
-        ct: '',
-        coi: '',
-        score: ''
-      }
-
+      filtering : {...filteringList},
+      sorting: ''
     }
+
 
     this.typingTimeout = undefined
     this.projectOid = undefined
   }
 
-  async loadInvestigators(page = 1, meshOid = undefined, filtering = undefined){
+  async loadInvestigators(page = 1){
     try{
       this.setState({isLoading: true})
       const { match: { params } } = this.props;
       const projectOid = params.id;
-      const { take, limit } = this.state;
+      const { take, limit, sorting, meshOid, filtering } = this.state;
 
       // Request investigators
       let skip = this.state.take * (page-1);
@@ -137,6 +130,11 @@ class InvestigatorTable extends React.Component {
             urlParams = `${urlParams}&${item.dataField}=${filtering[item.caption]}`;
           }
         }
+      }
+
+      // Add sorting
+      if( sorting !== ''){
+        urlParams = `${urlParams}&ordering=${sorting}`;
       }
 
       // Perform request
@@ -236,36 +234,44 @@ class InvestigatorTable extends React.Component {
     meshOid = meshOid.split('-')[meshOid.split('-').length -1 ]
     meshOid = parseInt( meshOid )
 
-
-    this.loadInvestigators(currentPage, meshOid)
+    this.state.meshOid = meshOid;
+    this.loadInvestigators(currentPage)
   }
 
   loadFilteredInvestigators(key, value){
-    let { currentPage, meshOid, filtering } = this.state;
+    let { currentPage, filtering } = this.state;
     for(const item_candidate of FILTERING ){
       if( key === item_candidate.caption ){
         filtering[item_candidate.caption] = value
       }
     }
 
-
+    this.state.filtering = filtering;
     // Clear timeout
     const that = this;
     if ( this.typingTimeout ) {
       clearTimeout(this.typingTimeout);
     }
     this.typingTimeout = 
-      setTimeout(function () { that.loadInvestigators(currentPage, meshOid, filtering) }, 2000)
+      setTimeout(function () { that.loadInvestigators(currentPage) }, 2000)
     
   }
 
-  render() {
-    const { currentPage, totalPage, meshOptions } = this.state;
-    const headers = [
-      'Profile', 'FirstName', 'LastName', 'Specialties',
-      'FocusArea', 'City', 'Country', 'P', 'E', 'CT', 'CoI'
-    ]
+  onSetSorting(field){
+    let { currentPage, meshOid, sorting, filtering } = this.state;
+    let target = '';
+    if( sorting == '' || sorting.includes(field) == false){
+      target = field
+    }else if( sorting === field ){
+     target =  `-${field}`
+    }
+    this.state.sorting = target;
 
+    this.loadInvestigators(currentPage)
+  }
+
+  render() {
+    const { currentPage, totalPage, meshOptions, sorting } = this.state;
     const { reloaded } = this.props;
 
     return (
@@ -290,7 +296,7 @@ class InvestigatorTable extends React.Component {
           active={ this.state.isLoading }
           spinner>
 
-          <table className="w-100" style={{ display: 'block', minHeight: '200px'}}>
+          <table className="w-100" style={{ display: 'block', minHeight: '200px', fontSize: '14px'}}>
             <thead>
               <tr>
                 <td style={{ cursor: 'pointer'}} style={{ width: '50px'}}>
@@ -298,7 +304,12 @@ class InvestigatorTable extends React.Component {
                 </td>
                 <td className="text-center" style={{ width: '50px' }}>Profile</td>
                 {FILTERING.map((item, id) =>
-                  <td key={id} className="text-center">{item.label}</td>
+                  <td key={id} className="text-center" style={{ cursor: 'pointer'}} 
+                    onClick={(e) => this.onSetSorting(item.dataField)}>
+                    {item.label}
+                    <FontAwesomeIcon icon={faLongArrowAltUp} className={sorting==item.dataField?"ml-1":"ml-1 d-none"} style={{ color: 'grey' }} />
+                    <FontAwesomeIcon icon={faLongArrowAltDown} className={sorting==`-${item.dataField}`?"ml-1":"ml-1 d-none"} style={{ color: 'grey' }} />
+                </td>
                 )}
               </tr>
               <tr style={{ border: '1px solid grey', borderWidth: '1px 0px 2px 0px' }}>
@@ -334,13 +345,13 @@ class InvestigatorTable extends React.Component {
                   <td className="text-center" 
                         style={{ width: '20%'}}>
                           <EllipsisWithTooltip placement="bottom" style={{ width: '150px'}}>
-                          {item.prop_specialties}
+                          {item.prop_specialties || ''}
                           </EllipsisWithTooltip>
                   </td>
                   <td className="text-center" 
                         style={{ width: '20%'}}>
                         <EllipsisWithTooltip placement="bottom" style={{ width: '150px'}}>
-                          {item.focus_areas_reasearch_interests}
+                          {item.focus_areas_reasearch_interests || ''}
                         </EllipsisWithTooltip>
                   </td>
                   <td className="text-center" 

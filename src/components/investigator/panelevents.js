@@ -231,7 +231,7 @@ class PanelEvents extends React.Component {
               </td>
               <td  className="text-left" style={{ width: '45%'}}>
                 <EllipsisWithTooltip placement="bottom" style={{ width: '500px'}}>
-                {item.name}
+                {item.name || ''}
                 </EllipsisWithTooltip>
               </td>
               <td  className="text-center" style={{ width: '10%'}}>{item.position}</td>

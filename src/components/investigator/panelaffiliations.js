@@ -450,12 +450,12 @@ class PanelAffiliations extends React.Component {
                         <td  className="text-center" style={{ width: '10%'}}>{item.position__name}</td>
                         <td  className="text-center" style={{ width: '200px'}}>
                           <EllipsisWithTooltip placement="bottom" style={{ width: '300px'}}>
-                          {item.institution__parent_name}
+                          {item.institution__parent_name || ''}
                           </EllipsisWithTooltip>
                         </td>
                         <td  className="text-center" style={{ width: '20%'}}>
                           <EllipsisWithTooltip placement="bottom" style={{ width: '100px'}}>
-                          {item.institution__department}
+                          {item.institution__department || ''}
                           </EllipsisWithTooltip>
                         </td>
                         <td  className="text-center" style={{ width: '20%'}}>{item.institution__institution_subtype__name}</td>

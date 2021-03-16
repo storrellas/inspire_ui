@@ -428,7 +428,7 @@ class PanelCompanyCooperation extends React.Component {
                         <td className="text-center" style={{ width: '10%'}}>{item.year}</td>
                         <td className="text-center" style={{ width: '40%'}}>
                           <EllipsisWithTooltip placement="bottom" style={{ width: '300px'}}>
-                          {item.institution}
+                          {item.institution || ''}
                           </EllipsisWithTooltip>
                         </td>
                         <td className="text-center" style={{ width: '20%'}}>{item.amount}</td>
