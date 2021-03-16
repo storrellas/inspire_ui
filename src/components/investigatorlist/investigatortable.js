@@ -86,8 +86,7 @@ class InvestigatorTable extends React.Component {
   constructor(props) {
     super(props)
 
-    const filteringList = FILTERING.reduce((acc,curr)=> (acc[curr.caption]='',acc),{});
-    
+    const filteringList = FILTERING.reduce((acc,curr)=> (acc[curr.caption]='',acc),{});    
     this.state = {
       currentPage: 1,
       totalPage: 10,
@@ -258,7 +257,7 @@ class InvestigatorTable extends React.Component {
   }
 
   onSetSorting(field){
-    let { currentPage, meshOid, sorting, filtering } = this.state;
+    let { currentPage, sorting } = this.state;
     let target = '';
     if( sorting == '' || sorting.includes(field) == false){
       target = field

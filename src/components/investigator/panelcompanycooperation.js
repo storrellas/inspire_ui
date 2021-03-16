@@ -13,6 +13,10 @@ import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 // EllipsisWithTooltip
 import EllipsisWithTooltip from 'react-ellipsis-with-tooltip'
 
+// Project imports
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faLongArrowAltUp, faLongArrowAltDown } from '@fortawesome/free-solid-svg-icons'
+
 // Styles
 import './modal.scss';
 
@@ -67,6 +71,7 @@ class PanelCompanyCooperation extends React.Component {
 
   constructor(props) {
     super(props)
+    const filteringList = FILTERING.reduce((acc,curr)=> (acc[curr.caption]='',acc),{});    
     this.state = {
       currentPage: 1,
       totalPage: 10,
@@ -79,13 +84,8 @@ class PanelCompanyCooperation extends React.Component {
       dataPerNature: undefined,
       investigatorId: undefined,
       dataCompanyCooperations: [],
-      filtering : {
-        type: '',
-        year: '', 
-        company: '',
-        amount: '',
-        currency: ''
-      }
+      filtering : {...filteringList},
+      sorting: ''
     }
 
     this.typingTimeout = undefined
@@ -280,12 +280,12 @@ class PanelCompanyCooperation extends React.Component {
     }
   }
 
-  async retrieveCompanyCooperations(page = 1, filtering = undefined){
+  async retrieveCompanyCooperations(page = 1){
     try{
       this.setState({isLoading: true})
 
       const token = localStorage.getItem('token')
-      const { take, limit } = this.state;
+      const { take, limit, filtering, sorting } = this.state;
 
       // Perform request
       let skip = this.state.take * (page-1);
@@ -299,6 +299,11 @@ class PanelCompanyCooperation extends React.Component {
             urlParams = `${urlParams}&${item.dataField}=${filtering[item.caption]}`;
           }
         }     
+      }
+
+      // Add sorting
+      if( sorting !== ''){
+        urlParams = `${urlParams}&ordering=${sorting}`;
       }
 
       const url = `${environment.base_url}/api/investigator/${this.state.investigatorId}/company-cooperations/?${urlParams}`;
@@ -354,15 +359,28 @@ class PanelCompanyCooperation extends React.Component {
         filtering[item_candidate.caption] = value
       }
     }
-
+    this.state.filtering = filtering;
     // Clear timeout
     const that = this;
     if ( this.typingTimeout ) {
       clearTimeout(this.typingTimeout);
     }
     this.typingTimeout = 
-      setTimeout(function () { that.retrieveCompanyCooperations(currentPage, filtering) }, 2000)
+      setTimeout(function () { that.retrieveCompanyCooperations(currentPage) }, 2000)
 
+  }
+
+  onSetSorting(field){
+    let { currentPage, sorting } = this.state;
+    let target = '';
+    if( sorting == '' || sorting.includes(field) == false){
+      target = field
+    }else if( sorting === field ){
+     target =  `-${field}`
+    }
+    this.state.sorting = target;
+
+    this.retrieveCompanyCooperations(currentPage)
   }
 
   render() {
@@ -373,7 +391,7 @@ class PanelCompanyCooperation extends React.Component {
       setTimeout(function () { that.generateChart() }, 500);
     }
 
-    const {dataCompanyCooperations, currentPage, totalPage} = this.state;
+    const {dataCompanyCooperations, currentPage, totalPage, sorting} = this.state;
 
     return (
       <div>
@@ -408,7 +426,12 @@ class PanelCompanyCooperation extends React.Component {
                   <thead>
                     <tr>
                     {FILTERING.map((item, id) =>
-                      <td key={id} className="text-center" >{item.label}</td>
+                      <td key={id} className="text-center" style={{ cursor: 'pointer' }}
+                        onClick={(e) => this.onSetSorting(item.dataField)}>
+                        {item.label}
+                        <FontAwesomeIcon icon={faLongArrowAltUp} className={sorting == item.dataField ? "ml-1" : "ml-1 d-none"} style={{ color: 'grey' }} />
+                        <FontAwesomeIcon icon={faLongArrowAltDown} className={sorting == `-${item.dataField}` ? "ml-1" : "ml-1 d-none"} style={{ color: 'grey' }} />
+                      </td>
                     )}
                     </tr>
                     <tr style={{ border: '1px solid grey', borderWidth: '1px 0px 2px 0px' }}>
