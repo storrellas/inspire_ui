@@ -23,7 +23,7 @@ import inspire_logo from '../assets/logo2.png';
 import Login from './login';
 import ProjectSelector from './projectselector';
 import InvestigatorList from './investigatorlist';
-import Investigator from './investigator';
+import InvestigatorReloaded from './investigatorreloaded';
 
 import AnimateHeight from 'react-animate-height';
 
@@ -149,7 +149,7 @@ class AppReloaded extends React.Component {
                                     <Route path={`${this.props.match.path}project/:id`} exact                                         
                                         render={(props) => (<InvestigatorList reloaded/>)} />
                                     <Route path={`${this.props.match.path}project/:id/investigator/:subid`} exact                                                                                  
-                                        render={(props) => (<Investigator reloaded/>)}/>
+                                        render={(props) => (<InvestigatorReloaded reloaded/>)}/>
                                 </Col>
                             </Row>
                         </Container>
