@@ -365,19 +365,6 @@ class PanelAffiliations extends React.Component {
 
   render() {
 
-    const item = {
-      position: 'Head of',
-      name: 'Klinikum Minden	',
-      department: 'Klinik für Neurologie',
-      subtype: 'Hospital Department',
-      pastPosition: 'Yes',
-      year: '1999 - 2005',
-      city: 'Hamburg',
-      country: 'Germany',
-    }
-    const data = Array(10).fill(item);
-
-
     const { affiliations, modalTitle, dataTable } = this.state;
     const { currentPage, totalPage} = this.state;
 
@@ -446,7 +433,7 @@ class PanelAffiliations extends React.Component {
                     </tr>
                     <tr style={{ border: '1px solid grey', borderWidth: '1px 0px 2px 0px' }}>
                       {FILTERING.map((item, id) =>
-                        <td key={id}>
+                        <td key={id} className="text-center">
                           <SearchHeader 
                             onChange={(pattern) => this.retrieveAffiliationsFiltered(item.caption, pattern)} 
                             type={item.type} />
@@ -457,14 +444,14 @@ class PanelAffiliations extends React.Component {
                   <tbody>
                     {dataTable.map((item, id) =>
                       <tr key={id}>
-                        <td style={{ width: '10%'}}>{item.position__name}</td>
-                        <td style={{ width: '20%'}}>{item.institution__parent_name}</td>
-                        <td style={{ width: '20%'}}>{item.institution__department}</td>
-                        <td style={{ width: '20%'}}>{item.institution__institution_subtype__name}</td>
-                        <td style={{ width: '10%'}}>{item.past_position}</td>
-                        <td style={{ width: '10%'}}>{item.year}</td>
-                        <td style={{ width: '10%'}}>{item.institution__city}</td>
-                        <td style={{ width: '10%'}}>{item.institution__country__name}</td>
+                        <td  className="text-center" style={{ width: '10%'}}>{item.position__name}</td>
+                        <td  className="text-center" style={{ width: '20%'}}>{item.institution__parent_name}</td>
+                        <td  className="text-center" style={{ width: '20%'}}>{item.institution__department}</td>
+                        <td  className="text-center" style={{ width: '20%'}}>{item.institution__institution_subtype__name}</td>
+                        <td  className="text-center" style={{ width: '10%'}}>{item.past_position}</td>
+                        <td  className="text-center" style={{ width: '10%'}}>{item.year}</td>
+                        <td  className="text-center" style={{ width: '10%'}}>{item.institution__city}</td>
+                        <td  className="text-center" style={{ width: '10%'}}>{item.institution__country__name}</td>
                       </tr>
                     )}
                   </tbody>

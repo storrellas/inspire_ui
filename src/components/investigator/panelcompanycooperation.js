@@ -405,12 +405,12 @@ class PanelCompanyCooperation extends React.Component {
                   <thead>
                     <tr>
                     {FILTERING.map((item, id) =>
-                      <td key={id}>{item.label}</td>
+                      <td key={id} className="text-center" >{item.label}</td>
                     )}
                     </tr>
                     <tr style={{ border: '1px solid grey', borderWidth: '1px 0px 2px 0px' }}>
                     {FILTERING.map((item, id) =>
-                      <td key={id}>
+                      <td key={id} className="text-center" >
                         <SearchHeader 
                           onChange={(pattern) => this.retrieveCompanyCooperationsFiltered(item.caption, pattern)} 
                           type={item.type} />
@@ -421,11 +421,11 @@ class PanelCompanyCooperation extends React.Component {
                   <tbody>
                     {dataCompanyCooperations.map((item, id) =>
                       <tr key={id}>
-                        <td style={{ width: '20%'}}>{item.nature_of_payment}</td>
-                        <td style={{ width: '10%'}}>{item.year}</td>
-                        <td style={{ width: '40%'}}>{item.institution}</td>
-                        <td style={{ width: '20%'}}>{item.amount}</td>
-                        <td style={{ width: '10%'}}>{item.currency}</td>
+                        <td className="text-center" style={{ width: '20%'}}>{item.nature_of_payment}</td>
+                        <td className="text-center" style={{ width: '10%'}}>{item.year}</td>
+                        <td className="text-center" style={{ width: '40%'}}>{item.institution}</td>
+                        <td className="text-center" style={{ width: '20%'}}>{item.amount}</td>
+                        <td className="text-center" style={{ width: '10%'}}>{item.currency}</td>
                       </tr>
                     )}
                   </tbody>

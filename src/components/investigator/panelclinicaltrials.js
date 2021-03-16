@@ -326,7 +326,7 @@ class PanelClinicalTrials extends React.Component {
               </tr>
               <tr style={{ border: '1px solid grey', borderWidth: '1px 0px 2px 0px' }}>
               {FILTERING.map((item, id) =>
-                <td key={id}>
+                <td key={id} className="text-center" >
                   <SearchHeader 
                     onChange={(pattern) => this.retrieveCTFiltered(item.caption, pattern)} 
                     type={item.type} />
@@ -338,7 +338,7 @@ class PanelClinicalTrials extends React.Component {
               {dataTable.map((item, id) =>
                 <tr key={id}>
                   {FILTERING.map( (header, id ) => 
-                    <td key={id} style={{ width: '20%'}}>{item[header.dataField]}</td>
+                    <td key={id}  className="text-center" style={{ width: '20%'}}>{item[header.dataField]}</td>
                   )}
                 </tr>
               )}

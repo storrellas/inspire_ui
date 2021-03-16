@@ -170,7 +170,7 @@ class PanelPublications extends React.Component {
               <tr style={{ border: '1px solid grey', borderWidth: '1px 0px 2px 0px' }}>
                 <td></td>
                 {FILTERING.map((item, id) =>
-                <td key={id}>
+                <td key={id} className="text-center" >
                   <SearchHeader 
                     onChange={(pattern) => this.retrievePublicationListFiltered(item.caption, pattern)} 
                     type={item.type} />
@@ -181,15 +181,15 @@ class PanelPublications extends React.Component {
             <tbody>
               {dataTable.map((item, id) =>
                 <tr key={id}>
-                  <td style={{ width: '5%' }}>
+                  <td  className="text-center" style={{ width: '5%' }}>
                     <a href={item.weblink}>
                       <img src="https://demo.explicatos.com/img/Internet.png" style={{ height: '25px' }}></img>
                     </a>
                   </td>
-                  <td style={{ width: '70%' }}>{item.name}</td>
-                  <td style={{ width: '5%' }}>{item.publication_year}</td>
-                  <td style={{ width: '10%' }}>{item.position}</td>
-                  <td style={{ width: '10%' }}>{item.publication_subtype}</td>
+                  <td  className="text-center" style={{ width: '70%' }}>{item.name}</td>
+                  <td  className="text-center" style={{ width: '5%' }}>{item.publication_year}</td>
+                  <td  className="text-center" style={{ width: '10%' }}>{item.position}</td>
+                  <td  className="text-center" style={{ width: '10%' }}>{item.publication_subtype}</td>
                 </tr>
               )}
             </tbody>

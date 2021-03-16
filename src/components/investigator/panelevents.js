@@ -226,12 +226,12 @@ class PanelEvents extends React.Component {
                   style={{ fontSize: '1em', color: 'grey', cursor:'pointer' }} 
                   onClick={(e) => this.onClickedTableDetail(id)} />
               </td>
-              <td style={{ width: '45%'}}>{item.name}</td>
-              <td style={{ width: '10%'}}>{item.position}</td>
-              <td style={{ width: '10%'}}>{item.event_subtype}</td>
-              <td style={{ width: '5%'}}>{item.start_date_year}</td>
-              <td style={{ width: '15%'}}>{item.city}</td>              
-              <td style={{ width: '15%'}}>{item.country}</td>
+              <td  className="text-left" style={{ width: '45%'}}>{item.name}</td>
+              <td  className="text-center" style={{ width: '10%'}}>{item.position}</td>
+              <td  className="text-center" style={{ width: '10%'}}>{item.event_subtype}</td>
+              <td  className="text-center" style={{ width: '5%'}}>{item.start_date_year}</td>
+              <td  className="text-center" style={{ width: '15%'}}>{item.city}</td>              
+              <td  className="text-center" style={{ width: '15%'}}>{item.country}</td>
             </tr>,
             <tr key={id+"_"}>
               <td colSpan="7">
