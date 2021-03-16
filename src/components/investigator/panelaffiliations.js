@@ -419,8 +419,8 @@ class PanelAffiliations extends React.Component {
           <Modal.Header closeButton>
             <Modal.Title>{modalTitle}</Modal.Title>
           </Modal.Header>
-          <Modal.Body>
-            <div className="p-3 h-100" style={{ overflowY: 'scroll', fontSize: '14px'}}>
+          <Modal.Body  style={{ overflowY: 'scroll', height: '100%'}}>
+            <div className="p-3 h-100" style={{ fontSize: '14px'}}>
                 <LoadingOverlay
                     active={ this.state.isLoading }
                     spinner>
