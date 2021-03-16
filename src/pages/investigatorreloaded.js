@@ -8,6 +8,10 @@ import { withRouter } from 'react-router-dom'
 // Loading Overlay
 import LoadingOverlay from 'react-loading-overlay';
 
+// Redux
+import { setInvestigatorProfile } from "../redux";
+import { connect } from "react-redux";
+
 // Styles
 import "./investigatorreloaded.scss"
 
@@ -19,10 +23,26 @@ import { faAngleRight, faAngleDown, faStar, faSearch, faArrowCircleDown, faNewsp
 
 
 
+
 // Axios
 import axios from 'axios';
 import environment from '../environment.json';
 
+// See https://github.com/PaulLeCam/react-leaflet/issues/453
+import 'leaflet/dist/leaflet.css';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
+
+import L from 'leaflet';
+import icon from 'leaflet/dist/images/marker-icon.png';
+import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+let DefaultIcon = L.icon({ iconUrl: icon, shadowUrl: iconShadow});
+L.Marker.prototype.options.icon = DefaultIcon;
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setInvestigatorProfile: (profile) => dispatch(setInvestigatorProfile(profile))
+  };
+}
 
 const PROFILE_SNAPSHOT = { SPECIALTIES: 1,  FOCUS_AREA: 2 }
 class InvestigatorReloaded extends React.Component {
@@ -273,6 +293,20 @@ class InvestigatorReloaded extends React.Component {
               </Row>
 
             </div>
+            <div className="mt-3 p-3" style={{ backgroundColor: 'white'}}>
+              <MapContainer center={[41.385, 2.17]} zoom={10} scrollWheelZoom={false} 
+                style={{ height: "400px", width: '100%', borderRadius: '5px'}}>
+                <TileLayer
+                  attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                <Marker position={[41.385, 2.17]}>
+                  <Popup>
+                    A pretty CSS3 popup. <br /> Easily customizable.
+                  </Popup>
+                </Marker>
+              </MapContainer>
+            </div>
           </Col>
           <Col sm={4}>
             <div className="inspire-panel" style={{ maxHeight: '400px', overflowY:'scroll',   scrollbarWidth: 'thin'}}>
@@ -411,4 +445,6 @@ class InvestigatorReloaded extends React.Component {
   }
 }
 
-export default withRouter(InvestigatorReloaded)
+
+export default connect(undefined, mapDispatchToProps)(withRouter(InvestigatorReloaded))
+
