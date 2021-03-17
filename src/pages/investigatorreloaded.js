@@ -286,7 +286,7 @@ class InvestigatorReloaded extends React.Component {
               </Row>
             
               <Row style={{ marginTop: '3em'}}>
-                <Col sm={5}>
+                <Col sm={4}>
                   <div className="inspire-text-secondary" style={{ fontSize: '12px'}}>POSITION</div>
                   <div>{this.state.affiliationPosition}</div>
                   <div className="inspire-text-secondary" style={{ fontSize: '12px'}}>CAREER STAGE</div>
@@ -305,7 +305,7 @@ class InvestigatorReloaded extends React.Component {
             </div>
             <div className="mt-3 p-3" style={{ backgroundColor: 'white'}}>
               <MapContainer center={[41.385, 2.17]} zoom={10} scrollWheelZoom={false} 
-                style={{ height: "100px", width: '100%', borderRadius: '5px'}}>
+                style={{ height: "300px", width: '100%', borderRadius: '5px'}}>
                 <TileLayer
                   attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
