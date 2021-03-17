@@ -21,12 +21,12 @@ import AnimateHeight from 'react-animate-height';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleRight, faAngleDown, faStar, faSearch, faArrowCircleDown, faNewspaper } from '@fortawesome/free-solid-svg-icons'
 
-
-
-
 // Axios
 import axios from 'axios';
 import environment from '../../environment.json';
+
+// Project imports
+import InvestigatorProfileReloaded from '../../components/investigator/reloaded/investigatorprofilereloaded'
 
 // See https://github.com/PaulLeCam/react-leaflet/issues/453
 import 'leaflet/dist/leaflet.css';
@@ -187,9 +187,6 @@ class InvestigatorReloaded extends React.Component {
 
     }
 
-    // This is a magic number 1,05 but I dont know why honestly
-    const height = this.divElement.clientHeight;
-    this.setState({ height });
   }
 
 
@@ -260,194 +257,8 @@ class InvestigatorReloaded extends React.Component {
             <Button className="w-100 inspire-button inspire-box-shadow" variant="primary">Open Project</Button>{' '}
           </Col>
         </Row>
-        <Row className="mt-3 align-items-stretch">
-          <Col sm={7}>
-            <div className="inspire-panel">
-              <Row>
-                <Col sm={2}>
-                  <img src={this.state.picture} width="71" style={{ borderRadius: '50%' }}></img>
-                </Col>
-                <Col sm={10}>
-                  <div className="h-100 d-flex flex-column justify-content-center">
-                    <div>
-                      <b>{this.state.name} </b>
-                      <span className="ml-3 inspire-text-secondary">{this.state.degree}</span>
-                    </div>
-                    <div>
-                      {this.state.affiliationInstitutionPhone}  | 
-                      <span className="ml-3 inspire-text-secondary">
-                      <a style={{wordBreak: 'break-all'}} 
-                        href={"mailto:"+this.state.affiliationInstitutionEmail}>{this.state.affiliationInstitutionEmail}</a></span>
-                    </div>
-                  </div>
-                </Col>
-              </Row>
-            
-              <Row style={{ marginTop: '3em'}}>
-                <Col sm={4}>
-                  <div className="inspire-text-secondary" style={{ fontSize: '12px'}}>POSITION</div>
-                  <div>{this.state.affiliationPosition}</div>
-                  <div className="inspire-text-secondary" style={{ fontSize: '12px'}}>CAREER STAGE</div>
-                  <div>{this.state.careerStage}</div>
-                </Col>
-                <Col sm={4}>
-                  <div className="inspire-text-secondary" style={{ fontSize: '12px'}}>AFFILIATION</div>
-                  <div>{this.state.affiliationInsititution}</div>
-                </Col>
-                <Col sm={4}>
-                  <div className="inspire-text-secondary" style={{ fontSize: '12px'}}>PRIVATE CONTACT</div>
-                  <div><a style={{wordBreak: 'break-all'}} href={"mailto:"+this.state.privateEmail}>{this.state.privateEmail}</a></div>
-                </Col>
-              </Row>
 
-            </div>
-            <div className="mt-3 p-3" style={{ backgroundColor: 'white'}}>
-              <MapContainer center={[41.385, 2.17]} zoom={10} scrollWheelZoom={false} 
-                style={{ height: "300px", width: '100%', borderRadius: '5px'}}>
-                <TileLayer
-                  attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                />
-                <Marker position={[41.385, 2.17]}>
-                  <Popup>
-                    A pretty CSS3 popup. <br /> Easily customizable.
-                  </Popup>
-                </Marker>
-              </MapContainer>
-            </div>
-          </Col>
-          <Col sm={4} ref={ (divElement) => { this.divElement = divElement } }>
-            <div className="inspire-panel" style={{ height: this.state.height, overflowY:'scroll',   scrollbarWidth: 'thin'}}>
-
-              <Row>
-                <Col sm={6}>
-                  <b>Profile Snapshot</b>
-                  <div>Last Update: {this.state.lastUpdated}</div>
-                </Col>
-                <Col sm={6} className="text-right">
-                  <div>
-                    <a href={this.state.cv} className={this.state.cv===''?'d-none':''}>                  
-                      Go To CV
-                      <FontAwesomeIcon className="ml-2" icon={faNewspaper} />
-                    </a>
-                  </div>
-                </Col>
-              </Row>
-              <Row className="mt-3">
-                <Col>
-                  <div className="inspire-snapshot-section">
-                    <div className="inspire-text-secondary"  style={{ cursor: 'pointer' }}
-                      onClick={(e) => this.onClickSnaphot(PROFILE_SNAPSHOT.SPECIALTIES)}>
-                      SPECIALTIES
-                      <FontAwesomeIcon className={this.state.snapshotSpecialties?'ml-2 unfolded':"ml-2 folded" }
-                        icon={faAngleDown}/>
-                    </div>
-                    <div className="text-justify">
-                      <AnimateHeight
-                          height={this.state.snapshotSpecialties?'auto':0}
-                          duration={500}>  
-                      {this.state.specialties}
-                      </AnimateHeight> 
-                    </div>
-
-                  </div>
-                  <div className="mt-3 inspire-snapshot-section">
-                    <div className="inspire-text-secondary" style={{ cursor: 'pointer' }}
-                     onClick={(e) => this.onClickSnaphot(PROFILE_SNAPSHOT.FOCUS_AREA)}>
-                      FOCUS AREA
-                      <FontAwesomeIcon className={this.state.snapshotFocusArea?'ml-2 unfolded':"ml-2 folded" }
-                        icon={faAngleDown}/>
-                    </div>
-                    <div className="text-justify">
-                        <div className={this.state.snapshotFocusArea?'d-none':''} style={{ width:'100%', textOverflow: 'ellipsis', overflow:'hidden', whiteSpace: 'nowrap'}}>
-                          {this.state.focusArea}
-                        </div>
-                        <AnimateHeight
-                          height={this.state.snapshotFocusArea?'auto':0}
-                          duration={500}>  
-                        {this.state.focusArea}
-                        </AnimateHeight> 
-                    </div>
-                  </div>
-                </Col>
-              </Row>
-
-              <Row>
-                <Col sm={12}>
-                  <div className="mt-3 inspire-snapshot-section">
-                    <b>Publications</b>
-                    <Row>
-                      <Col sm={6}>
-                        <div className="inspire-text-secondary" style={{ fontSize: '12px'}}>FIRST AUTHOR</div>
-                        <div style={{ fontSize: '12px'}}>{this.state.publicationsFirstAuthor}</div>
-                      </Col>
-                      <Col sm={6}>
-                        <div className="inspire-text-secondary" style={{ fontSize: '12px'}}>TOTAL</div>
-                        <div style={{ fontSize: '12px'}}>{this.state.publications}</div>
-                      </Col>
-                    </Row>
-                  </div>
-                </Col>
-              </Row>
-
-              <Row>
-                <Col sm={12}>
-                  <div className="mt-3 inspire-snapshot-section">
-                    <b>Coauthors</b>
-                    <Row>
-                      <Col sm={6}>
-                        <div className="inspire-text-secondary" style={{ fontSize: '12px'}}>SAME PA</div>
-                        <div style={{ fontSize: '12px'}}>{this.state.coauthorsSamePA}</div>
-                      </Col>
-                      <Col sm={6}>
-                        <div className="inspire-text-secondary" style={{ fontSize: '12px'}}>TOTAL</div>
-                        <div style={{ fontSize: '12px'}}>{this.state.coauthors}</div>
-                      </Col>
-                    </Row>
-                  </div>
-                </Col>
-              </Row>
-
-
-              <Row>
-                <Col sm={12}>
-                  <div className="mt-3 inspire-snapshot-section">
-                    <b>Events</b>
-                    <Row>
-                      <Col sm={6}>
-                        <div className="inspire-text-secondary" style={{ fontSize: '12px'}}>CHAIR PERSON</div>
-                        <div style={{ fontSize: '12px'}}>{this.state.eventsChairPerson}</div>
-                      </Col>
-                      <Col sm={6}>
-                        <div className="inspire-text-secondary" style={{ fontSize: '12px'}}>TOTAL</div>
-                        <div style={{ fontSize: '12px'}}>{this.state.events}</div>
-                      </Col>
-                    </Row>
-                  </div>
-                </Col>
-              </Row>
-
-              <Row>
-                <Col sm={12}>
-                  <div className="mt-3 inspire-snapshot-section">
-                    <b>Clinical Trials</b>
-                    <Row>
-                      <Col sm={6}>
-                        <div className="inspire-text-secondary" style={{ fontSize: '12px'}}>RECRUITING</div>
-                        <div style={{ fontSize: '12px'}}>{this.state.ctRecruiting}</div>
-                      </Col>
-                      <Col sm={6}>
-                        <div className="inspire-text-secondary" style={{ fontSize: '12px'}}>TOTAL</div>
-                        <div style={{ fontSize: '12px'}}>{this.state.ct}</div>
-                      </Col>
-                    </Row>
-                  </div>
-                </Col>
-              </Row>
-
-            </div>
-        </Col>
-        </Row>
+        <InvestigatorProfileReloaded />
       </>
     );
   }

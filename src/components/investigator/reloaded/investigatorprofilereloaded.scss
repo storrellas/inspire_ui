@@ -1,0 +1,70 @@
+$inspire-blue: #4A92CE;
+$inspire-grey: #ced4da;
+$inspire-text-secondary: #8A8A8A;
+
+
+.inspire-box-shadow{
+    -webkit-box-shadow: grey 0px 0 10px;
+    -moz-box-shadow: grey 0 0 10px;
+    box-shadow: grey 0 0 10px;
+}
+
+.inspire-ghost-button{
+    background-color: white;
+    border-radius: 20px;
+    border-color: $inspire-blue;
+    color: $inspire-blue;
+
+}
+.inspire-ghost-button:hover{
+    border-radius: 20px;
+    background-color: $inspire-blue;
+    color: white;
+    border: 0;
+}
+
+.inspire-button{
+    background-color: $inspire-blue;
+    border-radius: 20px;
+}
+
+.inspire-button:hover{
+    background-color: white;
+    border-radius: 20px;
+    color: $inspire-blue;
+}
+
+.inspire-panel{
+    background-color: white;
+    border-radius: 5px;
+    border: 1px solid $inspire-grey;
+    padding: 1em;
+    -webkit-box-shadow: grey 0px 0 10px;
+    -moz-box-shadow: grey 0 0 10px;
+    box-shadow: grey 0 0 10px;
+}
+
+.inspire-text-secondary{
+    color: $inspire-text-secondary;
+}
+
+.inspire-snapshot-section{
+    border-bottom: 1px solid #8A8A8A;
+    padding-bottom: 1em;
+}
+
+
+
+.inspire-snapshot-section{
+    border-bottom: 1px solid #8A8A8A;
+    padding-bottom: 1em;
+    .folded{
+        transition: all 0.5s;
+        transform: rotate(0deg);
+    }
+    .unfolded{
+        transition: all 0.5s;
+        transform: rotate(180deg);
+    }
+
+}
