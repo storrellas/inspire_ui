@@ -241,7 +241,7 @@ class InvestigatorProfileReloaded extends React.Component {
               </Row>
 
             </div>
-            <div className="mt-3 p-3" style={{ backgroundColor: 'white'}}>
+            <div className="mt-3 p-3 inspire-panel" style={{ backgroundColor: 'white'}}>
               <MapContainer center={[41.385, 2.17]} zoom={10} scrollWheelZoom={false} 
                 style={{ height: "300px", width: '100%', borderRadius: '5px'}}>
                 <TileLayer
