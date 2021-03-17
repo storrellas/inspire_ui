@@ -12,7 +12,7 @@ import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 
 // Font Awesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faExpandArrowsAlt, faSearch } from '@fortawesome/free-solid-svg-icons'
+import { faExpandArrowsAlt, faLongArrowAltUp, faLongArrowAltDown } from '@fortawesome/free-solid-svg-icons'
 
 // Redux
 import { connect } from "react-redux";
@@ -86,6 +86,7 @@ class PanelClinicalTrials extends React.Component {
 
   constructor(props) {
     super(props)
+    const filteringList = FILTERING.reduce((acc,curr)=> (acc[curr.caption]='',acc),{});    
     this.state = {
       isOpened: false,
       showModalConditions: false, 
@@ -99,17 +100,8 @@ class PanelClinicalTrials extends React.Component {
       take: 10,
       limit: 10,
       isLoading: false,
-      filtering : {
-        name: '',
-        condition: '', 
-        status: '',
-        startYear: '',
-        endYear: '',
-        phase: '', 
-        studyType: '',
-        enrollment: '',
-        intervention: '',
-      }
+      filtering : {...filteringList},
+      sorting: ''
     }
   }
 
@@ -225,12 +217,12 @@ class PanelClinicalTrials extends React.Component {
     }
   }
 
-  async retrieveCT(page = 1, filtering = undefined){
+  async retrieveCT(page = 1){
     try{
       this.setState({isLoading: true})
 
       const token = localStorage.getItem('token')
-      const { take, limit } = this.state;
+      const { take, limit, filtering, sorting } = this.state;
 
       // Perform request
       let skip = this.state.take * (page-1);
@@ -246,6 +238,11 @@ class PanelClinicalTrials extends React.Component {
         }
       }
       
+      // Add sorting
+      if( sorting !== ''){
+        urlParams = `${urlParams}&ordering=${sorting}`;
+      }
+
       const url = `${environment.base_url}/api/investigator/${this.investigatorId}/clinical-trials/?${urlParams}`;
       const response = await axios.get(url,
         { headers: { "Authorization": "jwt " + token }
@@ -299,18 +296,19 @@ class PanelClinicalTrials extends React.Component {
       }
     }
 
+    this.state.filtering = filtering;
     // Clear timeout
     const that = this;
     if ( this.typingTimeout ) {
       clearTimeout(this.typingTimeout);
     }
     this.typingTimeout = 
-      setTimeout(function () { that.retrieveCT(currentPage, filtering) }, 2000)
+      setTimeout(function () { that.retrieveCT(currentPage) }, 2000)
   }
 
   generateModalContent(){
 
-    const { currentPage, totalPage, dataTable } = this.state;
+    const { currentPage, totalPage, dataTable, sorting } = this.state;
 
     return (
     <div className="p-3">
@@ -321,8 +319,12 @@ class PanelClinicalTrials extends React.Component {
             <thead>
               <tr>
                 {FILTERING.map((item, id) =>
-                  <td key={id} className="text-center">{item.label}</td>
-                )}
+                  <td key={id} className="text-center" style={{ cursor: 'pointer' }}
+                  onClick={(e) => this.onSetSorting(item.dataField)}>
+                    {item.label}
+                    <FontAwesomeIcon icon={faLongArrowAltUp} className={sorting == item.dataField ? "ml-1" : "ml-1 d-none"} style={{ color: 'grey' }} />
+                    <FontAwesomeIcon icon={faLongArrowAltDown} className={sorting == `-${item.dataField}` ? "ml-1" : "ml-1 d-none"} style={{ color: 'grey' }} />
+                  </td>                )}
               </tr>
               <tr style={{ border: '1px solid grey', borderWidth: '1px 0px 2px 0px' }}>
               {FILTERING.map((item, id) =>
@@ -394,6 +396,20 @@ class PanelClinicalTrials extends React.Component {
     }else if( showModalInterventions ){
       this.generateInterventionsMaxChart()
     }
+  }
+
+
+  onSetSorting(field){
+    let { currentPage, sorting } = this.state;
+    let target = '';
+    if( sorting == '' || sorting.includes(field) == false){
+      target = field
+    }else if( sorting === field ){
+     target =  `-${field}`
+    }
+    this.state.sorting = target;
+
+    this.retrieveCT(currentPage)
   }
 
   render() {

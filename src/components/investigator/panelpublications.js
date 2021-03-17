@@ -20,6 +20,9 @@ import { connect } from "react-redux";
 // Loading Overlay
 import LoadingOverlay from 'react-loading-overlay';
 
+// EllipsisWithTooltip
+import EllipsisWithTooltip from 'react-ellipsis-with-tooltip'
+
 // Axios
 import axios from 'axios';
 import environment from '../../environment.json';
@@ -187,7 +190,11 @@ class PanelPublications extends React.Component {
                       <img src="https://demo.explicatos.com/img/Internet.png" style={{ height: '25px' }}></img>
                     </a>
                   </td>
-                  <td  className="text-center" style={{ width: '70%' }}>{item.name}</td>
+                  <td  className="text-center" style={{ width: '70%' }}>
+                    <EllipsisWithTooltip className="text-center" placement="bottom" style={{ width: '800px'}}>
+                      {item.name || ''}
+                    </EllipsisWithTooltip>
+                  </td>
                   <td  className="text-center" style={{ width: '5%' }}>{item.publication_year}</td>
                   <td  className="text-center" style={{ width: '10%' }}>{item.position}</td>
                   <td  className="text-center" style={{ width: '10%' }}>{item.publication_subtype}</td>

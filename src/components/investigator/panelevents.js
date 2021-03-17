@@ -11,10 +11,11 @@ import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 
 // Font Awesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faExpandArrowsAlt, faSearch, faCaretRight } from '@fortawesome/free-solid-svg-icons'
+import { faExpandArrowsAlt, faLongArrowAltUp, faLongArrowAltDown, faCaretRight } from '@fortawesome/free-solid-svg-icons'
 
 // EllipsisWithTooltip
 import EllipsisWithTooltip from 'react-ellipsis-with-tooltip'
+
 
 // Redux
 import { connect } from "react-redux";
@@ -75,6 +76,7 @@ class PanelEvents extends React.Component {
 
   constructor(props) {
     super(props)
+    const filteringList = FILTERING.reduce((acc,curr)=> (acc[curr.caption]='',acc),{});    
     this.state = {
       isOpened: false,
       showModalEventType: false,
@@ -88,14 +90,8 @@ class PanelEvents extends React.Component {
       take: 10,
       limit: 10,
       isLoading: false,
-      filtering : {
-        name: '',
-        position: '', 
-        subtype: '',
-        year: '',
-        city: '',
-        country: '',
-      }
+      filtering : {...filteringList},
+      sorting: ''
     }    
   }
 
@@ -193,7 +189,7 @@ class PanelEvents extends React.Component {
   }
 
   generateModalContent(){
-    const { currentPage, totalPage } = this.state;
+    const { currentPage, totalPage, sorting } = this.state;
 
     return (
     <div className="p-3 h-100" style={{ fontSize:'14px'}}>
@@ -206,8 +202,13 @@ class PanelEvents extends React.Component {
           <tr>
             <td></td>
             {FILTERING.map((item, id) =>
-              <td key={id} className="text-center">{item.label}</td>
-            )}
+              <td key={id} className="text-center" style={{ cursor: 'pointer' }}
+                onClick={(e) => this.onSetSorting(item.dataField)}>
+                {item.label}
+                <FontAwesomeIcon icon={faLongArrowAltUp} className={sorting == item.dataField ? "ml-1" : "ml-1 d-none"} style={{ color: 'grey' }} />
+                <FontAwesomeIcon icon={faLongArrowAltDown} className={sorting == `-${item.dataField}` ? "ml-1" : "ml-1 d-none"} style={{ color: 'grey' }} />
+              </td>
+              )}
           </tr>
           <tr style={{ border: '1px solid grey', borderWidth: '1px 0px 2px 0px' }}>
             <td></td>
@@ -322,12 +323,12 @@ class PanelEvents extends React.Component {
     }
   }
 
-  async retrieveEvents(page = 1, filtering = undefined){
+  async retrieveEvents(page = 1){
     try{
       this.setState({isLoading: true})
 
       const token = localStorage.getItem('token')
-      const { take, limit } = this.state;
+      const { take, limit, filtering, sorting } = this.state;
 
       // Perform request
       let skip = this.state.take * (page-1);
@@ -341,6 +342,11 @@ class PanelEvents extends React.Component {
             urlParams = `${urlParams}&${item.dataField}=${filtering[item.caption]}`;
           }
         }      
+      }
+
+      // Add sorting
+      if( sorting !== ''){
+        urlParams = `${urlParams}&ordering=${sorting}`;
       }
 
       const url = `${environment.base_url}/api/investigator/${this.investigatorId}/events/?${urlParams}`;
@@ -380,14 +386,14 @@ class PanelEvents extends React.Component {
       }
     }
 
-
+    this.state.filtering = filtering;
     // Clear timeout
     const that = this;
     if ( this.typingTimeout ) {
       clearTimeout(this.typingTimeout);
     }
     this.typingTimeout = 
-      setTimeout(function () { that.retrieveEvents(currentPage, filtering) }, 2000)
+      setTimeout(function () { that.retrieveEvents(currentPage) }, 2000)
 
   }
 
@@ -453,6 +459,19 @@ class PanelEvents extends React.Component {
     if (this.eventRoleMaxChart) {
       this.eventRoleMaxChart.dispose();
     }
+  }
+
+  onSetSorting(field){
+    let { currentPage, sorting } = this.state;
+    let target = '';
+    if( sorting == '' || sorting.includes(field) == false){
+      target = field
+    }else if( sorting === field ){
+     target =  `-${field}`
+    }
+    this.state.sorting = target;
+
+    this.retrieveEvents(currentPage)
   }
 
   render() {

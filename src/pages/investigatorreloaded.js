@@ -83,6 +83,8 @@ class InvestigatorReloaded extends React.Component {
 
       snapshotSpecialties: false,
       snapshotFocusArea: false,
+
+      height: 0
     }
   }
 
@@ -184,7 +186,13 @@ class InvestigatorReloaded extends React.Component {
       }
 
     }
+
+    // This is a magic number 1,05 but I dont know why honestly
+    const height = this.divElement.clientHeight;
+    this.setState({ height });
   }
+
+
 
   onClickSnaphot(type){
     const { snapshotSpecialties, snapshotFocusArea } = this.state;
@@ -199,6 +207,8 @@ class InvestigatorReloaded extends React.Component {
 
     const { match: { params } } = this.props;
     let projectOid = params.id;
+
+    console.log("height", this.state.height)
 
     return (
       <>
@@ -252,7 +262,7 @@ class InvestigatorReloaded extends React.Component {
             <Button className="w-100 inspire-button inspire-box-shadow" variant="primary">Open Project</Button>{' '}
           </Col>
         </Row>
-        <Row className="mt-3">
+        <Row className="mt-3 align-items-stretch">
           <Col sm={7}>
             <div className="inspire-panel">
               <Row>
@@ -295,7 +305,7 @@ class InvestigatorReloaded extends React.Component {
             </div>
             <div className="mt-3 p-3" style={{ backgroundColor: 'white'}}>
               <MapContainer center={[41.385, 2.17]} zoom={10} scrollWheelZoom={false} 
-                style={{ height: "400px", width: '100%', borderRadius: '5px'}}>
+                style={{ height: "100px", width: '100%', borderRadius: '5px'}}>
                 <TileLayer
                   attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -308,8 +318,8 @@ class InvestigatorReloaded extends React.Component {
               </MapContainer>
             </div>
           </Col>
-          <Col sm={4}>
-            <div className="inspire-panel" style={{ maxHeight: '400px', overflowY:'scroll',   scrollbarWidth: 'thin'}}>
+          <Col sm={4} ref={ (divElement) => { this.divElement = divElement } }>
+            <div className="inspire-panel" style={{ height: this.state.height, overflowY:'scroll',   scrollbarWidth: 'thin'}}>
 
               <Row>
                 <Col sm={6}>
