@@ -12,7 +12,7 @@ import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 
 // Font Awesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faExpandArrowsAlt, faSearch } from '@fortawesome/free-solid-svg-icons'
+import { faExpandArrowsAlt, faLongArrowAltUp, faLongArrowAltDown } from '@fortawesome/free-solid-svg-icons'
 
 // Redux
 import { connect } from "react-redux";
@@ -65,6 +65,7 @@ class PanelPublications extends React.Component {
 
   constructor(props) {
     super(props)
+    const filteringList = FILTERING.reduce((acc,curr)=> (acc[curr.caption]='',acc),{});    
     this.state = {
       isOpened: false,
       showModalPublicationType: false,
@@ -78,12 +79,8 @@ class PanelPublications extends React.Component {
       take: 10,
       limit: 10,
       isLoading: false,
-      filtering: {
-        name: '',
-        year: '',
-        position: '',
-        type: ''
-      }
+      filtering : {...filteringList},
+      sorting: ''
     }
 
     this.typingTimeout = undefined
@@ -153,7 +150,7 @@ class PanelPublications extends React.Component {
   }
 
   generateModalContent() {
-    const { dataTable, totalPage, currentPage } = this.state;
+    const { dataTable, totalPage, currentPage, sorting } = this.state;
     return (
       <div className="p-3 h-100" style={{ fontSize: '14px' }}>
         <LoadingOverlay
@@ -164,8 +161,12 @@ class PanelPublications extends React.Component {
               <tr>
                 <td className="text-center">WebLink</td>
                 {FILTERING.map((item, id) =>
-                  <td key={id} className="text-center">{item.label}</td>
-                )}
+                      <td key={id} className="text-center" style={{ cursor: 'pointer' }}
+                      onClick={(e) => this.onSetSorting(item.dataField)}>
+                      {item.label}
+                      <FontAwesomeIcon icon={faLongArrowAltUp} className={sorting == item.dataField ? "ml-1" : "ml-1 d-none"} style={{ color: 'grey' }} />
+                      <FontAwesomeIcon icon={faLongArrowAltDown} className={sorting == `-${item.dataField}` ? "ml-1" : "ml-1 d-none"} style={{ color: 'grey' }} />
+                    </td>                )}
               </tr>
               <tr style={{ border: '1px solid grey', borderWidth: '1px 0px 2px 0px' }}>
                 <td></td>
@@ -264,11 +265,11 @@ class PanelPublications extends React.Component {
     }
   }
 
-  async retrievePublicationList(page = 1, filtering = undefined) {
+  async retrievePublicationList(page = 1) {
     try {
       this.setState({ isLoading: true })
       const token = localStorage.getItem('token')
-      const { take, limit } = this.state;
+      const { take, limit, filtering, sorting } = this.state;
 
       // Perform request
       let skip = this.state.take * (page - 1);
@@ -285,6 +286,10 @@ class PanelPublications extends React.Component {
         }
       }
 
+      // Add sorting
+      if( sorting !== ''){
+        urlParams = `${urlParams}&ordering=${sorting}`;
+      }
 
       const response = await axios.get(`${environment.base_url}/api/investigator/${this.investigatorId}/publications/?${urlParams}`,
         {
@@ -329,13 +334,14 @@ class PanelPublications extends React.Component {
       }
     }
 
+    this.state.filtering = filtering
     // Clear timeout
     const that = this;
     if ( this.typingTimeout ) {
       clearTimeout(this.typingTimeout);
     }
     this.typingTimeout = 
-      setTimeout(function () { that.retrievePublicationList(currentPage, filtering) }, 2000)
+      setTimeout(function () { that.retrievePublicationList(currentPage) }, 2000)
 
   }
 
@@ -395,6 +401,19 @@ class PanelPublications extends React.Component {
     }
   }
 
+  onSetSorting(field){
+    let { currentPage, sorting } = this.state;
+    let target = '';
+    if( sorting == '' || sorting.includes(field) == false){
+      target = field
+    }else if( sorting === field ){
+     target =  `-${field}`
+    }
+    this.state.sorting = target;
+
+    this.retrievePublicationList(currentPage)
+  }
+
   render() {
     if (this.props.tabPublicationsOpened == true &&
       this.state.isOpened == false &&
@@ -404,7 +423,7 @@ class PanelPublications extends React.Component {
       setTimeout(function () { that.generateChart() }, 500);
     }
 
-    const { showModal, showModalPublicationType, showModalPublicationYears } = this.state;
+    const { showModal, showModalPublicationType, showModalPublicationYears, sorting } = this.state;
     const isModal = showModal || showModalPublicationType || showModalPublicationYears;
     let modalContent = <div>Unknown</div>
     if (showModal) {
