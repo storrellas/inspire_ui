@@ -85,8 +85,8 @@ class LoginReloaded extends React.Component {
       <Container fluid className="inspire-login-page d-flex flex-column align-items-center" style={{padding: 0}}>
         <Row>
           <Col>
-            <div style={{ marginTop: '5em', marginBottom: '3em' }}>
-              <img src={inspireLogo} alt="logo"></img>
+            <div className="inspire-login-logo" style={{ marginTop: '5em', }}>
+              <img className="w-100" src={inspireLogo} alt="logo"></img>
             </div>
           </Col>
         </Row>

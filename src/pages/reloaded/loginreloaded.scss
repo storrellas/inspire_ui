@@ -1,7 +1,9 @@
 $login-bg-color: #343547;
 $navbar-bg-hover: #4285f4;
 
-
+@import "bootstrap/scss/functions"; 
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/mixins";
 
 .inspire-login-page{
   background-color: $login-bg-color;
@@ -23,4 +25,15 @@ $navbar-bg-hover: #4285f4;
 .inspire-login-btn:hover{
   border: 1px solid #DDDDDD;
   color: #EEEEEE;
+}
+
+.inspire-login-logo {
+  max-width: 200px;    
+  margin-bottom: 1em; 
+}
+@include media-breakpoint-up(sm){
+  .inspire-login-logo {
+    max-width: 500px;   
+    margin-bottom: 3em; 
+  }
 }
