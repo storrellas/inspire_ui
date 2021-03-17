@@ -63,7 +63,7 @@ class ProjectSelector extends React.Component {
           <div className="d-flex flex-wrap" style={{ padding: '2em' }}>
             {projectList.map((item, id) =>
               <div key={id} style={{ padding: '1em 1em 0 1em', width: '33%', minWidth: '300px'  }} 
-                onClick={ (e) => this.props.history.push(`${reloaded?'/reloaded':''}/project/${item.oid}`)}>
+                onClick={ (e) => this.props.history.push(`${reloaded?'/reloaded/dashboard':''}/project/${item.oid}`)}>
                 <div className="landBtn project project-container btnActive"
                   style={{ height: '10em' }}>
                   <div className="top-triangle project"></div>

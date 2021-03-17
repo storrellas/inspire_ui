@@ -41,14 +41,14 @@ class InvestigatorList extends React.Component {
       this.state.map = <InvestigatorMap projectOid={projectOid} />                    
     }
     return (
-      <Row>
+      <Row className={reloaded?'mt-3 mb-3':''}>
         <Col sm={12}>
           <Nav variant="tabs" style={{ width: '100%' }}>
             <Nav.Item>
-              <Nav.Link href="#" active={activeTab == TAB.TABLE} onClick={(e) => this.setState({ activeTab: TAB.TABLE })}>Table</Nav.Link>
+              <Nav.Link href="#" active={activeTab == TAB.TABLE} onClick={(e) => this.setState({ activeTab: TAB.TABLE })}><b>Table</b></Nav.Link>
             </Nav.Item>
             <Nav.Item>
-              <Nav.Link href="#" active={activeTab == TAB.MAP} onClick={(e) => this.setState({ activeTab: TAB.MAP, isMapOpened: true })}>Map</Nav.Link>
+              <Nav.Link href="#" active={activeTab == TAB.MAP} onClick={(e) => this.setState({ activeTab: TAB.MAP, isMapOpened: true })}><b>Map</b></Nav.Link>
             </Nav.Item>
           </Nav>
           <div className={activeTab === TAB.TABLE ? '' : 'd-none'}>

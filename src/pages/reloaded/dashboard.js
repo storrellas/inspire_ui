@@ -8,16 +8,18 @@ import { Button, Container, Navbar, Col, Nav, NavDropdown, Dropdown, Row } from 
 import { Route } from "react-router-dom";
 import { withRouter } from 'react-router-dom'
 
+// Redux
+import { connect } from "react-redux";
+
 // Styles
-import "./AppReloaded.scss"
+import "./dashboard.scss"
 
 // Font Awesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUser, faBars, faStar, faQuestionCircle, faTasks } from '@fortawesome/free-solid-svg-icons'
+import { faUser, faBars, faStar, faQuestionCircle, faTasks, faAngleRight } from '@fortawesome/free-solid-svg-icons'
 
 // Assets
 import inspire_logo from '../../assets/logo2.png';
-
 
 // Project imports
 import Login from '../login';
@@ -27,7 +29,13 @@ import InvestigatorReloaded from './investigatorreloaded';
 
 import AnimateHeight from 'react-animate-height';
 
-class AppReloaded extends React.Component {
+const mapStateToProps = (state) => {
+    return {
+      investigatorProfile: state.investigatorProfile,
+    };
+  }
+
+class Dashboard extends React.Component {
 
     constructor(props) {
         super(props)
@@ -43,10 +51,17 @@ class AppReloaded extends React.Component {
     }
 
     render() {
-        console.log("ReRender ")
         const { isToggled } = this.state;
         
         const projectList = JSON.parse(localStorage.getItem('project_permissions'));
+
+        const { match: { params } } = this.props;
+        let projectOid = this.props.location.pathname.split('/')[4];
+        const name = this.props.investigatorProfile?this.props.investigatorProfile.name:undefined
+
+        console.log("projectOid ", this.props)
+        console.log("projectOid ", projectOid)
+        console.log("name ", name)
 
         return (
             <div style={{ position: 'relative' }}>
@@ -76,26 +91,26 @@ class AppReloaded extends React.Component {
                                     <div className="d-flex font-weight-bold">
                                         <div><FontAwesomeIcon icon={faUser} /></div>
                                         <span className="align-self-end ml-2" style={{ flexGrow: 1 }}>
-                                            <a href="#" style={{ color: 'white'}}
-                                            onClick={(e) => this.setState({height: this.state.height==0?'auto':0})}>
+                                            <a href="#" style={{ color: 'white' }}
+                                                onClick={(e) => this.setState({ height: this.state.height == 0 ? 'auto' : 0 })}>
                                                 Project
                                             </a>
                                         </span>
                                     </div>
                                     <div className="d-flex flex-column">
-                                    <AnimateHeight
+                                        <AnimateHeight
                                             height={this.state.height}
-                                            duration={500}>                                                
-                                        {projectList.map((item, id) => 
-                                            <div key={id} style={{width: '150px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'}}>
-                                                <a href={`/reloaded/project/${item.oid}`} 
-                                                style={{ color: 'white', marginLeft: '1em'}}>
-                                                    { item.name}
-                                                </a>
-                                            </div>
-                                        
-                                        )}
-                                    </AnimateHeight> 
+                                            duration={500}>
+                                            {projectList.map((item, id) =>
+                                                <div key={id} style={{ width: '150px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                                    <a href={`/reloaded/project/${item.oid}`}
+                                                        style={{ color: 'white', marginLeft: '1em' }}>
+                                                        {item.name}
+                                                    </a>
+                                                </div>
+
+                                            )}
+                                        </AnimateHeight>
                                     </div>
                                 </div>
                                 <div className="mt-3" style={{ cursor: 'pointer' }}>
@@ -140,16 +155,39 @@ class AppReloaded extends React.Component {
                     </div>
                     <div className="inspire-page-content">
                         <Container>
-                            <Row className="inspire-content">
+                            <Row className="inspire-breadcrumb">
                                 <Col sm={12}>
-                                    <Route path={`${this.props.match.path}/`} exact 
-                                        render={(props) => (<Login reloaded/>)} />
-                                    <Route path={`${this.props.match.path}project`} exact 
-                                        render={(props) => (<ProjectSelector reloaded/>)}/>
-                                    <Route path={`${this.props.match.path}project/:id`} exact                                         
-                                        render={(props) => (<InvestigatorList reloaded/>)} />
-                                    <Route path={`${this.props.match.path}project/:id/investigator/:subid`} exact                                                                                  
-                                        render={(props) => (<InvestigatorReloaded reloaded/>)}/>
+                                    <div className="d-flex">
+                                        {(projectOid!==undefined)?
+                                            <>
+                                                <div>
+                                                    <a href="/reloaded/dashboard/">Select Plan</a>
+                                                </div>
+                                                <div className="ml-2">
+                                                    <FontAwesomeIcon icon={faAngleRight} />
+                                                </div>
+                                                <div className="ml-2">
+                                                    <a href={`/reloaded/dashboard/project/${projectOid}`}>Investigators</a>
+                                                </div>
+                                            </>
+                                        :''}
+                                        {name!==undefined?
+                                            <>
+                                                <div className="ml-2"><FontAwesomeIcon icon={faAngleRight} /></div>
+                                                <div className="ml-2">{name}</div>
+                                            </>
+                                        :''}
+                                    </div>
+                                </Col>
+                            </Row>
+                            <Row className="inspire-content-reloaded">
+                                <Col sm={12}>
+                                    <Route path={`${this.props.match.path}`} exact
+                                        render={(props) => (<ProjectSelector reloaded />)} />
+                                    <Route path={`${this.props.match.path}project/:id`} exact
+                                        render={(props) => (<InvestigatorList reloaded />)} />
+                                    <Route path={`${this.props.match.path}project/:id/investigator/:subid`} exact
+                                        render={(props) => (<InvestigatorReloaded reloaded />)} />
                                 </Col>
                             </Row>
                         </Container>
@@ -159,4 +197,4 @@ class AppReloaded extends React.Component {
     }
 }
 
-export default withRouter(AppReloaded);
+export default connect(mapStateToProps, null)(withRouter(Dashboard));

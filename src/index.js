@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import AppReloaded from './pages/reloaded/AppReloaded'
+import AppReloaded from './AppReloaded'
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import { store } from "./redux";

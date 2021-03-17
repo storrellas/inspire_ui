@@ -77,37 +77,12 @@ class InvestigatorReloaded extends React.Component {
   }
 
   render() {
-    console.log("props ", this.props)
 
-
-    const { match: { params } } = this.props;
-    let projectOid = params.id;
 
     const { panel } = this.state;
-    const name = this.props.investigatorProfile?this.props.investigatorProfile.name:''    
+    
     return (
       <>
-        <Row>
-          <Col sm={12}>
-            <div className="d-flex">
-              <div>
-                <a href="/reloaded/project/">Select Plan</a>
-              </div>
-              <div className="ml-2">
-                <FontAwesomeIcon icon={faAngleRight} />
-              </div>
-              <div className="ml-2">
-                <a href={`/reloaded/project/${projectOid}`}>Investigators</a>
-              </div>
-              <div className="ml-2">
-                <FontAwesomeIcon icon={faAngleRight} />
-              </div>
-              <div className="ml-2">
-                {name}
-              </div>
-            </div>
-          </Col>
-        </Row>
         <Row className="mt-3">
           <Col sm={6}>
             <InputGroup className="mb-2" >

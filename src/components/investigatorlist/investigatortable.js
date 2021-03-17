@@ -333,7 +333,7 @@ class InvestigatorTable extends React.Component {
                   </td>
                   <td>
                     <img src={arrow} width="40"
-                      onClick={(e) => this.props.history.push(`${reloaded?'/reloaded':''}/project/${this.state.projectOid}/investigator/${item.oid}`)}
+                      onClick={(e) => this.props.history.push(`${reloaded?'/reloaded/dashboard':''}/project/${this.state.projectOid}/investigator/${item.oid}`)}
                       style={{ cursor: 'pointer' }}></img>
                   </td>
 
