@@ -118,38 +118,37 @@ class InvestigatorReloaded extends React.Component {
             <Nav variant="tabs" style={{ width: '100%', justifyContent: 'space-between' }}>
               <Nav.Item>
                 <Nav.Link href="#" active={activeTab == TAB.CONNECTIONS} 
-                  onClick={(e) => this.setState({ activeTab: TAB.CONNECTIONS })}>CONNECTIONS</Nav.Link>
+                  onClick={(e) => this.setState({ activeTab: TAB.CONNECTIONS })}>Connections</Nav.Link>
               </Nav.Item>
               <Nav.Item>
                 <Nav.Link href="#" active={activeTab == TAB.COMPANY_COOPERATION} 
-                  onClick={(e) => this.setState({ activeTab: TAB.COMPANY_COOPERATION })}>COMPANY_COOPERATION</Nav.Link>
+                  onClick={(e) => this.setState({ activeTab: TAB.COMPANY_COOPERATION })}>Company Cooperation</Nav.Link>
               </Nav.Item>
               <Nav.Item>
                 <Nav.Link href="#" active={activeTab == TAB.AFFILIATIONS} 
-                  onClick={(e) => this.setState({ activeTab: TAB.AFFILIATIONS })}>COMPANY_COOPERATION</Nav.Link>
+                  onClick={(e) => this.setState({ activeTab: TAB.AFFILIATIONS })}>Affiliations</Nav.Link>
               </Nav.Item>
               <Nav.Item>
                 <Nav.Link href="#" active={activeTab == TAB.RESEARCH_PROFILE} 
-                  onClick={(e) => this.setState({ activeTab: TAB.RESEARCH_PROFILE })}>RESEARCH_PROFILE</Nav.Link>
+                  onClick={(e) => this.setState({ activeTab: TAB.RESEARCH_PROFILE })}>Research Profile</Nav.Link>
               </Nav.Item>
-            </Nav>
-            <Nav variant="tabs" style={{ width: '100%', justifyContent: 'space-between'  }}>
+
 
               <Nav.Item>
                 <Nav.Link href="#" active={activeTab == TAB.PUBLICATIONS} 
-                  onClick={(e) => this.setState({ activeTab: TAB.PUBLICATIONS })}>PUBLICATIONS</Nav.Link>
+                  onClick={(e) => this.setState({ activeTab: TAB.PUBLICATIONS })}>Publications</Nav.Link>
               </Nav.Item>
               <Nav.Item>
                 <Nav.Link href="#" active={activeTab == TAB.EVENTS} 
-                  onClick={(e) => this.setState({ activeTab: TAB.EVENTS })}>EVENTS</Nav.Link>
+                  onClick={(e) => this.setState({ activeTab: TAB.EVENTS })}>Events</Nav.Link>
               </Nav.Item>
               <Nav.Item>
                 <Nav.Link href="#" active={activeTab == TAB.CLINICAL_TRIALS} 
-                  onClick={(e) => this.setState({ activeTab: TAB.CLINICAL_TRIALS })}>CLINICAL_TRIALS</Nav.Link>
+                  onClick={(e) => this.setState({ activeTab: TAB.CLINICAL_TRIALS })}>Clinical Trials</Nav.Link>
               </Nav.Item>
               <Nav.Item>
                 <Nav.Link href="#" active={activeTab == TAB.FEEDBACK} 
-                  onClick={(e) => this.setState({ activeTab: TAB.FEEDBACK })}>FEEDBACK</Nav.Link>
+                  onClick={(e) => this.setState({ activeTab: TAB.FEEDBACK })}>Feedback</Nav.Link>
               </Nav.Item>
 
             </Nav>
@@ -159,7 +158,7 @@ class InvestigatorReloaded extends React.Component {
                 borderColor: 'transparent #dee2e6 #dee2e6 #dee2e6', borderRadius: '0 .25rem 0 .25rem',
                 minHeight: '50vh', padding: '2em'
               }}>
-                This is my table1
+                This is my CONNECTIONS
               </div>
             </div>
             <div className={activeTab === TAB.COMPANY_COOPERATION ? '' : 'd-none'}>
@@ -168,9 +167,68 @@ class InvestigatorReloaded extends React.Component {
                 borderColor: 'transparent #dee2e6 #dee2e6 #dee2e6', borderRadius: '0 .25rem 0 .25rem',
                 minHeight: '50vh', padding: '2em'
               }}>
-                This is my table2
+                This is my COMPANY_COOPERATION
               </div>
             </div>
+            <div className={activeTab === TAB.AFFILIATIONS ? '' : 'd-none'}>
+              <div style={{
+                backgroundColor: 'white', border: '1px solid',
+                borderColor: 'transparent #dee2e6 #dee2e6 #dee2e6', borderRadius: '0 .25rem 0 .25rem',
+                minHeight: '50vh', padding: '2em'
+              }}>
+                This is my AFFILIATIONS
+              </div>
+            </div>
+            <div className={activeTab === TAB.RESEARCH_PROFILE ? '' : 'd-none'}>
+              <div style={{
+                backgroundColor: 'white', border: '1px solid',
+                borderColor: 'transparent #dee2e6 #dee2e6 #dee2e6', borderRadius: '0 .25rem 0 .25rem',
+                minHeight: '50vh', padding: '2em'
+              }}>
+                This is my RESEARCH_PROFILE
+              </div>
+            </div>
+
+
+            <div className={activeTab === TAB.PUBLICATIONS ? '' : 'd-none'}>
+              <div style={{
+                backgroundColor: 'white', border: '1px solid',
+                borderColor: 'transparent #dee2e6 #dee2e6 #dee2e6', borderRadius: '0 .25rem 0 .25rem',
+                minHeight: '50vh', padding: '2em'
+              }}>
+                This is my PUBLICATIONS
+              </div>
+            </div>
+            <div className={activeTab === TAB.EVENTS ? '' : 'd-none'}>
+              <div style={{
+                backgroundColor: 'white', border: '1px solid',
+                borderColor: 'transparent #dee2e6 #dee2e6 #dee2e6', borderRadius: '0 .25rem 0 .25rem',
+                minHeight: '50vh', padding: '2em'
+              }}>
+                This is my EVENTS
+              </div>
+            </div>
+            <div className={activeTab === TAB.CLINICAL_TRIALS ? '' : 'd-none'}>
+              <div style={{
+                backgroundColor: 'white', border: '1px solid',
+                borderColor: 'transparent #dee2e6 #dee2e6 #dee2e6', borderRadius: '0 .25rem 0 .25rem',
+                minHeight: '10vh', padding: '2em'
+              }}>
+                This is my CLINICAL_TRIALS
+              </div>
+            </div>
+            <div className={activeTab === TAB.FEEDBACK ? '' : 'd-none'}>
+              <div style={{
+                backgroundColor: 'white', border: '1px solid',
+                borderColor: 'transparent #dee2e6 #dee2e6 #dee2e6', borderRadius: '0 .25rem 0 .25rem',
+                minHeight: '10vh', padding: '2em'
+              }}>
+                This is my FEEDBACK
+              </div>
+            </div>
+
+
+
           </Col>
         </Row>
       </>
