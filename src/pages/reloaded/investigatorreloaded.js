@@ -9,7 +9,7 @@ import { withRouter } from 'react-router-dom'
 import LoadingOverlay from 'react-loading-overlay';
 
 // Redux
-import { setInvestigatorProfile } from "../redux";
+import { setInvestigatorProfile } from "../../redux";
 import { connect } from "react-redux";
 
 // Styles
@@ -26,7 +26,7 @@ import { faAngleRight, faAngleDown, faStar, faSearch, faArrowCircleDown, faNewsp
 
 // Axios
 import axios from 'axios';
-import environment from '../environment.json';
+import environment from '../../environment.json';
 
 // See https://github.com/PaulLeCam/react-leaflet/issues/453
 import 'leaflet/dist/leaflet.css';
@@ -207,8 +207,6 @@ class InvestigatorReloaded extends React.Component {
 
     const { match: { params } } = this.props;
     let projectOid = params.id;
-
-    console.log("height", this.state.height)
 
     return (
       <>

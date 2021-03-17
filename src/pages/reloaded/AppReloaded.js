@@ -16,13 +16,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser, faBars, faStar, faQuestionCircle, faTasks } from '@fortawesome/free-solid-svg-icons'
 
 // Assets
-import inspire_logo from '../assets/logo2.png';
+import inspire_logo from '../../assets/logo2.png';
 
 
 // Project imports
-import Login from './login';
-import ProjectSelector from './projectselector';
-import InvestigatorList from './investigatorlist';
+import Login from '../login';
+import ProjectSelector from '../projectselector';
+import InvestigatorList from '../investigatorlist';
 import InvestigatorReloaded from './investigatorreloaded';
 
 import AnimateHeight from 'react-animate-height';
