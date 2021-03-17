@@ -41,27 +41,29 @@ class Dashboard extends React.Component {
         super(props)
         this.state = {
             isToggled: true,
-            height: 0
+            projectHeight: 0,
+            userHeight: 0
         }
     }
 
     logout(e) {
+        e.preventDefault()
         localStorage.clear('token');
-        this.props.history.push('/')
-    }
+        this.props.history.push('/reloaded/')
+    }    
 
     render() {
         const { isToggled } = this.state;
+        const { investigatorProfile } = this.props;
         
         const projectList = JSON.parse(localStorage.getItem('project_permissions'));
+        const username = localStorage.getItem('username');
 
         const { match: { params } } = this.props;
         let projectOid = this.props.location.pathname.split('/')[4];
-        const name = this.props.investigatorProfile?this.props.investigatorProfile.name:undefined
+        const name = investigatorProfile?investigatorProfile.name:undefined
 
-        console.log("projectOid ", this.props)
-        console.log("projectOid ", projectOid)
-        console.log("name ", name)
+        
 
         return (
             <div style={{ position: 'relative' }}>
@@ -92,14 +94,14 @@ class Dashboard extends React.Component {
                                         <div><FontAwesomeIcon icon={faUser} /></div>
                                         <span className="align-self-end ml-2" style={{ flexGrow: 1 }}>
                                             <a href="#" style={{ color: 'white' }}
-                                                onClick={(e) => this.setState({ height: this.state.height == 0 ? 'auto' : 0 })}>
+                                                onClick={(e) => this.setState({ projectHeight: this.state.projectHeight == 0 ? 'auto' : 0 })}>
                                                 Project
                                             </a>
                                         </span>
                                     </div>
                                     <div className="d-flex flex-column">
                                         <AnimateHeight
-                                            height={this.state.height}
+                                            height={this.state.projectHeight}
                                             duration={500}>
                                             {projectList.map((item, id) =>
                                                 <div key={id} style={{ width: '150px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
@@ -145,8 +147,18 @@ class Dashboard extends React.Component {
                                 <div className="mt-3" style={{ cursor: 'pointer' }}>
                                     <div className="d-flex font-weight-bold">
                                         <div><FontAwesomeIcon icon={faUser} /></div>
-                                        <span className="align-self-end ml-2" style={{ flexGrow: 1 }}>User Name</span>
+                                        <span className="align-self-end ml-2" style={{ flexGrow: 1 }}
+                                        onClick={(e) => this.setState({ userHeight: this.state.userHeight == 0 ? 'auto' : 0 })}>{username}</span>
+
                                     </div>
+                                    <AnimateHeight
+                                            height={this.state.userHeight}
+                                            duration={500}>
+                                        <div style={{ width: '150px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                            <a href="#" style={{ color: 'white', marginLeft: '1em' }}
+                                            onClick={(e) => this.logout(e)}>Logout</a>
+                                        </div>
+                                    </AnimateHeight>
                                 </div>
 
                             </div>
