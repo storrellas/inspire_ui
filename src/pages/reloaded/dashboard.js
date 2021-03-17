@@ -19,7 +19,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser, faBars, faStar, faQuestionCircle, faTasks, faAngleRight } from '@fortawesome/free-solid-svg-icons'
 
 // Assets
-import inspire_logo from '../../assets/logo2.png';
+import inspireLogo from '../../assets/logo2.png';
 
 // Project imports
 import Login from '../login';
@@ -85,7 +85,7 @@ class Dashboard extends React.Component {
                         <div className="h-100 d-flex flex-column justify-content-between" style={{ color: 'white', fontSize: '18px', alignItems: 'center' }}>
                             <div>
                                 <div>
-                                    <img src={inspire_logo} alt="logo" style={{ height: '100px' }}></img>
+                                    <img src={inspireLogo} alt="logo" style={{ height: '100px' }}></img>
                                 </div>
                                 <div style={{ marginTop: '3em', cursor: 'pointer' }}>
                                     <div className="d-flex font-weight-bold">

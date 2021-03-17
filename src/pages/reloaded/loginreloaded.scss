@@ -1,0 +1,26 @@
+$login-bg-color: #343547;
+$navbar-bg-hover: #4285f4;
+
+
+
+.inspire-login-page{
+  background-color: $login-bg-color;
+  min-height: 100vh;
+  border: 3px;
+  width: 100vw;
+  box-sizing: border-box;
+}
+
+.inspire-login-btn{
+  background-color: #4A92CE;
+  font-weight: bold;
+  color: white;
+  font-size: 16px;
+  height: 55px;
+  border-radius: 30px;
+}
+
+.inspire-login-btn:hover{
+  border: 1px solid #DDDDDD;
+  color: #EEEEEE;
+}
