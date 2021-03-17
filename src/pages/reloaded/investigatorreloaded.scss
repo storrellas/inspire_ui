@@ -53,18 +53,7 @@ $inspire-text-secondary: #8A8A8A;
 }
 
 
-
-.inspire-snapshot-section{
-    border-bottom: 1px solid #8A8A8A;
-    padding-bottom: 1em;
-    .folded{
-        transition: all 0.5s;
-        transform: rotate(0deg);
-    }
-    .unfolded{
-        transition: all 0.5s;
-        transform: rotate(180deg);
-    }
-
+.nav-item .nav-link:not(.active){
+    background-color: rgba(164, 200, 230, 0.2);
 }
 

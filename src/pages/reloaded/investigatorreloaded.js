@@ -8,56 +8,83 @@ import { withRouter } from 'react-router-dom'
 // Loading Overlay
 import LoadingOverlay from 'react-loading-overlay';
 
-// Redux
-import { setInvestigatorProfile } from "../../redux";
-import { connect } from "react-redux";
 
 // Styles
 import "./investigatorreloaded.scss"
-
-import AnimateHeight from 'react-animate-height';
 
 // Font Awesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleRight, faAngleDown, faStar, faSearch, faArrowCircleDown, faNewspaper } from '@fortawesome/free-solid-svg-icons'
 
-// Axios
-import axios from 'axios';
-import environment from '../../environment.json';
 
 // Project imports
 import InvestigatorProfileReloaded from '../../components/investigator/reloaded/investigatorprofilereloaded'
 
+// Redux
+import { setPanelRendered, PANEL, resetPanel } from "../../redux";
+import { connect } from "react-redux";
+
+
+import PanelConnections from '../../components/investigator/panelconnections';
+import PanelCompanyCooperation from '../../components/investigator/panelcompanycooperation';
+import PanelAffiliations from '../../components/investigator/panelaffiliations';
+import PanelFeedback from '../../components/investigator/panelfeedback';
+
+import PanelResearchProfile from '../../components/investigator/panelresearchprofile';
+import PanelPublications from '../../components/investigator/panelpublications';
+import PanelEvents from '../../components/investigator/panelevents';
+import PanelClinicalTrials from '../../components/investigator/panelclinicaltrials';
 
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    setInvestigatorProfile: (profile) => dispatch(setInvestigatorProfile(profile))
+    setPanelRendered: (panel) => dispatch(setPanelRendered(panel)),
+    resetPanel: () => dispatch(resetPanel())
   };
 }
 
-const TAB = { 
-  CONNECTIONS: 1, COMPANY_COOPERATION: 2, AFFILIATIONS: 3, RESEARCH_PROFILE: 4, 
-  PUBLICATIONS: 5, EVENTS: 6, CLINICAL_TRIALS: 7, FEEDBACK: 8 
+const mapStateToProps = (state) => {
+  return {
+    investigatorProfile: state.investigatorProfile,
+  };
 }
+
+
 class InvestigatorReloaded extends React.Component {
 
   constructor(props) {
     super(props)
     this.state = {
-      activeTab: TAB.CONNECTIONS,
+      panel: PANEL.CONNECTIONS,
     }
   }
 
-  async componentDidMount(){
+  componentDidMount(){
+    this.props.resetPanel()
+    
+    const that = this;
+    setTimeout(function(){ that.props.setPanelRendered(PANEL.CONNECTIONS) }, 1000);
+  }
+
+  onSetPanel(panel) {      
+    this.setState({ panel })
+    // These panels do not require to trigger action
+    if( panel === PANEL.AFFILIATIONS ||
+      panel === PANEL.FEEDBACK ){
+        return
+    }    
+    this.props.setPanelRendered(panel)
   }
 
   render() {
+    console.log("props ", this.props)
+
 
     const { match: { params } } = this.props;
     let projectOid = params.id;
 
-    const { activeTab } = this.state;
+    const { panel } = this.state;
+    const name = this.props.investigatorProfile?this.props.investigatorProfile.name:''    
     return (
       <>
         <Row>
@@ -76,7 +103,7 @@ class InvestigatorReloaded extends React.Component {
                 <FontAwesomeIcon icon={faAngleRight} />
               </div>
               <div className="ml-2">
-                Nicolas Felten
+                {name}
               </div>
             </div>
           </Col>
@@ -113,117 +140,117 @@ class InvestigatorReloaded extends React.Component {
 
         <InvestigatorProfileReloaded />
 
-        <Row className="mt-3">
+        <Row className="mt-3 pb-3">
           <Col sm={12}>
             <Nav variant="tabs" style={{ width: '100%', justifyContent: 'space-between' }}>
               <Nav.Item>
-                <Nav.Link href="#" active={activeTab == TAB.CONNECTIONS} 
-                  onClick={(e) => this.setState({ activeTab: TAB.CONNECTIONS })}>Connections</Nav.Link>
+                <Nav.Link href="#" active={panel == PANEL.CONNECTIONS} 
+                  onClick={(e) => this.onSetPanel(PANEL.CONNECTIONS)}><b>Connections</b></Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link href="#" active={activeTab == TAB.COMPANY_COOPERATION} 
-                  onClick={(e) => this.setState({ activeTab: TAB.COMPANY_COOPERATION })}>Company Cooperation</Nav.Link>
+                <Nav.Link href="#" active={panel == PANEL.COMPANY_COOPERATION} 
+                  onClick={(e) => this.onSetPanel(PANEL.COMPANY_COOPERATION)}><b>Company Cooperation</b></Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link href="#" active={activeTab == TAB.AFFILIATIONS} 
-                  onClick={(e) => this.setState({ activeTab: TAB.AFFILIATIONS })}>Affiliations</Nav.Link>
+                <Nav.Link href="#" active={panel == PANEL.AFFILIATIONS} 
+                  onClick={(e) => this.onSetPanel(PANEL.AFFILIATIONS)}><b>Affiliations</b></Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link href="#" active={activeTab == TAB.RESEARCH_PROFILE} 
-                  onClick={(e) => this.setState({ activeTab: TAB.RESEARCH_PROFILE })}>Research Profile</Nav.Link>
+                <Nav.Link href="#" active={panel == PANEL.RESEARCH_PROFILE} 
+                  onClick={(e) => this.onSetPanel(PANEL.RESEARCH_PROFILE)}><b>Research Profile</b></Nav.Link>
               </Nav.Item>
 
 
               <Nav.Item>
-                <Nav.Link href="#" active={activeTab == TAB.PUBLICATIONS} 
-                  onClick={(e) => this.setState({ activeTab: TAB.PUBLICATIONS })}>Publications</Nav.Link>
+                <Nav.Link href="#" active={panel == PANEL.PUBLICATIONS} 
+                  onClick={(e) => this.onSetPanel(PANEL.PUBLICATIONS)}><b>Publications</b></Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link href="#" active={activeTab == TAB.EVENTS} 
-                  onClick={(e) => this.setState({ activeTab: TAB.EVENTS })}>Events</Nav.Link>
+                <Nav.Link href="#" active={panel == PANEL.EVENTS} 
+                  onClick={(e) => this.onSetPanel(PANEL.EVENTS)}><b>Events</b></Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link href="#" active={activeTab == TAB.CLINICAL_TRIALS} 
-                  onClick={(e) => this.setState({ activeTab: TAB.CLINICAL_TRIALS })}>Clinical Trials</Nav.Link>
+                <Nav.Link href="#" active={panel == PANEL.CLINICAL_TRIALS} 
+                  onClick={(e) => this.onSetPanel(PANEL.CLINICAL_TRIALS)}><b>Clinical Trials</b></Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link href="#" active={activeTab == TAB.FEEDBACK} 
-                  onClick={(e) => this.setState({ activeTab: TAB.FEEDBACK })}>Feedback</Nav.Link>
+                <Nav.Link href="#" active={panel == PANEL.FEEDBACK} 
+                  onClick={(e) => this.onSetPanel(PANEL.FEEDBACK)}><b>Feedback</b></Nav.Link>
               </Nav.Item>
 
             </Nav>
-            <div className={activeTab === TAB.CONNECTIONS ? '' : 'd-none'}>
+            <div className={panel === PANEL.CONNECTIONS ? '' : 'd-none'}>
               <div style={{
                 backgroundColor: 'white', border: '1px solid',
                 borderColor: 'transparent #dee2e6 #dee2e6 #dee2e6', borderRadius: '0 .25rem 0 .25rem',
-                minHeight: '50vh', padding: '2em'
+                padding: '2em'
               }}>
-                This is my CONNECTIONS
+                <PanelConnections reloaded />
               </div>
             </div>
-            <div className={activeTab === TAB.COMPANY_COOPERATION ? '' : 'd-none'}>
+            <div className={panel === PANEL.COMPANY_COOPERATION ? '' : 'd-none'}>
               <div style={{
                 backgroundColor: 'white', border: '1px solid',
                 borderColor: 'transparent #dee2e6 #dee2e6 #dee2e6', borderRadius: '0 .25rem 0 .25rem',
-                minHeight: '50vh', padding: '2em'
+                padding: '2em'
               }}>
-                This is my COMPANY_COOPERATION
+                <PanelCompanyCooperation/>
               </div>
             </div>
-            <div className={activeTab === TAB.AFFILIATIONS ? '' : 'd-none'}>
+            <div className={panel === PANEL.AFFILIATIONS ? '' : 'd-none'}>
               <div style={{
                 backgroundColor: 'white', border: '1px solid',
                 borderColor: 'transparent #dee2e6 #dee2e6 #dee2e6', borderRadius: '0 .25rem 0 .25rem',
-                minHeight: '50vh', padding: '2em'
+                padding: '2em'
               }}>
-                This is my AFFILIATIONS
+                <PanelAffiliations />
               </div>
             </div>
-            <div className={activeTab === TAB.RESEARCH_PROFILE ? '' : 'd-none'}>
+            <div className={panel === PANEL.RESEARCH_PROFILE ? '' : 'd-none'}>
               <div style={{
                 backgroundColor: 'white', border: '1px solid',
                 borderColor: 'transparent #dee2e6 #dee2e6 #dee2e6', borderRadius: '0 .25rem 0 .25rem',
-                minHeight: '50vh', padding: '2em'
+                padding: '2em'
               }}>
-                This is my RESEARCH_PROFILE
+                <PanelResearchProfile />                
               </div>
             </div>
 
 
-            <div className={activeTab === TAB.PUBLICATIONS ? '' : 'd-none'}>
+            <div className={panel === PANEL.PUBLICATIONS ? '' : 'd-none'}>
               <div style={{
                 backgroundColor: 'white', border: '1px solid',
                 borderColor: 'transparent #dee2e6 #dee2e6 #dee2e6', borderRadius: '0 .25rem 0 .25rem',
-                minHeight: '50vh', padding: '2em'
+                padding: '2em'
               }}>
-                This is my PUBLICATIONS
+                <PanelPublications />
               </div>
             </div>
-            <div className={activeTab === TAB.EVENTS ? '' : 'd-none'}>
+            <div className={panel === PANEL.EVENTS ? '' : 'd-none'}>
               <div style={{
                 backgroundColor: 'white', border: '1px solid',
                 borderColor: 'transparent #dee2e6 #dee2e6 #dee2e6', borderRadius: '0 .25rem 0 .25rem',
-                minHeight: '50vh', padding: '2em'
+                padding: '2em'
               }}>
-                This is my EVENTS
+                <PanelEvents />
               </div>
             </div>
-            <div className={activeTab === TAB.CLINICAL_TRIALS ? '' : 'd-none'}>
+            <div className={panel === PANEL.CLINICAL_TRIALS ? '' : 'd-none'}>
               <div style={{
                 backgroundColor: 'white', border: '1px solid',
                 borderColor: 'transparent #dee2e6 #dee2e6 #dee2e6', borderRadius: '0 .25rem 0 .25rem',
-                minHeight: '10vh', padding: '2em'
+                padding: '2em'
               }}>
-                This is my CLINICAL_TRIALS
+                <PanelClinicalTrials />
               </div>
             </div>
-            <div className={activeTab === TAB.FEEDBACK ? '' : 'd-none'}>
+            <div className={panel === PANEL.FEEDBACK ? '' : 'd-none'}>
               <div style={{
                 backgroundColor: 'white', border: '1px solid',
                 borderColor: 'transparent #dee2e6 #dee2e6 #dee2e6', borderRadius: '0 .25rem 0 .25rem',
-                minHeight: '10vh', padding: '2em'
+                padding: '2em'
               }}>
-                This is my FEEDBACK
+                <PanelFeedback />
               </div>
             </div>
 
@@ -237,5 +264,5 @@ class InvestigatorReloaded extends React.Component {
 }
 
 
-export default connect(undefined, mapDispatchToProps)(withRouter(InvestigatorReloaded))
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(InvestigatorReloaded))
 

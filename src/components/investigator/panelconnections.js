@@ -367,7 +367,6 @@ class PanelConnections extends React.Component {
   }
 
   onFilterCountry(e){
-    console.log("Change", e)
     // If all and some other remove all
     if( e.filter( x => x.value == 'all').length > 0 && e.length > 1){
       e = e.filter( x =>  x.value !== 'all')
@@ -430,7 +429,7 @@ class PanelConnections extends React.Component {
     return affiliation;
   }
 
-  async componentDidMount(){
+  async retrieveConnections(){
     try{
 
       const token = localStorage.getItem('token')
@@ -542,6 +541,15 @@ class PanelConnections extends React.Component {
     }
   }
   
+  componentDidMount(){
+    if( this.state.users.length == 0 && this.props.investigatorProfile)
+      this.retrieveConnections()
+  }
+
+  componentDidUpdate(){
+    if( this.state.users.length == 0 && this.props.investigatorProfile)
+      this.retrieveConnections()
+  }
 
   generateSource(users, connections){
     const source = [];
@@ -594,17 +602,15 @@ class PanelConnections extends React.Component {
   render() {
     const { users, connections } = this.state;
     const { usersMaximised, connectionsMaximised } = this.state;
-    // Generate Panel Cytoscape    
-    if( this.props.tabConnectionsOpened == true && 
-        this.state.cytoscape === undefined){
-        const source = this.generateSource(users, connections)
-        this.state.cytoscape = <CytoscapeComponent
-                    elements={source}
-                    style={{ width: '100%', height: '300px' }}
-                    stylesheet={this.cytoscapeStylesheet}
-                    layout={this.cytoscapeLayout} />
-        
-    }
+    const { reloaded } = this.props;
+    const source = this.generateSource(users, connections)
+    this.state.cytoscape = <CytoscapeComponent
+                            elements={source}
+                            cy={(cy) => this.renderedMaximised(cy) }
+                            style={{ width: '100%', height: reloaded?'500px':'300px' }}
+                            stylesheet={this.cytoscapeStylesheet}
+                            layout={this.cytoscapeLayout} />
+
     let content_cy = this.state.cytoscape!==undefined?
                         this.state.cytoscape:
                         <div className="w-100 text-center">Loading...</div>
