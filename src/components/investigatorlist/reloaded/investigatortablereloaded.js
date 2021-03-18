@@ -291,9 +291,6 @@ class InvestigatorTableReloaded extends React.Component {
           minHeight: '50vh', padding: '2em', overflow: 'hidden'
         }}>
 
-
-
-
         <div className="d-flex justify-content-end pt-3 pb-3">
           <div style={{ width: '40%'}}>
           <Select isLoading={this.state.isLoadingMesh} isClearable 

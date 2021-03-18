@@ -41,7 +41,7 @@ class InvestigatorListReloaded extends React.Component {
       this.state.map = <InvestigatorMap projectOid={projectOid} />                    
     }
     return (
-      <Row className={reloaded?'mt-3 mb-3':''}>        
+      <Row className='mt-3 mb-3'>        
         <Col sm={12}>
           <Nav variant="tabs" style={{ width: '100%' }}>
             <Nav.Item>
