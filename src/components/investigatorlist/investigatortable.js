@@ -79,7 +79,7 @@ const FILTERING = [
   },
 ]
 
-const TAB = { NONE: 1, ASC: 2, DESC: 3 }
+
 class InvestigatorTable extends React.Component {
 
   constructor(props) {

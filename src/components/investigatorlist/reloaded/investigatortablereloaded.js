@@ -80,7 +80,6 @@ const FILTERING = [
   },
 ]
 
-const TAB = { NONE: 1, ASC: 2, DESC: 3 }
 class InvestigatorTableReloaded extends React.Component {
 
   constructor(props) {

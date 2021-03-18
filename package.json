@@ -15,6 +15,7 @@
     "bootstrap": "^4.6.0",
     "cytoscape": "^3.18.1",
     "cytoscape-euler": "^1.2.2",
+    "env-cmd": "^10.1.0",
     "leaflet": "^1.7.1",
     "node-sass": "^5.0.0",
     "react": "^17.0.1",
@@ -36,6 +37,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "build:prod": "env-cmd -f .env.prod react-scripts build react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
