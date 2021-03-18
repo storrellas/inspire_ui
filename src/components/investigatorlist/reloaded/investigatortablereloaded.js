@@ -18,7 +18,7 @@ import EllipsisWithTooltip from 'react-ellipsis-with-tooltip'
 
 // Project imports
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faStar, faLongArrowAltUp, faLongArrowAltDown } from '@fortawesome/free-solid-svg-icons'
+import { faSpinner, faLongArrowAltUp, faLongArrowAltDown } from '@fortawesome/free-solid-svg-icons'
 
 // Axios
 import axios from 'axios';
@@ -107,7 +107,7 @@ class InvestigatorTableReloaded extends React.Component {
 
   async loadInvestigators(page = 1){
     try{
-      this.setState({isLoading: true})
+      this.setState({isLoading: true, investigatorList: []})
       const { match: { params } } = this.props;
       const projectOid = params.id;
       const { take, limit, sorting, meshOid, filtering } = this.state;
@@ -175,6 +175,7 @@ class InvestigatorTableReloaded extends React.Component {
   componentDidMount(){
     this.loadInvestigators()
   }
+
 
   async loadMesh(pattern){
     try{
@@ -304,7 +305,8 @@ class InvestigatorTableReloaded extends React.Component {
         </div>          
 
         <LoadingOverlay
-          active={ this.state.isLoading }
+          //active={ this.state.isLoading }
+          active={false}
           spinner>
 
           <table className="w-100 inspire-table" style={{ display: 'block', minHeight: '200px', fontSize: '14px'}}>
@@ -346,6 +348,14 @@ class InvestigatorTableReloaded extends React.Component {
             </thead>
 
             <tbody>
+                {this.state.investigatorList.length==0?
+                <tr>
+                  <td style={{ background: 'white', height: '400px' }} colSpan="14" className="text-center">
+                    <div className="mb-3" style={{ fontSize: '20px', color: 'grey' }} >Loading ...</div>
+                    <FontAwesomeIcon icon={faSpinner}  spin style={{ fontSize: '40px', color: 'grey' }} />                    
+                  </td>
+                </tr>
+                :<tr></tr>}
               {this.state.investigatorList.map((item, id) =>
                 <tr key={id}>
                   <td style={{ width: '5%'}}>
