@@ -1,0 +1,41 @@
+.inspire-table-search {
+    width: 80%;
+    outline: none;
+    border: 0;
+}
+
+.inspire-table-search-border{
+    background-color: grey;
+    height: 1px;
+    width: 0;
+    transition: width 0.1s linear;
+    &.active{
+        width: 80%;    
+    }
+}
+
+.inspire-table-search-number{
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+    margin: 0;
+}
+
+.inspire-table-search-number::-webkit-outer-spin-button,
+.inspire-table-search-number::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+/**/
+
+.inspire-table tbody tr:hover{
+    background-color: #ECEFF8;
+}
+
+.inspire-table tbody tr:hover td:first-child{    
+    border-radius: 10px 0 0 10px;
+}
+
+.inspire-table tbody tr:hover td:last-child{    
+    background-color: #ECEFF8;
+    border-radius: 0 10px 10px 0;
+}

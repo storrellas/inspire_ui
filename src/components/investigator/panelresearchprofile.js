@@ -21,7 +21,6 @@ import './panelresearchprofile.scss';
 
 // Axios
 import axios from 'axios';
-import environment from '../../environment.json';
 
 // Themes begin
 am4core.useTheme(am4themes_animated);
@@ -57,7 +56,7 @@ class PanelResearchProfile extends React.Component {
       investigatorId = parseInt( investigatorId )
 
       // Perform request
-      const response = await axios.get(`${environment.base_url}/api/investigator/${investigatorId}/meshs/`,
+      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/investigator/${investigatorId}/meshs/`,
         { headers: { "Authorization": "jwt " + token }
       })
 

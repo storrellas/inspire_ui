@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 // Bootstrap
-import { Col, Row, Dropdown, Pagination } from 'react-bootstrap';
+import { Col, Row, Dropdown, Pagination, Tooltip, OverlayTrigger } from 'react-bootstrap';
 
 // React Router
 import { withRouter } from 'react-router-dom'
 
 
 // Assets
-import arrow from '../../assets/arrow.png';
+import arrow from '../../../assets/arrow.png';
+import favorite from '../../../assets/favorite.png';
+import nonfavorite from '../../../assets/nonfavorite.png';
 
-import './investigatortable.scss'
+import './investigatortablereloaded.scss'
 
 // EllipsisWithTooltip
 import EllipsisWithTooltip from 'react-ellipsis-with-tooltip'
@@ -24,13 +26,12 @@ import axios from 'axios';
 // React Select
 import Select from 'react-select';
 
-
 // Loading overlay
 import LoadingOverlay from 'react-loading-overlay';
 
 // Project Imports
-import InspirePagination from '../shared/pagination'
-import SearchHeader, { SEARCH_HEADER } from '../shared/searchheader'
+import InspirePagination from '../../shared/pagination'
+import SearchHeader, { SEARCH_HEADER } from '../../shared/searchheader'
 
 const FILTERING = [
   { 
@@ -58,19 +59,19 @@ const FILTERING = [
     label: 'Country', type: SEARCH_HEADER.NUMBER 
   },
   { 
-    dataField:'number_linked_publications', caption: 'publications', 
+    dataField:'number_linked_publications', caption: 'Publications', 
     label: 'P', type: SEARCH_HEADER.NUMBER 
   },
   { 
-    dataField:'number_linked_events', caption: 'events', 
+    dataField:'number_linked_events', caption: 'Events', 
     label: 'E', type: SEARCH_HEADER.NUMBER 
   },
   { 
-    dataField:'number_linked_clinical_trials', caption: 'ct', 
+    dataField:'number_linked_clinical_trials', caption: 'Clinical Trials', 
     label: 'CT', type: SEARCH_HEADER.NUMBER 
   },
   { 
-    dataField:'number_linked_institutions_coi', caption: 'coi', 
+    dataField:'number_linked_institutions_coi', caption: 'Confict of Interest', 
     label: 'COI', type: SEARCH_HEADER.NUMBER 
   },
   { 
@@ -80,7 +81,7 @@ const FILTERING = [
 ]
 
 const TAB = { NONE: 1, ASC: 2, DESC: 3 }
-class InvestigatorTable extends React.Component {
+class InvestigatorTableReloaded extends React.Component {
 
   constructor(props) {
     super(props)
@@ -268,9 +269,19 @@ class InvestigatorTable extends React.Component {
     this.loadInvestigators(currentPage)
   }
 
+
+
   render() {
     const { currentPage, totalPage, meshOptions, sorting } = this.state;
-    const { reloaded } = this.props;
+
+    const renderTooltip = (props) => (
+      <Tooltip id="button-tooltip" {...props}>
+        Simple tooltip
+      </Tooltip>
+    );
+
+       
+
 
     return (
       <Row style={{ padding: 0, margin: 0 }}>
@@ -279,6 +290,9 @@ class InvestigatorTable extends React.Component {
           borderColor: 'transparent #dee2e6 #dee2e6 #dee2e6', borderRadius: '0 .25rem 0 .25rem',
           minHeight: '50vh', padding: '2em', overflow: 'hidden'
         }}>
+
+
+
 
         <div className="d-flex justify-content-end pt-3 pb-3">
           <div style={{ width: '40%'}}>
@@ -294,23 +308,32 @@ class InvestigatorTable extends React.Component {
           active={ this.state.isLoading }
           spinner>
 
-          <table className="w-100" style={{ display: 'block', minHeight: '200px', fontSize: '14px'}}>
+          <table className="w-100 inspire-table" style={{ display: 'block', minHeight: '200px', fontSize: '14px'}}>
             <thead>
               <tr>
-                <td style={{ cursor: 'pointer'}} style={{ width: '50px'}}>
-                  <FontAwesomeIcon icon={faStar} style={{ border: '1px solid grey', fontSize: '2em', color: 'grey' }} />
-                </td>
+                <td></td>
                 <td className="text-center" style={{ width: '50px' }}>Profile</td>
                 {FILTERING.map((item, id) =>
+                  
                   <td key={id} className="text-center" style={{ cursor: 'pointer'}} 
-                    onClick={(e) => this.onSetSorting(item.dataField)}>
-                    {item.label}
+                    onClick={() => this.onSetSorting(item.dataField)}>
+                    { 
+                    ['P', 'E', 'CT', 'COI'].includes(item.label)?
+                      <OverlayTrigger
+                        placement="bottom"
+                        delay={{ show: 250, hide: 400 }}
+                        overlay={<Tooltip>{item.caption}</Tooltip>}>
+                        <div style={{ textDecoration: 'underline' }}>{item.label}</div>
+                      </OverlayTrigger>
+                    :
+                    <div>{item.label}</div>}
+
                     <FontAwesomeIcon icon={faLongArrowAltUp} className={sorting==item.dataField?"ml-1":"ml-1 d-none"} style={{ color: 'grey' }} />
                     <FontAwesomeIcon icon={faLongArrowAltDown} className={sorting==`-${item.dataField}`?"ml-1":"ml-1 d-none"} style={{ color: 'grey' }} />
                 </td>
                 )}
               </tr>
-              <tr style={{ border: '1px solid grey', borderWidth: '1px 0px 2px 0px' }}>
+              <tr style={{ border: '1px solid #A4C8E6', borderWidth: '1px 0px 2px 0px' }}>
                 <td></td>
                 <td></td>
 
@@ -328,11 +351,15 @@ class InvestigatorTable extends React.Component {
               {this.state.investigatorList.map((item, id) =>
                 <tr key={id}>
                   <td style={{ cursor: 'pointer' }}>
-                    <FontAwesomeIcon icon={faStar} style={{ border: '1px solid grey', fontSize: '2em', color: 'grey' }} />
+                    
+                    <img src={item.is_favorite_investigator?favorite:nonfavorite} width="40"
+                      onClick={(e) => this.props.history.push(`/reloaded/dashboard/project/${this.state.projectOid}/investigator/${item.oid}`)}
+                      style={{ cursor: 'pointer' }}></img>
+                    
                   </td>
                   <td>
                     <img src={arrow} width="40"
-                      onClick={(e) => this.props.history.push(`${reloaded?'/reloaded/dashboard':''}/project/${this.state.projectOid}/investigator/${item.oid}`)}
+                      onClick={(e) => this.props.history.push(`/reloaded/dashboard/project/${this.state.projectOid}/investigator/${item.oid}`)}
                       style={{ cursor: 'pointer' }}></img>
                   </td>
 
@@ -385,4 +412,4 @@ class InvestigatorTable extends React.Component {
 
 
 
-export default withRouter(InvestigatorTable);
+export default withRouter(InvestigatorTableReloaded);

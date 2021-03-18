@@ -25,7 +25,6 @@ import EllipsisWithTooltip from 'react-ellipsis-with-tooltip'
 
 // Axios
 import axios from 'axios';
-import environment from '../../environment.json';
 
 // Project Imports
 import InspirePagination from '../shared/pagination'
@@ -220,7 +219,7 @@ class PanelPublications extends React.Component {
       const token = localStorage.getItem('token')
 
       // Perform request
-      const response = await axios.get(`${environment.base_url}/api/investigator/${this.investigatorId}/publications-per-type/`,
+      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/investigator/${this.investigatorId}/publications-per-type/`,
         {
           headers: { "Authorization": "jwt " + token }
         })
@@ -251,7 +250,7 @@ class PanelPublications extends React.Component {
       investigatorId = parseInt(investigatorId)
 
       // Perform request
-      const response = await axios.get(`${environment.base_url}/api/investigator/${investigatorId}/publications-per-year/`,
+      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/investigator/${investigatorId}/publications-per-year/`,
         {
           headers: { "Authorization": "jwt " + token }
         })
@@ -298,7 +297,7 @@ class PanelPublications extends React.Component {
         urlParams = `${urlParams}&ordering=${sorting}`;
       }
 
-      const response = await axios.get(`${environment.base_url}/api/investigator/${this.investigatorId}/publications/?${urlParams}`,
+      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/investigator/${this.investigatorId}/publications/?${urlParams}`,
         {
           headers: { "Authorization": "jwt " + token }
         })

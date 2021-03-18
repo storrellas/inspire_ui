@@ -11,7 +11,6 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons'
 
 // Axios
 import axios from 'axios';
-import environment from '../../environment.json';
 
 // Assets
 import inspireLogo from '../../assets/logo2Large.png';
@@ -23,8 +22,8 @@ class LoginReloaded extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      email: environment.email, 
-      password: environment.password,
+      email: '', 
+      password: '',
       wrongCredentials: false,
       inProgress: false
     }
@@ -37,7 +36,7 @@ class LoginReloaded extends React.Component {
         username: this.state.username,
         password: this.state.password
       }
-      const response = await axios.post(`${environment.base_url}/api/auth-get-token/`, body)
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/auth-get-token/`, body)
 
       // Store in localStorage
       localStorage.setItem('token', response.data.token);

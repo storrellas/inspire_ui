@@ -10,7 +10,6 @@ import { withRouter } from 'react-router-dom'
 
 // Axios
 import axios from 'axios';
-import environment from '../../environment.json';
 
 class ProjectSelectorReloaded extends React.Component {
 
@@ -27,7 +26,7 @@ class ProjectSelectorReloaded extends React.Component {
 
       // Get List of projects
       const token = localStorage.getItem('token')
-      const response = await axios.get( `${environment.base_url}/api/projects/?limit=100`,
+      const response = await axios.get( `${process.env.REACT_APP_BASE_URL}/api/projects/?limit=100`,
           { headers: { "Authorization": "jwt " + token }
         })
       const projectList = response.data.results;

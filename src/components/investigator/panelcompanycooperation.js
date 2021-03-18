@@ -29,7 +29,6 @@ import LoadingOverlay from 'react-loading-overlay';
 
 // Axios
 import axios from 'axios';
-import environment from '../../environment.json';
 
 // Project Imports
 import InspirePagination from '../shared/pagination'
@@ -225,7 +224,7 @@ class PanelCompanyCooperation extends React.Component {
       const token = localStorage.getItem('token')
 
       // Perform request
-      const url = `${environment.base_url}/api/investigator/${this.state.investigatorId}/cooperations-per-company/`
+      const url = `${process.env.REACT_APP_BASE_URL}/api/investigator/${this.state.investigatorId}/cooperations-per-company/`
       const response = await axios.get(url,
         { headers: { "Authorization": "jwt " + token }
       })
@@ -256,7 +255,7 @@ class PanelCompanyCooperation extends React.Component {
       const token = localStorage.getItem('token')
 
       // Perform request
-      const url = `${environment.base_url}/api/investigator/${this.state.investigatorId}/cooperations-per-nature-of-payment/`;
+      const url = `${process.env.REACT_APP_BASE_URL}/api/investigator/${this.state.investigatorId}/cooperations-per-nature-of-payment/`;
       const response = await axios.get(url,
         { headers: { "Authorization": "jwt " + token }
       })
@@ -306,7 +305,7 @@ class PanelCompanyCooperation extends React.Component {
         urlParams = `${urlParams}&ordering=${sorting}`;
       }
 
-      const url = `${environment.base_url}/api/investigator/${this.state.investigatorId}/company-cooperations/?${urlParams}`;
+      const url = `${process.env.REACT_APP_BASE_URL}/api/investigator/${this.state.investigatorId}/company-cooperations/?${urlParams}`;
       const response = await axios.get(url,
         { headers: { "Authorization": "jwt " + token }
       })

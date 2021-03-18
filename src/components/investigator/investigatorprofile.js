@@ -8,7 +8,6 @@ import { withRouter } from 'react-router-dom'
 
 // Axios
 import axios from 'axios';
-import environment from '../../environment.json';
 
 // Redux
 import { setInvestigatorProfile } from "../../redux";
@@ -70,7 +69,7 @@ class InvestigatorProfile extends React.Component {
       investigatorId = parseInt( investigatorId )
 
       // Perform request
-      const response = await axios.get(`${environment.base_url}/api/investigator/${investigatorId}`,
+      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/investigator/${investigatorId}`,
         { headers: { "Authorization": "jwt " + token }
       })
 

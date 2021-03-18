@@ -12,8 +12,6 @@ import am4geodata_data_countries2 from "@amcharts/amcharts4-geodata/data/countri
 
 // Axios
 import axios from 'axios';
-import environment from '../../environment.json';
-
 
 // Loading overlay
 import LoadingOverlay from 'react-loading-overlay';
@@ -45,7 +43,7 @@ class InvestigatorMap extends React.Component {
         // Get investigators per country
         const token = localStorage.getItem('token')
         let investigator_per_country_url = 
-          `${environment.base_url}/api/investigators-per-country/?project=${projectOid}`;
+          `${process.env.REACT_APP_BASE_URL}/api/investigators-per-country/?project=${projectOid}`;
         let response = await axios.get(investigator_per_country_url, {
             headers: {"Authorization": `jwt ${token}`} })
         for (const country of response.data.results){
@@ -54,7 +52,7 @@ class InvestigatorMap extends React.Component {
 
 
         // Get countries
-        response = await axios.get(`${environment.base_url}/api/countries/`, {
+        response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/countries/`, {
             headers: {"Authorization": `jwt ${token}`} 
           })
         for (const country of response.data.results){
@@ -181,7 +179,7 @@ class InvestigatorMap extends React.Component {
             const { match: { params } } = this.props;
             const projectOid = params.id;         
             const token = localStorage.getItem('token') 
-            const response = await axios.get(`${environment.base_url}/api/investigators-per-region/?country=${country_id_selected}&project=${projectOid}`, {
+            const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/investigators-per-region/?country=${country_id_selected}&project=${projectOid}`, {
                 headers: {"Authorization": `jwt ${token}`} })
             const region_obj = {}
             for(let region of response.data.results){
@@ -302,7 +300,7 @@ class InvestigatorMap extends React.Component {
               const { match: { params } } = this.props;
               const projectOid = params.id;         
               const token = localStorage.getItem('token') 
-              const response = await axios.get(`${environment.base_url}/api/investigators-per-region/?country=${country_id_selected}&project=${projectOid}`, {
+              const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/investigators-per-region/?country=${country_id_selected}&project=${projectOid}`, {
                   headers: {"Authorization": `jwt ${token}`} })
               const region_obj = {}
               for(let region of response.data.results){

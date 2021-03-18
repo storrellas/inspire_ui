@@ -28,7 +28,6 @@ import { connect } from "react-redux";
 
 // Axios
 import axios from 'axios';
-import environment from '../../environment.json';
 
 cytoscape.use(euler);
 
@@ -441,7 +440,7 @@ class PanelConnections extends React.Component {
       let projectOid = params.id;
 
       // Perform request
-      const response = await axios.get(`${environment.base_url}/api/investigator/${investigatorId}/connections/?affiliations=true`,
+      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/investigator/${investigatorId}/connections/?affiliations=true`,
         { headers: { "Authorization": "jwt " + token }
       })
 

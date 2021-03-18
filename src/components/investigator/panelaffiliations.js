@@ -17,7 +17,6 @@ import { faLongArrowAltUp, faLongArrowAltDown } from '@fortawesome/free-solid-sv
 
 // Axios
 import axios from 'axios';
-import environment from '../../environment.json';
 
 // Project Imports
 import InspirePagination from '../shared/pagination'
@@ -99,7 +98,7 @@ class PanelAffiliations extends React.Component {
       const token = localStorage.getItem('token')
 
       // Perform request
-      const url = `${environment.base_url}/api/investigator/${this.state.investigatorId}/affiliations-per-institution-type/`
+      const url = `${process.env.REACT_APP_BASE_URL}/api/investigator/${this.state.investigatorId}/affiliations-per-institution-type/`
       const response = await axios.get(url,
         { headers: { "Authorization": "jwt " + token }
       })
@@ -180,17 +179,17 @@ class PanelAffiliations extends React.Component {
   }
 
   async retrieveAffiliationsUniversities(page = 1) {
-    const base_url = `${environment.base_url}/api/investigator/${this.state.investigatorId}/affiliations-universities/`
+    const base_url = `${process.env.REACT_APP_BASE_URL}/api/investigator/${this.state.investigatorId}/affiliations-universities/`
     this.retrieveAffiliationsInstitution(base_url, page)
   }
 
   async retrieveAffiliationsHospitals(page = 1) {
-    const base_url = `${environment.base_url}/api/investigator/${this.state.investigatorId}/affiliations-hospitals/`
+    const base_url = `${process.env.REACT_APP_BASE_URL}/api/investigator/${this.state.investigatorId}/affiliations-hospitals/`
     this.retrieveAffiliationsInstitution(base_url, page)
   }
 
   async retrieveAffiliationsAssociations(page = 1) {
-    const base_url = `${environment.base_url}/api/investigator/${this.state.investigatorId}/affiliations-associations/`
+    const base_url = `${process.env.REACT_APP_BASE_URL}/api/investigator/${this.state.investigatorId}/affiliations-associations/`
     this.retrieveAffiliationsInstitution(base_url, page)
   }
 
