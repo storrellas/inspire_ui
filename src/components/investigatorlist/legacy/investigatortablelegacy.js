@@ -9,7 +9,7 @@ import { withRouter } from 'react-router-dom'
 // Assets
 import arrow from '../../../assets/arrow.png';
 
-import './investigatortable.scss'
+import './investigatortablelegacy.scss'
 
 // EllipsisWithTooltip
 import EllipsisWithTooltip from 'react-ellipsis-with-tooltip'

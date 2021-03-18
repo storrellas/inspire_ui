@@ -17,7 +17,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCaretDown } from '@fortawesome/free-solid-svg-icons'
 
 // Project imports
-import InvestigatorProfile from '../../components/investigator/legacy/investigatorprofile'
+import InvestigatorProfile from '../../components/investigator/legacy/investigatorprofilelegacy'
 
 import PanelConnections from '../../components/investigator/panelconnections';
 import PanelCompanyCooperation from '../../components/investigator/panelcompanycooperation';
