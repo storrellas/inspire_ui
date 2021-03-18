@@ -19,10 +19,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser, faStar, faDirections } from '@fortawesome/free-solid-svg-icons'
 
 // Project imports
-import Login from './pages/login';
-import ProjectSelector from './pages/projectselector';
-import InvestigatorList from './pages/investigatorlist';
-import Investigator from './pages/investigator';
+import Login from './pages/legacy/login';
+import ProjectSelector from './pages/legacy/projectselector';
+import InvestigatorList from './pages/legacy/investigatorlist';
+import Investigator from './pages/legacy/investigator';
 
 
 class App extends React.Component {

@@ -11,8 +11,8 @@ import { withRouter } from 'react-router-dom'
 // Assets
 
 // Project imports
-import InvestigatorTable from '../components/investigatorlist/investigatortable';
-import InvestigatorMap from '../components/investigatorlist/investigatormap';
+import InvestigatorTable from '../../components/investigatorlist/legacy/investigatortable';
+import InvestigatorMap from '../../components/investigatorlist/investigatormap';
 // Lazy import 
 //const InvestigatorMap = React.lazy(() => import('../components/investigatorlist/investigatormap'));
 

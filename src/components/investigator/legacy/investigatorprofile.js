@@ -10,7 +10,7 @@ import { withRouter } from 'react-router-dom'
 import axios from 'axios';
 
 // Redux
-import { setInvestigatorProfile } from "../../redux";
+import { setInvestigatorProfile } from "../../../redux";
 import { connect } from "react-redux";
 
 const mapDispatchToProps = (dispatch) => {

@@ -33,7 +33,6 @@ class InvestigatorListReloaded extends React.Component {
   render() {
     
     const { projectOid } = this.state;
-    const { reloaded } = this.props;
 
     // Activate tab
     const { activeTab } = this.state;

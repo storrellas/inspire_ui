@@ -17,17 +17,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCaretDown } from '@fortawesome/free-solid-svg-icons'
 
 // Project imports
-import InvestigatorProfile from '../components/investigator/investigatorprofile'
+import InvestigatorProfile from '../../components/investigator/legacy/investigatorprofile'
 
-import PanelConnections from '../components/investigator/panelconnections';
-import PanelCompanyCooperation from '../components/investigator/panelcompanycooperation';
-import PanelAffiliations from '../components/investigator/panelaffiliations';
-import PanelFeedback from '../components/investigator/panelfeedback';
+import PanelConnections from '../../components/investigator/panelconnections';
+import PanelCompanyCooperation from '../../components/investigator/panelcompanycooperation';
+import PanelAffiliations from '../../components/investigator/panelaffiliations';
+import PanelFeedback from '../../components/investigator/panelfeedback';
 
-import PanelResearchProfile from '../components/investigator/panelresearchprofile';
-import PanelPublications from '../components/investigator/panelpublications';
-import PanelEvents from '../components/investigator/panelevents';
-import PanelClinicalTrials from '../components/investigator/panelclinicaltrials';
+import PanelResearchProfile from '../../components/investigator/panelresearchprofile';
+import PanelPublications from '../../components/investigator/panelpublications';
+import PanelEvents from '../../components/investigator/panelevents';
+import PanelClinicalTrials from '../../components/investigator/panelclinicaltrials';
 
 
 // Redux
@@ -35,7 +35,7 @@ import {
   setPanelRendered,
   PANEL,
   resetPanel
-} from "../redux";
+} from "../../redux";
 import { connect } from "react-redux";
 
 
