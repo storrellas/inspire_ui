@@ -311,10 +311,9 @@ class InvestigatorTableReloaded extends React.Component {
             <thead>
               <tr>
                 <td></td>
-                <td className="text-center" style={{ width: '50px' }}>Profile</td>
-                {FILTERING.map((item, id) =>
-                  
-                  <td key={id} className="text-center" style={{ cursor: 'pointer'}} 
+                <td>Profile</td>
+                {FILTERING.map((item, id) =>                  
+                  <td key={id} style={{ cursor: 'pointer'}} 
                     onClick={() => this.onSetSorting(item.dataField)}>
                     { 
                     ['P', 'E', 'CT', 'COI'].includes(item.label)?
@@ -349,49 +348,38 @@ class InvestigatorTableReloaded extends React.Component {
             <tbody>
               {this.state.investigatorList.map((item, id) =>
                 <tr key={id}>
-                  <td style={{ cursor: 'pointer' }}>
+                  <td style={{ width: '5%'}}>
                     
                     <img src={item.is_favorite_investigator?favorite:nonfavorite} width="40"
                       onClick={(e) => this.props.history.push(`/reloaded/dashboard/project/${this.state.projectOid}/investigator/${item.oid}`)}
                       style={{ cursor: 'pointer' }}></img>
                     
                   </td>
-                  <td>
+                  <td style={{ width: '5%'}}>
                     <img src={arrow} width="40"
                       onClick={(e) => this.props.history.push(`/reloaded/dashboard/project/${this.state.projectOid}/investigator/${item.oid}`)}
                       style={{ cursor: 'pointer' }}></img>
                   </td>
 
-                  <td className="text-center" 
-                        style={{ width: '20%'}}>{item.first_name}</td>
-                  <td className="text-center" 
-                        style={{ width: '20%'}}>{item.last_name}</td>
-                  <td className="text-center" 
-                        style={{ width: '20%'}}>
-                          <EllipsisWithTooltip placement="bottom" style={{ width: '150px'}}>
+                  <td style={{ width: '10%'}}>{item.first_name}</td>
+                  <td style={{ width: '10%'}}>{item.last_name}</td>
+                  <td style={{ width: '10%'}}>
+                          <EllipsisWithTooltip placement="bottom" style={{ width: '100px'}}>
                           {item.prop_specialties || ''}
                           </EllipsisWithTooltip>
                   </td>
-                  <td className="text-center" 
-                        style={{ width: '20%'}}>
-                        <EllipsisWithTooltip placement="bottom" style={{ width: '150px'}}>
+                  <td style={{ width: '10%'}}>
+                        <EllipsisWithTooltip placement="bottom" style={{ width: '100px'}}>
                           {item.focus_areas_reasearch_interests || ''}
                         </EllipsisWithTooltip>
                   </td>
-                  <td className="text-center" 
-                        style={{ width: '20%'}}>{item.city}</td>
-                  <td className="text-center" 
-                        style={{ width: '20%'}}>{item.country}</td>
-                  <td className="text-center" 
-                        style={{ width: '20%'}}>{item.number_linked_publications}</td>
-                  <td className="text-center" 
-                        style={{ width: '20%'}}>{item.number_linked_events}</td>
-                  <td className="text-center" 
-                        style={{ width: '20%'}}>{item.number_linked_clinical_trials}</td>
-                  <td className="text-center" 
-                        style={{ width: '20%'}}>{item.number_linked_institutions_coi}</td>
-                  <td className="text-center" 
-                        style={{ width: '20%'}}>{item.mesh_counter}</td>
+                  <td style={{ width: '10%'}}>{item.city}</td>
+                  <td style={{ width: '10%'}}>{item.country}</td>
+                  <td style={{ width: '5%'}}>{item.number_linked_publications}</td>
+                  <td style={{ width: '5%'}}>{item.number_linked_events}</td>
+                  <td style={{ width: '5%'}}>{item.number_linked_clinical_trials}</td>
+                  <td style={{ width: '5%'}}>{item.number_linked_institutions_coi}</td>
+                  <td style={{ width: '5%'}}>{item.mesh_counter}</td>
 
                 </tr>
               )}
