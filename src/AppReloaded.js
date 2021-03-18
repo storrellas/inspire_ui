@@ -11,8 +11,8 @@ import { withRouter } from 'react-router-dom'
 import "./App.scss"
 
 // Project imports
-import Dashboard from './pages/reloaded/dashboard'
-import LoginReloaded from './pages/reloaded/loginreloaded'
+import Dashboard from './pages/dashboard'
+import LoginReloaded from './pages/loginreloaded'
 
 
 class AppReloaded extends React.Component {

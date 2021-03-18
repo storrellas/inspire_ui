@@ -18,22 +18,22 @@ import { faAngleRight, faAngleDown, faStar, faSearch, faArrowCircleDown, faNewsp
 
 
 // Project imports
-import InvestigatorProfileReloaded from '../../components/investigator/reloaded/investigatorprofilereloaded'
+import InvestigatorProfileReloaded from '../components/investigator/investigatorprofilereloaded'
 
 // Redux
-import { setPanelRendered, PANEL, resetPanel } from "../../redux";
+import { setPanelRendered, PANEL, resetPanel } from "../redux";
 import { connect } from "react-redux";
 
 
-import PanelConnections from '../../components/investigator/panelconnections';
-import PanelCompanyCooperation from '../../components/investigator/panelcompanycooperation';
-import PanelAffiliations from '../../components/investigator/panelaffiliations';
-import PanelFeedback from '../../components/investigator/panelfeedback';
+import PanelConnections from '../components/investigator/panelconnections';
+import PanelCompanyCooperation from '../components/investigator/panelcompanycooperation';
+import PanelAffiliations from '../components/investigator/panelaffiliations';
+import PanelFeedback from '../components/investigator/panelfeedback';
 
-import PanelResearchProfile from '../../components/investigator/panelresearchprofile';
-import PanelPublications from '../../components/investigator/panelpublications';
-import PanelEvents from '../../components/investigator/panelevents';
-import PanelClinicalTrials from '../../components/investigator/panelclinicaltrials';
+import PanelResearchProfile from '../components/investigator/panelresearchprofile';
+import PanelPublications from '../components/investigator/panelpublications';
+import PanelEvents from '../components/investigator/panelevents';
+import PanelClinicalTrials from '../components/investigator/panelclinicaltrials';
 
 
 const mapDispatchToProps = (dispatch) => {

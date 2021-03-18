@@ -19,7 +19,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser, faBars, faStar, faQuestionCircle, faTasks, faAngleRight } from '@fortawesome/free-solid-svg-icons'
 
 // Assets
-import inspireLogo from '../../assets/logo2.png';
+import inspireLogo from '../assets/logo2.png';
 
 // Project imports
 import ProjectSelectorReloaded from './projectselectorreloaded';

@@ -13,7 +13,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons'
 import axios from 'axios';
 
 // Assets
-import inspireLogo from '../../assets/logo2Large.png';
+import inspireLogo from '../assets/logo2Large.png';
 
 import './loginreloaded.scss'
 

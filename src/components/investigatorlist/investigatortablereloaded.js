@@ -7,9 +7,9 @@ import { withRouter } from 'react-router-dom'
 
 
 // Assets
-import arrow from '../../../assets/arrow.png';
-import favorite from '../../../assets/favorite.png';
-import nonfavorite from '../../../assets/nonfavorite.png';
+import arrow from '../../assets/arrow.png';
+import favorite from '../../assets/favorite.png';
+import nonfavorite from '../../assets/nonfavorite.png';
 
 import './investigatortablereloaded.scss'
 
@@ -30,8 +30,8 @@ import Select from 'react-select';
 import LoadingOverlay from 'react-loading-overlay';
 
 // Project Imports
-import InspirePagination from '../../shared/pagination'
-import SearchHeader, { SEARCH_HEADER } from '../../shared/searchheader'
+import InspirePagination from '../shared/pagination'
+import SearchHeader, { SEARCH_HEADER } from '../shared/searchheader'
 
 const FILTERING = [
   { 

@@ -14,7 +14,7 @@ import { faAngleRight, faAngleDown, faStar, faSearch, faArrowCircleDown, faNewsp
 import axios from 'axios';
 
 // Redux
-import { setInvestigatorProfile } from "../../../redux";
+import { setInvestigatorProfile } from "../../redux";
 import { connect } from "react-redux";
 
 // Styles
