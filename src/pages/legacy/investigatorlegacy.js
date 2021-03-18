@@ -9,7 +9,7 @@ import { withRouter } from 'react-router-dom'
 import LoadingOverlay from 'react-loading-overlay';
 
 // Styles
-import "./investigator.scss"
+import "./investigatorlegacy.scss"
 
 
 // Font Awesome

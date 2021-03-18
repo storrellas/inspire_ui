@@ -6,7 +6,7 @@ import { Col, Row } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom'
 
 // Styles
-import "./projectselector.scss"
+import "./projectselectorlegacy.scss"
 
 // Axios
 import axios from 'axios';
