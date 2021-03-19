@@ -71,7 +71,7 @@ class ProjectSelector extends React.Component {
 
   redirectProject(item){
     if( item.allowed )
-      this.props.history.push(`/reloaded/dashboard/project/${item.oid}`)
+      this.props.history.push(`/dashboard/project/${item.oid}`)
   }
 
   render() {

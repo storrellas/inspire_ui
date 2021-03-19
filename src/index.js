@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './AppLegacy';
+// import App from './AppLegacy';
 import AppReloaded from './AppReloaded'
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, Switch, Route } from "react-router-dom";
@@ -15,9 +15,9 @@ ReactDOM.render(
     <Provider store={store}>
 
       <Switch>
-        <Route path="/reloaded/" component={AppReloaded} />
+        <Route path="/" component={AppReloaded} />
 
-        <Route path="/" component={App} />
+        {/* <Route path="/legacy/" component={App} /> */}
       </Switch>
 
     </Provider>

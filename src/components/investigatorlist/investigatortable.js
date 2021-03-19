@@ -358,13 +358,13 @@ class InvestigatorTable extends React.Component {
                   <td style={{ width: '5%'}}>
                     
                     <img src={item.is_favorite_investigator?favorite:nonfavorite} width="40"
-                      onClick={(e) => this.props.history.push(`/reloaded/dashboard/project/${this.state.projectOid}/investigator/${item.oid}`)}
+                      onClick={(e) => this.props.history.push(`/dashboard/project/${this.state.projectOid}/investigator/${item.oid}`)}
                       style={{ cursor: 'pointer' }}></img>
                     
                   </td>
                   <td style={{ width: '5%'}}>
                     <img src={arrow} width="40"
-                      onClick={(e) => this.props.history.push(`/reloaded/dashboard/project/${this.state.projectOid}/investigator/${item.oid}`)}
+                      onClick={(e) => this.props.history.push(`/dashboard/project/${this.state.projectOid}/investigator/${item.oid}`)}
                       style={{ cursor: 'pointer' }}></img>
                   </td>
 

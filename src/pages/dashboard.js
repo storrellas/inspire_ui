@@ -172,13 +172,13 @@ class Dashboard extends React.Component {
                                         {(projectOid!==undefined)?
                                             <>
                                                 <div>
-                                                    <a href="/reloaded/dashboard/">Select Plan</a>
+                                                    <a href="/dashboard/">Select Plan</a>
                                                 </div>
                                                 <div className="ml-2">
                                                     <FontAwesomeIcon icon={faAngleRight} />
                                                 </div>
                                                 <div className="ml-2">
-                                                    <a href={`/reloaded/dashboard/project/${projectOid}`}>Investigators</a>
+                                                    <a href={`/dashboard/project/${projectOid}`}>Investigators</a>
                                                 </div>
                                             </>
                                         :''}
