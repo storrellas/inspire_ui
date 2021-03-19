@@ -116,7 +116,8 @@ class InvestigatorTable extends React.Component {
       let skip = this.state.take * (page-1);
       let offset = this.state.take * (page -1);
       const token = localStorage.getItem('token')
-      let urlParams = `project=${projectOid}&limit=${limit}&offset=${offset}&skip=${skip}&take=${take}`
+      let urlParams = projectOid?`project=${projectOid}`:'';
+      urlParams = `${urlParams}&limit=${limit}&offset=${offset}&skip=${skip}&take=${take}`
       if( meshOid !== undefined ){
         urlParams = `${urlParams}&mesh=${meshOid}`;
       }
@@ -135,8 +136,11 @@ class InvestigatorTable extends React.Component {
         urlParams = `${urlParams}&ordering=${sorting}`;
       }
 
+
+      const baseUrl = this.props.favorites?'/api/favorite-investigators/':'/api/investigators/'
+
       // Perform request
-      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/investigators/?${urlParams}`,
+      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}${baseUrl}?${urlParams}`,
         { headers: { "Authorization": "jwt " + token }
       })
 
@@ -284,13 +288,7 @@ class InvestigatorTable extends React.Component {
 
 
     return (
-      <Row style={{ padding: 0, margin: 0 }}>
-        <Col sm={12} style={{
-          backgroundColor: 'white', border: '1px solid',
-          borderColor: 'transparent #dee2e6 #dee2e6 #dee2e6', borderRadius: '0 .25rem 0 .25rem',
-          minHeight: '50vh', padding: '2em', overflow: 'hidden'
-        }}>
-
+      <>
         <div className="d-flex justify-content-end pt-3 pb-3">
           <div style={{ width: '40%'}}>
           <Select isLoading={this.state.isLoadingMesh} isClearable 
@@ -394,11 +392,8 @@ class InvestigatorTable extends React.Component {
           </table>
           </LoadingOverlay>
 
-          <InspirePagination currentPage={currentPage} totalPage={totalPage} onClick={this.navigatePage.bind(this)}/>
-
-        </Col>
-      </Row>
-
+          <InspirePagination currentPage={currentPage} totalPage={totalPage} onClick={this.navigatePage.bind(this)}/>        
+      </>
     );
   }
 

@@ -122,7 +122,7 @@ class ProjectSelector extends React.Component {
                             )
 
     return (
-      <Row>
+      <Row className="mt-3">
         <Col sm={12} className='page-container'>
           <div><b>SELECT YOUR PLAN</b></div>
           <div className="d-flex flex-wrap" style={{ paddingTop: '2em', justifyContent: 'space-evenly' }}>

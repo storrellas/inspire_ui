@@ -33,7 +33,7 @@ class InvestigatorFavoriteList extends React.Component {
       <Row className='mt-3 mb-3'>
         <Col sm={12} className='page-container'>
           <div><b>Investigator Favorites</b></div>
-          <div></div>
+          <InvestigatorTable favorites />
 
         </Col>
       </Row>);

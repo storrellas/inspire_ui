@@ -413,17 +413,13 @@ class InvestigatorMap extends React.Component {
     }
 
     return (
-      <div style={{
-        backgroundColor: 'white', border: '1px solid',
-        borderColor: 'transparent #dee2e6 #dee2e6 #dee2e6', borderRadius: '0 .25rem 0 .25rem',
-        minHeight: '50vh', padding: '2em'
-      }}>        
+      <>        
           <LoadingOverlay
             active={this.state.isOpened == false}
             spinner>              
             <div id="mapdiv"  className="w-100" style={{height:'400px', marginTop:'20px'}}></div>
           </LoadingOverlay>        
-      </div>
+      </>
     );
   }
 }

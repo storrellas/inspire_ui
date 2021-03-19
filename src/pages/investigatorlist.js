@@ -50,12 +50,21 @@ class InvestigatorList extends React.Component {
               <Nav.Link href="#" active={activeTab == TAB.MAP} onClick={(e) => this.setState({ activeTab: TAB.MAP, isMapOpened: true })}><b>Map</b></Nav.Link>
             </Nav.Item>
           </Nav>
+          <Row style={{ padding: 0, margin: 0 }}>
+            <Col sm={12} style={{
+              backgroundColor: 'white', border: '1px solid',
+              borderColor: 'transparent #dee2e6 #dee2e6 #dee2e6', borderRadius: '0 .25rem 0 .25rem',
+              minHeight: '50vh', padding: '2em', overflow: 'hidden'
+            }}>
           <div className={activeTab === TAB.TABLE ? '' : 'd-none'}>
             <InvestigatorTable />
           </div>
           <div className={activeTab === TAB.MAP ? '' : 'd-none'}>
             {this.state.map}
           </div>
+            </Col>
+          </Row>
+
         </Col>
       </Row>);
   }
