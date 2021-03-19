@@ -603,16 +603,19 @@ class PanelConnections extends React.Component {
     const { usersMaximised, connectionsMaximised } = this.state;
     const { reloaded } = this.props;
     const source = this.generateSource(users, connections)
-    this.state.cytoscape = <CytoscapeComponent
+    if( this.state.cytoscape === undefined && source.length > 0){
+      this.state.cytoscape = <CytoscapeComponent
                             elements={source}
                             cy={(cy) => this.renderedMaximised(cy) }
                             style={{ width: '100%', height: reloaded?'500px':'300px' }}
                             stylesheet={this.cytoscapeStylesheet}
                             layout={this.cytoscapeLayout} />
+    }
+
 
     let content_cy = this.state.cytoscape!==undefined?
                         this.state.cytoscape:
-                        <div className="w-100 text-center">Loading...</div>
+                        <div className="w-100 text-center" style={{ height: '400px'}}>Loading...</div>
 
     // Generate maximised cytoscape
     if (this.state.showModalCytoscape === true ) {

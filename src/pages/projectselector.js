@@ -78,20 +78,7 @@ class ProjectSelector extends React.Component {
     const { projectList, projectAllowedList } = this.state;
     const { reloaded } = this.props;
 
-    const projectLisRender = projectList.map((item, id) =>
-                                  <div key={id} style={{ padding: '1em 1em 0 1em', width: '33%', minWidth: '300px'  }} 
-                                    onClick={ (e) => this.redirectProject(item)}>
-                                    <div className={item.allowed?"landBtn project project-container btnActive":"landBtn project project-container btnOpacity"}
-                                      style={{ height: '10em' }}>
-                                      <div className="top-triangle project"></div>
-                                      <div className="bottom-triangle project"></div>
-                                      <div className="content">
-                                        <div className="title project" style={{ wordBreak: 'break-all'}}>{item.name}</div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                )
-
+    // NOTE: Project with allowed item
     // const projectListRenderAllowed = projectAllowedList.map((item, id) =>
     //                             <div key={id} style={{ padding: '1em 0 0 0', width: '300px', minWidth: '300px'  }} 
     //                               onClick={ (e) => this.redirectProject(item)}>

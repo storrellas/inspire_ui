@@ -81,23 +81,23 @@ class InvestigatorProfileReloaded extends React.Component {
   }
 
   async retrieveNominatim(){
-    try{
-      // Perform request
-      const response = await axios.get(`https://nominatim.openstreetmap.org/search?format=json&country=spain`)
-      console.log("response ", response)
-      //
-    }catch(error){
-      // Error
-      if (error.response) {
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
-      } else if (error.request) {
-          console.log(error.request);
-      } else {
-          console.log('Error', error.message);
-      }
-    }
+    // try{
+    //   // Perform request
+    //   const response = await axios.get(`https://nominatim.openstreetmap.org/search?format=json&country=spain`)
+      
+    //   //
+    // }catch(error){
+    //   // Error
+    //   if (error.response) {
+    //     console.log(error.response.data);
+    //     console.log(error.response.status);
+    //     console.log(error.response.headers);
+    //   } else if (error.request) {
+    //       console.log(error.request);
+    //   } else {
+    //       console.log('Error', error.message);
+    //   }
+    // }
   }
 
   async componentDidMount(){

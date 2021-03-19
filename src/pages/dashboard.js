@@ -25,6 +25,7 @@ import inspireLogo from '../assets/logo2.png';
 import ProjectSelector from './projectselector';
 import InvestigatorList from './investigatorlist';
 import Investigator from './investigator';
+import Profile from './profile';
 
 import AnimateHeight from 'react-animate-height';
 
@@ -103,7 +104,7 @@ class Dashboard extends React.Component {
                                             height={this.state.projectHeight}
                                             duration={500}>
                                             {projectList.map((item, id) =>
-                                                <div key={id} style={{ width: '150px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                                <div key={id} className="inspire-submenu-item">
                                                     <a href={`/reloaded/project/${item.oid}`}
                                                         style={{ color: 'white', marginLeft: '1em' }}>
                                                         {item.name}
@@ -153,7 +154,10 @@ class Dashboard extends React.Component {
                                     <AnimateHeight
                                             height={this.state.userHeight}
                                             duration={500}>
-                                        <div style={{ width: '150px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                        <div className="inspire-submenu-item">
+                                            <a href="/dashboard/profile" style={{ color: 'white', marginLeft: '1em' }}>Profile</a>
+                                        </div>
+                                        <div className="inspire-submenu-item">
                                             <a href="#" style={{ color: 'white', marginLeft: '1em' }}
                                             onClick={(e) => this.logout(e)}>Logout</a>
                                         </div>
@@ -198,7 +202,10 @@ class Dashboard extends React.Component {
                                     <Route path={`${this.props.match.path}project/:id`} exact
                                         render={(props) => (<InvestigatorList />)} />
                                     <Route path={`${this.props.match.path}project/:id/investigator/:subid`} exact
-                                        render={(props) => (<Investigator reloaded />)} />
+                                        render={(props) => (<Investigator />)} />
+                                    <Route path={`${this.props.match.path}profile`} exact
+                                        render={(props) => (<Profile />)} />
+
                                 </Col>
                             </Row>
                         </Container>

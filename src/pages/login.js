@@ -45,7 +45,7 @@ class Login extends React.Component {
       localStorage.setItem('username', username);
 
       // Move to dashboard
-      this.props.history.push('/reloaded/dashboard/')
+      this.props.history.push('/dashboard/')
     }catch(error){
 
       // Error
