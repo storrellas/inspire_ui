@@ -11,14 +11,14 @@ import { withRouter } from 'react-router-dom'
 // Assets
 
 // Project imports
-import InvestigatorTableReloaded from '../components/investigatorlist/investigatortablereloaded';
+import InvestigatorTable from '../components/investigatorlist/investigatortable';
 import InvestigatorMap from '../components/investigatorlist/investigatormap';
 // Lazy import 
 //const InvestigatorMap = React.lazy(() => import('../components/investigatorlist/investigatormap'));
 
 
 const TAB = { TABLE: 1, MAP: 2, }
-class InvestigatorListReloaded extends React.Component {
+class InvestigatorList extends React.Component {
 
   constructor(props) {
     super(props)
@@ -51,7 +51,7 @@ class InvestigatorListReloaded extends React.Component {
             </Nav.Item>
           </Nav>
           <div className={activeTab === TAB.TABLE ? '' : 'd-none'}>
-            <InvestigatorTableReloaded />
+            <InvestigatorTable />
           </div>
           <div className={activeTab === TAB.MAP ? '' : 'd-none'}>
             {this.state.map}
@@ -62,4 +62,4 @@ class InvestigatorListReloaded extends React.Component {
 }
 
 
-export default withRouter(InvestigatorListReloaded);
+export default withRouter(InvestigatorList);

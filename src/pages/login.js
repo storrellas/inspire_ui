@@ -15,9 +15,9 @@ import axios from 'axios';
 // Assets
 import inspireLogo from '../assets/logo2Large.png';
 
-import './loginreloaded.scss'
+import './login.scss'
 
-class LoginReloaded extends React.Component {
+class Login extends React.Component {
 
   constructor(props) {
     super(props)
@@ -130,4 +130,4 @@ class LoginReloaded extends React.Component {
 }
 
 
-export default withRouter(LoginReloaded);
+export default withRouter(Login);

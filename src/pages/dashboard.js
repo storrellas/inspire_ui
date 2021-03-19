@@ -22,9 +22,9 @@ import { faUser, faBars, faStar, faQuestionCircle, faTasks, faAngleRight } from 
 import inspireLogo from '../assets/logo2.png';
 
 // Project imports
-import ProjectSelectorReloaded from './projectselectorreloaded';
-import InvestigatorListReloaded from './investigatorlistreloaded';
-import InvestigatorReloaded from './investigatorreloaded';
+import ProjectSelector from './projectselector';
+import InvestigatorList from './investigatorlist';
+import Investigator from './investigator';
 
 import AnimateHeight from 'react-animate-height';
 
@@ -194,11 +194,11 @@ class Dashboard extends React.Component {
                             <Row className="inspire-content-reloaded">
                                 <Col sm={12}>
                                     <Route path={`${this.props.match.path}`} exact
-                                        render={(props) => (<ProjectSelectorReloaded />)} />
+                                        render={(props) => (<ProjectSelector />)} />
                                     <Route path={`${this.props.match.path}project/:id`} exact
-                                        render={(props) => (<InvestigatorListReloaded />)} />
+                                        render={(props) => (<InvestigatorList />)} />
                                     <Route path={`${this.props.match.path}project/:id/investigator/:subid`} exact
-                                        render={(props) => (<InvestigatorReloaded reloaded />)} />
+                                        render={(props) => (<Investigator reloaded />)} />
                                 </Col>
                             </Row>
                         </Container>

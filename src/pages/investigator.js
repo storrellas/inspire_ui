@@ -10,7 +10,7 @@ import LoadingOverlay from 'react-loading-overlay';
 
 
 // Styles
-import "./investigatorreloaded.scss"
+import "./investigator.scss"
 
 // Font Awesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -18,7 +18,7 @@ import { faAngleRight, faAngleDown, faStar, faSearch, faArrowCircleDown, faNewsp
 
 
 // Project imports
-import InvestigatorProfileReloaded from '../components/investigator/investigatorprofilereloaded'
+import InvestigatorProfile from '../components/investigator/investigatorprofile'
 
 // Redux
 import { setPanelRendered, PANEL, resetPanel } from "../redux";
@@ -50,7 +50,7 @@ const mapStateToProps = (state) => {
 }
 
 
-class InvestigatorReloaded extends React.Component {
+class Investigator extends React.Component {
 
   constructor(props) {
     super(props)
@@ -113,7 +113,7 @@ class InvestigatorReloaded extends React.Component {
           </Col>
         </Row>
 
-        <InvestigatorProfileReloaded />
+        <InvestigatorProfile />
 
         <Row className="mt-3 pb-3">
           <Col sm={12}>
@@ -239,5 +239,5 @@ class InvestigatorReloaded extends React.Component {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(InvestigatorReloaded))
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Investigator))
 

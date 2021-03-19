@@ -12,7 +12,7 @@ import "./App.scss"
 
 // Project imports
 import Dashboard from './pages/dashboard'
-import LoginReloaded from './pages/loginreloaded'
+import Login from './pages/login'
 
 
 class AppReloaded extends React.Component {
@@ -29,7 +29,7 @@ class AppReloaded extends React.Component {
     return (
       <>      
         <Route path={`${this.props.match.path}`} exact
-          render={(props) => (<LoginReloaded />)} />
+          render={(props) => (<Login />)} />
         <Route path={`${this.props.match.path}dashboard/`}
           render={(props) => (<Dashboard reloaded />)} />
       </>);

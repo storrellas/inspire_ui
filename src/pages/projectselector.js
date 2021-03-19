@@ -11,7 +11,7 @@ import { withRouter } from 'react-router-dom'
 // Axios
 import axios from 'axios';
 
-class ProjectSelectorReloaded extends React.Component {
+class ProjectSelector extends React.Component {
 
   constructor(props) {
     super(props)
@@ -150,4 +150,4 @@ class ProjectSelectorReloaded extends React.Component {
 }
 
 
-export default withRouter(ProjectSelectorReloaded);
+export default withRouter(ProjectSelector);

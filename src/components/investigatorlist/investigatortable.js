@@ -11,7 +11,7 @@ import arrow from '../../assets/arrow.png';
 import favorite from '../../assets/favorite.png';
 import nonfavorite from '../../assets/nonfavorite.png';
 
-import './investigatortablereloaded.scss'
+import './investigatortable.scss'
 
 // EllipsisWithTooltip
 import EllipsisWithTooltip from 'react-ellipsis-with-tooltip'
@@ -80,7 +80,7 @@ const FILTERING = [
   },
 ]
 
-class InvestigatorTableReloaded extends React.Component {
+class InvestigatorTable extends React.Component {
 
   constructor(props) {
     super(props)
@@ -406,4 +406,4 @@ class InvestigatorTableReloaded extends React.Component {
 
 
 
-export default withRouter(InvestigatorTableReloaded);
+export default withRouter(InvestigatorTable);

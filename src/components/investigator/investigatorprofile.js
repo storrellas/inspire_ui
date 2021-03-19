@@ -18,7 +18,7 @@ import { setInvestigatorProfile } from "../../redux";
 import { connect } from "react-redux";
 
 // Styles
-import "./investigatorprofilereloaded.scss"
+import "./investigatorprofile.scss"
 
 // AnimateHeight
 import AnimateHeight from 'react-animate-height';
