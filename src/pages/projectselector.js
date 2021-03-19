@@ -5,9 +5,6 @@ import { Col, Row } from 'react-bootstrap';
 // React Router
 import { withRouter } from 'react-router-dom'
 
-// Styles
-//import "./projectselector.scss"
-
 // Axios
 import axios from 'axios';
 
@@ -21,7 +18,7 @@ class ProjectSelector extends React.Component {
     }
   }
 
-  async get_project_list(){
+  async getProjectList(){
     try{
 
       // Get List of projects
@@ -66,7 +63,7 @@ class ProjectSelector extends React.Component {
   }
 
   componentDidMount(){
-    this.get_project_list()
+    this.getProjectList()
   }
 
   redirectProject(item){

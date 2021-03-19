@@ -8,11 +8,10 @@ import { withRouter } from 'react-router-dom'
 
 // Styles
 
-// Assets
+// Axios
+import axios from 'axios';
 
-// Project imports
-// import InvestigatorTable from '../components/investigatorlist/investigatortable';
-// import InvestigatorMap from '../components/investigatorlist/investigatormap';
+
 
 
 class Profile extends React.Component {
@@ -20,12 +19,79 @@ class Profile extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      email : '',
+      firstName: '',
+      lastName: '',
+      projectAllowedList: [],
+      projectList: [],
     }
   }
 
+  async getProfile(){
+    try{
+
+      // Get List of projects
+      const token = localStorage.getItem('token')
+      const response = await axios.get( `${process.env.REACT_APP_BASE_URL}/api/me/`,
+          { headers: { "Authorization": "jwt " + token }
+        })
+
+
+      this.setState({
+        email: response.data.email,
+        firstName: response.data.first_name,
+        lastName: response.data.last_name,
+        projectAllowedList: response.data.project_permissions,
+      })
+      return response.data.project_permissions
+    }catch(e){
+      //this.props.history.push('/')
+      console.log("FAILED")
+    }
+
+  }
+
+  async getProjectList(projectAllowedList){
+    try{
+
+      // Get List of projects
+      const token = localStorage.getItem('token')
+      const response = await axios.get( `${process.env.REACT_APP_BASE_URL}/api/projects/?limit=100&offset=0`,
+          { headers: { "Authorization": "jwt " + token }
+        })
+
+      console.log("projectAllowedList ", projectAllowedList)
+
+      const projectList = response.data.results;
+      console.log("response ", projectList)
+
+      for(let project of projectList){
+        if( projectAllowedList.some(item => ( item.oid == project.oid) )  ){
+          project.allowed = true
+        }else{
+          project.allowed = false
+        }
+      }
+
+
+      this.setState({
+        projectList: projectList,
+      })
+    }catch(e){
+      //this.props.history.push('/')
+      console.log("FAILED", e)
+    }
+  }
+
+  async componentDidMount(){
+    const projectAllowedList = await this.getProfile()
+    await this.getProjectList(projectAllowedList)
+  }
 
   render() {
     
+    const { email, firstName, lastName, projectList } = this.state;
+
     return (
       <Row className='mt-3 mb-3'>
         <Col sm={12} className='page-container'>
@@ -34,24 +100,22 @@ class Profile extends React.Component {
             <Col className="pt-3" sm={{ span: 4, offset: 4 }}>
               <Form.Group controlId="formBasicEmail">
                 <Form.Label>Email</Form.Label>
-                <Form.Control type="email" placeholder="Enter email" disabled />
+                <Form.Control type="email" defaultValue={email}/>
               </Form.Group>
               <Form.Group controlId="formBasicEmail">
                 <Form.Label>First Name</Form.Label>
-                <Form.Control type="text" placeholder="Enter email" disabled />
+                <Form.Control type="text" defaultValue={firstName}  />
               </Form.Group>
               <Form.Group controlId="formBasicEmail">
                 <Form.Label>Last Name</Form.Label>
-                <Form.Control type="text" placeholder="Enter email" disabled />
+                <Form.Control type="text" defaultValue={lastName}  />
               </Form.Group>
               <Form.Group controlId="exampleForm.ControlSelect2">
-                <Form.Label>Example multiple select</Form.Label>
-                <Form.Control as="select" multiple>
-                  <option>1</option>
-                  <option>2</option>
-                  <option>3</option>
-                  <option>4</option>
-                  <option>5</option>
+                <Form.Label>Project Permissions</Form.Label>
+                <Form.Control as="select" multiple style={{ height: '400px'}}>
+                  {projectList.map( (item, id ) =>
+                    <option selected={item.allowed} key={id}>{item.name}</option>
+                  )}
                 </Form.Control>
               </Form.Group>
             </Col>
