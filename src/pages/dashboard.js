@@ -24,6 +24,7 @@ import inspireLogo from '../assets/logo2.png';
 // Project imports
 import ProjectSelector from './projectselector';
 import InvestigatorList from './investigatorlist';
+import InvestigatorFavoriteList from './investigatorfavoritelist';
 import Investigator from './investigator';
 import Profile from './profile';
 
@@ -105,7 +106,7 @@ class Dashboard extends React.Component {
                                             duration={500}>
                                             {projectList.map((item, id) =>
                                                 <div key={id} className="inspire-submenu-item">
-                                                    <a href={`/reloaded/project/${item.oid}`}
+                                                    <a href={`${this.props.match.path}project/${item.oid}`}
                                                         style={{ color: 'white', marginLeft: '1em' }}>
                                                         {item.name}
                                                     </a>
@@ -118,7 +119,11 @@ class Dashboard extends React.Component {
                                 <div className="mt-3" style={{ cursor: 'pointer' }}>
                                     <div className="d-flex font-weight-bold">
                                         <div><FontAwesomeIcon icon={faStar} /></div>
-                                        <span className="align-self-end ml-2" style={{ flexGrow: 1 }}>My Favorites</span>
+                                        <span className="align-self-end ml-2" style={{ flexGrow: 1 }}>
+                                            <a href={`${this.props.match.path}favorites/`} style={{ color: 'white' }}>
+                                                My Favorites
+                                            </a>                                            
+                                        </span>
                                     </div>
                                 </div>
 
@@ -201,6 +206,8 @@ class Dashboard extends React.Component {
                                         render={(props) => (<ProjectSelector />)} />
                                     <Route path={`${this.props.match.path}project/:id`} exact
                                         render={(props) => (<InvestigatorList />)} />
+                                    <Route path={`${this.props.match.path}favorites`} exact
+                                        render={(props) => (<InvestigatorFavoriteList />)} />
                                     <Route path={`${this.props.match.path}project/:id/investigator/:subid`} exact
                                         render={(props) => (<Investigator />)} />
                                     <Route path={`${this.props.match.path}profile`} exact
