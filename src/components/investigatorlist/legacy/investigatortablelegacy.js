@@ -80,7 +80,7 @@ const FILTERING = [
 ]
 
 
-class InvestigatorTable extends React.Component {
+class InvestigatorTableLegacy extends React.Component {
 
   constructor(props) {
     super(props)
@@ -385,4 +385,4 @@ class InvestigatorTable extends React.Component {
 
 
 
-export default withRouter(InvestigatorTable);
+export default withRouter(InvestigatorTableLegacy);

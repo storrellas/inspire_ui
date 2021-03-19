@@ -17,7 +17,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCaretDown } from '@fortawesome/free-solid-svg-icons'
 
 // Project imports
-import InvestigatorProfile from '../../components/investigator/legacy/investigatorprofilelegacy'
+import InvestigatorProfileLegacy from '../../components/investigator/legacy/investigatorprofilelegacy'
 
 import PanelConnections from '../../components/investigator/panelconnections';
 import PanelCompanyCooperation from '../../components/investigator/panelcompanycooperation';
@@ -87,7 +87,7 @@ const mapDispatchToProps = (dispatch) => {
   };
 }
 
-class Investigator extends React.Component {
+class InvestigatorLegacy extends React.Component {
 
   constructor(props) {
     super(props)
@@ -154,7 +154,7 @@ class Investigator extends React.Component {
     return (
       <Row>
         <Col sm={12} className='page-container'>
-          <InvestigatorProfile />
+          <InvestigatorProfileLegacy />
 
           <Suspense fallback={<div style={{color: 'black' }}>Loading...</div>}>
             {this.state.showPanels?          
@@ -224,4 +224,4 @@ class Investigator extends React.Component {
   }
 }
 
-export default connect(undefined, mapDispatchToProps)(withRouter(Investigator))
+export default connect(undefined, mapDispatchToProps)(withRouter(InvestigatorLegacy))

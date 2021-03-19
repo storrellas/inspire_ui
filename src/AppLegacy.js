@@ -19,10 +19,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser, faStar, faDirections } from '@fortawesome/free-solid-svg-icons'
 
 // Project imports
-import Login from './pages/legacy/loginlegacy';
-import ProjectSelector from './pages/legacy/projectselectorlegacy';
-import InvestigatorList from './pages/legacy/investigatorlistlegacy';
-import Investigator from './pages/legacy/investigatorlegacy';
+import LoginLegacy from './pages/legacy/loginlegacy';
+import ProjectSelectorLegacy from './pages/legacy/projectselectorlegacy';
+import InvestigatorListLegacy from './pages/legacy/investigatorlistlegacy';
+import InvestigatorLegacy from './pages/legacy/investigatorlegacy';
 
 
 class App extends React.Component {
@@ -107,10 +107,10 @@ class App extends React.Component {
         <Container>
           <Row className="inspire-content">
             <Col sm={12}>
-              <Route path={`${this.props.match.path}/`} exact component={Login} />
-              <Route path={`${this.props.match.path}project`} exact component={ProjectSelector} />
-              <Route path={`${this.props.match.path}project/:id`} exact component={InvestigatorList} />
-              <Route path={`${this.props.match.path}project/:id/investigator/:subid`} exact component={Investigator} />
+              <Route path={`${this.props.match.path}/`} exact component={LoginLegacy} />
+              <Route path={`${this.props.match.path}project`} exact component={ProjectSelectorLegacy} />
+              <Route path={`${this.props.match.path}project/:id`} exact component={InvestigatorListLegacy} />
+              <Route path={`${this.props.match.path}project/:id/investigator/:subid`} exact component={InvestigatorLegacy} />
               </Col>
           </Row>
         </Container>

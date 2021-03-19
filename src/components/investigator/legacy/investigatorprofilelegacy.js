@@ -19,7 +19,7 @@ const mapDispatchToProps = (dispatch) => {
   };
 }
 
-class InvestigatorProfile extends React.Component {
+class InvestigatorProfileLegacy extends React.Component {
 
   constructor(props) {
     super(props)
@@ -269,5 +269,5 @@ class InvestigatorProfile extends React.Component {
 }
 
 
-export default connect(undefined, mapDispatchToProps)(withRouter(InvestigatorProfile))
+export default connect(undefined, mapDispatchToProps)(withRouter(InvestigatorProfileLegacy))
 

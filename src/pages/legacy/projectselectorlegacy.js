@@ -11,7 +11,7 @@ import "./projectselectorlegacy.scss"
 // Axios
 import axios from 'axios';
 
-class ProjectSelector extends React.Component {
+class ProjectSelectorLegacy extends React.Component {
 
   constructor(props) {
     super(props)
@@ -87,4 +87,4 @@ class ProjectSelector extends React.Component {
 }
 
 
-export default withRouter(ProjectSelector);
+export default withRouter(ProjectSelectorLegacy);

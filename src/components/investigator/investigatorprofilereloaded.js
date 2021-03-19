@@ -80,6 +80,26 @@ class InvestigatorProfileReloaded extends React.Component {
     }
   }
 
+  async retrieveNominatim(){
+    try{
+      // Perform request
+      const response = await axios.get(`https://nominatim.openstreetmap.org/search?format=json&country=spain`)
+      console.log("response ", response)
+      //
+    }catch(error){
+      // Error
+      if (error.response) {
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+          console.log(error.request);
+      } else {
+          console.log('Error', error.message);
+      }
+    }
+  }
+
   async componentDidMount(){
     try{
 
@@ -155,6 +175,7 @@ class InvestigatorProfileReloaded extends React.Component {
       if( response.data.email != null )
         this.state.privateEmail = response.data.email      
 
+        console.log("state ", state)
       this.setState(state)
 
       this.props.setInvestigatorProfile({
@@ -180,6 +201,10 @@ class InvestigatorProfileReloaded extends React.Component {
     // This is a magic number 1,05 but I dont know why honestly
     const height = this.divElement.clientHeight;
     this.setState({ height });
+
+    
+
+    this.retrieveNominatim()
 
   }
 

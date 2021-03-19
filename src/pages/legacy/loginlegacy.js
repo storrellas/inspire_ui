@@ -12,7 +12,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons'
 // Axios
 import axios from 'axios';
 
-class Login extends React.Component {
+class LoginLegacy extends React.Component {
 
   constructor(props) {
     super(props)
@@ -117,4 +117,4 @@ class Login extends React.Component {
 }
 
 
-export default withRouter(Login);
+export default withRouter(LoginLegacy);
