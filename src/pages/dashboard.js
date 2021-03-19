@@ -60,10 +60,12 @@ class Dashboard extends React.Component {
         const projectList = JSON.parse(localStorage.getItem('project_permissions'));
         const username = localStorage.getItem('username');
 
-        const { match: { params } } = this.props;
-        let projectOid = this.props.location.pathname.split('/')[4];
+        const { match: { params } } = this.props;        
+        const pathNameList = this.props.location.pathname.split('/');
+        const projectOid = pathNameList[4];
         const name = investigatorProfile?investigatorProfile.name:undefined
 
+        const favorites = this.props.location.pathname.split('/')[3];
         
 
         return (
@@ -178,7 +180,7 @@ class Dashboard extends React.Component {
                             <Row className="inspire-breadcrumb">
                                 <Col sm={12}>
                                     <div className="d-flex">
-                                        {(projectOid!==undefined)?
+                                        {(projectOid!==undefined || favorites !== undefined)?
                                             <>
                                                 <div>
                                                     <a href="/dashboard/">Select Plan</a>
@@ -186,6 +188,15 @@ class Dashboard extends React.Component {
                                                 <div className="ml-2">
                                                     <FontAwesomeIcon icon={faAngleRight} />
                                                 </div>
+                                            </>
+                                        :''}                                                
+                                        {(favorites!==undefined)?                                                
+                                            <>
+                                                <div className="ml-2">Favorites</div>
+                                            </>
+                                        :''}
+                                        {(projectOid!==undefined)?                                                
+                                            <>
                                                 <div className="ml-2">
                                                     <a href={`/dashboard/project/${projectOid}`}>Investigators</a>
                                                 </div>

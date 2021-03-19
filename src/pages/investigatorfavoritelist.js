@@ -30,10 +30,11 @@ class InvestigatorFavoriteList extends React.Component {
     const { projectOid } = this.state;
 
     return (
-      <Row className='mt-3 mb-3'>        
-        <Col sm={12}>
+      <Row className='mt-3 mb-3'>
+        <Col sm={12} className='page-container'>
           <div><b>Investigator Favorites</b></div>
-          <div>Favorite list</div>
+          <div></div>
+
         </Col>
       </Row>);
   }
