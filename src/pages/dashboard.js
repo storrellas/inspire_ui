@@ -131,7 +131,7 @@ class Dashboard extends React.Component {
                                     </div>
                                 </div>
 
-                                <div className="mt-3" style={{ cursor: 'pointer' }}>
+                                {/* <div className="mt-3" style={{ cursor: 'pointer' }}>
                                     <div className="d-flex font-weight-bold">
                                         <div><FontAwesomeIcon icon={faQuestionCircle} /></div>
                                         <span className="align-self-end ml-2" style={{ flexGrow: 1 }}>Navigation3</span>
@@ -143,16 +143,16 @@ class Dashboard extends React.Component {
                                         <div><FontAwesomeIcon icon={faTasks} /></div>
                                         <span className="align-self-end ml-2" style={{ flexGrow: 1 }}>Navigation4</span>
                                     </div>
-                                </div>
+                                </div> */}
                             </div>
                             <div className="pb-3">
 
-                                <div className="mt-3" style={{ cursor: 'pointer' }}>
+                                {/* <div className="mt-3" style={{ cursor: 'pointer' }}>
                                     <div className="d-flex font-weight-bold">
                                         <div><FontAwesomeIcon icon={faQuestionCircle} /></div>
                                         <span className="align-self-end ml-2" style={{ flexGrow: 1 }}>Navigation3</span>
                                     </div>
-                                </div>
+                                </div> */}
                                 <div className="mt-3" style={{ cursor: 'pointer' }}>
                                     <div className="d-flex font-weight-bold">
                                         <div><FontAwesomeIcon icon={faUser} /></div>

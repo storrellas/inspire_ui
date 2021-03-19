@@ -273,7 +273,44 @@ class InvestigatorTable extends React.Component {
     this.loadInvestigators(currentPage)
   }
 
+  async onSetInvestigatorFavorite(oid, isFavorite){
+    try{
+      let { currentPage, sorting } = this.state;
 
+      // Set selection      
+      let shortOid = oid.split('-')[oid.split('-').length -1 ]
+      //shortOid = parseInt( shortOid )
+      console.log("shortOid ", shortOid)
+
+
+      const token = localStorage.getItem('token')
+      const baseUrl = isFavorite?
+        `${process.env.REACT_APP_BASE_URL}/api/remove-favorite-investigators/`:
+        `${process.env.REACT_APP_BASE_URL}/api/add-favorite-investigators/`;
+      const body = { ids: [ shortOid ] }
+      const response = await axios.post(baseUrl, body,
+        { headers: { "Authorization": "jwt " + token }
+      })
+
+      console.log("response ", response)
+      this.loadInvestigators(currentPage)
+
+    }catch(error){
+
+      // Error
+      if (error.response) {
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+          console.log(error.request);
+      } else {
+          console.log('Error', error.message);
+      }
+
+    } 
+
+  }
 
   render() {
     const { currentPage, totalPage, meshOptions, sorting } = this.state;
@@ -343,7 +380,7 @@ class InvestigatorTable extends React.Component {
             </thead>
 
             <tbody>
-                {this.state.investigatorList.length==0?
+                {this.state.isLoading?
                 <tr>
                   <td style={{ background: 'white', height: '400px' }} colSpan="14" className="text-center">
                     <div className="mb-3" style={{ fontSize: '20px', color: 'grey' }} >Loading ...</div>
@@ -356,7 +393,7 @@ class InvestigatorTable extends React.Component {
                   <td style={{ width: '5%'}}>
                     
                     <img src={item.is_favorite_investigator?favorite:nonfavorite} width="40"
-                      onClick={(e) => this.props.history.push(`/dashboard/project/${this.state.projectOid}/investigator/${item.oid}`)}
+                      onClick={(e) => this.onSetInvestigatorFavorite(item.oid, item.is_favorite_investigator)}
                       style={{ cursor: 'pointer' }}></img>
                     
                   </td>
