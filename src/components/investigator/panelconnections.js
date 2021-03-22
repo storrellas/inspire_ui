@@ -660,7 +660,7 @@ class PanelConnections extends React.Component {
         </div>
 
         <div className="ml-3 d-flex w-100" 
-          style={{ flexDirection: 'column', height: this.state.height, overflow: 'hidden' }}>
+          style={{ flexDirection: 'column', overflow: 'hidden' }}>
           <Nav variant="tabs" style={{ width: '100%' }}>
             <Nav.Item>
               <Nav.Link href="#" active={activeTab == TAB.NETWORK}

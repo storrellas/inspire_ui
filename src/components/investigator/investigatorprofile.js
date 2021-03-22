@@ -267,7 +267,7 @@ class InvestigatorProfileReloaded extends React.Component {
             </div>
             <div className="mt-3 p-3 inspire-panel" style={{ backgroundColor: 'white'}}>
               <MapContainer center={[41.385, 2.17]} zoom={10} scrollWheelZoom={false} 
-                style={{ height: "300px", width: '100%', borderRadius: '5px'}}>
+                style={{ height: "200px", width: '100%', borderRadius: '5px'}}>
                 <TileLayer
                   attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -281,8 +281,8 @@ class InvestigatorProfileReloaded extends React.Component {
             </div>
           </Col>
           <Col sm={5} ref={ (divElement) => { this.divElement = divElement } }>
-            <div className="inspire-panel" style={{ height: this.state.height, overflowY:'scroll',   scrollbarWidth: 'thin'}}>
-
+            <div className="inspire-panel h-100" style={{ padding: 0, position:'relative', overflowY:'scroll', overflowX: 'hidden' }}>
+              <div className="p-3 w-100" style={{ position:'absolute'}}>
               <Row>
                 <Col sm={6}>
                   <b>Profile Snapshot</b>
@@ -408,7 +408,7 @@ class InvestigatorProfileReloaded extends React.Component {
                   </div>
                 </Col>
               </Row>
-
+              </div>
             </div>
         </Col>
         </Row>
