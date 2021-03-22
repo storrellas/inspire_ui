@@ -154,79 +154,31 @@ class Investigator extends React.Component {
               </Nav.Item>
 
             </Nav>
-            <div className={panel === PANEL.CONNECTIONS ? '' : 'd-none'}>
-              <div style={{
-                backgroundColor: 'white', border: '1px solid',
-                borderColor: 'transparent #dee2e6 #dee2e6 #dee2e6', borderRadius: '0 .25rem 0 .25rem',
-                padding: '2em'
-              }}>
+            <div className={panel === PANEL.CONNECTIONS ? 'inspire-panel-content' : 'd-none'}>
                 <PanelConnections reloaded />
-              </div>
             </div>
-            <div className={panel === PANEL.COMPANY_COOPERATION ? '' : 'd-none'}>
-              <div style={{
-                backgroundColor: 'white', border: '1px solid',
-                borderColor: 'transparent #dee2e6 #dee2e6 #dee2e6', borderRadius: '0 .25rem 0 .25rem',
-                padding: '2em'
-              }}>
-                <PanelCompanyCooperation/>
-              </div>
+            <div className={panel === PANEL.COMPANY_COOPERATION ? 'inspire-panel-content' : 'd-none'}>
+              <PanelCompanyCooperation/>
             </div>
-            <div className={panel === PANEL.AFFILIATIONS ? '' : 'd-none'}>
-              <div style={{
-                backgroundColor: 'white', border: '1px solid',
-                borderColor: 'transparent #dee2e6 #dee2e6 #dee2e6', borderRadius: '0 .25rem 0 .25rem',
-                padding: '2em'
-              }}>
-                <PanelAffiliations />
-              </div>
+            <div className={panel === PANEL.AFFILIATIONS ? 'inspire-panel-content' : 'd-none'}>
+              <PanelAffiliations />
             </div>
-            <div className={panel === PANEL.RESEARCH_PROFILE ? '' : 'd-none'}>
-              <div style={{
-                backgroundColor: 'white', border: '1px solid',
-                borderColor: 'transparent #dee2e6 #dee2e6 #dee2e6', borderRadius: '0 .25rem 0 .25rem',
-                padding: '2em'
-              }}>
-                <PanelResearchProfile />                
-              </div>
+            <div className={panel === PANEL.RESEARCH_PROFILE ? 'inspire-panel-content' : 'd-none'}>
+              <PanelResearchProfile />                
             </div>
 
 
-            <div className={panel === PANEL.PUBLICATIONS ? '' : 'd-none'}>
-              <div style={{
-                backgroundColor: 'white', border: '1px solid',
-                borderColor: 'transparent #dee2e6 #dee2e6 #dee2e6', borderRadius: '0 .25rem 0 .25rem',
-                padding: '2em'
-              }}>
-                <PanelPublications />
-              </div>
+            <div className={panel === PANEL.PUBLICATIONS ? 'inspire-panel-content' : 'd-none'}>
+              <PanelPublications />
             </div>
-            <div className={panel === PANEL.EVENTS ? '' : 'd-none'}>
-              <div style={{
-                backgroundColor: 'white', border: '1px solid',
-                borderColor: 'transparent #dee2e6 #dee2e6 #dee2e6', borderRadius: '0 .25rem 0 .25rem',
-                padding: '2em'
-              }}>
-                <PanelEvents />
-              </div>
+            <div className={panel === PANEL.EVENTS ? 'inspire-panel-content' : 'd-none'}>
+              <PanelEvents />
             </div>
-            <div className={panel === PANEL.CLINICAL_TRIALS ? '' : 'd-none'}>
-              <div style={{
-                backgroundColor: 'white', border: '1px solid',
-                borderColor: 'transparent #dee2e6 #dee2e6 #dee2e6', borderRadius: '0 .25rem 0 .25rem',
-                padding: '2em'
-              }}>
-                <PanelClinicalTrials />
-              </div>
+            <div className={panel === PANEL.CLINICAL_TRIALS ? 'inspire-panel-content' : 'd-none'}>
+              <PanelClinicalTrials />
             </div>
-            <div className={panel === PANEL.FEEDBACK ? '' : 'd-none'}>
-              <div style={{
-                backgroundColor: 'white', border: '1px solid',
-                borderColor: 'transparent #dee2e6 #dee2e6 #dee2e6', borderRadius: '0 .25rem 0 .25rem',
-                padding: '2em'
-              }}>
-                <PanelFeedback />
-              </div>
+            <div className={panel === PANEL.FEEDBACK ? 'inspire-panel-content' : 'd-none'}>
+              <PanelFeedback />
             </div>
 
 

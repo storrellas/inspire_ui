@@ -190,6 +190,7 @@ class PanelConnections extends React.Component {
       randomize: true,
       animate: false,
     }
+    this.filterHeight = undefined;
 
   }
 
@@ -210,7 +211,8 @@ class PanelConnections extends React.Component {
     // remove first user
     const usersLocal = users.slice(1);
 
-    return <div className="h-100" style={{ display: "flex", flexWrap: "wrap", overflowY: 'scroll' }}>
+    const height = this.filterHeight?`${this.filterHeight}px`:'10px';
+    return <div className="h-100" style={{ display: "flex", backgroundColor: 'yellow', flexWrap: "wrap", overflowY: 'scroll' }}>
       {usersLocal.map((item, id) =>
         <div key={id} style={{ width: "33%", padding: '1em' }}>
           {item.url === '' ?
@@ -543,6 +545,13 @@ class PanelConnections extends React.Component {
   componentDidMount(){
     if( this.state.users.length == 0 && this.props.investigatorProfile)
       this.retrieveConnections()
+    console.log("this.filterHeight", this.filterHeight)
+    // if( this.filterHeight ){
+    //   // This is a magic number 1,05 but I dont know why honestly
+    //   const tabHeight = this.filterHeight.clientHeight;
+    //   console.log("height ", height)
+    //   this.setState({ tabHeight });
+    // }
   }
 
   componentDidUpdate(){
@@ -612,14 +621,20 @@ class PanelConnections extends React.Component {
                             layout={this.cytoscapeLayout} />
     }
 
-
-    let content_cy = this.state.cytoscape!==undefined?
-                        this.state.cytoscape:
-                        <div className="w-100 text-center" style={{ height: '400px'}}>Loading...</div>
-
     // Generate maximised cytoscape
-    if (this.state.showModalCytoscape === true ) {
-        const source = this.generateSource(usersMaximised, connectionsMaximised)
+    // if (this.state.showModalCytoscape === true ) {
+    //     const source = this.generateSource(usersMaximised, connectionsMaximised)
+    //     this.cytoscapeMax = <CytoscapeComponent key={this.childKey}
+    //                         elements={source}
+    //                         cy={(cy) => this.renderedMaximised(cy) }
+    //                         style={{ width: '100%', height: '100%' }}
+    //                         stylesheet={this.cytoscapeStylesheet}
+    //                         layout={this.cytoscapeLayout} />;        
+    // }
+
+    if ( this.state.cytoscapeMax === undefined && source.length > 0) {
+        //const source = this.generateSource(usersMaximised, connectionsMaximised)
+        const source = this.generateSource(users, connections)        
         this.cytoscapeMax = <CytoscapeComponent key={this.childKey}
                             elements={source}
                             cy={(cy) => this.renderedMaximised(cy) }
@@ -628,13 +643,17 @@ class PanelConnections extends React.Component {
                             layout={this.cytoscapeLayout} />;        
     }
 
+    let content_cy = this.state.cytoscape!==undefined?
+                        this.state.cytoscape:
+                        <div className="w-100 text-center" style={{ height: '400px'}}>Loading...</div>
+
     // NetworkContent
-    const networkContent = this.state.showModalCytoscape ? this.cytoscapeMax : '';
+    //const networkContent = this.state.showModalCytoscape ? this.cytoscapeMax : '';
 
     const { activeTab, countryList, yearList } = this.state;
     const { countrySelected, connectionTypeSelected } = this.state;
     const { cytoscapeInvestigator } = this.state;
-    const content = (activeTab == TAB.NETWORK) ? networkContent : this.generateProfiles()
+    const content = (activeTab == TAB.NETWORK) ? this.cytoscapeMax : this.generateProfiles()
 
     // Calculate nodeData
     let nodeDesc = {}
@@ -643,14 +662,104 @@ class PanelConnections extends React.Component {
     const nodeData = { ...cytoscapeInvestigator, ...nodeDesc}
 
     return (
-      <div>
+      <div className="d-flex" style={{ height: '100%' }}>
 
-        {content_cy}
-        <div className="text-right pr-2 pb-1" style={{ cursor: 'pointer' }} onClick={(e) => this.openModal(e)}>
-          <FontAwesomeIcon icon={faExpandArrowsAlt} />
+            
+        <div style={{ width: '30%' }} ref={ (el) => this.filterHeight = el }>
+          <div style={{ borderRadius: '3px', border: '1px solid #ccc', color: '#555' }}>
+            <div className="font-weight-bold" style={{ padding: '0.5em', paddingLeft: '15%', fontSize: '16px', backgroundColor: '#ddd' }}>FILTERS</div>
+            <div className="p-2">
+              <div className="font-weight-bold">Connection Minimum Strength</div>
+              <Select
+                options={connectionStregnthOptions}
+                defaultValue={connectionStregnthOptions[0]}
+                onChange={ (e) => this.onFilterConnectionStrength(e)}
+              />
+              <div className="font-weight-bold">Country</div>
+              <Select
+                isMulti
+                options={countryList}
+                value={countrySelected}
+                onChange={ (e) => this.onFilterCountry(e)}
+              />
+
+              <div className="font-weight-bold">Connection Type</div>
+              <Select
+                isMulti
+                options={connectionTypeOptions}
+                value={connectionTypeSelected}
+                onChange={ (e) => this.onFilterConnectionType(e)}
+              />
+              <div className="d-flex">
+                <div className="w-50 mr-1">
+                  <div className="font-weight-bold">From</div>
+                  <Select options={yearList} 
+                    onChange={ (e) => this.onYearFrom(e)}
+                    defaultValue={yearList[0]}/>
+                </div>
+                <div className="w-50 ml-1">
+                  <div className="font-weight-bold">To</div>
+                  <Select options={yearList} 
+                    onChange={ (e) => this.onYearTo(e)}
+                    defaultValue={yearList[yearList.length-1]}/>
+                </div>
+
+              </div>
+              
+            </div>
+          </div>
+          <div className="mt-3" style={{ borderRadius: '3px', border: '1px solid #ccc', color: '#555' }}>
+            <div className="font-weight-bold" style={{ padding: '0.5em', paddingLeft: '15%', fontSize: '16px', backgroundColor: '#ddd' }}>DETAILS</div>
+            <div className="p-3">
+              <NodeDetail data={nodeData} />
+            </div>
+          </div>
         </div>
 
-        <Modal animation centered
+        <div className="ml-3 d-flex h-100 w-100" style={{ flexDirection: 'column', backgroundColor: 'blue' }}>
+        <CytoscapeComponent key={this.childKey}
+                      elements={source}
+                      cy={(cy) => this.renderedMaximised(cy) }
+                      style={{ width: '100%', height: '400px' }}
+                      stylesheet={this.cytoscapeStylesheet}
+                      layout={this.cytoscapeLayout} />
+
+        </div>
+
+
+
+
+              {/* <div className="ml-3 d-flex h-100 w-100" style={{ flexDirection: 'column', backgroundColor: 'blue' }}>
+                <div style={{ width: '100%' }} >
+                  <Nav variant="tabs" style={{ width: '100%' }}>
+                    <Nav.Item>
+                      <Nav.Link href="#" active={activeTab == TAB.NETWORK}
+                        onClick={(e) => this.setState({ activeTab: TAB.NETWORK })}>Network</Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item>
+                      <Nav.Link href="#" active={activeTab == TAB.PROFILES}
+                        onClick={(e) => this.setState({ activeTab: TAB.PROFILES })}>Profiles</Nav.Link>
+                    </Nav.Item>
+                  </Nav>
+                </div>
+
+                <div style={{ backgroundColor: 'green', borderRadius: '0 3px 3px 3px', border: '1px solid #dee2e6 ', 
+                              borderTop: 0, flexGrow: 1 }}>
+                  {content}
+                </div>
+
+              </div> */}
+
+
+
+
+
+        {/* {content_cy}
+        <div className="text-right pr-2 pb-1" style={{ cursor: 'pointer' }} onClick={(e) => this.openModal(e)}>
+          <FontAwesomeIcon icon={faExpandArrowsAlt} />
+        </div> */}
+
+        {/* <Modal animation centered
           show={this.state.showModal}
           onHide={(e) => this.closeModal(e)}
           onEntered={(e) => this.setState({ showModalCytoscape: true })}
@@ -736,7 +845,7 @@ class PanelConnections extends React.Component {
               Close
             </Button>
           </Modal.Footer>
-        </Modal>
+        </Modal> */}
 
       </div>);
   }

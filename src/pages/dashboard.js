@@ -65,10 +65,6 @@ class Dashboard extends React.Component {
         const projectOid = pathNameList[3] === 'favorites';
         const name = investigatorProfile?investigatorProfile.name:undefined
         const section = this.props.location.pathname.split('/')[2];
-        
-        console.log("section ", section)
-        console.log("section ", section == '')
-
 
         return (
             <div style={{ position: 'relative' }}>

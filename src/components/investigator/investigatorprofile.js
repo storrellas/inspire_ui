@@ -112,7 +112,7 @@ class InvestigatorProfileReloaded extends React.Component {
       investigatorId = parseInt( investigatorId )
 
       // Perform request
-      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/investigator/${investigatorId}`,
+      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/investigator/${investigatorId}/`,
         { headers: { "Authorization": "jwt " + token }
       })
 
@@ -175,9 +175,10 @@ class InvestigatorProfileReloaded extends React.Component {
       if( response.data.email != null )
         this.state.privateEmail = response.data.email      
 
-        console.log("state ", state)
+      // Refresh
       this.setState(state)
 
+      //
       this.props.setInvestigatorProfile({
         name: this.state.name,
         affiliationInstitution: this.state.affiliationInsititution,
