@@ -46,30 +46,13 @@ function NodeDetail(props) {
       <div style={{ fontSize: '18px', color: "#337ab7" }}>
         <a href={props.data.link} style={{color: "#337ab7"}}>{props.data.label}</a>
       </div>
-      <div>{props.data.affiliation}</div>
-      <div>
-        <FontAwesomeIcon icon={faFolder} />
-        <span className="ml-2">All ({props.data.all})</span>
-      </div>
-      <div><FontAwesomeIcon icon={faFolder} />
-        <span className="ml-2">Trials ({props.data.clinicalTrials})</span>
-      </div>
-      <div>
-        <FontAwesomeIcon icon={faCalendarWeek} />
-        <span className="ml-2">Events ({props.data.events})</span>
-      </div>
-      <div>
-        <FontAwesomeIcon icon={faBook} />
-        <span className="ml-2">Publications ({props.data.publications})</span>
-      </div>
-      <div>
-        <FontAwesomeIcon icon={faHome} />
-        <span className="ml-2">Affiliations (past) ({props.data.institutionsPast})</span>
-      </div>
-      <div>
-        <FontAwesomeIcon icon={faHome} />
-        <span className="ml-2">Affiliations (present) ({props.data.institutionsPresent})</span>
-      </div>
+      <div className="mt-2">{props.data.affiliation}</div>
+      <div className="mt-2">All ({props.data.all})</div>
+      <div>Trials ({props.data.clinicalTrials})</div>
+      <div>Events ({props.data.events})</div>
+      <div>Publications ({props.data.publications})</div>
+      <div>Affiliations (past) ({props.data.institutionsPast})</div>
+      <div>Affiliations (present) ({props.data.institutionsPresent})</div>
     </div>
   );
 }
@@ -626,10 +609,10 @@ class PanelConnections extends React.Component {
 
             
         <div style={{ width: '30%' }} ref={ (el) => this.filterHeight = el }>
-          <div style={{ borderRadius: '3px', border: '1px solid #ccc', color: '#555' }}>
-            <div className="font-weight-bold" style={{ padding: '0.5em', paddingLeft: '15%', fontSize: '16px', backgroundColor: '#ddd' }}>FILTERS</div>
-            <div className="p-2">
-              <div className="font-weight-bold">Connection Minimum Strength</div>
+          <div>
+            <div className="font-weight-bold p-2 " style={{ fontSize: '16px' }}>FILTERS</div>
+            <div className="p-2" style={{ color: '#555' }}>
+              <div className="font-weight-bold">Connection Strength</div>
               <Select
                 options={connectionStregnthOptions}
                 defaultValue={connectionStregnthOptions[0]}
@@ -668,9 +651,9 @@ class PanelConnections extends React.Component {
               
             </div>
           </div>
-          <div className="mt-3" style={{ borderRadius: '3px', border: '1px solid #ccc', color: '#555' }}>
-            <div className="font-weight-bold" style={{ padding: '0.5em', paddingLeft: '15%', fontSize: '16px', backgroundColor: '#ddd' }}>DETAILS</div>
-            <div className="p-3">
+          <div className="mt-3">
+          <div className="font-weight-bold pl-2 " style={{ fontSize: '16px' }}>FILTERS</div>
+            <div className="pt-2 pl-2" style={{ color: '#555' }}>
               <NodeDetail data={nodeData} />
             </div>
           </div>
