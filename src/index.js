@@ -4,7 +4,7 @@ import './index.css';
 // import App from './AppLegacy';
 import AppReloaded from './AppReloaded'
 import reportWebVitals from './reportWebVitals';
-import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { BrowserRouter, Redirect, Switch, Route } from "react-router-dom";
 import { store } from "./redux";
 import { Provider } from 'react-redux'
 
@@ -14,11 +14,7 @@ ReactDOM.render(
   <BrowserRouter>
     <Provider store={store}>
 
-      <Switch>
-        <Route path="/" component={AppReloaded} />
-
-        {/* <Route path="/legacy/" component={App} /> */}
-      </Switch>
+      <AppReloaded />
 
     </Provider>
   </BrowserRouter>,

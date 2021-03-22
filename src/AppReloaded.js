@@ -4,7 +4,7 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 // React Router
-import { Route } from "react-router-dom";
+import { BrowserRouter, Redirect, Switch, Route } from "react-router-dom";
 import { withRouter } from 'react-router-dom'
 
 // Styles
@@ -27,12 +27,14 @@ class AppReloaded extends React.Component {
   render() {
     console.log("ReRender")
     return (
-      <>      
+      <Switch>
         <Route path={`${this.props.match.path}`} exact
           render={(props) => (<Login />)} />
         <Route path={`${this.props.match.path}dashboard/`}
           render={(props) => (<Dashboard reloaded />)} />
-      </>);
+        <Redirect to='/' />
+      </Switch>
+    );
   }
 }
 

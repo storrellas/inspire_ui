@@ -15,6 +15,12 @@ import EllipsisWithTooltip from 'react-ellipsis-with-tooltip'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLongArrowAltUp, faLongArrowAltDown } from '@fortawesome/free-solid-svg-icons'
 
+// Assets
+import universities from '../../assets/universities.png';
+import hospitals from '../../assets/hospitals.png';
+import associations from '../../assets/associations.png';
+
+
 // Axios
 import axios from 'axios';
 
@@ -317,10 +323,13 @@ class PanelAffiliations extends React.Component {
 
     return (
       <div>
-        <div className="d-flex" style={{ margin: '0 0.2em 0 0.2em'}}>
-          <div className="text-center" style={{ width: '33%', margin: '1em 0.2em 1em 0.2em', border: '1px solid #4780c4' }}>
-            <img className="w-100" src="https://demo.explicatos.com/img/icons_37_37_px-13.png" alt=" "></img>
+        <div className="d-flex" style={{ margin: '0 20% 0 20%'}}>
+          <div className="text-center" style={{ width: '33%', margin: '1em 0.2em 1em 0.2em', border: '1px solid #D1E3F2', borderRadius: '5px' }}>
             <div>{nUniversities}</div>
+            <div style={{ padding: '2em'}}>
+              <img className="w-100" src={universities} alt=" "></img>
+            </div>
+            
             <div style={{ padding: '0.4em'}}>
               <button className="btn btn-primary" style={{ width: '80%', backgroundColor: '#4780c4', fontSize: '14px'  }}
                 onClick={ (e) => this.showModalUniversities()}>
@@ -328,9 +337,12 @@ class PanelAffiliations extends React.Component {
               </button>
             </div>
           </div>
-          <div className="text-center" style={{ width: '33%', margin: '1em 0.2em 1em 0.2em', border: '1px solid #4780c4'  }}>
-            <img className="w-100" src="https://demo.explicatos.com/img/icons_37_37_px-14.png" alt=" "></img>
+          <div className="text-center" style={{ width: '33%', margin: '1em 0.2em 1em 0.2em', border: '1px solid #D1E3F2', borderRadius: '5px'  }}>
             <div>{nHospitals}</div>
+            <div style={{ padding: '2em'}}>
+              <img className="w-100" src={hospitals} alt=" "></img>
+            </div>
+            
             <div style={{ padding: '0.4em'}}>
               <button className="btn btn-primary" style={{ width: '80%', backgroundColor: '#4780c4', fontSize: '14px' }}
                 onClick={ (e) => this.showModalHospitals()}>
@@ -338,9 +350,12 @@ class PanelAffiliations extends React.Component {
               </button>
             </div>
           </div>
-          <div className="text-center" style={{ width: '33%', margin: '1em 0.2em 1em 0.2em', border: '1px solid #4780c4'  }}>
-            <img className="w-100" src="https://demo.explicatos.com/img/icons_37_37_px-12.png" alt=" "></img>
+          <div className="text-center" style={{ width: '33%', margin: '1em 0.2em 1em 0.2em', border: '1px solid #D1E3F2', borderRadius: '5px'  }}>
             <div>{nAssociations}</div>
+            <div style={{ padding: '2em'}}>
+              <img className="w-100" src={associations} alt=" "></img>
+            </div>
+            
             <div style={{ padding: '0.2em'}}>
               <button className="btn btn-primary" style={{ width: '80%', backgroundColor: '#4780c4', fontSize: '14px'  }}
                 onClick={ (e) => this.showModalAssociations()}>
@@ -350,7 +365,61 @@ class PanelAffiliations extends React.Component {
           </div>
         </div>
 
-        <Modal animation centered
+        <div className="p-3 h-100" style={{ fontSize: '14px'}}>
+          <LoadingOverlay
+              active={ this.state.isLoading }
+              spinner>
+          <table className="w-100 inspire-table">
+            <thead>
+              <tr>
+                {FILTERING.map((item, id) =>
+                <td key={id} className="text-center" style={{ cursor: 'pointer' }}
+                  onClick={(e) => this.onSetSorting(item.dataField)}>
+                  {item.label}
+                  <FontAwesomeIcon icon={faLongArrowAltUp} className={sorting == item.dataField ? "ml-1" : "ml-1 d-none"} style={{ color: 'grey' }} />
+                  <FontAwesomeIcon icon={faLongArrowAltDown} className={sorting == `-${item.dataField}` ? "ml-1" : "ml-1 d-none"} style={{ color: 'grey' }} />
+                </td>
+                )}
+              </tr>
+              <tr style={{ border: '1px solid #A4C8E6', borderWidth: '1px 0px 2px 0px' }}>
+                {FILTERING.map((item, id) =>
+                  <td key={id} className="text-center">
+                    <SearchHeader 
+                      onChange={(pattern) => this.retrieveAffiliationsFiltered(item.caption, pattern)} 
+                      type={item.type} />
+                  </td>
+                )}
+              </tr>
+            </thead>
+            <tbody>
+              {dataTable.map((item, id) =>
+                <tr key={id}>
+                  <td  className="text-center" style={{ width: '10%'}}>{item.position__name}</td>
+                  <td  className="text-center" style={{ width: '200px'}}>
+                    <EllipsisWithTooltip placement="bottom" style={{ width: '300px'}}>
+                    {item.institution__parent_name || ''}
+                    </EllipsisWithTooltip>
+                  </td>
+                  <td  className="text-center" style={{ width: '20%'}}>
+                    <EllipsisWithTooltip placement="bottom" style={{ width: '100px'}}>
+                    {item.institution__department || ''}
+                    </EllipsisWithTooltip>
+                  </td>
+                  <td  className="text-center" style={{ width: '20%'}}>{item.institution__institution_subtype__name}</td>
+                  <td  className="text-center" style={{ width: '10%'}}>{item.past_position}</td>
+                  <td  className="text-center" style={{ width: '10%'}}>{item.year}</td>
+                  <td  className="text-center" style={{ width: '10%'}}>{item.institution__city}</td>
+                  <td  className="text-center" style={{ width: '10%'}}>{item.institution__country__name}</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+          </LoadingOverlay>
+          <InspirePagination currentPage={currentPage} totalPage={totalPage} onClick={this.navigatePage.bind(this)}/>
+
+      </div>
+
+        {/* <Modal animation centered
           show={this.state.showModalAssociations || this.state.showModalHospitals || this.state.showModalUniversities}
           onHide={(e) => this.closeModal(e)}
           dialogClassName="affiliations-modal">
@@ -362,7 +431,7 @@ class PanelAffiliations extends React.Component {
                 <LoadingOverlay
                     active={ this.state.isLoading }
                     spinner>
-                <table className="w-100">
+                <table className="w-100 inspire-table">
                   <thead>
                     <tr>
                       {FILTERING.map((item, id) =>
@@ -374,7 +443,7 @@ class PanelAffiliations extends React.Component {
                       </td>
                       )}
                     </tr>
-                    <tr style={{ border: '1px solid grey', borderWidth: '1px 0px 2px 0px' }}>
+                    <tr style={{ border: '1px solid #A4C8E6', borderWidth: '1px 0px 2px 0px' }}>
                       {FILTERING.map((item, id) =>
                         <td key={id} className="text-center">
                           <SearchHeader 
@@ -417,7 +486,7 @@ class PanelAffiliations extends React.Component {
               Close
             </Button>
           </Modal.Footer>
-        </Modal>
+        </Modal> */}
       </div>);
   }
 }
