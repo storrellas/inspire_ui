@@ -200,13 +200,12 @@ class InvestigatorProfileReloaded extends React.Component {
     }
 
     // This is a magic number 1,05 but I dont know why honestly
-    const height = this.divElement.clientHeight;
-    this.setState({ height });
-
-    
+    if( this.divElement ){
+      const height = this.divElement.clientHeight;
+      this.setState({ height });
+    }
 
     this.retrieveNominatim()
-
   }
 
   onClickSnaphot(type){

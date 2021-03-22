@@ -111,14 +111,12 @@ class PanelConnections extends React.Component {
     
     this.state = {
       isOpened: false,
-      showModal: false,
-      showModalCytoscape: false,
       activeTab: TAB.NETWORK,
       modalNetwork: undefined,
       users: [],
       connections: [],
-      usersMaximised: [],
-      connectionsMaximised: [],
+      usersFiltered: [],
+      connectionsFiltered: [],
       yearList: yearList,
       countryList: [],
       countrySelected: [],
@@ -145,6 +143,7 @@ class PanelConnections extends React.Component {
         institutionsPast: 0, 
         institutionsPresent: 0
       },
+      height: undefined,
     }
     this.cytoscape = undefined
     this.cytoscapeMax = undefined
@@ -194,40 +193,31 @@ class PanelConnections extends React.Component {
 
   }
 
-  openModal(e) {
-    this.setState({ showModal: true })
-  }
-
-  closeModal(e) {    
-    // this.cy.resize()
-    // this.cy.fit();
-    // this.cy.destroy();
-    this.setState({ showModal: false, showModalCytoscape: false })
-  }
-
   generateProfiles() {
 
     const { users } = this.state;
     // remove first user
     const usersLocal = users.slice(1);
 
-    const height = this.filterHeight?`${this.filterHeight}px`:'10px';
-    return <div className="h-100" style={{ display: "flex", backgroundColor: 'yellow', flexWrap: "wrap", overflowY: 'scroll' }}>
-      {usersLocal.map((item, id) =>
-        <div key={id} style={{ width: "33%", padding: '1em' }}>
-          {item.url === '' ?
-            <p style={{ fontSize: '18px', color: "#337ab7" }}>{item.label}</p>
-            :
-            <a href="#" target="_blank" style={{ fontSize: '18px', color: "#337ab7" }} >
-              <b>{item.label}</b>
-            </a>
-          }
-          <p style={{ fontSize: '14px' }}>{item.affiliation}</p>
+    return (
+      <div className="h-100" style={{ position: 'relative'}}>
+        <div className="h-100 d-flex flex-wrap" style={{ position:'absolute', overflowY: 'scroll' }}>
+          {usersLocal.map((item, id) =>
+            <div key={id} style={{ width: "33%", padding: '1em' }}>
+              {item.url === '' ?
+                <p style={{ fontSize: '18px', color: "#337ab7" }}>{item.label}</p>
+                :
+                <a href="#" target="_blank" style={{ fontSize: '18px', color: "#337ab7" }} >
+                  <b>{item.label}</b>
+                </a>
+              }
+              <p style={{ fontSize: '14px' }}>{item.affiliation}</p>
 
+            </div>
+          )}
         </div>
-      )}
-
-    </div>
+      </div>);
+ 
   }
 
   renderedMaximised(cy){
@@ -358,7 +348,7 @@ class PanelConnections extends React.Component {
 
     // Force cytoscapeMax to reload
     this.cytoscapeMax = undefined;
-    this.setState({ usersMaximised: filtering.users, connectionsMaximised: filtering.connections})
+    this.setState({ usersFiltered: filtering.users, connectionsFiltered: filtering.connections})
   }
 
   onFilterConnectionStrength(e){
@@ -512,8 +502,8 @@ class PanelConnections extends React.Component {
       this.state.users = users
       this.state.connections = connections
       // For maximised cytoscape
-      this.state.usersMaximised = users
-      this.state.connectionsMaximised = connections
+      this.state.usersFiltered = users
+      this.state.connectionsFiltered = connections
 
       this.state.cytoscapeInvestigator = users[0]
 
@@ -545,18 +535,16 @@ class PanelConnections extends React.Component {
   componentDidMount(){
     if( this.state.users.length == 0 && this.props.investigatorProfile)
       this.retrieveConnections()
-    console.log("this.filterHeight", this.filterHeight)
-    // if( this.filterHeight ){
-    //   // This is a magic number 1,05 but I dont know why honestly
-    //   const tabHeight = this.filterHeight.clientHeight;
-    //   console.log("height ", height)
-    //   this.setState({ tabHeight });
-    // }
+
   }
 
   componentDidUpdate(){
     if( this.state.users.length == 0 && this.props.investigatorProfile)
       this.retrieveConnections()
+    if( this.filterHeight == undefined){
+      const height = this.filterHeight.clientHeight * 1.15;
+      this.setState({ height });
+    }
   }
 
   generateSource(users, connections){
@@ -579,7 +567,7 @@ class PanelConnections extends React.Component {
 
   getNodeDesc(id) {
 
-    const { connectionsMaximised } = this.state;
+    const { connectionsFiltered } = this.state;
 
     // Calculate figures
     let clinicalTrials = 0;
@@ -587,10 +575,10 @@ class PanelConnections extends React.Component {
     let publications = 0;
     let institutionsPast = 0;
     let institutionsPresent = 0;
-    let connectionList = connectionsMaximised;
+    let connectionList = connectionsFiltered;
 
     if (id !== "1" )            
-      connectionList = [connectionsMaximised.find(p => ((p.source == "1") && (p.target == id)))];
+      connectionList = [connectionsFiltered.find(p => ((p.source == "1") && (p.target == id)))];
     for(const connection of connectionList){
       clinicalTrials += connection.number_clinical_trials || 0;
       events += connection.number_events || 0;
@@ -608,33 +596,11 @@ class PanelConnections extends React.Component {
 
 
   render() {
-    const { users, connections } = this.state;
-    const { usersMaximised, connectionsMaximised } = this.state;
-    const { reloaded } = this.props;
-    const source = this.generateSource(users, connections)
-    if( this.state.cytoscape === undefined && source.length > 0){
-      this.state.cytoscape = <CytoscapeComponent
-                            elements={source}
-                            cy={(cy) => this.renderedMaximised(cy) }
-                            style={{ width: '100%', height: reloaded?'500px':'300px' }}
-                            stylesheet={this.cytoscapeStylesheet}
-                            layout={this.cytoscapeLayout} />
-    }
 
-    // Generate maximised cytoscape
-    // if (this.state.showModalCytoscape === true ) {
-    //     const source = this.generateSource(usersMaximised, connectionsMaximised)
-    //     this.cytoscapeMax = <CytoscapeComponent key={this.childKey}
-    //                         elements={source}
-    //                         cy={(cy) => this.renderedMaximised(cy) }
-    //                         style={{ width: '100%', height: '100%' }}
-    //                         stylesheet={this.cytoscapeStylesheet}
-    //                         layout={this.cytoscapeLayout} />;        
-    // }
+    const { usersFiltered, connectionsFiltered } = this.state;
+    const source = this.generateSource(usersFiltered, connectionsFiltered)        
+    if ( this.cytoscapeMax === undefined && source.length > 0) {
 
-    if ( this.state.cytoscapeMax === undefined && source.length > 0) {
-        //const source = this.generateSource(usersMaximised, connectionsMaximised)
-        const source = this.generateSource(users, connections)        
         this.cytoscapeMax = <CytoscapeComponent key={this.childKey}
                             elements={source}
                             cy={(cy) => this.renderedMaximised(cy) }
@@ -642,13 +608,6 @@ class PanelConnections extends React.Component {
                             stylesheet={this.cytoscapeStylesheet}
                             layout={this.cytoscapeLayout} />;        
     }
-
-    let content_cy = this.state.cytoscape!==undefined?
-                        this.state.cytoscape:
-                        <div className="w-100 text-center" style={{ height: '400px'}}>Loading...</div>
-
-    // NetworkContent
-    //const networkContent = this.state.showModalCytoscape ? this.cytoscapeMax : '';
 
     const { activeTab, countryList, yearList } = this.state;
     const { countrySelected, connectionTypeSelected } = this.state;
@@ -661,8 +620,9 @@ class PanelConnections extends React.Component {
       nodeDesc = this.getNodeDesc(cytoscapeInvestigator.id)
     const nodeData = { ...cytoscapeInvestigator, ...nodeDesc}
 
+
     return (
-      <div className="d-flex" style={{ height: '100%' }}>
+      <div className="d-flex" style={{ height: '100%', alignItems: 'stretch' }}>
 
             
         <div style={{ width: '30%' }} ref={ (el) => this.filterHeight = el }>
@@ -716,136 +676,21 @@ class PanelConnections extends React.Component {
           </div>
         </div>
 
-        <div className="ml-3 d-flex h-100 w-100" style={{ flexDirection: 'column', backgroundColor: 'blue' }}>
-        <CytoscapeComponent key={this.childKey}
-                      elements={source}
-                      cy={(cy) => this.renderedMaximised(cy) }
-                      style={{ width: '100%', height: '400px' }}
-                      stylesheet={this.cytoscapeStylesheet}
-                      layout={this.cytoscapeLayout} />
+        <div className="ml-3 d-flex w-100" 
+          style={{ flexDirection: 'column', height: this.state.height, overflow: 'hidden' }}>
+          <Nav variant="tabs" style={{ width: '100%' }}>
+            <Nav.Item>
+              <Nav.Link href="#" active={activeTab == TAB.NETWORK}
+                onClick={(e) => this.setState({ activeTab: TAB.NETWORK })}><b>Network</b></Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link href="#" active={activeTab == TAB.PROFILES}
+                onClick={(e) => this.setState({ activeTab: TAB.PROFILES })}><b>Profiles</b></Nav.Link>
+            </Nav.Item>
+          </Nav>
 
+          {content}
         </div>
-
-
-
-
-              {/* <div className="ml-3 d-flex h-100 w-100" style={{ flexDirection: 'column', backgroundColor: 'blue' }}>
-                <div style={{ width: '100%' }} >
-                  <Nav variant="tabs" style={{ width: '100%' }}>
-                    <Nav.Item>
-                      <Nav.Link href="#" active={activeTab == TAB.NETWORK}
-                        onClick={(e) => this.setState({ activeTab: TAB.NETWORK })}>Network</Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item>
-                      <Nav.Link href="#" active={activeTab == TAB.PROFILES}
-                        onClick={(e) => this.setState({ activeTab: TAB.PROFILES })}>Profiles</Nav.Link>
-                    </Nav.Item>
-                  </Nav>
-                </div>
-
-                <div style={{ backgroundColor: 'green', borderRadius: '0 3px 3px 3px', border: '1px solid #dee2e6 ', 
-                              borderTop: 0, flexGrow: 1 }}>
-                  {content}
-                </div>
-
-              </div> */}
-
-
-
-
-
-        {/* {content_cy}
-        <div className="text-right pr-2 pb-1" style={{ cursor: 'pointer' }} onClick={(e) => this.openModal(e)}>
-          <FontAwesomeIcon icon={faExpandArrowsAlt} />
-        </div> */}
-
-        {/* <Modal animation centered
-          show={this.state.showModal}
-          onHide={(e) => this.closeModal(e)}
-          onEntered={(e) => this.setState({ showModalCytoscape: true })}
-          dialogClassName="connections-modal">
-          <Modal.Header closeButton>
-            <Modal.Title>Connections</Modal.Title>
-          </Modal.Header>
-          <Modal.Body style={{ overflowY: 'scroll', height: '100%'}}>
-            <div className="d-flex" style={{ height: '100%' }}>
-              <div style={{ width: '30%' }}>
-                <div style={{ borderRadius: '3px', border: '1px solid #ccc', color: '#555' }}>
-                  <div className="font-weight-bold" style={{ padding: '0.5em', paddingLeft: '15%', fontSize: '16px', backgroundColor: '#ddd' }}>FILTERS</div>
-                  <div className="p-2">
-                    <div className="font-weight-bold">Connection Minimum Strength</div>
-                    <Select
-                      options={connectionStregnthOptions}
-                      defaultValue={connectionStregnthOptions[0]}
-                      onChange={ (e) => this.onFilterConnectionStrength(e)}
-                    />
-                    <div className="font-weight-bold">Country</div>
-                    <Select
-                      isMulti
-                      options={countryList}
-                      value={countrySelected}
-                      onChange={ (e) => this.onFilterCountry(e)}
-                    />
-
-                    <div className="font-weight-bold">Connection Type</div>
-                    <Select
-                      isMulti
-                      options={connectionTypeOptions}
-                      value={connectionTypeSelected}
-                      onChange={ (e) => this.onFilterConnectionType(e)}
-                    />
-                    <div className="d-flex">
-                      <div className="w-50 mr-1">
-                        <div className="font-weight-bold">From</div>
-                        <Select options={yearList} 
-                          onChange={ (e) => this.onYearFrom(e)}
-                          defaultValue={yearList[0]}/>
-                      </div>
-                      <div className="w-50 ml-1">
-                        <div className="font-weight-bold">To</div>
-                        <Select options={yearList} 
-                          onChange={ (e) => this.onYearTo(e)}
-                          defaultValue={yearList[yearList.length-1]}/>
-                      </div>
-
-                    </div>
-                    
-                  </div>
-                </div>
-                <div className="mt-3" style={{ borderRadius: '3px', border: '1px solid #ccc', color: '#555' }}>
-                  <div className="font-weight-bold" style={{ padding: '0.5em', paddingLeft: '15%', fontSize: '16px', backgroundColor: '#ddd' }}>DETAILS</div>
-                  <div className="p-3">
-                    <NodeDetail data={nodeData} />
-                  </div>
-                </div>
-              </div>
-              <div className="ml-3 d-flex h-100 w-100" style={{ flexDirection: 'column' }}>
-                <div style={{ width: '100%' }} >
-                  <Nav variant="tabs" style={{ width: '100%' }}>
-                    <Nav.Item>
-                      <Nav.Link href="#" active={activeTab == TAB.NETWORK}
-                        onClick={(e) => this.setState({ activeTab: TAB.NETWORK })}>Network</Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item>
-                      <Nav.Link href="#" active={activeTab == TAB.PROFILES}
-                        onClick={(e) => this.setState({ activeTab: TAB.PROFILES })}>Profiles</Nav.Link>
-                    </Nav.Item>
-                  </Nav>
-                </div>
-
-                <div style={{ borderRadius: '0 3px 3px 3px', border: '1px solid #dee2e6 ', borderTop: 0, flexGrow: 1, height:'10px' }}>
-                  {content}
-                </div>
-
-              </div>
-            </div>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={(e) => this.closeModal(e)}>
-              Close
-            </Button>
-          </Modal.Footer>
-        </Modal> */}
 
       </div>);
   }
