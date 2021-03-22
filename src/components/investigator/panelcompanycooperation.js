@@ -310,10 +310,21 @@ class PanelCompanyCooperation extends React.Component {
         { headers: { "Authorization": "jwt " + token }
       })
 
+      let dataCompanyCooperations = response.data.results
+      if(response.data.results.length < take){
+        const filteringList = FILTERING.reduce((acc,curr)=> (acc[curr.caption]='',acc),{});    
+        const fill = new Array(take - response.data.results.length).fill(filteringList)
+        
+
+        dataCompanyCooperations.push(...fill)
+      }
+
+      console.log("size ", dataCompanyCooperations.length)
+
       // Set State
       const totalPage = Math.ceil(response.data.count / take);      
       this.setState({
-        dataCompanyCooperations: response.data.results, 
+        dataCompanyCooperations: dataCompanyCooperations, 
         currentPage: page,
         totalPage: totalPage,
         isLoading: false,
@@ -387,7 +398,7 @@ class PanelCompanyCooperation extends React.Component {
       this.state.isOpened == false &&
       this.state.dataPerCompany !== undefined) {
       const that = this;
-      setTimeout(function () { that.generateChart() }, 500);
+      setTimeout(function () { that.generateChart(); that.generateMaxChart() }, 500);
     }
 
     const {dataCompanyCooperations, currentPage, totalPage, sorting} = this.state;
@@ -398,30 +409,17 @@ class PanelCompanyCooperation extends React.Component {
           active={this.state.isOpened == false}
           spinner>
           <div id="companycooperationchart" style={{ height: '400px', padding: '1em' }}></div>
-          <div className="text-right pr-2 pb-1" style={{ cursor: 'pointer' }} onClick={(e) => this.openModal(e)}>
-            View Details ...
-          </div>
-        </LoadingOverlay>
 
-        <Modal animation centered
-          show={this.state.showModal}
-          onHide={(e) => this.closeModal(e)}
-          onEntered={(e) => this.generateMaxChart()}
-          dialogClassName="company-cooperation-modal">
-          <Modal.Header closeButton>
-            <Modal.Title>Company Cooperation</Modal.Title>
-          </Modal.Header>
-          <Modal.Body style={{ overflowY: 'scroll', height: '100%'}}>
-            <div className="d-flex" style={{ height: '100%' }}>
+          <div className="d-flex" style={{ marginTop: '3em' }}>
               <div className="d-flex justify-content-center flex-column" style={{ width: '30%' }}>
-                <div id="companycooperationmaxchart" style={{ height: '70%' }}></div>
+                <div id="companycooperationmaxchart" style={{ height: '400px' }}></div>
               </div>
               <div style={{ width: '70%' }}>
               <LoadingOverlay
                 active={ this.state.isLoading }
                 spinner>
 
-                <table className="w-100">
+                <table className="w-100 inspire-table">
                   <thead>
                     <tr>
                     {FILTERING.map((item, id) =>
@@ -433,7 +431,7 @@ class PanelCompanyCooperation extends React.Component {
                       </td>
                     )}
                     </tr>
-                    <tr style={{ border: '1px solid grey', borderWidth: '1px 0px 2px 0px' }}>
+                    <tr style={{ border: '1px solid #A4C8E6', borderWidth: '1px 0px 2px 0px' }}>
                     {FILTERING.map((item, id) =>
                       <td key={id} className="text-center" >
                         <SearchHeader 
@@ -464,13 +462,9 @@ class PanelCompanyCooperation extends React.Component {
 
               </div>
             </div>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={(e) => this.closeModal(e)}>
-              Close
-            </Button>
-          </Modal.Footer>
-        </Modal>
+
+
+        </LoadingOverlay>
 
       </div>);
   }

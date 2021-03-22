@@ -69,3 +69,26 @@
 .clinical-trials-modal .modal-content {
     height: 80%;
 }
+
+
+.inspire-table td{
+    padding: 0.5em 0 0.5em 0;
+    text-align: center!important;
+}
+
+.inspire-table tbody tr:hover{
+    background-color: #ECEFF8;
+}
+
+.inspire-table tbody tr:hover td:first-child{    
+    border-radius: 10px 0 0 10px;
+}
+
+.inspire-table tbody tr:hover td:last-child{    
+    background-color: #ECEFF8;
+    border-radius: 0 10px 10px 0;
+}
+
+.inspire-table td:empty::after{
+    content: "\00a0";
+}
