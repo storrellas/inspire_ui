@@ -128,11 +128,8 @@ class PanelClinicalTrials extends React.Component {
 
   generateConditionsChart() {
     this.conditionsChart = this.generateConditions("conditionsChart")
-  }
-
-  generateConditionsMaxChart() {
-    this.conditionsMaxChart = this.generateConditions("conditionsMaxChart")
-    this.conditionsMaxChart.legend = new am4charts.Legend();
+    this.conditionsChart.legend = new am4charts.Legend();    
+    this.conditionsChart.legend.position = "right"
   }
 
   generateInterventions(container) {
@@ -158,12 +155,10 @@ class PanelClinicalTrials extends React.Component {
 
   generateInterventionsChart() {
     this.interventionsChart = this.generateInterventions("interventionsChart")
+    this.interventionsChart.legend = new am4charts.Legend();    
+    this.interventionsChart.legend.position = "right"
   }
 
-  generateInterventionsMaxChart() {
-    this.interventionsMaxChart = this.generateInterventions("interventionsMaxChart")
-    this.interventionsMaxChart.legend = new am4charts.Legend();
-  }
 
   async retrieveConditions(){
     try{      
@@ -314,7 +309,7 @@ class PanelClinicalTrials extends React.Component {
         <LoadingOverlay
           active={this.state.isLoading}
           spinner>
-          <table className="w-100" style={{ fontSize: '12px' }}>
+          <table className="w-100 inspire-table" style={{ fontSize: '12px' }}>
             <thead>
               <tr>
                 {FILTERING.map((item, id) =>
@@ -325,7 +320,7 @@ class PanelClinicalTrials extends React.Component {
                     <FontAwesomeIcon icon={faLongArrowAltDown} className={sorting == `-${item.dataField}` ? "ml-1" : "ml-1 d-none"} style={{ color: 'grey' }} />
                   </td>                )}
               </tr>
-              <tr style={{ border: '1px solid grey', borderWidth: '1px 0px 2px 0px' }}>
+              <tr style={{ border: '1px solid #A4C8E6', borderWidth: '1px 0px 2px 0px' }}>
               {FILTERING.map((item, id) =>
                 <td key={id} className="text-center" >
                   <SearchHeader 
@@ -371,30 +366,15 @@ class PanelClinicalTrials extends React.Component {
 
   closeModal(){
     this.setState({ 
-      showModalConditions: false, 
-      showModalInterventions: false, 
       showModal: false
     })
   }
 
   closedModal(){
-    if (this.interventionsMaxChart) {
-      this.interventionsMaxChart.dispose();
-    }
-    if (this.conditionsMaxChart) {
-      this.conditionsMaxChart.dispose();
-    }
   }
 
   openedModal(){
-    const {showModal, showModalConditions, showModalInterventions} = this.state;
-    if( showModal ){
-      // Do nothing      
-    }else if( showModalConditions ){
-      this.generateConditionsMaxChart()
-    }else if( showModalInterventions ){
-      this.generateInterventionsMaxChart()
-    }
+    const {showModal} = this.state;
   }
 
 
@@ -420,39 +400,25 @@ class PanelClinicalTrials extends React.Component {
       setTimeout(function(){ that.generateChart() }, 500);
     }
 
-    const {showModal, showModalConditions, showModalInterventions} = this.state;
-    const isModal = showModal || showModalConditions || showModalInterventions;
+    const {showModal} = this.state;
     let modalContent = <div>Unknown</div>
     if( showModal ){
       modalContent = this.generateModalContent()      
-    }else if( showModalConditions ){      
-      modalContent = <div id="conditionsMaxChart" style={{ width:'100%', height:'100%', marginTop:'20px'}}></div>
-    }else if( showModalInterventions ){
-      modalContent = <div id="interventionsMaxChart" style={{ width:'100%', height:'100%', marginTop:'20px'}}></div>
     }
-
 
     return (
       <div>
         <LoadingOverlay
           active={this.state.isOpened == false}
           spinner>
-          <div className="d-flex" style={{ padding: '1em 1em 1em 1em' }}>
-            <div className="w-50 text-center">
+          <div style={{ padding: '1em 1em 1em 1em' }}>
+            <div>
               <div>Conditions</div>
-              <div id="conditionsChart" style={{ height: '200px', width: '100%' }}></div>
-              <div className="text-right pr-2 pb-1" style={{ cursor: 'pointer' }}
-                onClick={(e) => this.setState({ showModalConditions: true })}>
-                <FontAwesomeIcon icon={faExpandArrowsAlt} />
-              </div>
+              <div id="conditionsChart" style={{ height: '400px', width: '100%' }}></div>
             </div>
-            <div className="w-50 text-center">
+            <div>
               <div>Interventions</div>
-              <div id="interventionsChart" style={{ width: '100%', height: '200px' }}></div>
-              <div className="text-right pr-2 pb-1" style={{ cursor: 'pointer' }}
-                onClick={(e) => this.setState({ showModalInterventions: true })}>
-                <FontAwesomeIcon icon={faExpandArrowsAlt} />
-              </div>
+              <div id="interventionsChart" style={{ width: '100%', height: '400px' }}></div>
             </div>
           </div>
           <div className="text-right pr-2 pb-1" style={{ cursor: 'pointer' }} 
@@ -463,7 +429,7 @@ class PanelClinicalTrials extends React.Component {
 
 
         <Modal animation centered
-          show={isModal}
+          show={showModal}
           onHide={(e) => this.closeModal(e)}
           onEntered={(e) => this.openedModal()}
           onExited={(e) => this.closedModal(e)}
