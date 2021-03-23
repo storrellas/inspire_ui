@@ -11,7 +11,7 @@ import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 
 // Font Awesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faExpandArrowsAlt, faLongArrowAltUp, faLongArrowAltDown, faCaretRight } from '@fortawesome/free-solid-svg-icons'
+import { faSpinner, faLongArrowAltUp, faLongArrowAltDown, faCaretRight } from '@fortawesome/free-solid-svg-icons'
 
 // EllipsisWithTooltip
 import EllipsisWithTooltip from 'react-ellipsis-with-tooltip'
@@ -119,27 +119,27 @@ class PanelEvents extends React.Component {
 
 
   createSeries(chart, field, name){
-      // Set up series
-      let series = chart.series.push(new am4charts.ColumnSeries());
-      series.name = name;
-      series.dataFields.valueY = field;
-      series.dataFields.categoryX = "state";
-      series.sequencedInterpolation = true;
+    // Set up series
+    let series = chart.series.push(new am4charts.ColumnSeries());
+    series.name = name;
+    series.dataFields.valueY = field;
+    series.dataFields.categoryX = "state";
+    series.sequencedInterpolation = true;
 
-      // Make it stacked
-      series.stacked = true;
+    // Make it stacked
+    series.stacked = true;
 
-      // Configure columns
-      series.columns.template.width = am4core.percent(60);
-      series.columns.template.tooltipText = "[bold]{name}[/]\n[font-size:14px]{categoryX}";
+    // Configure columns
+    series.columns.template.width = am4core.percent(60);
+    series.columns.template.tooltipText = "[bold]{name}[/]\n[font-size:14px]{categoryX}";
 
-      // Add label
-      let labelBullet = series.bullets.push(new am4charts.LabelBullet());
-      labelBullet.label.text = "{valueY}";
-      labelBullet.locationY = 0.5;
-      labelBullet.label.hideOversized = true;
+    // Add label
+    let labelBullet = series.bullets.push(new am4charts.LabelBullet());
+    labelBullet.label.text = "{valueY}";
+    labelBullet.locationY = 0.5;
+    labelBullet.label.hideOversized = true;
 
-      return series;
+    return series;
   }
 
   generateEventRole(container) {
@@ -185,9 +185,7 @@ class PanelEvents extends React.Component {
 
     return (
     <div className="p-3 h-100" style={{ fontSize:'14px'}}>
-      <LoadingOverlay
-        active={ this.state.isLoading }
-        spinner>
+
 
       <table className="w-100 inspire-table" style={{ fontSize: '12px'}}>
         <thead>
@@ -214,13 +212,35 @@ class PanelEvents extends React.Component {
           </tr>
         </thead>
         <tbody>
+        {this.state.isLoading?
+          <>
+          <tr>
+            <td></td>
+            <td rowSpan="10" style={{ background: 'white', height: '400px' }} colSpan="14" className="text-center">
+              <div className="mb-3" style={{ fontSize: '20px', color: 'grey' }} >Loading ...</div>
+              <FontAwesomeIcon icon={faSpinner}  spin style={{ fontSize: '40px', color: 'grey' }} />                    
+            </td>
+          </tr>
+          <tr><td></td></tr>
+          <tr><td></td></tr>
+          <tr><td></td></tr>
+          <tr><td></td></tr>
+          <tr><td></td></tr>
+          <tr><td></td></tr>
+          <tr><td></td></tr>
+          <tr><td></td></tr>
+          <tr><td></td></tr>
+          </>
+          :<tr></tr>}
           {this.state.dataTable.map((item, id) =>
             [
             <tr key={id}>
               <td className="text-center" style={{ width: '5%'}}>
+                {item.position!== ''?
                 <FontAwesomeIcon className={item.show?'table-caret active':'table-caret'} icon={faCaretRight} 
                   style={{ fontSize: '1em', color: 'grey', cursor:'pointer' }} 
                   onClick={(e) => this.onClickedTableDetail(id)} />
+                  :''}
               </td>
               <td  className="text-left" style={{ width: '45%'}}>
                 <EllipsisWithTooltip placement="bottom" style={{ width: '500px'}}>
@@ -252,7 +272,7 @@ class PanelEvents extends React.Component {
           )}
         </tbody>
       </table>
-      </LoadingOverlay>
+
       <InspirePagination currentPage={currentPage} totalPage={totalPage} onClick={this.navigatePage.bind(this)}/>
     </div>)
   }
@@ -317,7 +337,7 @@ class PanelEvents extends React.Component {
 
   async retrieveEvents(page = 1){
     try{
-      this.setState({isLoading: true})
+      this.setState({isLoading: true, dataTable: []})
 
       const token = localStorage.getItem('token')
       const { take, limit, filtering, sorting } = this.state;
@@ -346,10 +366,17 @@ class PanelEvents extends React.Component {
         { headers: { "Authorization": "jwt " + token }
       })
 
+      let dataTable = response.data.results
+      if(response.data.results.length < take){
+        const filteringList = FILTERING.reduce((acc,curr)=> (acc[curr.caption]='',acc),{});    
+        const fill = new Array(take - response.data.results.length).fill(filteringList)
+        dataTable.push(...fill)
+      }
+
       // Set State
       const totalPage = Math.ceil(response.data.count / take);      
       this.setState({
-        dataTable: response.data.results, 
+        dataTable: dataTable, 
         currentPage: page,
         totalPage: totalPage,
         isLoading: false,
