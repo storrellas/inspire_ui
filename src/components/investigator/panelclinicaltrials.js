@@ -12,7 +12,7 @@ import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 
 // Font Awesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faExpandArrowsAlt, faLongArrowAltUp, faLongArrowAltDown } from '@fortawesome/free-solid-svg-icons'
+import { faSpinner, faLongArrowAltUp, faLongArrowAltDown } from '@fortawesome/free-solid-svg-icons'
 
 // Redux
 import { connect } from "react-redux";
@@ -213,7 +213,7 @@ class PanelClinicalTrials extends React.Component {
 
   async retrieveCT(page = 1){
     try{
-      this.setState({isLoading: true})
+      this.setState({isLoading: true, dataTable: []})
 
       const token = localStorage.getItem('token')
       const { take, limit, filtering, sorting } = this.state;
@@ -242,10 +242,17 @@ class PanelClinicalTrials extends React.Component {
         { headers: { "Authorization": "jwt " + token }
       })
 
+      let dataTable = response.data.results
+      if(response.data.results.length < take){
+        const filteringList = FILTERING.reduce((acc,curr)=> (acc[curr.caption]='',acc),{});    
+        const fill = new Array(take - response.data.results.length).fill(filteringList)
+        dataTable.push(...fill)
+      }
+
       // Set State
       const totalPage = Math.ceil(response.data.count / take);      
       this.setState({
-        dataTable: response.data.results, 
+        dataTable: dataTable, 
         currentPage: page,
         totalPage: totalPage,
         isLoading: false,
@@ -306,41 +313,59 @@ class PanelClinicalTrials extends React.Component {
 
     return (
     <div className="p-3">
-        <LoadingOverlay
-          active={this.state.isLoading}
-          spinner>
-          <table className="w-100 inspire-table" style={{ fontSize: '12px' }}>
-            <thead>
-              <tr>
-                {FILTERING.map((item, id) =>
-                  <td key={id} className="text-center" style={{ cursor: 'pointer' }}
-                  onClick={(e) => this.onSetSorting(item.dataField)}>
-                    {item.label}
-                    <FontAwesomeIcon icon={faLongArrowAltUp} className={sorting == item.dataField ? "ml-1" : "ml-1 d-none"} style={{ color: 'grey' }} />
-                    <FontAwesomeIcon icon={faLongArrowAltDown} className={sorting == `-${item.dataField}` ? "ml-1" : "ml-1 d-none"} style={{ color: 'grey' }} />
-                  </td>                )}
-              </tr>
-              <tr style={{ border: '1px solid #A4C8E6', borderWidth: '1px 0px 2px 0px' }}>
+
+        <table className="w-100 inspire-table" style={{ fontSize: '12px' }}>
+          <thead>
+            <tr>
               {FILTERING.map((item, id) =>
-                <td key={id} className="text-center" >
-                  <SearchHeader 
-                    onChange={(pattern) => this.retrieveCTFiltered(item.caption, pattern)} 
-                    type={item.type} />
-                </td>
-              )}
+                <td key={id} className="text-center" style={{ cursor: 'pointer' }}
+                onClick={(e) => this.onSetSorting(item.dataField)}>
+                  {item.label}
+                  <FontAwesomeIcon icon={faLongArrowAltUp} className={sorting == item.dataField ? "ml-1" : "ml-1 d-none"} style={{ color: 'grey' }} />
+                  <FontAwesomeIcon icon={faLongArrowAltDown} className={sorting == `-${item.dataField}` ? "ml-1" : "ml-1 d-none"} style={{ color: 'grey' }} />
+                </td>                )}
+            </tr>
+            <tr style={{ border: '1px solid #A4C8E6', borderWidth: '1px 0px 2px 0px' }}>
+            {FILTERING.map((item, id) =>
+              <td key={id} className="text-center" >
+                <SearchHeader 
+                  onChange={(pattern) => this.retrieveCTFiltered(item.caption, pattern)} 
+                  type={item.type} />
+              </td>
+            )}
+            </tr>
+          </thead>
+          <tbody>
+          {this.state.isLoading?
+            <>
+            <tr>
+              <td></td>
+              <td rowSpan="10" style={{ background: 'white', height: '400px' }} colSpan="14" className="text-center">
+                <div className="mb-3" style={{ fontSize: '20px', color: 'grey' }} >Loading ...</div>
+                <FontAwesomeIcon icon={faSpinner}  spin style={{ fontSize: '40px', color: 'grey' }} />                    
+              </td>
+            </tr>
+            <tr><td></td></tr>
+            <tr><td></td></tr>
+            <tr><td></td></tr>
+            <tr><td></td></tr>
+            <tr><td></td></tr>
+            <tr><td></td></tr>
+            <tr><td></td></tr>
+            <tr><td></td></tr>
+            <tr><td></td></tr>
+            </>
+            :<tr></tr>}
+            {dataTable.map((item, id) =>
+              <tr key={id}>
+                {FILTERING.map( (header, id ) => 
+                  <td key={id}  className="text-center" style={{ width: '20%'}}>{item[header.dataField]}</td>
+                )}
               </tr>
-            </thead>
-            <tbody>
-              {dataTable.map((item, id) =>
-                <tr key={id}>
-                  {FILTERING.map( (header, id ) => 
-                    <td key={id}  className="text-center" style={{ width: '20%'}}>{item[header.dataField]}</td>
-                  )}
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </LoadingOverlay>
+            )}
+          </tbody>
+        </table>
+
         <InspirePagination currentPage={currentPage} totalPage={totalPage} onClick={this.navigatePage.bind(this)} />
 
       </div>)
