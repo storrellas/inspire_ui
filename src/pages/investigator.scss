@@ -8,25 +8,12 @@ $inspire-text-secondary: #8A8A8A;
     box-shadow: grey 0 0 10px;
 }
 
-.inspire-ghost-button{
-    background-color: white;
-    border-radius: 20px;
-    border-color: $inspire-blue;
-    color: $inspire-blue;
-
-}
-.inspire-ghost-button:hover{
-    border-radius: 20px;
-    background-color: $inspire-blue;
-    color: white;
-    border: 0;
-}
-
 .inspire-button{
     background-color: $inspire-blue;
     border-radius: 20px;
     color: white;
-    border: 0;
+    border: 1px solid transparent;
+    padding: 0.2em 0.5em 0.2em 0.5em;    
 }
 
 .inspire-button:hover{
@@ -35,6 +22,22 @@ $inspire-text-secondary: #8A8A8A;
     color: $inspire-blue;
     border: 1px solid $inspire-blue;
 }
+
+.inspire-ghost-button{
+    background-color: white;
+    border-radius: 20px;
+    color: $inspire-blue;
+    border: 1px solid $inspire-blue;
+    padding: 0.2em 0.5em 0.2em 0.5em;    
+}
+.inspire-ghost-button:hover{
+    border-radius: 20px;
+    background-color: $inspire-blue;
+    color: white;
+    border: 1px solid transparent;
+}
+
+
 
 .inspire-panel{
     background-color: white;

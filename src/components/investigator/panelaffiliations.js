@@ -195,6 +195,8 @@ class PanelAffiliations extends React.Component {
   showTableUniversities(){
     this.setState({
       showTableUniversities: true, 
+      showTableHospitals: false, 
+      showTableAssociations: false, 
       modalTitle: 'Affiliations - Universities',
       currentPage: 1,
       totalPage: 10,
@@ -208,7 +210,9 @@ class PanelAffiliations extends React.Component {
   
   showTableHospitals(){
     this.setState({
+      showTableUniversities: false, 
       showTableHospitals: true, 
+      showTableAssociations: false, 
       modalTitle: 'Affiliations - Hospitals',
       currentPage: 1,
       totalPage: 10,
@@ -221,6 +225,8 @@ class PanelAffiliations extends React.Component {
 
   showTableAssociations(){
     this.setState({
+      showTableUniversities: false, 
+      showTableHospitals: false, 
       showTableAssociations: true, 
       modalTitle: 'Affiliations - Associations',
       currentPage: 1,
@@ -305,7 +311,7 @@ class PanelAffiliations extends React.Component {
 
     const { affiliations, modalTitle, dataTable } = this.state;
     const { currentPage, totalPage, sorting } = this.state;
-    const { showModalUniversities, showTableHospitals, showTableAssociations } = this.state;
+    const { showTableUniversities, showTableHospitals, showTableAssociations } = this.state;
 
     let nUniversities = "-";
     let nHospitals = "-";
@@ -315,6 +321,8 @@ class PanelAffiliations extends React.Component {
       nHospitals = affiliations.filter(x => x.affiliation_type === 'hospitals')[0].total
       nAssociations = affiliations.filter(x => x.affiliation_type === 'associations')[0].total
     }
+
+    console.log("showTable ", showTableUniversities, showTableHospitals, showTableAssociations)
 
     return (
       <div>
@@ -329,11 +337,11 @@ class PanelAffiliations extends React.Component {
             </div>
             
             <div style={{ padding: '1em 2em 1em 2em'}}>
-              <Button className={showModalUniversities?"w-100 inspire-button":"w-100 inspire-ghost-button"} variant="outline-primary"
+              <button className={showTableUniversities?"w-100 inspire-button":"w-100 inspire-ghost-button"}
                 style={{ paddingLeft: '1em', paddingRight: '1em' }}
-                onClick={ (e) => this.showModalUniversities()}>
+                onClick={ (e) => this.showTableUniversities()}>
                 Show Results
-              </Button>
+              </button>
             </div>
           </div>
           <div className="text-center" style={{ width: '33%', margin: '1em 0.2em 1em 0.2em', border: '1px solid #D1E3F2', borderRadius: '5px'  }}>
@@ -346,11 +354,11 @@ class PanelAffiliations extends React.Component {
             </div>
             
             <div style={{ padding: '1em 2em 1em 2em'}}>
-              <Button className={showTableHospitals?"w-100 inspire-button":"w-100 inspire-ghost-button"}  variant="outline-primary"
+              <button className={showTableHospitals?"w-100 inspire-button":"w-100 inspire-ghost-button"}
                 style={{ paddingLeft: 0, paddingRight: 0 }}
                 onClick={ (e) => this.showTableHospitals()}>
                 Show Results
-              </Button>
+              </button>
             </div>
           </div>
           <div className="text-center" style={{ width: '33%', margin: '1em 0.2em 1em 0.2em', border: '1px solid #D1E3F2', borderRadius: '5px'  }}>
@@ -363,11 +371,11 @@ class PanelAffiliations extends React.Component {
             </div>
             
             <div style={{ padding: '1em 2em 1em 2em'}}>
-              <Button className={showTableAssociations?"w-100 inspire-button":"w-100 inspire-ghost-button"}  variant="outline-primary"
+              <button className={showTableAssociations?"w-100 inspire-button":"w-100 inspire-ghost-button"}  variant="primary"
                 style={{ paddingLeft: 0, paddingRight: 0 }}
                 onClick={ (e) => this.showTableAssociations()}>
                 Show Results
-              </Button>
+              </button>
             </div>
           </div>
         </div>
