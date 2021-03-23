@@ -78,8 +78,6 @@ class PanelEvents extends React.Component {
     const filteringList = FILTERING.reduce((acc,curr)=> (acc[curr.caption]='',acc),{});    
     this.state = {
       isOpened: false,
-      showModalEventType: false,
-      showModalEventRole: false,
       showModal: false,
       dataTable: [],
       dataTypes: undefined,
@@ -115,12 +113,10 @@ class PanelEvents extends React.Component {
 
   generateEventTypeChart() {
     this.eventTypeChart = this.generateEventType("eventTypeChart")
+    this.eventTypeChart.legend = new am4charts.Legend();    
+    this.eventTypeChart.legend.position = "right"
   }
 
-  generateEventTypeMaxChart() {
-    this.eventTypeMaxChart = this.generateEventType("eventTypeMaxChart")
-    this.eventTypeMaxChart.legend = new am4charts.Legend();
-  }
 
   createSeries(chart, field, name){
       // Set up series
@@ -172,11 +168,8 @@ class PanelEvents extends React.Component {
 
   generateEventRoleChart() {
     this.eventRoleChart = this.generateEventRole("eventRoleChart")
-  }
-
-  generateEventRoleMaxChart() {
-    this.eventRoleMaxChart = this.generateEventRole("eventRoleMaxChart")
-    this.eventRoleMaxChart.legend = new am4charts.Legend();    
+    this.eventRoleChart.legend = new am4charts.Legend();    
+    this.eventRoleChart.legend.position = "right"
   }
 
   onClickedTableDetail(id){    
@@ -196,7 +189,7 @@ class PanelEvents extends React.Component {
         active={ this.state.isLoading }
         spinner>
 
-      <table className="w-100" style={{ fontSize: '12px'}}>
+      <table className="w-100 inspire-table" style={{ fontSize: '12px'}}>
         <thead>
           <tr>
             <td></td>
@@ -209,7 +202,7 @@ class PanelEvents extends React.Component {
               </td>
               )}
           </tr>
-          <tr style={{ border: '1px solid grey', borderWidth: '1px 0px 2px 0px' }}>
+          <tr style={{ border: '1px solid #A4C8E6', borderWidth: '1px 0px 2px 0px' }}>
             <td></td>
               {FILTERING.map((item, id) =>
                 <td key={id}>
@@ -246,8 +239,8 @@ class PanelEvents extends React.Component {
                 id="example-panel"
                 height={ item.show?'auto':0}
                 duration={250}>
-                <div style={{ border: '1px solid grey', borderWidth: '1px 0px 1px 0px', 
-                              padding: '0.5em', paddingLeft: '2em', backgroundColor: '#fafafa'}}>
+                <div className="text-left" style={{ border: '1px solid #A4C8E6', borderWidth: '1px 0px 1px 0px', 
+                              padding: '0.5em', paddingLeft: '2em', backgroundColor: '#F2F7FB'}}>
                   <div><span className="font-weight-bold">Talks:</span> {item.talks}</div>
                   <div><span className="font-weight-bold">Sesions:</span> {item.sessions}</div>
                   <div><span className="font-weight-bold">Posters:</span> {item.posters}</div>
@@ -427,8 +420,6 @@ class PanelEvents extends React.Component {
 
   closeModal(){
     this.setState({ 
-      showModalEventType: false, 
-      showModalEventRole: false, 
       showModal: false
     })
   }
@@ -437,19 +428,7 @@ class PanelEvents extends React.Component {
     this.retrieveEvents(page)
   }
 
-  openedModal(){
-    const {showModal, showModalEventType, showModalEventRole} = this.state;
-
-    
-    if( showModal ){
-      // Do nothing      
-    }else if( showModalEventType ){
-      this.generateEventTypeMaxChart()
-    }else if( showModalEventRole ){
-      this.generateEventRoleMaxChart()
-    }
-  }
-
+  openedModal(){}
 
   closedModal(){
     if (this.eventTypeMaxChart) {
@@ -484,15 +463,10 @@ class PanelEvents extends React.Component {
 
 
 
-    const {showModal, showModalEventType, showModalEventRole} = this.state;
-    const isModal = showModal || showModalEventType || showModalEventRole;
+    const { showModal } = this.state;
     let modalContent = <div>Unknown</div>
     if( showModal ){
       modalContent = this.generateModalContent()     
-    }else if( showModalEventType ){
-      modalContent = <div id="eventTypeMaxChart" style={{ width:'100%', height:'100%', marginTop:'20px'}}></div>
-    }else if( showModalEventRole ){
-      modalContent = <div id="eventRoleMaxChart" style={{ width:'100%', height:'100%', marginTop:'20px'}}></div>
     }
 
 
@@ -501,22 +475,14 @@ class PanelEvents extends React.Component {
         <LoadingOverlay
           active={this.state.isOpened === false}
           spinner>
-          <div className="d-flex" style={{ padding: '1em 1em 1em 1em' }}>
-            <div className="w-50 text-center">
+          <div style={{ padding: '1em 1em 1em 1em' }}>
+            <div>
               <div>Event Types</div>
-              <div id="eventTypeChart" style={{ width: '100%', height: '200px', paddingBottom: '0.5em' }}></div>
-              <div className="text-right pr-2 pb-1" style={{ cursor: 'pointer' }}
-                onClick={(e) => this.setState({ showModalEventType: true })}>
-                <FontAwesomeIcon icon={faExpandArrowsAlt} />
-              </div>
+              <div id="eventTypeChart" style={{ width: '100%', height: '400px', padding: '1em 15% 1em 15%' }}></div>
             </div>
-            <div className="w-50 text-center">
+            <div className="mt-3">
               <div>Event Roles</div>
-              <div id="eventRoleChart" style={{ width: '100%', height: '200px', paddingBottom: '0.5em' }}></div>
-              <div className="text-right pr-2 pb-1" style={{ cursor: 'pointer' }}
-                onClick={(e) => this.setState({ showModalEventRole: true })}>
-                <FontAwesomeIcon icon={faExpandArrowsAlt} />
-              </div>
+              <div id="eventRoleChart" style={{ width: '100%', height: '400px', padding: '1em 20% 1em 20%' }}></div>
             </div>
           </div>
           <div className="text-right pr-2 pb-1" style={{ cursor: 'pointer' }}
@@ -526,7 +492,7 @@ class PanelEvents extends React.Component {
         </LoadingOverlay>
 
         <Modal animation centered
-          show={isModal}
+          show={showModal}
           onHide={(e) => this.closeModal(e)}
           onEntered={(e) => this.openedModal()}
           onExited={(e) => this.closedModal(e)}

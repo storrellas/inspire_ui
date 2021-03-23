@@ -151,7 +151,7 @@ class PanelPublications extends React.Component {
         <LoadingOverlay
           active={this.state.isLoading}
           spinner>
-          <table className="w-100" style={{ fontSize: '13px' }}>
+          <table className="inspire-table w-100" style={{ fontSize: '13px' }}>
             <thead>
               <tr>
                 <td className="text-center">WebLink</td>
@@ -163,7 +163,7 @@ class PanelPublications extends React.Component {
                       <FontAwesomeIcon icon={faLongArrowAltDown} className={sorting == `-${item.dataField}` ? "ml-1" : "ml-1 d-none"} style={{ color: 'grey' }} />
                     </td>                )}
               </tr>
-              <tr style={{ border: '1px solid grey', borderWidth: '1px 0px 2px 0px' }}>
+              <tr style={{ border: '1px solid #A4C8E6', borderWidth: '1px 0px 2px 0px' }}>
                 <td></td>
                 {FILTERING.map((item, id) =>
                 <td key={id} className="text-center" >
