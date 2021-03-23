@@ -70,9 +70,9 @@ class PanelAffiliations extends React.Component {
     super(props)
     const filteringList = FILTERING.reduce((acc,curr)=> (acc[curr.caption]='',acc),{});    
     this.state = {
-      showModalUniversities: false,
-      showModalHospitals: false,
-      showModalAssociations: false,
+      showTableUniversities: false,
+      showTableHospitals: false,
+      showTableAssociations: false,
       modalTitle: '',
       investigatorId: undefined,
       affiliations: undefined,
@@ -90,13 +90,6 @@ class PanelAffiliations extends React.Component {
     }
   }
 
-  closeModal(){
-    this.setState({
-      showModalUniversities: false,
-      showModalHospitals: false,
-      showModalAssociations: false
-    })
-  }
 
   async retrieveAffiliations() {
     try{
@@ -199,9 +192,9 @@ class PanelAffiliations extends React.Component {
     this.retrieveAffiliationsInstitution(base_url, page)
   }
 
-  showModalUniversities(){
+  showTableUniversities(){
     this.setState({
-      showModalUniversities: true, 
+      showTableUniversities: true, 
       modalTitle: 'Affiliations - Universities',
       currentPage: 1,
       totalPage: 10,
@@ -213,9 +206,9 @@ class PanelAffiliations extends React.Component {
   }
 
   
-  showModalHospitals(){
+  showTableHospitals(){
     this.setState({
-      showModalHospitals: true, 
+      showTableHospitals: true, 
       modalTitle: 'Affiliations - Hospitals',
       currentPage: 1,
       totalPage: 10,
@@ -226,9 +219,9 @@ class PanelAffiliations extends React.Component {
     this.retrieveAffiliationsHospitals(1) 
   }
 
-  showModalAssociations(){
+  showTableAssociations(){
     this.setState({
-      showModalAssociations: true, 
+      showTableAssociations: true, 
       modalTitle: 'Affiliations - Associations',
       currentPage: 1,
       totalPage: 10,
@@ -256,11 +249,11 @@ class PanelAffiliations extends React.Component {
     }
     this.typingTimeout = 
       setTimeout(function () { 
-        if( that.state.showModalUniversities ){
+        if( that.state.showTableUniversities ){
           that.retrieveAffiliationsUniversities(currentPage) 
-        }else if( that.state.showModalHospitals ){
+        }else if( that.state.showTableHospitals ){
           that.retrieveAffiliationsHospitals(currentPage) 
-        }else if( that.state.showModalAssociations ){
+        }else if( that.state.showTableAssociations ){
           that.retrieveAffiliationsAssociations(currentPage) 
         }
       }, 2000)
@@ -275,14 +268,15 @@ class PanelAffiliations extends React.Component {
     this.state.investigatorId = parseInt( this.state.investigatorId )
 
     this.retrieveAffiliations()
+    this.showTableUniversities()
   }  
 
   navigatePage(page) {
-    if( this.state.showModalUniversities ){
+    if( this.state.showTableUniversities ){
       this.retrieveAffiliationsUniversities(page) 
-    }else if( this.state.showModalHospitals ){
+    }else if( this.state.showTableHospitals ){
       this.retrieveAffiliationsHospitals(page) 
-    }else if( this.state.showModalAssociations ){
+    }else if( this.state.showTableAssociations ){
       this.retrieveAffiliationsAssociations(page) 
     }
     
@@ -300,9 +294,9 @@ class PanelAffiliations extends React.Component {
 
     if( this.state.showModalUniversities ){
       this.retrieveAffiliationsUniversities(currentPage) 
-    }else if( this.state.showModalHospitals ){
+    }else if( this.state.showTableHospitals ){
       this.retrieveAffiliationsHospitals(currentPage) 
-    }else if( this.state.showModalAssociations ){
+    }else if( this.state.showTableAssociations ){
       this.retrieveAffiliationsAssociations(currentPage) 
     }
   }
@@ -311,6 +305,7 @@ class PanelAffiliations extends React.Component {
 
     const { affiliations, modalTitle, dataTable } = this.state;
     const { currentPage, totalPage, sorting } = this.state;
+    const { showModalUniversities, showTableHospitals, showTableAssociations } = this.state;
 
     let nUniversities = "-";
     let nHospitals = "-";
@@ -325,42 +320,54 @@ class PanelAffiliations extends React.Component {
       <div>
         <div className="d-flex" style={{ margin: '0 20% 0 20%'}}>
           <div className="text-center" style={{ width: '33%', margin: '1em 0.2em 1em 0.2em', border: '1px solid #D1E3F2', borderRadius: '5px' }}>
-            <div>{nUniversities}</div>
-            <div style={{ padding: '2em'}}>
+            <div className="font-weight-bold" style={{ padding: '1em 2em 1em 2em'}}>
+              Universities
+            </div>
+            <div className="font-weight-bold">{nUniversities}</div>
+            <div style={{ padding: '1em 2em 1em 2em'}}>
               <img className="w-100" src={universities} alt=" "></img>
             </div>
             
-            <div style={{ padding: '0.4em'}}>
-              <button className="btn btn-primary" style={{ width: '80%', backgroundColor: '#4780c4', fontSize: '14px'  }}
+            <div style={{ padding: '1em 2em 1em 2em'}}>
+              <Button className={showModalUniversities?"w-100 inspire-button":"w-100 inspire-ghost-button"} variant="outline-primary"
+                style={{ paddingLeft: '1em', paddingRight: '1em' }}
                 onClick={ (e) => this.showModalUniversities()}>
-                Universities
-              </button>
+                Show Results
+              </Button>
             </div>
           </div>
           <div className="text-center" style={{ width: '33%', margin: '1em 0.2em 1em 0.2em', border: '1px solid #D1E3F2', borderRadius: '5px'  }}>
-            <div>{nHospitals}</div>
-            <div style={{ padding: '2em'}}>
+            <div className="font-weight-bold" style={{ padding: '1em 2em 1em 2em'}}>
+              Hospitals
+            </div>
+            <div className="font-weight-bold">{nHospitals}</div>
+            <div style={{ padding: '1em 2em 1em 2em'}}>
               <img className="w-100" src={hospitals} alt=" "></img>
             </div>
             
-            <div style={{ padding: '0.4em'}}>
-              <button className="btn btn-primary" style={{ width: '80%', backgroundColor: '#4780c4', fontSize: '14px' }}
-                onClick={ (e) => this.showModalHospitals()}>
-                Hospitals
-              </button>
+            <div style={{ padding: '1em 2em 1em 2em'}}>
+              <Button className={showTableHospitals?"w-100 inspire-button":"w-100 inspire-ghost-button"}  variant="outline-primary"
+                style={{ paddingLeft: 0, paddingRight: 0 }}
+                onClick={ (e) => this.showTableHospitals()}>
+                Show Results
+              </Button>
             </div>
           </div>
           <div className="text-center" style={{ width: '33%', margin: '1em 0.2em 1em 0.2em', border: '1px solid #D1E3F2', borderRadius: '5px'  }}>
-            <div>{nAssociations}</div>
-            <div style={{ padding: '2em'}}>
+            <div className="font-weight-bold" style={{ padding: '1em 2em 1em 2em'}}>
+              Associations
+            </div>
+            <div className="font-weight-bold">{nAssociations}</div>
+            <div style={{ padding: '1em 2em 1em 2em'}}>
               <img className="w-100" src={associations} alt=" "></img>
             </div>
             
-            <div style={{ padding: '0.2em'}}>
-              <button className="btn btn-primary" style={{ width: '80%', backgroundColor: '#4780c4', fontSize: '14px'  }}
-                onClick={ (e) => this.showModalAssociations()}>
-                  Associations
-              </button>
+            <div style={{ padding: '1em 2em 1em 2em'}}>
+              <Button className={showTableAssociations?"w-100 inspire-button":"w-100 inspire-ghost-button"}  variant="outline-primary"
+                style={{ paddingLeft: 0, paddingRight: 0 }}
+                onClick={ (e) => this.showTableAssociations()}>
+                Show Results
+              </Button>
             </div>
           </div>
         </div>
@@ -420,7 +427,7 @@ class PanelAffiliations extends React.Component {
       </div>
 
         {/* <Modal animation centered
-          show={this.state.showModalAssociations || this.state.showModalHospitals || this.state.showModalUniversities}
+          show={this.state.showTableAssociations || this.state.showTableHospitals || this.state.showModalUniversities}
           onHide={(e) => this.closeModal(e)}
           dialogClassName="affiliations-modal">
           <Modal.Header closeButton>

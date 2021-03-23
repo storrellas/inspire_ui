@@ -126,7 +126,6 @@ class PanelConnections extends React.Component {
         institutionsPast: 0, 
         institutionsPresent: 0
       },
-      height: undefined,
     }
     this.cytoscape = undefined
     this.cytoscapeMax = undefined
@@ -172,7 +171,6 @@ class PanelConnections extends React.Component {
       randomize: true,
       animate: false,
     }
-    this.filterHeight = undefined;
 
   }
 
@@ -524,10 +522,6 @@ class PanelConnections extends React.Component {
   componentDidUpdate(){
     if( this.state.users.length == 0 && this.props.investigatorProfile)
       this.retrieveConnections()
-    if( this.filterHeight == undefined){
-      const height = this.filterHeight.clientHeight * 1.15;
-      this.setState({ height });
-    }
   }
 
   generateSource(users, connections){
@@ -608,7 +602,7 @@ class PanelConnections extends React.Component {
       <div className="d-flex" style={{ height: '100%', alignItems: 'stretch' }}>
 
             
-        <div style={{ width: '30%' }} ref={ (el) => this.filterHeight = el }>
+        <div style={{ width: '30%' }}>
           <div>
             <div className="font-weight-bold p-2 " style={{ fontSize: '16px' }}>FILTERS</div>
             <div className="p-2" style={{ color: '#555' }}>

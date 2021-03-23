@@ -25,12 +25,15 @@ $inspire-text-secondary: #8A8A8A;
 .inspire-button{
     background-color: $inspire-blue;
     border-radius: 20px;
+    color: white;
+    border: 0;
 }
 
 .inspire-button:hover{
     background-color: white;
     border-radius: 20px;
     color: $inspire-blue;
+    border: 1px solid $inspire-blue;
 }
 
 .inspire-panel{

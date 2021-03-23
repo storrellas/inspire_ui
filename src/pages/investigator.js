@@ -91,7 +91,7 @@ class Investigator extends React.Component {
                   <FontAwesomeIcon icon={faSearch} />
                 </InputGroup.Text>
               </InputGroup.Prepend>
-              <FormControl id="inlineFormInputGroup" placeholder="Search by names, position, field of study"
+              <FormControl placeholder="Search by names, position, field of study"
                 style={{ borderLeft: 0, borderRadius: '0 20px 20px 0', }} />
             </InputGroup>
           </Col>
