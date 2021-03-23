@@ -37,9 +37,7 @@ class PanelResearchProfile extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      isOpened: false,
-      showModal: false,
-      openedModal: false,    
+      isOpened: false,  
       data: []  
     }    
   }
@@ -104,7 +102,7 @@ class PanelResearchProfile extends React.Component {
     series.slices.template.cornerRadius = 6;
     series.colors.step = 3;
     // See: https://www.amcharts.com/docs/v4/tutorials/dealing-with-piechart-labels-that-dont-fit/
-    series.labels.template.maxWidth = 100;
+    series.labels.template.maxWidth = 150;
     series.labels.template.wrap = true;
     series.labels.template.fontSize = 14;
 
@@ -115,6 +113,7 @@ class PanelResearchProfile extends React.Component {
     this.chart = chart
     this.chart.legend = new am4charts.Legend();
     this.chart.legend.fontSize = 12;
+    this.chart.legend.position = "right"
 
     // Set state after timeout
     this.setState({isOpened: true})
@@ -124,18 +123,6 @@ class PanelResearchProfile extends React.Component {
     if (this.chart) {
       this.chart.dispose();
     }
-  }
-
-  openModal(e) {
-    this.setState({ showModal: true })
-  }
-
-  closeModal(e) {
-    this.setState({ showModal: false, openedModal: false })
-  }
-
-  modalOpened(e){
-    this.setState({openedModal: true})
   }
 
   generateModalData(){
@@ -191,44 +178,28 @@ class PanelResearchProfile extends React.Component {
           active={this.state.isOpened == false}
           spinner>
           <div id="researchprofilechart" style={{ height:'100%', height: '500px' }}></div>
-          <div className="text-right pr-2 pb-1" style={{ cursor: 'pointer' }} onClick={(e) => this.openModal()}>
-              View Details ...
-          </div>
+
+          <div style={{ height: '400px'}}>
+            <div className="h-100" style={{ overflowY:'auto', overflowX: 'none'}}>
+              {researchProfileData.map( (item, key) => 
+              <div key={key} id="category-page-3" className="category" style={{ marginTop: '1em', width: '100%'}}>
+                <h4><b>{item.name}</b></h4>
+                <div className="d-flex flex-wrap">
+                  {item.childrenList.map( (item, key) => 
+                      <div key={key} className="w-50 p-2">
+                        {item.label}
+                        <div className={this.state.isOpened ? "bar ready" : "bar"}>
+                          <div className="rowshadow text-rigth pl-3" style={{ width: item.relative + "%" }}>{item.counter}</div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+              </div>
+              )}
+              </div>
+            </div>
         </LoadingOverlay> 
 
-        <Modal animation centered
-          show={this.state.showModal}
-          onHide={(e) => this.closeModal(e)}
-          onEntered={(e) => this.modalOpened()}
-          dialogClassName="research-profile-modal">
-          <Modal.Header closeButton>
-            <Modal.Title>Research Profile</Modal.Title>
-          </Modal.Header>
-          <Modal.Body style={{ overflow: 'hidden'}}>
-            <div className="h-100" style={{ overflowY:'auto', overflowX: 'none'}}>
-            {researchProfileData.map( (item, key) => 
-            <div key={key} id="category-page-3" className="category" style={{ marginTop: '1em', width: '100%'}}>
-              <h4><b>{item.name}</b></h4>
-              <div className="d-flex flex-wrap">
-                {item.childrenList.map( (item, key) => 
-                    <div key={key} className="w-50 p-2">
-                      {item.label}
-                      <div className={this.state.openedModal ? "bar ready" : "bar"}>
-                        <div className="rowshadow text-rigth pl-3" style={{ width: item.relative + "%" }}>{item.counter}</div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-            </div>
-            )}
-            </div>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={(e) => this.closeModal(e)}>
-              Close
-            </Button>
-          </Modal.Footer>
-        </Modal>
 
       </div>);
   }

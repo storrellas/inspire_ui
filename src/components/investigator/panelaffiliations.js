@@ -13,7 +13,7 @@ import EllipsisWithTooltip from 'react-ellipsis-with-tooltip'
 
 // Project imports
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faLongArrowAltUp, faLongArrowAltDown } from '@fortawesome/free-solid-svg-icons'
+import { faLongArrowAltUp, faLongArrowAltDown, faSpinner } from '@fortawesome/free-solid-svg-icons'
 
 // Assets
 import universities from '../../assets/universities.png';
@@ -73,7 +73,6 @@ class PanelAffiliations extends React.Component {
       showTableUniversities: false,
       showTableHospitals: false,
       showTableAssociations: false,
-      modalTitle: '',
       investigatorId: undefined,
       affiliations: undefined,
       affiliationsUniversities: undefined,
@@ -123,7 +122,7 @@ class PanelAffiliations extends React.Component {
 
   async retrieveAffiliationsInstitution(base_url, page = 1) {
     try{
-      this.setState({isLoading: true})
+      this.setState({isLoading: true, dataTable: []})
 
       const token = localStorage.getItem('token')
       const { take, limit, filtering, sorting } = this.state;
@@ -152,10 +151,17 @@ class PanelAffiliations extends React.Component {
         { headers: { "Authorization": "jwt " + token }
       })
 
+      let dataTable = response.data.results
+      if(response.data.results.length < take){
+        const filteringList = FILTERING.reduce((acc,curr)=> (acc[curr.caption]='',acc),{});    
+        const fill = new Array(take - response.data.results.length).fill(filteringList)
+        dataTable.push(...fill)
+      }
+
       // Set State
       const totalPage = Math.ceil(response.data.count / take);      
       this.setState({
-        dataTable: response.data.results, 
+        dataTable: dataTable, 
         currentPage: page,
         totalPage: totalPage,
         isLoading: false,
@@ -197,9 +203,8 @@ class PanelAffiliations extends React.Component {
       showTableUniversities: true, 
       showTableHospitals: false, 
       showTableAssociations: false, 
-      modalTitle: 'Affiliations - Universities',
       currentPage: 1,
-      totalPage: 10,
+      totalPage: 1,
       take: 10,
       limit: 10,
       isLoading: false,
@@ -213,9 +218,8 @@ class PanelAffiliations extends React.Component {
       showTableUniversities: false, 
       showTableHospitals: true, 
       showTableAssociations: false, 
-      modalTitle: 'Affiliations - Hospitals',
       currentPage: 1,
-      totalPage: 10,
+      totalPage: 1,
       take: 10,
       limit: 10,
       isLoading: false,
@@ -228,9 +232,8 @@ class PanelAffiliations extends React.Component {
       showTableUniversities: false, 
       showTableHospitals: false, 
       showTableAssociations: true, 
-      modalTitle: 'Affiliations - Associations',
       currentPage: 1,
-      totalPage: 10,
+      totalPage: 1,
       take: 10,
       limit: 10,
       isLoading: false,
@@ -309,7 +312,7 @@ class PanelAffiliations extends React.Component {
 
   render() {
 
-    const { affiliations, modalTitle, dataTable } = this.state;
+    const { affiliations, dataTable } = this.state;
     const { currentPage, totalPage, sorting } = this.state;
     const { showTableUniversities, showTableHospitals, showTableAssociations } = this.state;
 
@@ -321,8 +324,6 @@ class PanelAffiliations extends React.Component {
       nHospitals = affiliations.filter(x => x.affiliation_type === 'hospitals')[0].total
       nAssociations = affiliations.filter(x => x.affiliation_type === 'associations')[0].total
     }
-
-    console.log("showTable ", showTableUniversities, showTableHospitals, showTableAssociations)
 
     return (
       <div>
@@ -381,9 +382,6 @@ class PanelAffiliations extends React.Component {
         </div>
 
         <div className="p-3 h-100" style={{ fontSize: '14px'}}>
-          <LoadingOverlay
-              active={ this.state.isLoading }
-              spinner>
           <table className="w-100 inspire-table">
             <thead>
               <tr>
@@ -407,6 +405,27 @@ class PanelAffiliations extends React.Component {
               </tr>
             </thead>
             <tbody>
+              {this.state.isLoading?
+                <>
+                <tr>
+                  <td></td>
+                  <td rowSpan="10" style={{ background: 'white', height: '400px' }} colSpan="14" className="text-center">
+                    <div className="mb-3" style={{ fontSize: '20px', color: 'grey' }} >Loading ...</div>
+                    <FontAwesomeIcon icon={faSpinner}  spin style={{ fontSize: '40px', color: 'grey' }} />                    
+                  </td>
+                </tr>
+                <tr><td></td></tr>
+                <tr><td></td></tr>
+                <tr><td></td></tr>
+                <tr><td></td></tr>
+                <tr><td></td></tr>
+                <tr><td></td></tr>
+                <tr><td></td></tr>
+                <tr><td></td></tr>
+                <tr><td></td></tr>
+                </>
+                :<tr></tr>}
+
               {dataTable.map((item, id) =>
                 <tr key={id}>
                   <td  className="text-center" style={{ width: '10%'}}>{item.position__name}</td>
@@ -429,80 +448,9 @@ class PanelAffiliations extends React.Component {
               )}
             </tbody>
           </table>
-          </LoadingOverlay>
           <InspirePagination currentPage={currentPage} totalPage={totalPage} onClick={this.navigatePage.bind(this)}/>
-
       </div>
-
-        {/* <Modal animation centered
-          show={this.state.showTableAssociations || this.state.showTableHospitals || this.state.showModalUniversities}
-          onHide={(e) => this.closeModal(e)}
-          dialogClassName="affiliations-modal">
-          <Modal.Header closeButton>
-            <Modal.Title>{modalTitle}</Modal.Title>
-          </Modal.Header>
-          <Modal.Body  style={{ overflowY: 'scroll', height: '100%'}}>
-            <div className="p-3 h-100" style={{ fontSize: '14px'}}>
-                <LoadingOverlay
-                    active={ this.state.isLoading }
-                    spinner>
-                <table className="w-100 inspire-table">
-                  <thead>
-                    <tr>
-                      {FILTERING.map((item, id) =>
-                      <td key={id} className="text-center" style={{ cursor: 'pointer' }}
-                        onClick={(e) => this.onSetSorting(item.dataField)}>
-                        {item.label}
-                        <FontAwesomeIcon icon={faLongArrowAltUp} className={sorting == item.dataField ? "ml-1" : "ml-1 d-none"} style={{ color: 'grey' }} />
-                        <FontAwesomeIcon icon={faLongArrowAltDown} className={sorting == `-${item.dataField}` ? "ml-1" : "ml-1 d-none"} style={{ color: 'grey' }} />
-                      </td>
-                      )}
-                    </tr>
-                    <tr style={{ border: '1px solid #A4C8E6', borderWidth: '1px 0px 2px 0px' }}>
-                      {FILTERING.map((item, id) =>
-                        <td key={id} className="text-center">
-                          <SearchHeader 
-                            onChange={(pattern) => this.retrieveAffiliationsFiltered(item.caption, pattern)} 
-                            type={item.type} />
-                        </td>
-                      )}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {dataTable.map((item, id) =>
-                      <tr key={id}>
-                        <td  className="text-center" style={{ width: '10%'}}>{item.position__name}</td>
-                        <td  className="text-center" style={{ width: '200px'}}>
-                          <EllipsisWithTooltip placement="bottom" style={{ width: '300px'}}>
-                          {item.institution__parent_name || ''}
-                          </EllipsisWithTooltip>
-                        </td>
-                        <td  className="text-center" style={{ width: '20%'}}>
-                          <EllipsisWithTooltip placement="bottom" style={{ width: '100px'}}>
-                          {item.institution__department || ''}
-                          </EllipsisWithTooltip>
-                        </td>
-                        <td  className="text-center" style={{ width: '20%'}}>{item.institution__institution_subtype__name}</td>
-                        <td  className="text-center" style={{ width: '10%'}}>{item.past_position}</td>
-                        <td  className="text-center" style={{ width: '10%'}}>{item.year}</td>
-                        <td  className="text-center" style={{ width: '10%'}}>{item.institution__city}</td>
-                        <td  className="text-center" style={{ width: '10%'}}>{item.institution__country__name}</td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-                </LoadingOverlay>
-                <InspirePagination currentPage={currentPage} totalPage={totalPage} onClick={this.navigatePage.bind(this)}/>
-
-            </div>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={(e) => this.closeModal(e)}>
-              Close
-            </Button>
-          </Modal.Footer>
-        </Modal> */}
-      </div>);
+    </div>);
   }
 }
 

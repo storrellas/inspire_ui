@@ -99,7 +99,7 @@ class Investigator extends React.Component {
             <Button className="w-100 inspire-ghost-button inspire-box-shadow" variant="outline-primary">
               <FontAwesomeIcon icon={faArrowCircleDown} className="mr-2" />
               Export
-              </Button>
+            </Button>
           </Col>
           <Col sm={2}>
             <Button className="w-100 inspire-ghost-button inspire-box-shadow" variant="outline-primary"
@@ -115,7 +115,7 @@ class Investigator extends React.Component {
 
         <InvestigatorProfile />
 
-        <Row className="mt-3 pb-3">
+        <Row className="pb-3" style={{ marginTop: '4em'}}>
           <Col sm={12}>
             <Nav variant="tabs" style={{ width: '100%', justifyContent: 'space-between' }}>
               <Nav.Item>

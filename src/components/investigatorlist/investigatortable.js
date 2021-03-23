@@ -144,10 +144,11 @@ class InvestigatorTable extends React.Component {
         { headers: { "Authorization": "jwt " + token }
       })
 
-
-      const totalPage = Math.ceil(response.data.count / take);
-
       clearTimeout(this.typingTimeout);
+
+      
+      // Set State
+      const totalPage = Math.ceil(response.data.count / take);
       this.setState({
         investigatorList: response.data.results, 
         projectOid: projectOid,
@@ -279,10 +280,6 @@ class InvestigatorTable extends React.Component {
 
       // Set selection      
       let shortOid = oid.split('-')[oid.split('-').length -1 ]
-      //shortOid = parseInt( shortOid )
-      console.log("shortOid ", shortOid)
-
-
       const token = localStorage.getItem('token')
       const baseUrl = isFavorite?
         `${process.env.REACT_APP_BASE_URL}/api/remove-favorite-investigators/`:
@@ -335,11 +332,6 @@ class InvestigatorTable extends React.Component {
                 />
           </div>
         </div>          
-
-        <LoadingOverlay
-          //active={ this.state.isLoading }
-          active={false}
-          spinner>
 
           <table className="w-100 inspire-table" style={{ display: 'block', minHeight: '200px', fontSize: '14px'}}>
             <thead>
@@ -427,7 +419,7 @@ class InvestigatorTable extends React.Component {
               )}
             </tbody>
           </table>
-          </LoadingOverlay>
+          
 
           <InspirePagination currentPage={currentPage} totalPage={totalPage} onClick={this.navigatePage.bind(this)}/>        
       </>

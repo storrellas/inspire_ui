@@ -15,7 +15,7 @@ import EllipsisWithTooltip from 'react-ellipsis-with-tooltip'
 
 // Project imports
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faLongArrowAltUp, faLongArrowAltDown } from '@fortawesome/free-solid-svg-icons'
+import { faLongArrowAltUp, faLongArrowAltDown, faSpinner } from '@fortawesome/free-solid-svg-icons'
 
 // Styles
 import './modal.scss';
@@ -281,7 +281,7 @@ class PanelCompanyCooperation extends React.Component {
 
   async retrieveCompanyCooperations(page = 1){
     try{
-      this.setState({isLoading: true})
+      this.setState({isLoading: true, dataCompanyCooperations: []})
 
       const token = localStorage.getItem('token')
       const { take, limit, filtering, sorting } = this.state;
@@ -314,12 +314,9 @@ class PanelCompanyCooperation extends React.Component {
       if(response.data.results.length < take){
         const filteringList = FILTERING.reduce((acc,curr)=> (acc[curr.caption]='',acc),{});    
         const fill = new Array(take - response.data.results.length).fill(filteringList)
-        
-
         dataCompanyCooperations.push(...fill)
       }
 
-      console.log("size ", dataCompanyCooperations.length)
 
       // Set State
       const totalPage = Math.ceil(response.data.count / take);      
@@ -415,9 +412,6 @@ class PanelCompanyCooperation extends React.Component {
                 <div id="companycooperationmaxchart" style={{ height: '400px' }}></div>
               </div>
               <div style={{ width: '70%' }}>
-              <LoadingOverlay
-                active={ this.state.isLoading }
-                spinner>
 
                 <table className="w-100 inspire-table">
                   <thead>
@@ -442,6 +436,26 @@ class PanelCompanyCooperation extends React.Component {
                     </tr>
                   </thead>
                   <tbody>
+                  {this.state.isLoading?
+                    <>
+                    <tr>
+                      <td></td>
+                      <td rowSpan="10" style={{ background: 'white', height: '400px' }} colSpan="14" className="text-center">
+                        <div className="mb-3" style={{ fontSize: '20px', color: 'grey' }} >Loading ...</div>
+                        <FontAwesomeIcon icon={faSpinner}  spin style={{ fontSize: '40px', color: 'grey' }} />                    
+                      </td>
+                    </tr>
+                    <tr><td></td></tr>
+                    <tr><td></td></tr>
+                    <tr><td></td></tr>
+                    <tr><td></td></tr>
+                    <tr><td></td></tr>
+                    <tr><td></td></tr>
+                    <tr><td></td></tr>
+                    <tr><td></td></tr>
+                    <tr><td></td></tr>
+                    </>
+                    :<tr></tr>}
                     {dataCompanyCooperations.map((item, id) =>
                       <tr key={id}>
                         <td className="text-center" style={{ width: '20%'}}>{item.nature_of_payment}</td>
@@ -457,7 +471,6 @@ class PanelCompanyCooperation extends React.Component {
                     )}
                   </tbody>
                 </table>
-                </LoadingOverlay>
                 <InspirePagination currentPage={currentPage} totalPage={totalPage} onClick={this.navigatePage.bind(this)}/>
 
               </div>

@@ -111,12 +111,10 @@ class PanelPublications extends React.Component {
 
   generatePublicationTypeChart() {
     this.publicationTypeChart = this.generatePublicationType("publicationTypeChart")
+    this.publicationTypeChart.legend = new am4charts.Legend();
+    this.publicationTypeChart.legend.position = "right"
   }
 
-  generatePublicationTypeMaxChart() {
-    this.publicationTypeMaxChart = this.generatePublicationType("publicationTypeMaxChart")
-    this.publicationTypeMaxChart.legend = new am4charts.Legend();
-  }
 
   generatePublicationYears(container) {
     // Create chart instance
@@ -144,11 +142,6 @@ class PanelPublications extends React.Component {
 
   generatePublicationYearsChart() {
     this.publicationYearsChart = this.generatePublicationYears("publicationYearsChart")
-  }
-
-  generatePublicationYearsMaxChart() {
-    this.publicationYearsMaxChart = this.generatePublicationYears("publicationYearsMaxChart")
-    this.publicationYearsMaxChart.legend = new am4charts.Legend();
   }
 
   generateModalContent() {
@@ -369,18 +362,10 @@ class PanelPublications extends React.Component {
     if (this.publicationTypeChart) {
       this.publicationTypeChart.dispose();
     }
-    if (this.publicationYearsMaxChart) {
-      this.publicationYearsMaxChart.dispose();
-    }
-    if (this.publicationTypeMaxChart) {
-      this.publicationTypeMaxChart.dispose();
-    }
   }
 
   closeModal() {
     this.setState({
-      showModalPublicationType: false,
-      showModalPublicationYears: false,
       showModal: false
     })
   }
@@ -429,18 +414,11 @@ class PanelPublications extends React.Component {
       setTimeout(function () { that.generateChart() }, 500);
     }
 
-    const { showModal, showModalPublicationType, showModalPublicationYears, sorting } = this.state;
-    const isModal = showModal || showModalPublicationType || showModalPublicationYears;
+    const { showModal } = this.state;
     let modalContent = <div>Unknown</div>
-    if (showModal) {
+    if ( showModal ) {
       modalContent = this.generateModalContent()
-    } else if (showModalPublicationType) {
-      modalContent = <div id="publicationTypeMaxChart" style={{ width: '100%', height: '100%', marginTop: '20px' }}></div>
-    } else if (showModalPublicationYears) {
-      modalContent = <div id="publicationYearsMaxChart" style={{ width: '100%', height: '100%', marginTop: '20px' }}></div>
     }
-
-
 
 
     return (
@@ -448,22 +426,14 @@ class PanelPublications extends React.Component {
         <LoadingOverlay
           active={this.state.isOpened == false}
           spinner>
-          <div className="d-flex" style={{ padding: '1em 1em 1em 1em' }}>
-            <div className="w-50 text-center">
+          <div style={{ padding: '1em 1em 1em 1em' }}>
+            <div>
               <div>Publication Types</div>
-              <div id="publicationTypeChart" style={{ width: '100%', height: '200px', marginTop: '20px' }}></div>
-              <div className="text-right pr-2 pb-1" style={{ cursor: 'pointer' }}
-                onClick={(e) => this.setState({ showModalPublicationType: true })}>
-                <FontAwesomeIcon icon={faExpandArrowsAlt} />
-              </div>
+              <div id="publicationTypeChart" style={{ width: '100%', height: '400px', marginTop: '20px' }}></div>
             </div>
-            <div className="w-50 text-center">
+            <div style={{ marginTop: '4em'}}>
               <div>Publication Years</div>
-              <div id="publicationYearsChart" style={{ width: '100%', height: '200px', marginTop: '20px' }}></div>
-              <div className="text-right pr-2 pb-1" style={{ cursor: 'pointer' }}
-                onClick={(e) => this.setState({ showModalPublicationYears: true })}>
-                <FontAwesomeIcon icon={faExpandArrowsAlt} />
-              </div>
+              <div id="publicationYearsChart" style={{ width: '100%', height: '400px', marginTop: '20px' }}></div>
             </div>
           </div>
           <div className="text-right pr-2 pb-1" style={{ cursor: 'pointer' }}
@@ -473,7 +443,7 @@ class PanelPublications extends React.Component {
         </LoadingOverlay>
 
         <Modal animation centered
-          show={isModal}
+          show={showModal}
           onHide={(e) => this.closeModal(e)}
           onEntered={(e) => this.openedModal()}
           onExited={(e) => this.closedModal(e)}

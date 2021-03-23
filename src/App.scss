@@ -4,6 +4,12 @@ $enable-prefers-reduced-motion-media-query: false;
 @import "bootstrap/scss/variables";
 @import "bootstrap/scss/mixins";
 
+@import url('https://fonts.googleapis.com/css?family=Raleway');
+
+body {
+  font-family: 'Raleway';
+}
+
 .App {
   text-align: center;
 }

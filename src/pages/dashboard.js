@@ -62,7 +62,7 @@ class Dashboard extends React.Component {
 
         const { match: { params } } = this.props;        
         const pathNameList = this.props.location.pathname.split('/');
-        const projectOid = pathNameList[3] === 'favorites';
+        const projectOid = pathNameList[3];
         const name = investigatorProfile?investigatorProfile.name:undefined
         const section = this.props.location.pathname.split('/')[2];
 
