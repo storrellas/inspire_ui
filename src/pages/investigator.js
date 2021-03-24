@@ -84,7 +84,7 @@ class Investigator extends React.Component {
     return (
       <>
         <Row className="mt-3">
-          <Col sm={6}>
+          <Col sm={7}>
             <InputGroup className="mb-2" >
               <InputGroup.Prepend>
                 <InputGroup.Text style={{ borderRadius: '20px 0 0 20px', backgroundColor: 'white', borderRight: 0 }}>
@@ -95,13 +95,13 @@ class Investigator extends React.Component {
                 style={{ borderLeft: 0, borderRadius: '0 20px 20px 0', }} />
             </InputGroup>
           </Col>
-          <Col sm={2}>
+          {/* <Col sm={2}>
             <Button className="w-100 inspire-ghost-button inspire-box-shadow" variant="outline-primary">
               <FontAwesomeIcon icon={faArrowCircleDown} className="mr-2" />
               Export
             </Button>
-          </Col>
-          <Col sm={2}>
+          </Col> */}
+          <Col sm={3}>
             <Button className="w-100 inspire-ghost-button inspire-box-shadow" variant="outline-primary"
               style={{ paddingLeft: 0, paddingRight: 0 }}>
               <FontAwesomeIcon icon={faStar} className="mr-2" />

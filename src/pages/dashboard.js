@@ -87,7 +87,7 @@ class Dashboard extends React.Component {
                     <div className="inspire-sidebar">
                         <div className="h-100 d-flex flex-column justify-content-between" style={{ color: 'white', fontSize: '18px', alignItems: 'center' }}>
                             <div>
-                                <div>
+                                <div className="text-center">
                                     <img src={inspireLogo} alt="logo" style={{ height: '100px' }}></img>
                                 </div>
                                 <div style={{ marginTop: '3em', cursor: 'pointer' }}>
@@ -190,7 +190,11 @@ class Dashboard extends React.Component {
                                                     <FontAwesomeIcon icon={faAngleRight} />
                                                 </div>
                                                 <div className="ml-2">
+                                                    {name === undefined?
+                                                    <div>Investigators</div>
+                                                    :                                                    
                                                     <a href={`/dashboard/project/${projectOid}`}>Investigators</a>
+                                                    }
                                                 </div>
                                             </>
                                         :''}
