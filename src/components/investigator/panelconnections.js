@@ -180,6 +180,8 @@ class PanelConnections extends React.Component {
     // remove first user
     const usersLocal = users.slice(1);
 
+    console.log("users ", usersLocal)
+
     return (
       <div className="h-100" style={{ position: 'relative'}}>
         <div className="h-100 d-flex flex-wrap" style={{ position:'absolute', overflowY: 'scroll' }}>
@@ -188,7 +190,7 @@ class PanelConnections extends React.Component {
               {item.url === '' ?
                 <p style={{ fontSize: '18px', color: "#337ab7" }}>{item.label}</p>
                 :
-                <a href="#" target="_blank" style={{ fontSize: '18px', color: "#337ab7" }} >
+                <a href={item.link} target="_blank" style={{ fontSize: '18px', color: "#337ab7" }} >
                   <b>{item.label}</b>
                 </a>
               }
@@ -449,7 +451,7 @@ class PanelConnections extends React.Component {
             image: investigator_img, 
             strength: item.number_common_objects,
             common_project: item.common_project,
-            link: `/project/${projectOid}/investigator/${item.medical_expert_oid}`
+            link: `/dashboard/project/${projectOid}/investigator/${item.medical_expert_oid}`
         }
         users.push(user);
         connections.push({           

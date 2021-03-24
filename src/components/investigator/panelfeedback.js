@@ -23,22 +23,18 @@ class PanelFeedback extends React.Component {
           <Form.Group controlId="exampleForm.ControlSelect1">
             <Form.Label>Ticket Type</Form.Label>
             <Form.Control as="select">
-              <option>1</option>
-              <option>2</option>
-              <option>3</option>
-              <option>4</option>
-              <option>5</option>
+              <option>Coverage Issue</option>
+              <option>Data Consistency Issue</option>
+              <option>Technical Issue</option>
             </Form.Control>
           </Form.Group>
 
           <Form.Group controlId="exampleForm.ControlSelect1">
             <Form.Label>Ticket Priority</Form.Label>
             <Form.Control as="select">
-              <option>1</option>
-              <option>2</option>
-              <option>3</option>
-              <option>4</option>
-              <option>5</option>
+              <option>Normal</option>
+              <option>Critical</option>
+              <option>High</option>
             </Form.Control>
           </Form.Group>
 

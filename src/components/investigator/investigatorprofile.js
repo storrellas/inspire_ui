@@ -228,10 +228,10 @@ class InvestigatorProfileReloaded extends React.Component {
           <Col sm={7}>
             <div className="inspire-panel">
               <Row>
-                <Col sm={2}>
-                  <img src={this.state.picture} width="71" style={{ borderRadius: '50%' }}></img>
+                <Col sm={3}>
+                  <img src={this.state.picture} className="w-100" style={{ borderRadius: '50%' }}></img>
                 </Col>
-                <Col sm={10}>
+                <Col sm={9}>
                   <div className="h-100 d-flex flex-column justify-content-center">
                     <div>
                       <b>{this.state.name} </b>

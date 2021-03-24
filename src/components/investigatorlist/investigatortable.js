@@ -325,10 +325,16 @@ class InvestigatorTable extends React.Component {
       <>
         <div className="d-flex justify-content-end pt-3 pb-3">
           <div style={{ width: '40%'}}>
+          <div style={{ color: '#A8A8A8', fontSize: '12px'}}>Select Mesh</div>
           <Select isLoading={this.state.isLoadingMesh} isClearable 
                 isSearchable options={meshOptions} 
                 onInputChange={(e) => this.onMeshFill(e)} 
                 onChange={ (e) => this.onMeshSelected(e)}
+                placeholder={'All'}
+                styles={{ 
+                  control: (provided) => ({ ...provided, borderTop: 0, borderLeft: 0, borderRight: 0, borderRadius: 0}),
+                  indicatorSeparator: (provided) => ({ backgroundColor: 'white'}) 
+                }}
                 />
           </div>
         </div>          

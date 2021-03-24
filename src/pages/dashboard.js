@@ -174,7 +174,7 @@ class Dashboard extends React.Component {
 
                     </div>
                     <div className="inspire-page-content">
-                        <Container>
+                        <Container style={{ maxWidth: '1300px'}}>
                             <Row className="inspire-breadcrumb">
                                 <Col sm={12}>
                                     <div className="d-flex">
