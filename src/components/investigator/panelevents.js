@@ -34,6 +34,7 @@ import axios from 'axios';
 // Project Imports
 import InspirePagination from '../shared/pagination'
 import SearchHeader, { SEARCH_HEADER } from '../shared/searchheader'
+import EmptyPanel from '../shared/emptypanel';
 
 // Themes begin
 am4core.useTheme(am4themes_animated);
@@ -113,9 +114,12 @@ class PanelEvents extends React.Component {
     pieSeries.hiddenState.properties.endAngle = -90;
 
     pieSeries.events.on("ready", ()=>{
-      pieSeriesRef.slices.getIndex(0).showTooltipOn = "always";
-      pieSeriesRef.slices.getIndex(1).showTooltipOn = "always";
-      pieSeriesRef.slices.getIndex(2).showTooltipOn = "always";
+      if(pieSeries.slices.length > 0 )
+        pieSeriesRef.slices.getIndex(0).showTooltipOn = "always";
+      if(pieSeries.slices.length > 1 )
+        pieSeriesRef.slices.getIndex(1).showTooltipOn = "always";
+      if(pieSeries.slices.length > 2 )
+        pieSeriesRef.slices.getIndex(2).showTooltipOn = "always";
     })
 
     return chart;
@@ -377,7 +381,7 @@ class PanelEvents extends React.Component {
       })
 
       let dataTable = response.data.results
-      if(response.data.results.length < take){
+      if(response.data.results.length < take && dataTable.length > 0){
         const filteringList = FILTERING.reduce((acc,curr)=> (acc[curr.caption]='',acc),{});    
         const fill = new Array(take - response.data.results.length).fill(filteringList)
         dataTable.push(...fill)
@@ -438,8 +442,10 @@ class PanelEvents extends React.Component {
   }
 
   generateChart() {
-    this.generateEventTypeChart()
-    this.generateEventRoleChart()
+    if(this.state.dataTable.length > 0){
+      this.generateEventTypeChart()
+      this.generateEventRoleChart()
+    }
 
     // Set state after timeout
     this.setState({isOpened: true})
@@ -505,12 +511,18 @@ class PanelEvents extends React.Component {
       modalContent = this.generateModalContent()     
     }
 
+    const emptyPanelShow = this.state.dataTable.length == 0 && 
+      this.props.tabEventsOpened;
 
     return (
       <div>
+        <EmptyPanel show={emptyPanelShow} />
+
         <LoadingOverlay
           active={this.state.isOpened === false}
           spinner>
+          {!emptyPanelShow?
+          <>
           <div style={{ padding: '1em 1em 1em 1em' }}>
             <div>
               <div>Event Types</div>
@@ -525,6 +537,8 @@ class PanelEvents extends React.Component {
             onClick={(e) => this.setState({ showModal: true })}>
             View Details ...
         </div>
+        </>
+        :''}
         </LoadingOverlay>
 
         <Modal animation centered

@@ -6,6 +6,8 @@ $enable-prefers-reduced-motion-media-query: false;
 
 @import url('https://fonts.googleapis.com/css?family=Raleway');
 
+html, body {margin: 0; height: 100%; overflow: hidden}
+
 body {
   font-family: 'Raleway';
 }

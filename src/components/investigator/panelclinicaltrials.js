@@ -26,6 +26,7 @@ import axios from 'axios';
 // Project Imports
 import InspirePagination from '../shared/pagination'
 import SearchHeader, { SEARCH_HEADER } from '../shared/searchheader'
+import EmptyPanel from '../shared/emptypanel';
 
 // Themes begin
 am4core.useTheme(am4themes_animated);
@@ -243,7 +244,7 @@ class PanelClinicalTrials extends React.Component {
       })
 
       let dataTable = response.data.results
-      if(response.data.results.length < take){
+      if(response.data.results.length < take && dataTable.length > 0){
         const filteringList = FILTERING.reduce((acc,curr)=> (acc[curr.caption]='',acc),{});    
         const fill = new Array(take - response.data.results.length).fill(filteringList)
         dataTable.push(...fill)
@@ -372,8 +373,10 @@ class PanelClinicalTrials extends React.Component {
   }
 
   generateChart() {
-    this.generateConditionsChart()
-    this.generateInterventionsChart()
+    if(this.state.dataTable.length > 0){
+      this.generateConditionsChart()
+      this.generateInterventionsChart()
+    }
 
     // Set state after timeout
     this.setState({isOpened: true})
@@ -430,12 +433,16 @@ class PanelClinicalTrials extends React.Component {
     if( showModal ){
       modalContent = this.generateModalContent()      
     }
-
+    const emptyPanelShow = this.state.dataTable.length == 0 && 
+                          this.props.tabClinicalTrialsOpened;
     return (
       <div>
         <LoadingOverlay
           active={this.state.isOpened == false}
           spinner>
+          <EmptyPanel show={emptyPanelShow} />
+          {!emptyPanelShow?
+          <>
           <div style={{ padding: '1em 1em 1em 1em' }}>
             <div>
               <div>Conditions</div>
@@ -450,6 +457,8 @@ class PanelClinicalTrials extends React.Component {
                   onClick={(e) => this.setState({ showModal: true})}>
           View Details ...
         </div>
+        </>
+        :''}
         </LoadingOverlay>
 
 

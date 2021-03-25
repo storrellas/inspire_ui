@@ -44,10 +44,10 @@ class PanelFeedback extends React.Component {
           <textarea className="w-100" rows="8" style={{ borderColor: '#ced4da', resize: 'none'}}>            
           </textarea>
 
-          <div className="w-100" style={{ padding: '0.2em'}}>
+          <div className="w-100" style={{ padding: '0 20% 0 20%'}}>
             <button className="mt-3 w-100 inspire-button"
-                style={{ paddingLeft: '1em', paddingRight: '1em' }}
-                onClick={ (e) => this.showTableUniversities()}>
+                style={{ padding: '0.5em 1em 0.5em 1em' }}
+                onClick={ (e) => console.log("Not implemented yet")}>
                 Send Feedback
             </button>
           </div>

@@ -22,6 +22,9 @@ import './panelresearchprofile.scss';
 // Axios
 import axios from 'axios';
 
+// Project imports
+import EmptyPanel from '../shared/emptypanel';
+
 // Themes begin
 am4core.useTheme(am4themes_animated);
 
@@ -38,6 +41,7 @@ class PanelResearchProfile extends React.Component {
     super(props)
     this.state = {
       isOpened: false,  
+      researchProfileData: [],
       data: []  
     }    
   }
@@ -88,6 +92,11 @@ class PanelResearchProfile extends React.Component {
   }
 
   generateChart(){
+    // No data
+    if( this.state.researchProfileData.length == 0){
+      this.setState({isOpened: true})
+      return
+    }
 
     let chart = am4core.create("researchprofilechart", am4charts.PieChart);
     chart.hiddenState.properties.opacity = 0; // this creates initial fade-in
@@ -149,7 +158,7 @@ class PanelResearchProfile extends React.Component {
       }     
       research_profile_data.push({'name': category, 'childrenList': childrenList})
     }
-
+    this.state.researchProfileData = research_profile_data;
     return research_profile_data
   }
 
@@ -165,32 +174,40 @@ class PanelResearchProfile extends React.Component {
 
 
     const researchProfileData = this.generateModalData()
+    const emptyPanelShow = researchProfileData.length == 0 
+                            && this.props.tabResearchProfileOpened;
     return (
       <div>    
         <LoadingOverlay
           active={this.state.isOpened == false}
           spinner>
-          <div id="researchprofilechart" style={{ height:'100%', height: '500px' }}></div>
 
-          <div style={{ height: '400px'}}>
-            <div className="h-100" style={{ overflowY:'auto', overflowX: 'none'}}>
-              {researchProfileData.map( (item, key) => 
-              <div key={key} id="category-page-3" className="category" style={{ marginTop: '1em', width: '100%'}}>
-                <h4><b>{item.name}</b></h4>
-                <div className="d-flex flex-wrap">
-                  {item.childrenList.map( (item, key) => 
-                      <div key={key} className="w-50 p-2">
-                        {item.label}
-                        <div className={this.state.isOpened ? "bar ready" : "bar"}>
-                          <div className="rowshadow text-rigth pl-3" style={{ width: item.relative + "%" }}>{item.counter} - {item.name} </div>
+          <EmptyPanel show={emptyPanelShow} />
+          {!emptyPanelShow?
+          <>
+            <div id="researchprofilechart" style={{ height:'100%', height: '500px' }}></div>
+
+            <div style={{ height: '400px'}}>
+              <div className="h-100" style={{ overflowY:'auto', overflowX: 'none'}}>
+                {researchProfileData.map( (item, key) => 
+                <div key={key} id="category-page-3" className="category" style={{ marginTop: '1em', width: '100%'}}>
+                  <h4><b>{item.name}</b></h4>
+                  <div className="d-flex flex-wrap">
+                    {item.childrenList.map( (item, key) => 
+                        <div key={key} className="w-50 p-2">
+                          {item.label}
+                          <div className={this.state.isOpened ? "bar ready" : "bar"}>
+                            <div className="rowshadow text-rigth pl-3" style={{ width: item.relative + "%" }}>{item.counter} - {item.name} </div>
+                          </div>
                         </div>
-                      </div>
-                    )}
-                  </div>
+                      )}
+                    </div>
+                </div>
+                )}
+                </div>
               </div>
-              )}
-              </div>
-            </div>
+            </>
+            :''}
         </LoadingOverlay> 
 
 

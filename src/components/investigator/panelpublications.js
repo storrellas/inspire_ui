@@ -29,6 +29,7 @@ import axios from 'axios';
 // Project Imports
 import InspirePagination from '../shared/pagination'
 import SearchHeader, { SEARCH_HEADER } from '../shared/searchheader'
+import EmptyPanel from '../shared/emptypanel';
 
 // Themes begin
 am4core.useTheme(am4themes_animated);
@@ -75,7 +76,7 @@ class PanelPublications extends React.Component {
       showModal: false,
       dataType: undefined,
       dataYears: undefined,
-      dataTable: undefined,
+      dataTable: [],
       currentPage: 1,
       totalPage: 10,
       take: 10,
@@ -218,8 +219,10 @@ class PanelPublications extends React.Component {
   }
 
   generateChart() {
-    this.generatePublicationTypeChart()
-    this.generatePublicationYearsChart()
+    if(this.state.dataTable.length > 0){
+      this.generatePublicationTypeChart()
+      this.generatePublicationYearsChart()
+    }
 
     // Set state after timeout
     this.setState({ isOpened: true })
@@ -314,7 +317,7 @@ class PanelPublications extends React.Component {
         })
 
       let dataTable = response.data.results
-      if(response.data.results.length < take){
+      if(response.data.results.length < take && dataTable.length > 0){
         const filteringList = FILTERING.reduce((acc,curr)=> (acc[curr.caption]='',acc),{});    
         const fill = new Array(take - response.data.results.length).fill(filteringList)
         dataTable.push(...fill)
@@ -446,12 +449,17 @@ class PanelPublications extends React.Component {
       modalContent = this.generateModalContent()
     }
 
-
+    const emptyPanelShow = this.state.dataTable.length == 0 && 
+                          this.props.tabPublicationsOpened;
     return (
       <div>
         <LoadingOverlay
           active={this.state.isOpened == false}
           spinner>
+          
+          <EmptyPanel show={emptyPanelShow} />
+          {!emptyPanelShow?
+          <>
           <div style={{ padding: '1em 1em 1em 1em' }}>
             <div>
               <div>Publication Types</div>
@@ -466,6 +474,8 @@ class PanelPublications extends React.Component {
             onClick={(e) => this.setState({ showModal: true })}>
             View Details ...
         </div>
+        </>
+        :''}
         </LoadingOverlay>
 
         <Modal animation centered
@@ -486,6 +496,7 @@ class PanelPublications extends React.Component {
             </Button>
           </Modal.Footer>
         </Modal>
+
 
 
       </div>);
