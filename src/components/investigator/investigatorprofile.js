@@ -40,7 +40,7 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 const PROFILE_SNAPSHOT = { SPECIALTIES: 1,  FOCUS_AREA: 2 }
-class InvestigatorProfileReloaded extends React.Component {
+class InvestigatorProfile extends React.Component {
 
   constructor(props) {
     super(props)
@@ -76,9 +76,8 @@ class InvestigatorProfileReloaded extends React.Component {
 
       ctRecruiting: '',
       ct: '',
-
-      height: 0
     }
+    this.mapRef = React.createRef();
   }
 
   async retrieveNominatim(){
@@ -202,11 +201,7 @@ class InvestigatorProfileReloaded extends React.Component {
 
     }
 
-    // This is a magic number 1,05 but I dont know why honestly
-    if( this.divElement ){
-      const height = this.divElement.clientHeight;
-      this.setState({ height });
-    }
+
 
     this.retrieveNominatim()
   }
@@ -224,32 +219,19 @@ class InvestigatorProfileReloaded extends React.Component {
     const { match: { params } } = this.props;
     let projectOid = params.id;
 
+    // Map completition
     const { affiliationInstitutionLocation } = this.state;
-    console.log("affiliationInstitutionLocation ", affiliationInstitutionLocation)
-    let lat = 41.385
-    let lng = 2.17
-    let map = <div>Loading ...</div>
+    let lat = 47.5162;
+    let lng = 14.5501;
     if( affiliationInstitutionLocation ){    
       const location = affiliationInstitutionLocation.split('(')[1].slice(0, -1).split(' ')
       lat = parseFloat( location[1] )
       lng = parseFloat( location[0] )
-      console.log("location" , location)
-      map = <MapContainer center={[lat, lng]} zoom={10} scrollWheelZoom 
-              style={{ height: "200px", width: '100%', borderRadius: '5px'}}>
-            <TileLayer
-              attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-            <Marker position={[lat, lng]}>
-              <Popup>
-                Position: {lat} {lng}
-              </Popup>
-            </Marker>
-          </MapContainer>
+      console.log("location" , location, this.mapRef)
+      this.mapRef.current.flyTo([lat,lng], 14, {
+        duration: 2
+      });
     }
-
-    console.log("lat" , lat)
-    console.log("lng" , lng)
 
     return (
 
@@ -297,10 +279,25 @@ class InvestigatorProfileReloaded extends React.Component {
 
             </div>
             <div className="mt-3 p-3 inspire-panel" style={{ backgroundColor: 'white'}}>
-              { map }
+
+            <MapContainer 
+              whenCreated={ mapInstance => { this.mapRef.current = mapInstance } }
+              center={[lat, lng]} zoom={10} scrollWheelZoom 
+              style={{ height: "200px", width: '100%', borderRadius: '5px'}}>
+              <TileLayer
+                attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+              <Marker position={[lat, lng]}>
+                <Popup>
+                  Position: {lat} {lng}
+                </Popup>
+              </Marker>
+            </MapContainer>
+
             </div>
           </Col>
-          <Col sm={5} ref={ (divElement) => { this.divElement = divElement } }>
+          <Col sm={5}>
             <div className="inspire-panel h-100" style={{ padding: 0, position:'relative', overflowY:'scroll', overflowX: 'hidden' }}>
               <div className="p-3 w-100" style={{ position:'absolute'}}>
               <Row>
@@ -438,5 +435,5 @@ class InvestigatorProfileReloaded extends React.Component {
 }
 
 
-export default connect(undefined, mapDispatchToProps)(withRouter(InvestigatorProfileReloaded))
+export default connect(undefined, mapDispatchToProps)(withRouter(InvestigatorProfile))
 
