@@ -316,7 +316,7 @@ class PanelPublications extends React.Component {
         })
 
       let dataTable = response.data.results
-      if(response.data.results.length < take && dataTable.length > 0){
+      if(response.data.results.length < take){
         const filteringList = FILTERING.reduce((acc,curr)=> (acc[curr.caption]='',acc),{});    
         const fill = new Array(take - response.data.results.length).fill(filteringList)
         dataTable.push(...fill)
