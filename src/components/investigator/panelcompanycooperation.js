@@ -86,9 +86,10 @@ class PanelCompanyCooperation extends React.Component {
       dataPerCompany: undefined,
       dataPerNature: undefined,
       investigatorId: undefined,
-      dataCompanyCooperations: [],
+      dataTable: [],
       filtering : {...filteringList},
-      sorting: ''
+      sorting: '',
+      emptyPanelShow: false
     }
 
     this.typingTimeout = undefined
@@ -111,7 +112,7 @@ class PanelCompanyCooperation extends React.Component {
   }
 
   generateChart() {
-    if( this.state.dataCompanyCooperations.length == 0 ){
+    if( this.state.dataTable.length == 0 ){
       this.setState({ isOpened: true })
       return
     }
@@ -290,7 +291,7 @@ class PanelCompanyCooperation extends React.Component {
 
   async retrieveCompanyCooperations(page = 1){
     try{
-      this.setState({isLoading: true, dataCompanyCooperations: []})
+      this.setState({isLoading: true, dataTable: []})
 
       const token = localStorage.getItem('token')
       const { take, limit, filtering, sorting } = this.state;
@@ -319,21 +320,22 @@ class PanelCompanyCooperation extends React.Component {
         { headers: { "Authorization": "jwt " + token }
       })
 
-      let dataCompanyCooperations = response.data.results
-      if(response.data.results.length < take){
+      let dataTable = response.data.results
+      if(response.data.results.length < take && dataTable.length > 0){
         const filteringList = FILTERING.reduce((acc,curr)=> (acc[curr.caption]='',acc),{});    
         const fill = new Array(take - response.data.results.length).fill(filteringList)
-        dataCompanyCooperations.push(...fill)
+        dataTable.push(...fill)
       }
 
 
       // Set State
       const totalPage = Math.ceil(response.data.count / take);      
       this.setState({
-        dataCompanyCooperations: dataCompanyCooperations, 
+        dataTable: dataTable, 
         currentPage: page,
         totalPage: totalPage,
         isLoading: false,
+        emptyPanelShow: dataTable.length == 0
       })
 
     }catch(error){
@@ -407,9 +409,9 @@ class PanelCompanyCooperation extends React.Component {
       setTimeout(function () { that.generateChart(); that.generateMaxChart() }, 500);
     }
 
-    const {dataCompanyCooperations, currentPage, totalPage, sorting} = this.state;
+    const {dataTable, currentPage, totalPage, sorting} = this.state;
 
-    const emptyPanelShow = dataCompanyCooperations.length == 0 && this.props.tabCompanyCooperationOpened;    
+    const emptyPanelShow = this.state.emptyPanelShow && this.props.tabCompanyCooperationOpened;    
     return (
       <div>
         <LoadingOverlay
@@ -470,7 +472,7 @@ class PanelCompanyCooperation extends React.Component {
                     <tr><td></td></tr>
                     </>
                     :<tr></tr>}
-                    {dataCompanyCooperations.map((item, id) =>
+                    {dataTable.map((item, id) =>
                       <tr key={id}>
                         <td style={{ width: '20%'}}>{item.nature_of_payment}</td>
                         <td style={{ width: '10%'}}>{item.year}</td>

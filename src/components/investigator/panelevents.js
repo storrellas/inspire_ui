@@ -89,7 +89,8 @@ class PanelEvents extends React.Component {
       limit: 10,
       isLoading: false,
       filtering : {...filteringList},
-      sorting: ''
+      sorting: '',
+      emptyPanelShow: false
     }    
   }
 
@@ -201,7 +202,7 @@ class PanelEvents extends React.Component {
     <div className="p-3 h-100" style={{ fontSize:'14px'}}>
 
 
-      <table className="w-100 inspire-table" style={{ fontSize: '12px'}}>
+      <table className="w-100 inspire-table">
         <thead>
           <tr>
             <td></td>
@@ -267,8 +268,8 @@ class PanelEvents extends React.Component {
               <td  className="text-center" style={{ width: '15%'}}>{item.city}</td>              
               <td  className="text-center" style={{ width: '15%'}}>{item.country}</td>
             </tr>,
-            <tr key={id+"_"}>
-              <td colSpan="7">
+            <tr key={id+"_"} className="inspire-table-events-subrow">
+              <td colSpan="7" className={item.show?'':'d-none'}>
               <AnimateHeight
                 id="example-panel"
                 height={ item.show?'auto':0}
@@ -394,6 +395,7 @@ class PanelEvents extends React.Component {
         currentPage: page,
         totalPage: totalPage,
         isLoading: false,
+        emptyPanelShow: dataTable.length == 0
       })
 
     }catch(error){
@@ -506,12 +508,10 @@ class PanelEvents extends React.Component {
     }
 
     const { showModal } = this.state;
-    let modalContent = <div>Unknown</div>
-    if( showModal ){
-      modalContent = this.generateModalContent()     
-    }
+    let modalContent = this.generateModalContent()   
 
-    const emptyPanelShow = this.state.dataTable.length == 0 && 
+
+    const emptyPanelShow = this.state.emptyPanelShow && 
       this.props.tabEventsOpened;
 
     return (
@@ -533,32 +533,13 @@ class PanelEvents extends React.Component {
               <div id="eventRoleChart" style={{ width: '100%', height: '400px', padding: '1em 20% 1em 20%' }}></div>
             </div>
           </div>
-          <div className="text-right pr-2 pb-1" style={{ cursor: 'pointer' }}
-            onClick={(e) => this.setState({ showModal: true })}>
-            View Details ...
-        </div>
+          <div className="mt-3">
+            {modalContent}
+          </div>
         </>
         :''}
         </LoadingOverlay>
 
-        <Modal animation centered
-          show={showModal}
-          onHide={(e) => this.closeModal(e)}
-          onEntered={(e) => this.openedModal()}
-          onExited={(e) => this.closedModal(e)}
-          dialogClassName="events-modal">
-          <Modal.Header closeButton>
-            <Modal.Title>Events</Modal.Title>
-          </Modal.Header>
-          <Modal.Body style={{ overflowY: 'scroll', height: '100%'}}>
-            {modalContent}
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={(e) => this.closeModal(e)}>
-              Close
-            </Button>
-          </Modal.Footer>
-        </Modal>
 
       </div>);
   }

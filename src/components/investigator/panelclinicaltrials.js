@@ -89,9 +89,6 @@ class PanelClinicalTrials extends React.Component {
     const filteringList = FILTERING.reduce((acc,curr)=> (acc[curr.caption]='',acc),{});    
     this.state = {
       isOpened: false,
-      showModalConditions: false, 
-      showModalInterventions: false, 
-      showModal: false,
       dataConditions: undefined,
       dataInterventions: undefined,
       dataTable: [],
@@ -101,7 +98,8 @@ class PanelClinicalTrials extends React.Component {
       limit: 10,
       isLoading: false,
       filtering : {...filteringList},
-      sorting: ''
+      sorting: '',
+      emptyPanelShow: false
     }
   }
 
@@ -257,6 +255,7 @@ class PanelClinicalTrials extends React.Component {
         currentPage: page,
         totalPage: totalPage,
         isLoading: false,
+        emptyPanelShow: dataTable.length == 0
       })
 
     }catch(error){
@@ -392,18 +391,6 @@ class PanelClinicalTrials extends React.Component {
 
   }
 
-  closeModal(){
-    this.setState({ 
-      showModal: false
-    })
-  }
-
-  closedModal(){
-  }
-
-  openedModal(){
-    const {showModal} = this.state;
-  }
 
 
   onSetSorting(field){
@@ -428,12 +415,8 @@ class PanelClinicalTrials extends React.Component {
       setTimeout(function(){ that.generateChart() }, 500);
     }
 
-    const {showModal} = this.state;
-    let modalContent = <div>Unknown</div>
-    if( showModal ){
-      modalContent = this.generateModalContent()      
-    }
-    const emptyPanelShow = this.state.dataTable.length == 0 && 
+    const modalContent = this.generateModalContent()      
+    const emptyPanelShow = this.state.emptyPanelShow && 
                           this.props.tabClinicalTrialsOpened;
     return (
       <div>
@@ -453,33 +436,12 @@ class PanelClinicalTrials extends React.Component {
               <div id="interventionsChart" style={{ width: '100%', height: '400px' }}></div>
             </div>
           </div>
-          <div className="text-right pr-2 pb-1" style={{ cursor: 'pointer' }} 
-                  onClick={(e) => this.setState({ showModal: true})}>
-          View Details ...
-        </div>
+          <div className="mt-3">
+            {modalContent}
+          </div>
         </>
         :''}
         </LoadingOverlay>
-
-
-        <Modal animation centered
-          show={showModal}
-          onHide={(e) => this.closeModal(e)}
-          onEntered={(e) => this.openedModal()}
-          onExited={(e) => this.closedModal(e)}
-          dialogClassName="clinical-trials-modal">
-          <Modal.Header closeButton>
-            <Modal.Title>Clinical Trials</Modal.Title>
-          </Modal.Header>
-          <Modal.Body style={{ overflowY: 'scroll', height: '100%'}}>
-            {modalContent}
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={(e) => this.closeModal(e)}>
-              Close
-            </Button>
-          </Modal.Footer>
-        </Modal>
 
       </div>);
   }

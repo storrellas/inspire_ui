@@ -71,9 +71,6 @@ class PanelPublications extends React.Component {
     const filteringList = FILTERING.reduce((acc,curr)=> (acc[curr.caption]='',acc),{});    
     this.state = {
       isOpened: false,
-      showModalPublicationType: false,
-      showModalPublicationYears: false,
-      showModal: false,
       dataType: undefined,
       dataYears: undefined,
       dataTable: [],
@@ -83,7 +80,8 @@ class PanelPublications extends React.Component {
       limit: 10,
       isLoading: false,
       filtering : {...filteringList},
-      sorting: ''
+      sorting: '',
+      emptyPanelShow: false
     }
 
     this.typingTimeout = undefined
@@ -331,6 +329,7 @@ class PanelPublications extends React.Component {
         currentPage: page,
         totalPage: totalPage,
         isLoading: false,
+        emptyPanelShow: dataTable.length == 0
       })
     } catch (error) {
 
@@ -400,27 +399,6 @@ class PanelPublications extends React.Component {
   }
 
 
-  openedModal() {
-    const { showModal, showModalPublicationType, showModalPublicationYears } = this.state;
-
-    if (showModal) {
-      // Do nothing      
-    } else if (showModalPublicationType) {
-      this.generatePublicationTypeMaxChart()
-    } else if (showModalPublicationYears) {
-      this.generatePublicationYearsMaxChart()
-    }
-  }
-
-  closedModal() {
-    if (this.publicationYearsMaxChart) {
-      this.publicationYearsMaxChart.dispose();
-    }
-    if (this.publicationTypeMaxChart) {
-      this.publicationTypeMaxChart.dispose();
-    }
-  }
-
   onSetSorting(field){
     let { currentPage, sorting } = this.state;
     let target = '';
@@ -443,13 +421,10 @@ class PanelPublications extends React.Component {
       setTimeout(function () { that.generateChart() }, 500);
     }
 
-    const { showModal } = this.state;
-    let modalContent = <div>Unknown</div>
-    if ( showModal ) {
-      modalContent = this.generateModalContent()
-    }
+    // Generate modal content
+    const modalContent = this.generateModalContent()
 
-    const emptyPanelShow = this.state.dataTable.length == 0 && 
+    const emptyPanelShow = this.state.emptyPanelShow && 
                           this.props.tabPublicationsOpened;
     return (
       <div>
@@ -470,34 +445,13 @@ class PanelPublications extends React.Component {
               <div id="publicationYearsChart" style={{ width: '100%', height: '400px', marginTop: '20px' }}></div>
             </div>
           </div>
-          <div className="text-right pr-2 pb-1" style={{ cursor: 'pointer' }}
-            onClick={(e) => this.setState({ showModal: true })}>
-            View Details ...
-        </div>
+          <div className="mt-3">
+            {modalContent}
+          </div>
+
         </>
         :''}
         </LoadingOverlay>
-
-        <Modal animation centered
-          show={showModal}
-          onHide={(e) => this.closeModal(e)}
-          onEntered={(e) => this.openedModal()}
-          onExited={(e) => this.closedModal(e)}
-          dialogClassName="publications-modal">
-          <Modal.Header closeButton>
-            <Modal.Title>Publications</Modal.Title>
-          </Modal.Header>
-          <Modal.Body style={{ overflowY: 'scroll', height: '100%' }}>
-            {modalContent}
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={(e) => this.closeModal(e)}>
-              Close
-            </Button>
-          </Modal.Footer>
-        </Modal>
-
-
 
       </div>);
   }
