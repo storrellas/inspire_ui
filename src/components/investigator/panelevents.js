@@ -207,7 +207,7 @@ class PanelEvents extends React.Component {
           <tr>
             <td></td>
             {FILTERING.map((item, id) =>
-              <td key={id} className="text-center" style={{ cursor: 'pointer' }}
+              <td key={id} style={{ cursor: 'pointer' }}
                 onClick={(e) => this.onSetSorting(item.dataField)}>
                 {item.label}
                 <FontAwesomeIcon icon={faLongArrowAltUp} className={sorting == item.dataField ? "ml-1" : "ml-1 d-none"} style={{ color: 'grey' }} />

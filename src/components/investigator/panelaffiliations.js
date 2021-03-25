@@ -386,7 +386,7 @@ class PanelAffiliations extends React.Component {
             <thead>
               <tr>
                 {FILTERING.map((item, id) =>
-                <td key={id} className="text-center" style={{ cursor: 'pointer' }}
+                <td key={id} style={{ cursor: 'pointer' }}
                   onClick={(e) => this.onSetSorting(item.dataField)}>
                   {item.label}
                   <FontAwesomeIcon icon={faLongArrowAltUp} className={sorting == item.dataField ? "ml-1" : "ml-1 d-none"} style={{ color: 'grey' }} />
@@ -428,7 +428,7 @@ class PanelAffiliations extends React.Component {
 
               {dataTable.map((item, id) =>
                 <tr key={id}>
-                  <td  className="text-center" style={{ width: '10%'}}>{item.position__name}</td>
+                  <td  className="text-left" style={{ width: '10%'}}>{item.position__name}</td>
                   <td  className="text-center" style={{ width: '200px'}}>
                     <EllipsisWithTooltip placement="bottom" style={{ width: '300px'}}>
                     {item.institution__parent_name || ''}

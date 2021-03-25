@@ -27,9 +27,14 @@
 }
 
 
-.inspire-table td{
+.inspire-table tr td{
     padding: 0.5em 0 0.5em 0;
-    text-align: center!important;
+    text-align: center;
+}
+
+.inspire-table tr td:first-child{
+    padding: 0.5em 0 0.5em 0;
+    text-align: left;
 }
 
 .inspire-table tbody tr:hover{

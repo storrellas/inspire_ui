@@ -408,7 +408,7 @@ class PanelCompanyCooperation extends React.Component {
           active={this.state.isOpened == false}
           spinner>
 
-          {dataCompanyCooperations.length == 0?
+          {dataCompanyCooperations.length == 0 && this.props.tabCompanyCooperationOpened == true?
           <div className="w-100 text-center">
             <img className="w-25" src={emptyPanel} alt="logo"></img>
             <div className="mt-3">
@@ -430,7 +430,7 @@ class PanelCompanyCooperation extends React.Component {
                   <thead>
                     <tr>
                     {FILTERING.map((item, id) =>
-                      <td key={id} className="text-center" style={{ cursor: 'pointer' }}
+                      <td key={id} style={{ cursor: 'pointer' }}
                         onClick={(e) => this.onSetSorting(item.dataField)}>
                         {item.label}
                         <FontAwesomeIcon icon={faLongArrowAltUp} className={sorting == item.dataField ? "ml-1" : "ml-1 d-none"} style={{ color: 'grey' }} />
@@ -471,15 +471,15 @@ class PanelCompanyCooperation extends React.Component {
                     :<tr></tr>}
                     {dataCompanyCooperations.map((item, id) =>
                       <tr key={id}>
-                        <td className="text-center" style={{ width: '20%'}}>{item.nature_of_payment}</td>
-                        <td className="text-center" style={{ width: '10%'}}>{item.year}</td>
-                        <td className="text-center" style={{ width: '40%'}}>
+                        <td style={{ width: '20%'}}>{item.nature_of_payment}</td>
+                        <td style={{ width: '10%'}}>{item.year}</td>
+                        <td style={{ width: '40%'}}>
                           <EllipsisWithTooltip placement="bottom" style={{ width: '300px'}}>
                           {item.institution || ''}
                           </EllipsisWithTooltip>
                         </td>
-                        <td className="text-center" style={{ width: '20%'}}>{item.amount}</td>
-                        <td className="text-center" style={{ width: '10%'}}>{item.currency}</td>
+                        <td style={{ width: '20%'}}>{item.amount}</td>
+                        <td style={{ width: '10%'}}>{item.currency}</td>
                       </tr>
                     )}
                   </tbody>

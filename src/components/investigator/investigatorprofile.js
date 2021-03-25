@@ -76,6 +76,9 @@ class InvestigatorProfile extends React.Component {
 
       ctRecruiting: '',
       ct: '',
+
+      snapshotSpecialties: true, 
+      snapshotFocusArea: false,
     }
     this.mapRef = React.createRef();
   }
@@ -227,9 +230,10 @@ class InvestigatorProfile extends React.Component {
       const location = affiliationInstitutionLocation.split('(')[1].slice(0, -1).split(' ')
       lat = parseFloat( location[1] )
       lng = parseFloat( location[0] )
-      this.mapRef.current.flyTo([lat,lng], 14, {
-        duration: 2
-      });
+      // this.mapRef.current.flyTo([lat,lng], 14, {
+      //   duration: 2
+      // });
+      this.mapRef.current.setView([lat,lng], 14);
     }
 
     return (
@@ -240,20 +244,22 @@ class InvestigatorProfile extends React.Component {
           <Col sm={7}>
             <div className="inspire-panel">
               <Row>
-                <Col sm={3}>
-                  <img src={this.state.picture} className="w-100" style={{ borderRadius: '50%' }}></img>
+                <Col sm={3} className="text-center">
+                  <img src={this.state.picture} style={{ width: '90%', borderRadius: '50%' }}></img>
                 </Col>
                 <Col sm={9}>
-                  <div className="h-100 d-flex flex-column justify-content-center">
+                  <div className="h-100 d-flex flex-column justify-content-center" style={{ fontSize: '18px'}}>
                     <div>
-                      <b>{this.state.name} </b>
-                      <span className="ml-3 inspire-text-secondary">{this.state.degree}</span>
+                      <span className="inspire-text-secondary">{this.state.degree}</span>
+                      <span className="ml-3"><b>{this.state.name} </b></span>
+                      
                     </div>
                     <div>
                       {this.state.affiliationInstitutionPhone}  | 
                       <span className="ml-3 inspire-text-secondary">
-                      <a style={{wordBreak: 'break-all'}} 
-                        href={"mailto:"+this.state.affiliationInstitutionEmail}>{this.state.affiliationInstitutionEmail}</a></span>
+                        <a style={{wordBreak: 'break-all'}} 
+                          href={"mailto:"+this.state.affiliationInstitutionEmail}>{this.state.affiliationInstitutionEmail}</a>
+                      </span>
                     </div>
                   </div>
                 </Col>

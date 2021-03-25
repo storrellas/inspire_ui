@@ -150,8 +150,6 @@ class PanelResearchProfile extends React.Component {
       research_profile_data.push({'name': category, 'childrenList': childrenList})
     }
 
-
-
     return research_profile_data
   }
 
@@ -165,13 +163,8 @@ class PanelResearchProfile extends React.Component {
       setTimeout(function(){ that.generateChart() }, 500);
     }
 
-    const data = [
-      { label: 'test', width: '80%', value: 4},
-      { label: 'test1', width: '20%', value: 3},
-      { label: 'test2', width: '40%', value: 6},
-    ]
-    const researchProfileData = this.generateModalData()
 
+    const researchProfileData = this.generateModalData()
     return (
       <div>    
         <LoadingOverlay
@@ -189,7 +182,7 @@ class PanelResearchProfile extends React.Component {
                       <div key={key} className="w-50 p-2">
                         {item.label}
                         <div className={this.state.isOpened ? "bar ready" : "bar"}>
-                          <div className="rowshadow text-rigth pl-3" style={{ width: item.relative + "%" }}>{item.counter}</div>
+                          <div className="rowshadow text-rigth pl-3" style={{ width: item.relative + "%" }}>{item.counter} - {item.name} </div>
                         </div>
                       </div>
                     )}

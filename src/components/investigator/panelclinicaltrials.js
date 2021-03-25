@@ -318,7 +318,7 @@ class PanelClinicalTrials extends React.Component {
           <thead>
             <tr>
               {FILTERING.map((item, id) =>
-                <td key={id} className="text-center" style={{ cursor: 'pointer' }}
+                <td key={id} style={{ cursor: 'pointer' }}
                 onClick={(e) => this.onSetSorting(item.dataField)}>
                   {item.label}
                   <FontAwesomeIcon icon={faLongArrowAltUp} className={sorting == item.dataField ? "ml-1" : "ml-1 d-none"} style={{ color: 'grey' }} />
@@ -359,7 +359,7 @@ class PanelClinicalTrials extends React.Component {
             {dataTable.map((item, id) =>
               <tr key={id}>
                 {FILTERING.map( (header, id ) => 
-                  <td key={id}  className="text-center" style={{ width: '20%'}}>{item[header.dataField]}</td>
+                  <td key={id}  style={{ width: '20%'}}>{item[header.dataField]}</td>
                 )}
               </tr>
             )}
