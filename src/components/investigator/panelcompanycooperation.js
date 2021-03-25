@@ -9,6 +9,8 @@ import { withRouter } from 'react-router-dom'
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
+import am4lang_de_DE from "@amcharts/amcharts4/lang/de_DE";
+
 
 // EllipsisWithTooltip
 import EllipsisWithTooltip from 'react-ellipsis-with-tooltip'
@@ -166,6 +168,7 @@ class PanelCompanyCooperation extends React.Component {
       series.stacked = true;
       series.name = name;
       series.columns.template.tooltipText = "{name}: {valueX}";
+      series.numberFormatter.language.locale = am4lang_de_DE;
   
       let labelBullet = series.bullets.push(new am4charts.LabelBullet());
       labelBullet.locationX = 0.5;
