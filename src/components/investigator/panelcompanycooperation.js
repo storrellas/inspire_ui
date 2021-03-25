@@ -111,7 +111,11 @@ class PanelCompanyCooperation extends React.Component {
   }
 
   generateChart() {
-    
+    if( this.state.dataCompanyCooperations.length == 0 ){
+      this.setState({ isOpened: true })
+      return
+    }
+
     // Create chart instance
     this.chart = am4core.create("companycooperationchart", am4charts.XYChart);
 
