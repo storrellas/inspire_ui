@@ -327,6 +327,7 @@ class PanelEvents extends React.Component {
         { headers: { "Authorization": "jwt " + token }
       })
       this.state.dataRoles = response.data.results;
+      this.state.emptyPanelShow = response.data.results.length == 0;
 
       // Process Data
       const dataRoles = {"state": "event"}
@@ -394,8 +395,7 @@ class PanelEvents extends React.Component {
         dataTable: dataTable, 
         currentPage: page,
         totalPage: totalPage,
-        isLoading: false,
-        emptyPanelShow: dataTable.length == 0
+        isLoading: false
       })
 
     }catch(error){

@@ -167,8 +167,8 @@ class PanelClinicalTrials extends React.Component {
       const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/investigator/${this.investigatorId}/clinical-trials-per-condition/`,
         { headers: { "Authorization": "jwt " + token }
       })
-      this.state.dataConditions = response.data.results;
-
+      this.state.dataConditions = response.data.results;      
+      this.state.emptyPanelShow = response.data.results.length == 0;
 
     }catch(error){
 
@@ -254,8 +254,7 @@ class PanelClinicalTrials extends React.Component {
         dataTable: dataTable, 
         currentPage: page,
         totalPage: totalPage,
-        isLoading: false,
-        emptyPanelShow: dataTable.length == 0
+        isLoading: false
       })
 
     }catch(error){

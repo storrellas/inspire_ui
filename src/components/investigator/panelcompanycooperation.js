@@ -240,8 +240,8 @@ class PanelCompanyCooperation extends React.Component {
       })
 
       // Chart data
-      this.state.dataPerCompany = response.data.results
-
+      this.state.dataPerCompany = response.data.results      
+      this.state.emptyPanelShow = response.data.results.length == 0
 
     }catch(error){
 
@@ -334,8 +334,7 @@ class PanelCompanyCooperation extends React.Component {
         dataTable: dataTable, 
         currentPage: page,
         totalPage: totalPage,
-        isLoading: false,
-        emptyPanelShow: dataTable.length == 0
+        isLoading: false
       })
 
     }catch(error){

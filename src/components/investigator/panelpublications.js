@@ -236,6 +236,7 @@ class PanelPublications extends React.Component {
           headers: { "Authorization": "jwt " + token }
         })
       this.state.dataType = response.data.results;
+      this.state.emptyPanelShow = response.data.results.length == 0;
 
     } catch (error) {
 
@@ -328,8 +329,7 @@ class PanelPublications extends React.Component {
         dataTable: dataTable,
         currentPage: page,
         totalPage: totalPage,
-        isLoading: false,
-        emptyPanelShow: dataTable.length == 0
+        isLoading: false
       })
     } catch (error) {
 
