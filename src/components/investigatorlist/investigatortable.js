@@ -388,28 +388,28 @@ class InvestigatorTable extends React.Component {
                 :<tr></tr>}
               {this.state.investigatorList.map((item, id) =>
                 <tr key={id}>
-                  <td style={{ width: '5%'}}>
+                  <td style={{ width: '3%'}}>
                     
-                    <img src={item.is_favorite_investigator?favorite:nonfavorite} width="40"
+                    <img src={item.is_favorite_investigator?favorite:nonfavorite} width="30"
                       onClick={(e) => this.onSetInvestigatorFavorite(item.oid, item.is_favorite_investigator)}
                       style={{ cursor: 'pointer' }}></img>
                     
                   </td>
-                  <td style={{ width: '5%'}}>
-                    <img src={arrow} width="40"
+                  <td style={{ width: '3%'}}>
+                    <img src={arrow} width="30"
                       onClick={(e) => this.props.history.push(`/dashboard/project/${this.state.projectOid}/investigator/${item.oid}`)}
                       style={{ cursor: 'pointer' }}></img>
                   </td>
 
                   <td style={{ width: '10%'}}>{item.first_name}</td>
                   <td style={{ width: '10%'}}>{item.last_name}</td>
-                  <td style={{ width: '10%'}}>
-                          <EllipsisWithTooltip placement="bottom" style={{ width: '100px'}}>
+                  <td style={{ width: '20%'}}>
+                          <EllipsisWithTooltip placement="bottom" style={{ width: '250px'}}>
                           {item.prop_specialties || ''}
                           </EllipsisWithTooltip>
                   </td>
-                  <td style={{ width: '10%'}}>
-                        <EllipsisWithTooltip placement="bottom" style={{ width: '100px'}}>
+                  <td style={{ width: '20%'}}>
+                        <EllipsisWithTooltip placement="bottom" style={{ width: '250px'}}>
                           {item.focus_areas_reasearch_interests || ''}
                         </EllipsisWithTooltip>
                   </td>
