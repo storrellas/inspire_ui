@@ -106,11 +106,6 @@ class PanelEvents extends React.Component {
     const pieSeries = chart.series.push(new am4charts.PieSeries());
     const pieSeriesRef = pieSeries;
 
-    // console.log("-- pieSeries ", this.pieSeries)
-    console.log("pieSeries ", pieSeries.slices)
-    // console.log("pieSeries ", this.pieSeries.slices.getIndex(1))
-    // console.log("pieSeries ", this.pieSeries.slices.length)
-
     pieSeries.labels.template.disabled = true;
     pieSeries.dataFields.value = "total";
     pieSeries.dataFields.category = "name";

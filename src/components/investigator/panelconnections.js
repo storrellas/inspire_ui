@@ -22,6 +22,8 @@ import Select from 'react-select'
 
 // Project imports
 import sourceFile from './source'
+import userGray from '../../assets/userGray.png';
+
 
 // Redux
 import { connect } from "react-redux";
@@ -259,6 +261,7 @@ class PanelConnections extends React.Component {
         // Iterate on connectionType
         for( const connectionType of filters.connectionTypeList ) {
           if( connection[connectionType] > 0 ){
+            console.log("connection ", connection)
             filteredConnectionTypeConnectionSet.add(connection.id);          
           }          
             
@@ -280,20 +283,26 @@ class PanelConnections extends React.Component {
       filteredYearsSet = new Set()
       for(const connection of connections){
         if(checkEventsDate){
-          const { first_year_common_events } = connection;
-          if( yearFrom > first_year_common_events && first_year_common_events < yearTo ){
+          const { first_year_common_events, last_year_common_events } = connection;
+          if( first_year_common_events < yearFrom || yearTo < last_year_common_events ){
+            // Do nothing
+          }else{
             filteredYearsSet.add(connection.id);
           }
         }
         if(checkTrialsDate){
-          const { first_year_common_clinical_trials } = connection;
-          if( yearFrom > first_year_common_clinical_trials && first_year_common_clinical_trials < yearTo ){
+          const { first_year_common_clinical_trials, last_year_common_clinical_trials } = connection;         
+          if( first_year_common_clinical_trials < yearFrom || yearTo < last_year_common_clinical_trials ){
+            // Do nothing
+          }else{
             filteredYearsSet.add(connection.id);
           }
         }
         if(checkPublicationDate){
-          const { first_year_common_publications } = connection;
-          if( yearFrom > first_year_common_publications && first_year_common_publications < yearTo ){
+          const { first_year_common_publications, last_year_common_publications } = connection;
+          if( first_year_common_publications < yearFrom || yearTo < last_year_common_publications  ){
+            // Do nothing
+          }else{
             filteredYearsSet.add(connection.id);
           }
         }
@@ -420,7 +429,7 @@ class PanelConnections extends React.Component {
       const countrySet = new Set()
 
       // collection of nodes
-      const investigator_img = "https://demo.explicatos.com/img/user_gray.png";
+      const investigator_img = {userGray};
       const users = [
         { 
           id: "1", 
