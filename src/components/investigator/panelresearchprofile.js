@@ -187,7 +187,7 @@ class PanelResearchProfile extends React.Component {
           <>
             <div id="researchprofilechart" style={{ height:'100%', height: '500px' }}></div>
 
-            <div style={{ height: '400px'}}>
+            <div className="mt-3" style={{ height: '400px'}}>
               <div className="h-100" style={{ overflowY:'auto', overflowX: 'none'}}>
                 {researchProfileData.map( (item, key) => 
                 <div key={key} id="category-page-3" className="category" style={{ marginTop: '1em', width: '100%'}}>
@@ -196,8 +196,11 @@ class PanelResearchProfile extends React.Component {
                     {item.childrenList.map( (item, key) => 
                         <div key={key} className="w-50 p-2">
                           {item.label}
-                          <div className={this.state.isOpened ? "bar ready" : "bar"}>
-                            <div className="rowshadow text-rigth pl-3" style={{ width: item.relative + "%" }}>{item.counter} - {item.name} </div>
+                          <div className={this.state.isOpened ? "bar ready" : "bar"} style={{ position: 'relative'}}>
+                            <div className="pl-3" style={{ lineHeight: '30px', position:'absolute'}}>
+                              <b>{item.counter} - {item.name}</b>
+                            </div>
+                            <div className="rowshadow text-rigth pl-3" style={{ width: item.relative + "%" }}>&nbsp;</div>
                           </div>
                         </div>
                       )}
