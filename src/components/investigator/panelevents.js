@@ -95,18 +95,33 @@ class PanelEvents extends React.Component {
   generateEventType(container){
     // Create chart instance
     const chart = am4core.create(container, am4charts.PieChart);
+    chart.startAngle = -180;
+    chart.endAngle = 180;
 
     // Add data
-    chart.data = this.state.dataTypes;
+    chart.data = this.state.dataTypes.sort((a,b) => (a.total > b.total) ? -1 : ((b.total > a.total) ? 1 : 0));
     chart.innerRadius = am4core.percent(60);
 
     // Add and configure Series
-    var pieSeries = chart.series.push(new am4charts.PieSeries());
+    const pieSeries = chart.series.push(new am4charts.PieSeries());
+    const pieSeriesRef = pieSeries;
+
+    // console.log("-- pieSeries ", this.pieSeries)
+    console.log("pieSeries ", pieSeries.slices)
+    // console.log("pieSeries ", this.pieSeries.slices.getIndex(1))
+    // console.log("pieSeries ", this.pieSeries.slices.length)
+
     pieSeries.labels.template.disabled = true;
     pieSeries.dataFields.value = "total";
     pieSeries.dataFields.category = "name";
-    pieSeries.dataFields.tooltipText = "{category}{value}";
+    pieSeries.slices.template.tooltipText = "{category} {value}%";
     pieSeries.hiddenState.properties.endAngle = -90;
+
+    pieSeries.events.on("ready", ()=>{
+      pieSeriesRef.slices.getIndex(0).showTooltipOn = "always";
+      pieSeriesRef.slices.getIndex(1).showTooltipOn = "always";
+      pieSeriesRef.slices.getIndex(2).showTooltipOn = "always";
+    })
 
     return chart;
   }
@@ -445,6 +460,7 @@ class PanelEvents extends React.Component {
 
   }
 
+
   closeModal(){
     this.setState({ 
       showModal: false
@@ -487,8 +503,6 @@ class PanelEvents extends React.Component {
       const that = this;
       setTimeout(function () { that.generateChart() }, 500);
     }
-
-
 
     const { showModal } = this.state;
     let modalContent = <div>Unknown</div>

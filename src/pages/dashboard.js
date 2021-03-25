@@ -191,9 +191,9 @@ class Dashboard extends React.Component {
                                                 </div>
                                                 <div className="ml-2">
                                                     {name === undefined?
-                                                    <div>Investigators</div>
+                                                    <div>Medical Experts</div>
                                                     :                                                    
-                                                    <a href={`/dashboard/project/${projectOid}`}>Investigators</a>
+                                                    <a href={`/dashboard/project/${projectOid}`}>Medical Experts</a>
                                                     }
                                                 </div>
                                             </>

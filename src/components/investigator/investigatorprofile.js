@@ -227,7 +227,6 @@ class InvestigatorProfile extends React.Component {
       const location = affiliationInstitutionLocation.split('(')[1].slice(0, -1).split(' ')
       lat = parseFloat( location[1] )
       lng = parseFloat( location[0] )
-      console.log("location" , location, this.mapRef)
       this.mapRef.current.flyTo([lat,lng], 14, {
         duration: 2
       });
