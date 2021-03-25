@@ -16,9 +16,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLongArrowAltUp, faLongArrowAltDown, faSpinner } from '@fortawesome/free-solid-svg-icons'
 
 // Assets
-import universities from '../../assets/universities.png';
-import hospitals from '../../assets/hospitals.png';
-import associations from '../../assets/associations.png';
+import universities from '../../assets/universities.svg';
+import hospitals from '../../assets/hospitals.svg';
+import associations from '../../assets/associations.svg';
 
 
 // Axios
