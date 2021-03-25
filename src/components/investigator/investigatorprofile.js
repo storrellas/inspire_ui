@@ -56,6 +56,7 @@ class InvestigatorProfileReloaded extends React.Component {
       affiliationInstitution: '',
       affiliationInstitutionPhone: '',
       affiliationInstitutionEmail: '',
+      affiliationInstitutionLocation: '',
 
       careerStage: '',
       privatePhone: '',
@@ -139,6 +140,8 @@ class InvestigatorProfileReloaded extends React.Component {
           this.state.affiliationInstitutionPhone = response.data.affiliation.institution__phone
         if( response.data.affiliation.institution__email != null)
           this.state.affiliationInstitutionEmail = response.data.affiliation.institution__email          
+        if( response.data.affiliation.institution__location != null)
+          this.state.affiliationInstitutionLocation = response.data.affiliation.institution__location          
       }
 
       if( response.data.number_linked_publications_position_first_author != null)
@@ -220,6 +223,34 @@ class InvestigatorProfileReloaded extends React.Component {
   render() {
     const { match: { params } } = this.props;
     let projectOid = params.id;
+
+    const { affiliationInstitutionLocation } = this.state;
+    console.log("affiliationInstitutionLocation ", affiliationInstitutionLocation)
+    let lat = 41.385
+    let lng = 2.17
+    let map = <div>Loading ...</div>
+    if( affiliationInstitutionLocation ){    
+      const location = affiliationInstitutionLocation.split('(')[1].slice(0, -1).split(' ')
+      lat = parseFloat( location[1] )
+      lng = parseFloat( location[0] )
+      console.log("location" , location)
+      map = <MapContainer center={[lat, lng]} zoom={10} scrollWheelZoom 
+              style={{ height: "200px", width: '100%', borderRadius: '5px'}}>
+            <TileLayer
+              attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            <Marker position={[lat, lng]}>
+              <Popup>
+                Position: {lat} {lng}
+              </Popup>
+            </Marker>
+          </MapContainer>
+    }
+
+    console.log("lat" , lat)
+    console.log("lng" , lng)
+
     return (
 
       <>
@@ -266,18 +297,7 @@ class InvestigatorProfileReloaded extends React.Component {
 
             </div>
             <div className="mt-3 p-3 inspire-panel" style={{ backgroundColor: 'white'}}>
-              <MapContainer center={[41.385, 2.17]} zoom={10} scrollWheelZoom={false} 
-                style={{ height: "200px", width: '100%', borderRadius: '5px'}}>
-                <TileLayer
-                  attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                />
-                <Marker position={[41.385, 2.17]}>
-                  <Popup>
-                    A pretty CSS3 popup. <br /> Easily customizable.
-                  </Popup>
-                </Marker>
-              </MapContainer>
+              { map }
             </div>
           </Col>
           <Col sm={5} ref={ (divElement) => { this.divElement = divElement } }>

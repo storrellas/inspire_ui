@@ -26,6 +26,8 @@ import { connect } from "react-redux";
 // Loading overlay
 import LoadingOverlay from 'react-loading-overlay';
 
+// Assets
+import emptyPanel from '../../assets/emptypanel.svg';
 
 // Axios
 import axios from 'axios';
@@ -405,6 +407,17 @@ class PanelCompanyCooperation extends React.Component {
         <LoadingOverlay
           active={this.state.isOpened == false}
           spinner>
+
+          {dataCompanyCooperations.length == 0?
+          <div className="w-100 text-center">
+            <img className="w-25" src={emptyPanel} alt="logo"></img>
+            <div className="mt-3">
+              <b className="mt-3">Nothing in here!</b>
+              <div className="mt-3">There is no data available in this section</div>
+            </div>
+          </div>
+          :''}
+
           <div id="companycooperationchart" style={{ height: '400px', padding: '1em' }}></div>
 
           <div className="d-flex" style={{ marginTop: '3em' }}>

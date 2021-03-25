@@ -176,11 +176,9 @@ class PanelConnections extends React.Component {
 
   generateProfiles() {
 
-    const { users } = this.state;
+    const { usersFiltered } = this.state;
     // remove first user
-    const usersLocal = users.slice(1);
-
-    console.log("users ", usersLocal)
+    const usersLocal = usersFiltered.slice(1);
 
     return (
       <div className="h-100" style={{ position: 'relative'}}>
@@ -430,7 +428,7 @@ class PanelConnections extends React.Component {
           affiliation: this.props.investigatorProfile.affiliationInstitution,
           image: this.props.picture || investigator_img, 
           strength: '',
-          link: `/project/${params.id}/investigator/${params.subid}`
+          link: `/dashboard/project/${params.id}/investigator/${params.subid}`
         }
       ];      
 

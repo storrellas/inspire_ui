@@ -117,38 +117,38 @@ class Investigator extends React.Component {
 
         <Row className="pb-3" style={{ marginTop: '4em'}}>
           <Col sm={12}>
-            <Nav variant="tabs" style={{ width: '100%', justifyContent: 'space-between' }}>
-              <Nav.Item>
+            <Nav variant="tabs" style={{ width: '100%' }}>
+              <Nav.Item className="mr-2">
                 <Nav.Link href="#" active={panel == PANEL.CONNECTIONS} 
                   onClick={(e) => this.onSetPanel(PANEL.CONNECTIONS)}><b>Connections</b></Nav.Link>
               </Nav.Item>
-              <Nav.Item>
+              <Nav.Item className="mr-2">
                 <Nav.Link href="#" active={panel == PANEL.COMPANY_COOPERATION} 
                   onClick={(e) => this.onSetPanel(PANEL.COMPANY_COOPERATION)}><b>Company Cooperation</b></Nav.Link>
               </Nav.Item>
-              <Nav.Item>
+              <Nav.Item className="mr-2">
                 <Nav.Link href="#" active={panel == PANEL.AFFILIATIONS} 
                   onClick={(e) => this.onSetPanel(PANEL.AFFILIATIONS)}><b>Affiliations</b></Nav.Link>
               </Nav.Item>
-              <Nav.Item>
+              <Nav.Item className="mr-2">
                 <Nav.Link href="#" active={panel == PANEL.RESEARCH_PROFILE} 
                   onClick={(e) => this.onSetPanel(PANEL.RESEARCH_PROFILE)}><b>Research Profile</b></Nav.Link>
               </Nav.Item>
 
 
-              <Nav.Item>
+              <Nav.Item className="mr-2">
                 <Nav.Link href="#" active={panel == PANEL.PUBLICATIONS} 
                   onClick={(e) => this.onSetPanel(PANEL.PUBLICATIONS)}><b>Publications</b></Nav.Link>
               </Nav.Item>
-              <Nav.Item>
+              <Nav.Item className="mr-2">
                 <Nav.Link href="#" active={panel == PANEL.EVENTS} 
                   onClick={(e) => this.onSetPanel(PANEL.EVENTS)}><b>Events</b></Nav.Link>
               </Nav.Item>
-              <Nav.Item>
+              <Nav.Item className="mr-2">
                 <Nav.Link href="#" active={panel == PANEL.CLINICAL_TRIALS} 
                   onClick={(e) => this.onSetPanel(PANEL.CLINICAL_TRIALS)}><b>Clinical Trials</b></Nav.Link>
               </Nav.Item>
-              <Nav.Item>
+              <Nav.Item className="mr-2">
                 <Nav.Link href="#" active={panel == PANEL.FEEDBACK} 
                   onClick={(e) => this.onSetPanel(PANEL.FEEDBACK)}><b>Feedback</b></Nav.Link>
               </Nav.Item>
