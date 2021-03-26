@@ -1,6 +1,6 @@
 import React from 'react';
 // Bootstrap
-import { Modal, Button } from 'react-bootstrap';
+import { Modal, Button, Row, Col } from 'react-bootstrap';
 
 // React Router
 import { withRouter } from 'react-router-dom'
@@ -90,28 +90,42 @@ class PanelPublications extends React.Component {
   generatePublicationType(container) {
     // Create chart instance
     let chart = am4core.create(container, am4charts.PieChart);
+    chart.startAngle = -180;
+    chart.endAngle = 180;
 
     // Add data
-    //chart.data = publicationTypes;
-    chart.data = this.state.dataType;
+    chart.data = this.state.dataType.sort((a,b) => (a.total > b.total) ? -1 : ((b.total > a.total) ? 1 : 0));
     chart.innerRadius = am4core.percent(60);
 
     // Add and configure Series
     var pieSeries = chart.series.push(new am4charts.PieSeries());
+    const pieSeriesRef = pieSeries;
+
     pieSeries.labels.template.disabled = true;
     pieSeries.dataFields.value = "total";
     pieSeries.dataFields.category = "name";
-    pieSeries.dataFields.tooltipText = "{category}{value}";
+    pieSeries.slices.template.tooltipText = "{category} {value}%";
+    pieSeries.hiddenState.properties.endAngle = -90;
 
-    chart.hiddenState.properties.radius = am4core.percent(0);
+    pieSeries.events.on("ready", ()=>{
+      if(pieSeries.slices.length > 0 )
+        pieSeriesRef.slices.getIndex(0).showTooltipOn = "always";
+      if(pieSeries.slices.length > 1 )
+        pieSeriesRef.slices.getIndex(1).showTooltipOn = "always";
+      if(pieSeries.slices.length > 2 )
+        pieSeriesRef.slices.getIndex(2).showTooltipOn = "always";
+    })
+
+
+    //chart.hiddenState.properties.radius = am4core.percent(0);
 
     return chart;
   }
 
   generatePublicationTypeChart() {
     this.publicationTypeChart = this.generatePublicationType("publicationTypeChart")
-    this.publicationTypeChart.legend = new am4charts.Legend();
-    this.publicationTypeChart.legend.position = "right"
+    //this.publicationTypeChart.legend = new am4charts.Legend();
+    //this.publicationTypeChart.legend.position = "right"
   }
 
 
@@ -435,16 +449,16 @@ class PanelPublications extends React.Component {
           <EmptyPanel show={emptyPanelShow} />
           {!emptyPanelShow?
           <>
-          <div style={{ padding: '1em 1em 1em 1em' }}>
-            <div>
+          <Row style={{ padding: '1em 1em 1em 1em' }}>
+            <Col sm={6}>
               <div>Publication Types</div>
-              <div id="publicationTypeChart" style={{ width: '100%', height: '400px', marginTop: '20px' }}></div>
-            </div>
-            <div style={{ marginTop: '4em'}}>
+              <div id="publicationTypeChart" style={{ width: '100%', height: '300px', marginTop: '20px' }}></div>
+            </Col>
+            <Col  sm={6}>
               <div>Publication Years</div>
-              <div id="publicationYearsChart" style={{ width: '100%', height: '400px', marginTop: '20px' }}></div>
-            </div>
-          </div>
+              <div id="publicationYearsChart" style={{ width: '100%', height: '300px', marginTop: '20px' }}></div>
+            </Col>
+          </Row>
           <div className="mt-3">
             {modalContent}
           </div>

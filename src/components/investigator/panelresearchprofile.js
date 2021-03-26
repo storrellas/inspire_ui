@@ -188,11 +188,12 @@ class PanelResearchProfile extends React.Component {
             <div id="researchprofilechart" style={{ height:'100%', height: '500px' }}></div>
 
             <div className="mt-3" style={{ height: '400px'}}>
-              <div className="h-100" style={{ overflowY:'auto', overflowX: 'none'}}>
+              <div className="h-100" style={{ overflowY:'scroll', overflowX: 'none'}}>
+                <div style={{ position:'relative'}}>
                 {researchProfileData.map( (item, key) => 
                 <div key={key} id="category-page-3" className="category" style={{ marginTop: '1em', width: '100%'}}>
                   <h4><b>{item.name}</b></h4>
-                  <div className="d-flex flex-wrap">
+                  <div className="d-flex flex-wrap w-100 h-100">
                     {item.childrenList.map( (item, key) => 
                         <div key={key} className="w-50 p-2">
                           {item.label}
@@ -207,6 +208,7 @@ class PanelResearchProfile extends React.Component {
                     </div>
                 </div>
                 )}
+                </div>
                 </div>
               </div>
             </>

@@ -312,7 +312,7 @@ class InvestigatorProfile extends React.Component {
                 </Col>
                 <Col sm={6} className="text-right">
                   <div>
-                    <a href={this.state.cv} className={this.state.cv===''?'d-none':''}>                  
+                    <a href={this.state.cv} className={this.state.cv===''?'d-none':''} target="_blank">                  
                       Go To CV
                       <FontAwesomeIcon className="ml-2" icon={faNewspaper} />
                     </a>

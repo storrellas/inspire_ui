@@ -1,6 +1,6 @@
 import React from 'react';
 // Bootstrap
-import { Modal, Button } from 'react-bootstrap';
+import { Modal, Button, Row, Col } from 'react-bootstrap';
 // React Router
 import { withRouter } from 'react-router-dom'
 
@@ -128,8 +128,8 @@ class PanelEvents extends React.Component {
 
   generateEventTypeChart() {
     this.eventTypeChart = this.generateEventType("eventTypeChart")
-    this.eventTypeChart.legend = new am4charts.Legend();    
-    this.eventTypeChart.legend.position = "right"
+    // this.eventTypeChart.legend = new am4charts.Legend();    
+    // this.eventTypeChart.legend.position = "right"
   }
 
 
@@ -523,16 +523,16 @@ class PanelEvents extends React.Component {
           spinner>
           {!emptyPanelShow?
           <>
-          <div style={{ padding: '1em 1em 1em 1em' }}>
-            <div>
+          <Row style={{ padding: '1em 1em 1em 1em' }}>
+            <Col>
               <div>Event Types</div>
-              <div id="eventTypeChart" style={{ width: '100%', height: '400px', padding: '1em 15% 1em 15%' }}></div>
-            </div>
-            <div className="mt-3">
+              <div id="eventTypeChart" style={{ width: '100%', height: '300px'}}></div>
+            </Col>
+            <Col>
               <div>Event Roles</div>
-              <div id="eventRoleChart" style={{ width: '100%', height: '400px', padding: '1em 20% 1em 20%' }}></div>
-            </div>
-          </div>
+              <div id="eventRoleChart" style={{ width: '100%', height: '300px'}}></div>
+            </Col>
+          </Row>
           <div className="mt-3">
             {modalContent}
           </div>

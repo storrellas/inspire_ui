@@ -1,6 +1,6 @@
 import React from 'react';
 // Bootstrap
-import { Modal, Button } from 'react-bootstrap';
+import { Modal, Button, Row, Col } from 'react-bootstrap';
 
 // React Router
 import { withRouter } from 'react-router-dom'
@@ -106,34 +106,50 @@ class PanelClinicalTrials extends React.Component {
   generateConditions(container) {
     // Create chart instance
     const chart = am4core.create(container, am4charts.PieChart);
+    chart.startAngle = -180;
+    chart.endAngle = 180;
 
     // Add data
-    chart.data = this.state.dataConditions;
+    chart.data = this.state.dataConditions.sort((a,b) => (a.total > b.total) ? -1 : ((b.total > a.total) ? 1 : 0));
     chart.innerRadius = am4core.percent(60);
 
     // Add and configure Series
     var pieSeries = chart.series.push(new am4charts.PieSeries());
+    const pieSeriesRef = pieSeries;
+
     pieSeries.labels.template.disabled = true;
     pieSeries.dataFields.value = "total";
     pieSeries.dataFields.category = "name";
-    pieSeries.dataFields.tooltipText = "{category}{value}";
+    //pieSeries.dataFields.tooltipText = "{category}{value}";
+    pieSeries.slices.template.tooltipText = "{category} {value}%";
+    pieSeries.hiddenState.properties.endAngle = -90;
 
-    
-    pieSeries.slices.template.showOnInit = true;
-    pieSeries.slices.template.hiddenState.properties.shiftRadius = 1;
+    // pieSeries.slices.template.showOnInit = true;
+    // pieSeries.slices.template.hiddenState.properties.shiftRadius = 1;
+
+    pieSeries.events.on("ready", ()=>{
+      if(pieSeries.slices.length > 0 )
+        pieSeriesRef.slices.getIndex(0).showTooltipOn = "always";
+      if(pieSeries.slices.length > 1 )
+        pieSeriesRef.slices.getIndex(1).showTooltipOn = "always";
+      if(pieSeries.slices.length > 2 )
+        pieSeriesRef.slices.getIndex(2).showTooltipOn = "always";
+    })
 
     return chart
   }
 
   generateConditionsChart() {
     this.conditionsChart = this.generateConditions("conditionsChart")
-    this.conditionsChart.legend = new am4charts.Legend();    
-    this.conditionsChart.legend.position = "right"
+    // this.conditionsChart.legend = new am4charts.Legend();    
+    // this.conditionsChart.legend.position = "right"
   }
 
   generateInterventions(container) {
     // Create chart instance
     const chart = am4core.create(container, am4charts.PieChart);
+    chart.startAngle = -180;
+    chart.endAngle = 180;
 
     // Add data
     chart.data = this.state.dataInterventions;
@@ -141,21 +157,33 @@ class PanelClinicalTrials extends React.Component {
 
     // Add and configure Series
     var pieSeries = chart.series.push(new am4charts.PieSeries());
+    const pieSeriesRef = pieSeries;
+
     pieSeries.labels.template.disabled = true;
     pieSeries.dataFields.value = "total";
     pieSeries.dataFields.category = "intervention__name";
-    pieSeries.dataFields.tooltipText = "{category}{intervention__name}";
+    pieSeries.slices.template.tooltipText = "{category} {value}%";
+    pieSeries.hiddenState.properties.endAngle = -90;
 
-    pieSeries.slices.template.showOnInit = true;
-    pieSeries.slices.template.hiddenState.properties.shiftRadius = 1;
+    // pieSeries.slices.template.showOnInit = true;
+    // pieSeries.slices.template.hiddenState.properties.shiftRadius = 1;
+
+    pieSeries.events.on("ready", ()=>{
+      if(pieSeries.slices.length > 0 )
+        pieSeriesRef.slices.getIndex(0).showTooltipOn = "always";
+      if(pieSeries.slices.length > 1 )
+        pieSeriesRef.slices.getIndex(1).showTooltipOn = "always";
+      if(pieSeries.slices.length > 2 )
+        pieSeriesRef.slices.getIndex(2).showTooltipOn = "always";
+    })
 
     return chart
   }
 
   generateInterventionsChart() {
     this.interventionsChart = this.generateInterventions("interventionsChart")
-    this.interventionsChart.legend = new am4charts.Legend();    
-    this.interventionsChart.legend.position = "right"
+    // this.interventionsChart.legend = new am4charts.Legend();    
+    // this.interventionsChart.legend.position = "right"
   }
 
 
@@ -425,16 +453,16 @@ class PanelClinicalTrials extends React.Component {
           <EmptyPanel show={emptyPanelShow} />
           {!emptyPanelShow?
           <>
-          <div style={{ padding: '1em 1em 1em 1em' }}>
-            <div>
+          <Row style={{ padding: '1em 1em 1em 1em' }}>
+            <Col>
               <div>Conditions</div>
               <div id="conditionsChart" style={{ height: '400px', width: '100%' }}></div>
-            </div>
-            <div>
+            </Col>
+            <Col>
               <div>Interventions</div>
               <div id="interventionsChart" style={{ width: '100%', height: '400px' }}></div>
-            </div>
-          </div>
+            </Col>
+          </Row>
           <div className="mt-3">
             {modalContent}
           </div>
