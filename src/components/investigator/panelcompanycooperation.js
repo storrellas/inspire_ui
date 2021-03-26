@@ -37,9 +37,11 @@ import axios from 'axios';
 // Project Imports
 import InspirePagination from '../shared/pagination'
 import SearchHeader, { SEARCH_HEADER } from '../shared/searchheader'
+import am4themes_inspire from '../shared/am4colorset';
 
 // Themes begin
 am4core.useTheme(am4themes_animated);
+am4core.useTheme(am4themes_inspire);
 
 const mapStateToProps = state => {
   return {
