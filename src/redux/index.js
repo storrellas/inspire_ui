@@ -29,6 +29,7 @@ export const PANEL_EVENTS_OPENED = "PANEL_EVENTS_OPENED";
 export const PANEL_CLINICAL_TRIALS_OPENED = "PANEL_CLINICAL_TRIALS_OPENED";
 
 export const INVESTIGATOR_PROFILE = "INVESTIGATOR_PROFILE";
+export const INVESTIGATOR_FIXED_TOP_PROFILE = "INVESTIGATOR_FIXED_PROFILE";
 
 // Content list
 
@@ -58,7 +59,9 @@ export function setInvestigatorProfile(payload) {
   return { type: INVESTIGATOR_PROFILE, payload }
 };
 
-
+export function setInvestigatorFixedTopProfile(payload) {
+  return { type: INVESTIGATOR_FIXED_TOP_PROFILE, payload }
+};
 
 // Reducers
 // ---------------------
@@ -71,7 +74,9 @@ const initialState = {
   tabEventsOpened: false,
   tabClinicalTrialsOpened: false,
 
-  investigatorProfile: undefined
+  investigatorProfile: undefined,
+
+  investigatorFixedTopProfile: false,
 };
 
 export function rootReducer(state = initialState, action) {
@@ -108,9 +113,8 @@ export function rootReducer(state = initialState, action) {
     };
   }
 
-
-  if (action.type === INVESTIGATOR_PROFILE) {
-    return { ...state, investigatorProfile: action.payload
+  if (action.type === INVESTIGATOR_FIXED_TOP_PROFILE) {
+    return { ...state, investigatorFixedTopProfile: action.payload.investigatorFixedTopProfile
     };
   }
 

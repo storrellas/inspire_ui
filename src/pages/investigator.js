@@ -83,10 +83,10 @@ class Investigator extends React.Component {
     
     const { match: { params } } = this.props;
     let projectOid = params.id;
-    console.log("project Oid ", projectOid)
 
     return (
       <>
+
         <Row className="mt-3">
           <Col sm={7}>
             <InputGroup className="mb-2" >
@@ -117,6 +117,8 @@ class Investigator extends React.Component {
             onClick={ (e) => this.props.history.push(`/dashboard/project/${projectOid}/`)}>Open Project</Button>{' '}
           </Col>
         </Row>
+
+
 
         <InvestigatorProfile />
 

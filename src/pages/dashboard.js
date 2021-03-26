@@ -9,6 +9,8 @@ import { Route } from "react-router-dom";
 import { withRouter } from 'react-router-dom'
 
 // Redux
+import { setInvestigatorFixedTopProfile } from "../redux";
+
 import { connect } from "react-redux";
 
 // Styles
@@ -34,7 +36,14 @@ const mapStateToProps = (state) => {
     return {
       investigatorProfile: state.investigatorProfile,
     };
-  }
+}
+
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setInvestigatorFixedTopProfile: (payload) => dispatch(setInvestigatorFixedTopProfile(payload)),
+    };
+}
 
 class Dashboard extends React.Component {
 
@@ -52,6 +61,20 @@ class Dashboard extends React.Component {
         localStorage.clear('token');
         this.props.history.push('/reloaded/')
     }    
+
+    onScroll(e){
+        const scrollTop = e.target.scrollTop;
+        let docHeight = e.target.scrollHeight;
+        let clientHeight = e.target.clientHeight;
+        let scrollPercent = scrollTop *100 / (docHeight - clientHeight);
+        if(scrollPercent > 50 ){
+            console.log("Firing event true")
+            this.props.setInvestigatorFixedTopProfile({investigatorFixedTopProfile: true})
+        }else{
+            console.log("Firing event false")
+            this.props.setInvestigatorFixedTopProfile({investigatorFixedTopProfile: false})
+        }
+    }
 
     render() {
         const { isToggled } = this.state;
@@ -173,7 +196,7 @@ class Dashboard extends React.Component {
                         </div>
 
                     </div>
-                    <div className="inspire-page-content">
+                    <div className="inspire-page-content" onScroll={(e) => this.onScroll(e)}>
                         <Container>
                             <Row className="inspire-breadcrumb">
                                 <Col sm={12}>
@@ -238,4 +261,4 @@ class Dashboard extends React.Component {
     }
 }
 
-export default connect(mapStateToProps, null)(withRouter(Dashboard));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Dashboard));

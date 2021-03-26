@@ -39,6 +39,13 @@ const mapDispatchToProps = (dispatch) => {
   };
 }
 
+const mapStateToProps = (state) => {
+  return {
+    investigatorFixedTopProfile: state.investigatorFixedTopProfile,
+  };
+}
+
+
 const PROFILE_SNAPSHOT = { SPECIALTIES: 1,  FOCUS_AREA: 2 }
 class InvestigatorProfile extends React.Component {
 
@@ -236,9 +243,32 @@ class InvestigatorProfile extends React.Component {
       this.mapRef.current.setView([lat,lng], 14);
     }
 
-    return (
 
+    return (
       <>
+
+        <div className={this.props.investigatorFixedTopProfile?"":"d-none"}>
+          <div className="d-flex p-3 justify-content-between inspire-box-shadow" 
+              style={{ fontSize: '20px', borderRadius: '2px', 
+                        position: 'fixed', backgroundColor: 'white', 
+                        top: 0, left: 0, zIndex: 10000, width: '100%' }}>
+
+            <div className="d-flex justify-content-center align-items-center">
+              <img src={this.state.picture} style={{ width: '100px', borderRadius: '50%' }}></img>
+              <div className="inspire-text-secondary ml-3">{this.state.degree}</div>
+              <div className="ml-3"><b>{this.state.name} </b></div>
+            </div>
+
+            <div className="d-flex justify-content-center align-items-center">
+              <div>{this.state.affiliationInstitutionPhone}</div>
+              <div className="ml-3"> | </div>
+              <div className="ml-3">
+                <a style={{wordBreak: 'break-all'}} 
+                              href={"mailto:"+this.state.affiliationInstitutionEmail}>{this.state.affiliationInstitutionEmail}</a>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <Row className="mt-3 align-items-stretch">
           <Col sm={7}>
@@ -440,5 +470,5 @@ class InvestigatorProfile extends React.Component {
 }
 
 
-export default connect(undefined, mapDispatchToProps)(withRouter(InvestigatorProfile))
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(InvestigatorProfile))
 
