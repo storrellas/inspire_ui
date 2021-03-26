@@ -182,17 +182,19 @@ class PanelConnections extends React.Component {
     // remove first user
     const usersLocal = usersFiltered.slice(1);
 
+    console.log("usersFiltered ", usersFiltered)
+
     return (
       <div className="h-100" style={{ position: 'relative'}}>
         <div className="h-100 d-flex flex-wrap" style={{ position:'absolute', overflowY: 'scroll' }}>
           {usersLocal.map((item, id) =>
             <div key={id} style={{ width: "33%", padding: '1em' }}>
-              {item.url === '' ?
-                <p style={{ fontSize: '18px', color: "#337ab7" }}>{item.label}</p>
-                :
+              {item.common_project?
                 <a href={item.link} target="_blank" style={{ fontSize: '18px', color: "#337ab7" }} >
                   <b>{item.label}</b>
-                </a>
+                </a>                
+                :
+                <p style={{ fontSize: '18px', color: "#337ab7" }}>{item.label}</p>
               }
               <p style={{ fontSize: '14px' }}>{item.affiliation}</p>
 
@@ -449,6 +451,11 @@ class PanelConnections extends React.Component {
         const middle_name = (this.isValid(item.middle_name))?item.middle_name:'';
         const combined_name = `${item.first_name} ${middle_name} ${item.last_name}`
         const affiliation = this.get_affiliation(item)
+
+        //console.log("item ", item)
+        if(item.common_project === true){
+          console.log("Common Project !!!!")
+        }
 
         // prevent adding the node if for some reason, a medical expert is connected more than once
         const user = {

@@ -214,7 +214,7 @@ class PanelPublications extends React.Component {
                     </a>
                     :''}
                   </td>
-                  <td  className="text-center" style={{ width: '70%' }}>
+                  <td  className="text-left" style={{ width: '70%' }}>
                     <EllipsisWithTooltip className="text-center" placement="bottom" style={{ width: '800px'}}>
                       {item.name || ''}
                     </EllipsisWithTooltip>
