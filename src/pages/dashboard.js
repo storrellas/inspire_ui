@@ -68,10 +68,8 @@ class Dashboard extends React.Component {
         let clientHeight = e.target.clientHeight;
         let scrollPercent = scrollTop *100 / (docHeight - clientHeight);
         if(scrollPercent > 50 ){
-            console.log("Firing event true")
             this.props.setInvestigatorFixedTopProfile({investigatorFixedTopProfile: true})
         }else{
-            console.log("Firing event false")
             this.props.setInvestigatorFixedTopProfile({investigatorFixedTopProfile: false})
         }
     }

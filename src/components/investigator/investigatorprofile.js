@@ -247,11 +247,15 @@ class InvestigatorProfile extends React.Component {
     return (
       <>
 
-        <div className={this.props.investigatorFixedTopProfile?"":"d-none"}>
+        <div style={{ fontSize: '20px', borderRadius: '2px', 
+                      position: 'fixed', backgroundColor: 'white', 
+                      top: 0, left: 0, zIndex: 10000, width: '100%' }}>
+        <AnimateHeight
+            height={this.props.investigatorFixedTopProfile?'auto':0}
+            duration={500}>  
+
           <div className="d-flex p-3 justify-content-between inspire-box-shadow" 
-              style={{ fontSize: '20px', borderRadius: '2px', 
-                        position: 'fixed', backgroundColor: 'white', 
-                        top: 0, left: 0, zIndex: 10000, width: '100%' }}>
+>
 
             <div className="d-flex justify-content-center align-items-center">
               <img src={this.state.picture} style={{ width: '100px', borderRadius: '50%' }}></img>
@@ -268,7 +272,11 @@ class InvestigatorProfile extends React.Component {
               </div>
             </div>
           </div>
+          </AnimateHeight>
+          </div>
+          <div className={this.props.investigatorFixedTopProfile?"":"d-none"}>
         </div>
+        
 
         <Row className="mt-3 align-items-stretch">
           <Col sm={7}>
