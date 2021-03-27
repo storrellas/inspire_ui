@@ -28,6 +28,7 @@ import ProjectSelector from './projectselector';
 import InvestigatorList from './investigatorlist';
 import InvestigatorFavoriteList from './investigatorfavoritelist';
 import Investigator from './investigator';
+import InvestigatorReloaded from './investigatorreloaded';
 import Profile from './profile';
 
 import AnimateHeight from 'react-animate-height';
@@ -247,6 +248,10 @@ class Dashboard extends React.Component {
                                         render={(props) => (<InvestigatorFavoriteList />)} />
                                     <Route path={`${this.props.match.path}project/:id/investigator/:subid`} exact
                                         render={(props) => (<Investigator />)} />
+                                        
+                                    <Route path={`${this.props.match.path}project/:id/investigator/reloaded/:subid`} exact
+                                        render={(props) => (<InvestigatorReloaded/>)} />
+
                                     <Route path={`${this.props.match.path}profile`} exact
                                         render={(props) => (<Profile />)} />
 
