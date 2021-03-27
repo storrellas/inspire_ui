@@ -112,7 +112,10 @@ export function rootReducer(state = initialState, action) {
       tabClinicalTrialsOpened: false,    
     };
   }
-
+  if (action.type === INVESTIGATOR_PROFILE) {
+    return { ...state, investigatorProfile: action.payload
+    };
+  }
   if (action.type === INVESTIGATOR_FIXED_TOP_PROFILE) {
     return { ...state, investigatorFixedTopProfile: action.payload.investigatorFixedTopProfile
     };
