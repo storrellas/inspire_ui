@@ -555,28 +555,12 @@ chart.projection = new am4maps.projections.Mercator();
 chart.zoomControl = new am4maps.ZoomControl();
 
 // Set initial zoom
-chart.homeZoomLevel = 4;
+chart.homeZoomLevel = 1.5;
 chart.homeGeoPoint = {
   latitude: 46.9480,
   longitude: 7.4474
 };
-// this.worldSeries.geodata = am4geodata_worldLow;
-// this.worldSeries.include = [ "AL", "AD", "AM", "AT", "BY", "BE", "BG", 
-//                                 "CH", "CY", "CZ", "DE", "DK","AT", "DK",
-//                                 "EE", "ES", "FO", "FI", "FR", "GB", "GE", "GI", "GR", "HU", "HR",
-//                                 "IE", "IS", "IT", "LT", "LU", "LV", 
-//                                 "MC", "MK", "MT", "NO", "NL", "PL", "PT",
-//                                 "RO", "SE", "SI", "SK", "SM", "TR", "UA", "VA",
-//                                 //"RU", 
-//                                 ];
 
-// // Configure polygons
-// this.worldPolygon = this.worldSeries.mapPolygons.template;
-// this.worldPolygon.tooltipText = "{investigators}";
-// this.worldPolygon.nonScalingStroke = true;
-// this.worldPolygon.strokeOpacity = 0.5;
-// this.worldPolygon.fill = am4core.color("#eee");
-// this.worldPolygon.propertyFields.fill = "color";
 // Create map polygon series
 let polygonSeries = chart.series.push(new am4maps.MapPolygonSeries());
 polygonSeries.include = [ "AL", "AD", "AM", "AT", "BY", "BE", "BG", 
@@ -593,7 +577,17 @@ polygonSeries.mapPolygons.template.nonScalingStroke = true;
 // Add images
 let imageSeries = chart.series.push(new am4maps.MapImageSeries());
 let imageTemplate = imageSeries.mapImages.template;
-imageTemplate.tooltipText = "{title}";
+imageTemplate.tooltipHTML  = `<div><b>{name}</b></div>
+<div style="margin-top: 0.5em; text-align: justify; text-justify: inter-word"><i>{institution}</i></div>
+<div style="margin-top: 0.5em;"><b>All:</b> {all}</div>
+<div><b>Trials:</b> {trials}</div>
+<div><b>Events:</b> {eventsNumber}</div>
+<div><b>Publications:</b> {publications}</div>
+<div><b>Affiliations (past):</b> {affiliationsPast}</div>
+<div><b>Affiliations (present):</b> {affiliationsPresent}</div>`;
+imageSeries.tooltip.label.wrap = true;
+imageSeries.tooltip.label.width = 250;
+
 imageTemplate.nonScaling = true;
 
 let marker = imageTemplate.createChild(am4core.Sprite);
@@ -609,112 +603,230 @@ imageSeries.data = [ {
   "id": "london",
   "svgPath": targetSVG,
   "title": "London",
+  "name": "Joachim Rother",
+  "institution": "Asklepios Kliniken - Asklepios Klinik Altona, Abteilung für Neurologie",
+  "all": 613,
+  "trials": 23,
+  "eventsNumber": 23,
+  "publications": 64,
+  "affiliationsPast": 10,
+  "affiliationsPresent": 10,
   "latitude": 51.5002,
   "longitude": -0.1262,
   "scale": 1
 }, {
   "svgPath": targetSVG,
   "title": "Brussels",
+  "name": "Joachim Rother",
+  "institution": "Asklepios Kliniken - Asklepios Klinik Altona, Abteilung für Neurologie",
+  "all": 613,
+  "trials": 23,
+  "eventsNumber": 23,
+  "publications": 64,
+  "affiliationsPast": 10,
+  "affiliationsPresent": 10,  
   "latitude": 50.8371,
   "longitude": 4.3676,
   "scale": 0.5
 }, {
   "svgPath": targetSVG,
   "title": "Prague",
+  "name": "Joachim Rother",
+  "institution": "Asklepios Kliniken - Asklepios Klinik Altona, Abteilung für Neurologie",
+  "all": 613,
+  "trials": 23,
+  "eventsNumber": 23,
+  "publications": 64,
+  "affiliationsPast": 10,
+  "affiliationsPresent": 10,  
   "latitude": 50.0878,
   "longitude": 14.4205,
   "scale": 0.5
 }, {
   "svgPath": targetSVG,
   "title": "Athens",
+  "name": "Joachim Rother",
+  "institution": "Asklepios Kliniken - Asklepios Klinik Altona, Abteilung für Neurologie",
+  "all": 613,
+  "trials": 23,
+  "eventsNumber": 23,
+  "publications": 64,
+  "affiliationsPast": 10,
+  "affiliationsPresent": 10,  
   "latitude": 37.9792,
   "longitude": 23.7166,
   "scale": 0.5
 }, {
   "svgPath": targetSVG,
   "title": "Reykjavik",
+  "name": "Joachim Rother",
+  "institution": "Asklepios Kliniken - Asklepios Klinik Altona, Abteilung für Neurologie",
+  "all": 613,
+  "trials": 23,
+  "eventsNumber": 23,
+  "publications": 64,
+  "affiliationsPast": 10,
+  "affiliationsPresent": 10,  
   "latitude": 64.1353,
   "longitude": -21.8952,
   "scale": 0.5
 }, {
   "svgPath": targetSVG,
   "title": "Dublin",
+  "name": "Joachim Rother",
+  "institution": "Asklepios Kliniken - Asklepios Klinik Altona, Abteilung für Neurologie",
+  "all": 613,
+  "trials": 23,
+  "eventsNumber": 23,
+  "publications": 64,
+  "affiliationsPast": 10,
+  "affiliationsPresent": 10,  
   "latitude": 53.3441,
   "longitude": -6.2675,
   "scale": 0.5
 }, {
   "svgPath": targetSVG,
   "title": "Oslo",
+  "name": "Joachim Rother",
+  "institution": "Asklepios Kliniken - Asklepios Klinik Altona, Abteilung für Neurologie",
+  "all": 613,
+  "trials": 23,
+  "eventsNumber": 23,
+  "publications": 64,
+  "affiliationsPast": 10,
+  "affiliationsPresent": 10,  
   "latitude": 59.9138,
   "longitude": 10.7387,
   "scale": 0.5
 }, {
   "svgPath": targetSVG,
   "title": "Lisbon",
+  "name": "Joachim Rother",
+  "institution": "Asklepios Kliniken - Asklepios Klinik Altona, Abteilung für Neurologie",
+  "all": 613,
+  "trials": 23,
+  "eventsNumber": 23,
+  "publications": 64,
+  "affiliationsPast": 10,
+  "affiliationsPresent": 10,  
   "latitude": 38.7072,
   "longitude": -9.1355,
   "scale": 0.5
-}, {
-  "svgPath": targetSVG,
-  "title": "Moscow",
-  "latitude": 55.7558,
-  "longitude": 37.6176,
-  "scale": 0.5
-}, {
+},
+{
   "svgPath": targetSVG,
   "title": "Belgrade",
+  "name": "Joachim Rother",
+  "institution": "Asklepios Kliniken - Asklepios Klinik Altona, Abteilung für Neurologie",
+  "all": 613,
+  "trials": 23,
+  "eventsNumber": 23,
+  "publications": 64,
+  "affiliationsPast": 10,
+  "affiliationsPresent": 10,  
   "latitude": 44.8048,
   "longitude": 20.4781,
   "scale": 0.5
 }, {
   "svgPath": targetSVG,
   "title": "Bratislava",
+  "name": "Joachim Rother",
+  "institution": "Asklepios Kliniken - Asklepios Klinik Altona, Abteilung für Neurologie",
+  "all": 613,
+  "trials": 23,
+  "eventsNumber": 23,
+  "publications": 64,
+  "affiliationsPast": 10,
+  "affiliationsPresent": 10,  
   "latitude": 48.2116,
   "longitude": 17.1547,
   "scale": 0.5
 }, {
   "svgPath": targetSVG,
   "title": "Ljubljana",
+  "name": "Joachim Rother",
+  "institution": "Asklepios Kliniken - Asklepios Klinik Altona, Abteilung für Neurologie",
+  "all": 613,
+  "trials": 23,
+  "eventsNumber": 23,
+  "publications": 64,
+  "affiliationsPast": 10,
+  "affiliationsPresent": 10,  
   "latitude": 46.0514,
   "longitude": 14.5060,
   "scale": 0.5
 }, {
   "svgPath": targetSVG,
   "title": "Madrid",
+  "name": "Joachim Rother",
+  "institution": "Asklepios Kliniken - Asklepios Klinik Altona, Abteilung für Neurologie",
+  "all": 613,
+  "trials": 23,
+  "eventsNumber": 23,
+  "publications": 64,
+  "affiliationsPast": 10,
+  "affiliationsPresent": 10,  
   "latitude": 40.4167,
   "longitude": -3.7033,
   "scale": 0.5
 }, {
   "svgPath": targetSVG,
   "title": "Stockholm",
+  "name": "Joachim Rother",
+  "institution": "Asklepios Kliniken - Asklepios Klinik Altona, Abteilung für Neurologie",
+  "all": 613,
+  "trials": 23,
+  "eventsNumber": 23,
+  "publications": 64,
+  "affiliationsPast": 10,
+  "affiliationsPresent": 10,  
   "latitude": 59.3328,
   "longitude": 18.0645,
   "scale": 0.5
 }, {
   "svgPath": targetSVG,
   "title": "Bern",
+  "name": "Joachim Rother",
+  "institution": "Asklepios Kliniken - Asklepios Klinik Altona, Abteilung für Neurologie",
+  "all": 613,
+  "trials": 23,
+  "eventsNumber": 23,
+  "publications": 64,
+  "affiliationsPast": 10,
+  "affiliationsPresent": 10,  
   "latitude": 46.9480,
   "longitude": 7.4481,
   "scale": 0.5
 }, {
   "svgPath": targetSVG,
   "title": "Kiev",
+  "name": "Joachim Rother",
+  "institution": "Asklepios Kliniken - Asklepios Klinik Altona, Abteilung für Neurologie",
+  "all": 613,
+  "trials": 23,
+  "eventsNumber": 23,
+  "publications": 64,
+  "affiliationsPast": 10,
+  "affiliationsPresent": 10,  
   "latitude": 50.4422,
   "longitude": 30.5367,
   "scale": 0.5
 }, {
   "svgPath": targetSVG,
   "title": "Paris",
+  "name": "Joachim Rother",
+  "institution": "Asklepios Kliniken - Asklepios Klinik Altona, Abteilung für Neurologie",
+  "all": 613,
+  "trials": 23,
+  "eventsNumber": 23,
+  "publications": 64,
+  "affiliationsPast": 10,
+  "affiliationsPresent": 10,  
   "latitude": 48.8567,
   "longitude": 2.3510,
   "scale": 0.5
-}, {
-  "svgPath": targetSVG,
-  "title": "New York",
-  "latitude": 40.43,
-  "longitude": -74,
-  "scale": 0.5
-} ];
+}
+];
 
 // Add lines
 let lineSeries = chart.series.push(new am4maps.MapLineSeries());
@@ -736,21 +848,8 @@ lineSeries.data = [{
       { "latitude": 50.4422, "longitude": 30.5367 }
     ]
   ]
-}, {
-  "multiGeoLine": [
-    [
-      { "latitude": 51.5002, "longitude": -0.1262 },
-      { "latitude": 40.4300, "longitude": -74.0000 }
-    ]
-  ]
-}, {
-  "multiGeoLine": [
-    [
-      { "latitude": 51.5002, "longitude": -0.1262 },
-      { "latitude": 64.1353, "longitude": -21.8952 }
-    ]
-  ]
-}, {
+}, 
+{
   "multiGeoLine": [
     [
       { "latitude": 51.5002, "longitude": -0.1262 },
@@ -817,18 +916,21 @@ lineSeries.data = [{
   }
 
   componentDidMount(){
-    if( this.state.users.length == 0 && this.props.investigatorProfile)
+    if( this.state.users.length == 0 && this.props.investigatorProfile){
       this.retrieveConnections()
-
-    this.generateMap2()
+      this.generateMap2()
+    }
 
   }
 
   componentDidUpdate(){
-    if( this.state.users.length == 0 && this.props.investigatorProfile)
+    if( this.state.users.length == 0 && this.props.investigatorProfile){
       this.retrieveConnections()
+      this.generateMap2()
+    }
+      
 
-    this.generateMap2()
+    
   }
 
   generateSource(users, connections){
