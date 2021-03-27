@@ -411,7 +411,7 @@ class InvestigatorMap extends React.Component {
   render(){
     if ( this.state.isOpened == false) {
       const that = this;
-      setTimeout(function () { that.generateMap(); that.generateMap2() }, 200);
+      setTimeout(function () { that.generateMap(); }, 200);
     }
 
     return (
