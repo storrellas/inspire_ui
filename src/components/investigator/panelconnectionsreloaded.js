@@ -536,7 +536,34 @@ class PanelConnectionsReloaded extends React.Component {
     }
   }
   
+  randomLocation(){
+    Math.random()
+
+    const latitudeMax = 56.70411613681161;
+    const longitudeMax = 27.244571091301232;
+
+    const latitudeMin = 37.98896845287744;
+    const longitudeMin = -8.106830464026174;
+
+    const diffLatitude = latitudeMax - latitudeMin;
+    const diffLongitude = longitudeMax - longitudeMin;
+
+    const randomLatitude = diffLatitude * Math.random() + latitudeMin;
+    const randomLongitude = diffLongitude * Math.random() + longitudeMin;
+
+
+    return [randomLatitude, randomLongitude]
+  }
+
   async generateMap2(){
+
+    // let [latitude1, longitude1] = this.randomLocation()
+    // console.log("random location ", latitude1, longitude1)
+    // let [latitude2, longitude2] = this.randomLocation()
+    // console.log("random location ", latitude2, longitude2)
+    // let [latitude3, longitude3] = this.randomLocation()
+    // console.log("random location ", latitude3, longitude3)
+
     console.log("GenerateMap2")
     // Define marker path
 let targetSVG = "M9,0C4.029,0,0,4.029,0,9s4.029,9,9,9s9-4.029,9-9S13.971,0,9,0z M9,15.93 c-3.83,0-6.93-3.1-6.93-6.93S5.17,2.07,9,2.07s6.93,3.1,6.93,6.93S12.83,15.93,9,15.93 M12.5,9c0,1.933-1.567,3.5-3.5,3.5S5.5,10.933,5.5,9S7.067,5.5,9,5.5 S12.5,7.067,12.5,9z";
@@ -599,6 +626,28 @@ marker.fill = interfaceColors.getFor("alternativeBackground");
 
 imageTemplate.propertyFields.latitude = "latitude";
 imageTemplate.propertyFields.longitude = "longitude";
+const data = []
+for(let i = 0; i < 10; i++){
+  data.push({
+    "id": "london",
+    "svgPath": targetSVG,
+    "title": "London",
+    "name": "Joachim Rother",
+    "institution": "Asklepios Kliniken - Asklepios Klinik Altona, Abteilung für Neurologie",
+    "all": 613,
+    "trials": 23,
+    "eventsNumber": 23,
+    "publications": 64,
+    "affiliationsPast": 10,
+    "affiliationsPresent": 10,
+    "latitude": this.randomLocation()[0],
+    "longitude": this.randomLocation()[1],
+    "scale": 1    
+  })
+}
+imageSeries.data = data
+
+/*
 imageSeries.data = [ {
   "id": "london",
   "svgPath": targetSVG,
@@ -827,7 +876,9 @@ imageSeries.data = [ {
   "scale": 0.5
 }
 ];
+/**/
 
+/*
 // Add lines
 let lineSeries = chart.series.push(new am4maps.MapLineSeries());
 lineSeries.dataFields.multiGeoLine = "multiGeoLine";
@@ -913,6 +964,7 @@ lineSeries.data = [{
     ]
   ]
 }];
+/**/
   }
 
   componentDidMount(){
