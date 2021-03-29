@@ -564,7 +564,9 @@ class PanelConnectionsReloaded extends React.Component {
     // let [latitude3, longitude3] = this.randomLocation()
     // console.log("random location ", latitude3, longitude3)
 
-    console.log("GenerateMap2")
+    console.log("GenerateMap2", this.state.usersFiltered)
+    const { usersFiltered } = this.state;
+
     // Define marker path
 let targetSVG = "M9,0C4.029,0,0,4.029,0,9s4.029,9,9,9s9-4.029,9-9S13.971,0,9,0z M9,15.93 c-3.83,0-6.93-3.1-6.93-6.93S5.17,2.07,9,2.07s6.93,3.1,6.93,6.93S12.83,15.93,9,15.93 M12.5,9c0,1.933-1.567,3.5-3.5,3.5S5.5,10.933,5.5,9S7.067,5.5,9,5.5 S12.5,7.067,12.5,9z";
 
@@ -607,11 +609,11 @@ let imageTemplate = imageSeries.mapImages.template;
 imageTemplate.tooltipHTML  = `<div><b>{name}</b></div>
 <div style="margin-top: 0.5em; text-align: justify; text-justify: inter-word"><i>{institution}</i></div>
 <div style="margin-top: 0.5em;"><b>All:</b> {all}</div>
-<div><b>Trials:</b> {trials}</div>
+<div><b>Trials:</b> {clinicalTrials}</div>
 <div><b>Events:</b> {eventsNumber}</div>
 <div><b>Publications:</b> {publications}</div>
-<div><b>Affiliations (past):</b> {affiliationsPast}</div>
-<div><b>Affiliations (present):</b> {affiliationsPresent}</div>`;
+<div><b>Affiliations (past):</b> {institutionsPast}</div>
+<div><b>Affiliations (present):</b> {institutionsPresent}</div>`;
 imageSeries.tooltip.label.wrap = true;
 imageSeries.tooltip.label.width = 250;
 
@@ -623,262 +625,35 @@ marker.horizontalCenter = "middle";
 marker.verticalCenter = "middle";
 marker.scale = 0.7;
 marker.fill = interfaceColors.getFor("alternativeBackground");
-
 imageTemplate.propertyFields.latitude = "latitude";
 imageTemplate.propertyFields.longitude = "longitude";
 const data = []
-for(let i = 0; i < 10; i++){
+let counter = 0;
+for(const item of usersFiltered){
+  const nodeDesc = this.getNodeDesc(item.id)
   data.push({
-    "id": "london",
+    "id": item.id,
     "svgPath": targetSVG,
-    "title": "London",
-    "name": "Joachim Rother",
-    "institution": "Asklepios Kliniken - Asklepios Klinik Altona, Abteilung für Neurologie",
-    "all": 613,
-    "trials": 23,
-    "eventsNumber": 23,
-    "publications": 64,
-    "affiliationsPast": 10,
-    "affiliationsPresent": 10,
+    "name": item.label,
+    "institution": item.affiliation,
+    "all": nodeDesc.all,
+    "clinicalTrials": nodeDesc.clinicalTrials,
+    "eventsNumber": nodeDesc.events,
+    "publications": nodeDesc.publications,
+    "institutionsPast": nodeDesc.institutionsPast,
+    "institutionsPresent": nodeDesc.institutionsPresent,
     "latitude": this.randomLocation()[0],
     "longitude": this.randomLocation()[1],
     "scale": 1    
   })
+  if( counter > 10 ){
+    break;
+  }
 }
 imageSeries.data = data
 
-/*
-imageSeries.data = [ {
-  "id": "london",
-  "svgPath": targetSVG,
-  "title": "London",
-  "name": "Joachim Rother",
-  "institution": "Asklepios Kliniken - Asklepios Klinik Altona, Abteilung für Neurologie",
-  "all": 613,
-  "trials": 23,
-  "eventsNumber": 23,
-  "publications": 64,
-  "affiliationsPast": 10,
-  "affiliationsPresent": 10,
-  "latitude": 51.5002,
-  "longitude": -0.1262,
-  "scale": 1
-}, {
-  "svgPath": targetSVG,
-  "title": "Brussels",
-  "name": "Joachim Rother",
-  "institution": "Asklepios Kliniken - Asklepios Klinik Altona, Abteilung für Neurologie",
-  "all": 613,
-  "trials": 23,
-  "eventsNumber": 23,
-  "publications": 64,
-  "affiliationsPast": 10,
-  "affiliationsPresent": 10,  
-  "latitude": 50.8371,
-  "longitude": 4.3676,
-  "scale": 0.5
-}, {
-  "svgPath": targetSVG,
-  "title": "Prague",
-  "name": "Joachim Rother",
-  "institution": "Asklepios Kliniken - Asklepios Klinik Altona, Abteilung für Neurologie",
-  "all": 613,
-  "trials": 23,
-  "eventsNumber": 23,
-  "publications": 64,
-  "affiliationsPast": 10,
-  "affiliationsPresent": 10,  
-  "latitude": 50.0878,
-  "longitude": 14.4205,
-  "scale": 0.5
-}, {
-  "svgPath": targetSVG,
-  "title": "Athens",
-  "name": "Joachim Rother",
-  "institution": "Asklepios Kliniken - Asklepios Klinik Altona, Abteilung für Neurologie",
-  "all": 613,
-  "trials": 23,
-  "eventsNumber": 23,
-  "publications": 64,
-  "affiliationsPast": 10,
-  "affiliationsPresent": 10,  
-  "latitude": 37.9792,
-  "longitude": 23.7166,
-  "scale": 0.5
-}, {
-  "svgPath": targetSVG,
-  "title": "Reykjavik",
-  "name": "Joachim Rother",
-  "institution": "Asklepios Kliniken - Asklepios Klinik Altona, Abteilung für Neurologie",
-  "all": 613,
-  "trials": 23,
-  "eventsNumber": 23,
-  "publications": 64,
-  "affiliationsPast": 10,
-  "affiliationsPresent": 10,  
-  "latitude": 64.1353,
-  "longitude": -21.8952,
-  "scale": 0.5
-}, {
-  "svgPath": targetSVG,
-  "title": "Dublin",
-  "name": "Joachim Rother",
-  "institution": "Asklepios Kliniken - Asklepios Klinik Altona, Abteilung für Neurologie",
-  "all": 613,
-  "trials": 23,
-  "eventsNumber": 23,
-  "publications": 64,
-  "affiliationsPast": 10,
-  "affiliationsPresent": 10,  
-  "latitude": 53.3441,
-  "longitude": -6.2675,
-  "scale": 0.5
-}, {
-  "svgPath": targetSVG,
-  "title": "Oslo",
-  "name": "Joachim Rother",
-  "institution": "Asklepios Kliniken - Asklepios Klinik Altona, Abteilung für Neurologie",
-  "all": 613,
-  "trials": 23,
-  "eventsNumber": 23,
-  "publications": 64,
-  "affiliationsPast": 10,
-  "affiliationsPresent": 10,  
-  "latitude": 59.9138,
-  "longitude": 10.7387,
-  "scale": 0.5
-}, {
-  "svgPath": targetSVG,
-  "title": "Lisbon",
-  "name": "Joachim Rother",
-  "institution": "Asklepios Kliniken - Asklepios Klinik Altona, Abteilung für Neurologie",
-  "all": 613,
-  "trials": 23,
-  "eventsNumber": 23,
-  "publications": 64,
-  "affiliationsPast": 10,
-  "affiliationsPresent": 10,  
-  "latitude": 38.7072,
-  "longitude": -9.1355,
-  "scale": 0.5
-},
-{
-  "svgPath": targetSVG,
-  "title": "Belgrade",
-  "name": "Joachim Rother",
-  "institution": "Asklepios Kliniken - Asklepios Klinik Altona, Abteilung für Neurologie",
-  "all": 613,
-  "trials": 23,
-  "eventsNumber": 23,
-  "publications": 64,
-  "affiliationsPast": 10,
-  "affiliationsPresent": 10,  
-  "latitude": 44.8048,
-  "longitude": 20.4781,
-  "scale": 0.5
-}, {
-  "svgPath": targetSVG,
-  "title": "Bratislava",
-  "name": "Joachim Rother",
-  "institution": "Asklepios Kliniken - Asklepios Klinik Altona, Abteilung für Neurologie",
-  "all": 613,
-  "trials": 23,
-  "eventsNumber": 23,
-  "publications": 64,
-  "affiliationsPast": 10,
-  "affiliationsPresent": 10,  
-  "latitude": 48.2116,
-  "longitude": 17.1547,
-  "scale": 0.5
-}, {
-  "svgPath": targetSVG,
-  "title": "Ljubljana",
-  "name": "Joachim Rother",
-  "institution": "Asklepios Kliniken - Asklepios Klinik Altona, Abteilung für Neurologie",
-  "all": 613,
-  "trials": 23,
-  "eventsNumber": 23,
-  "publications": 64,
-  "affiliationsPast": 10,
-  "affiliationsPresent": 10,  
-  "latitude": 46.0514,
-  "longitude": 14.5060,
-  "scale": 0.5
-}, {
-  "svgPath": targetSVG,
-  "title": "Madrid",
-  "name": "Joachim Rother",
-  "institution": "Asklepios Kliniken - Asklepios Klinik Altona, Abteilung für Neurologie",
-  "all": 613,
-  "trials": 23,
-  "eventsNumber": 23,
-  "publications": 64,
-  "affiliationsPast": 10,
-  "affiliationsPresent": 10,  
-  "latitude": 40.4167,
-  "longitude": -3.7033,
-  "scale": 0.5
-}, {
-  "svgPath": targetSVG,
-  "title": "Stockholm",
-  "name": "Joachim Rother",
-  "institution": "Asklepios Kliniken - Asklepios Klinik Altona, Abteilung für Neurologie",
-  "all": 613,
-  "trials": 23,
-  "eventsNumber": 23,
-  "publications": 64,
-  "affiliationsPast": 10,
-  "affiliationsPresent": 10,  
-  "latitude": 59.3328,
-  "longitude": 18.0645,
-  "scale": 0.5
-}, {
-  "svgPath": targetSVG,
-  "title": "Bern",
-  "name": "Joachim Rother",
-  "institution": "Asklepios Kliniken - Asklepios Klinik Altona, Abteilung für Neurologie",
-  "all": 613,
-  "trials": 23,
-  "eventsNumber": 23,
-  "publications": 64,
-  "affiliationsPast": 10,
-  "affiliationsPresent": 10,  
-  "latitude": 46.9480,
-  "longitude": 7.4481,
-  "scale": 0.5
-}, {
-  "svgPath": targetSVG,
-  "title": "Kiev",
-  "name": "Joachim Rother",
-  "institution": "Asklepios Kliniken - Asklepios Klinik Altona, Abteilung für Neurologie",
-  "all": 613,
-  "trials": 23,
-  "eventsNumber": 23,
-  "publications": 64,
-  "affiliationsPast": 10,
-  "affiliationsPresent": 10,  
-  "latitude": 50.4422,
-  "longitude": 30.5367,
-  "scale": 0.5
-}, {
-  "svgPath": targetSVG,
-  "title": "Paris",
-  "name": "Joachim Rother",
-  "institution": "Asklepios Kliniken - Asklepios Klinik Altona, Abteilung für Neurologie",
-  "all": 613,
-  "trials": 23,
-  "eventsNumber": 23,
-  "publications": 64,
-  "affiliationsPast": 10,
-  "affiliationsPresent": 10,  
-  "latitude": 48.8567,
-  "longitude": 2.3510,
-  "scale": 0.5
-}
-];
-/**/
 
-/*
+
 // Add lines
 let lineSeries = chart.series.push(new am4maps.MapLineSeries());
 lineSeries.dataFields.multiGeoLine = "multiGeoLine";
@@ -891,7 +666,24 @@ lineTemplate.arrow.height = 6;
 lineTemplate.stroke = interfaceColors.getFor("alternativeBackground");
 lineTemplate.fill = interfaceColors.getFor("alternativeBackground");
 lineTemplate.line.strokeOpacity = 0.4;
-
+const lineData = []
+/*
+for( const item of data ){
+  if(item == data[0]) continue
+  lineData.push(
+    {
+      "multiGeoLine": [
+        [
+          { "latitude": data[0].latitude, "longitude": data[0].longitude },
+          { "latitude": item.latitude, "longitude": item.longitude }
+        ]
+      ]
+    }
+  )
+}
+/**/
+lineSeries.data = lineData
+/*
 lineSeries.data = [{
   "multiGeoLine": [
     [
@@ -970,7 +762,6 @@ lineSeries.data = [{
   componentDidMount(){
     if( this.state.users.length == 0 && this.props.investigatorProfile){
       this.retrieveConnections()
-      this.generateMap2()
     }
 
   }
@@ -978,11 +769,7 @@ lineSeries.data = [{
   componentDidUpdate(){
     if( this.state.users.length == 0 && this.props.investigatorProfile){
       this.retrieveConnections()
-      this.generateMap2()
     }
-      
-
-    
   }
 
   generateSource(users, connections){
@@ -1038,6 +825,8 @@ lineSeries.data = [{
     const { usersFiltered, connectionsFiltered } = this.state;
     const source = this.generateSource(usersFiltered, connectionsFiltered)        
     if ( this.cytoscapeMax === undefined && source.length > 0) {
+
+        this.generateMap2()
 
         this.cytoscapeMax = <CytoscapeComponent key={this.childKey}
                             elements={source}
@@ -1136,7 +925,7 @@ lineSeries.data = [{
 
       </div>
       
-      <div id="mapdiv"  className="w-100" style={{height:'400px', marginTop:'20px'}}></div>
+      <div id="mapdiv"  className="w-100" style={{height:'600px', marginTop:'20px'}}></div>
 
       </>);
   }
