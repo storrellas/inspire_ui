@@ -208,7 +208,7 @@ class PanelPublications extends React.Component {
                 <tr key={id}>
                   <td  className="text-center" style={{ width: '5%' }}>
                     {item.weblink !=undefined?
-                    <a href={item.weblink}>
+                    <a href={item.weblink} target="_blank">                      
                       <img src="https://demo.explicatos.com/img/Internet.png" style={{ height: '25px' }}></img>
                     </a>
                     :''}
