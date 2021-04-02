@@ -8,7 +8,6 @@ import { withRouter } from 'react-router-dom'
 // am4charts
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
-import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 
 // Redux
 import { connect } from "react-redux";
@@ -25,8 +24,6 @@ import axios from 'axios';
 // Project imports
 import EmptyPanel from '../shared/emptypanel';
 
-// Themes begin
-am4core.useTheme(am4themes_animated);
 
 const mapStateToProps = state => {
   return { 

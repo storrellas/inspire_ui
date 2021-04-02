@@ -7,7 +7,6 @@ import { withRouter } from 'react-router-dom'
 // am4Charts
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
-import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 
 // Font Awesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -36,8 +35,6 @@ import InspirePagination from '../shared/pagination'
 import SearchHeader, { SEARCH_HEADER } from '../shared/searchheader'
 import EmptyPanel from '../shared/emptypanel';
 
-// Themes begin
-am4core.useTheme(am4themes_animated);
 
 const mapStateToProps = state => {
   return {
