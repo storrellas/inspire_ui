@@ -128,7 +128,6 @@ class PanelResearchProfile extends React.Component {
       am4core.color("#80B2DC"),
       am4core.color("#A4C8E6"),
     ].map(function(color) {
-      console.log("Color")
       return new am4core.color(color);
     });
     
@@ -174,6 +173,12 @@ class PanelResearchProfile extends React.Component {
       }     
       research_profile_data.push({'name': category, 'childrenList': childrenList})
     }
+
+    // Set Diseases to be first item in list
+    var first = "diseases";
+    research_profile_data.sort(function(x,y){ return x.name.toLowerCase() == first ? -1 : y.name.toLowerCase() == first ? 1 : 0; });
+
+
     this.state.researchProfileData = research_profile_data;
     return research_profile_data
   }
