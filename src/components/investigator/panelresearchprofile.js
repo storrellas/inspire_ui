@@ -98,6 +98,10 @@ class PanelResearchProfile extends React.Component {
     let chart = am4core.create("researchprofilechart", am4charts.PieChart);
     chart.hiddenState.properties.opacity = 0; // this creates initial fade-in
   
+
+
+    
+
     chart.data = this.state.data.slice(0,7);
 
     var series = chart.series.push(new am4charts.PieSeries());
@@ -112,9 +116,24 @@ class PanelResearchProfile extends React.Component {
     series.labels.template.wrap = true;
     series.labels.template.fontSize = 14;
 
-  
     series.hiddenState.properties.endAngle = -90;
   
+    // Custom colorset for pie series
+    const colorSet = new am4core.ColorSet()
+    colorSet.list = [
+      // Row1
+      am4core.color("#162B3D"),
+      am4core.color("#336690"),
+      am4core.color("#4A92CE"),
+      am4core.color("#80B2DC"),
+      am4core.color("#A4C8E6"),
+    ].map(function(color) {
+      console.log("Color")
+      return new am4core.color(color);
+    });
+    
+    series.colors = colorSet 
+
     //chart.legend = new am4charts.Legend();
     this.chart = chart
     this.chart.legend = new am4charts.Legend();
