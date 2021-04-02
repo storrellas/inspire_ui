@@ -165,7 +165,10 @@ class PanelConnections extends React.Component {
         'background-width': '60%',
         'background-height': '60%',
         'label': 'data(label)',
-        'font-size': 11,
+        'font-size': 14,
+        'z-index': 10,
+        "text-background-opacity": 1, 
+        "text-background-color": "#ffffff"
       }
     }]
     this.cytoscapeLayout = {
@@ -205,7 +208,7 @@ class PanelConnections extends React.Component {
  
   }
 
-  renderedMaximised(cy){
+  renderedCytoscape(cy){
     this.cy = cy
     const that = this;
     this.cy.removeAllListeners()
@@ -215,6 +218,7 @@ class PanelConnections extends React.Component {
       that.setState({cytoscapeInvestigator:data})
     });
     this.cy.layout(this.cytoscapeLayout).run() 
+    cy.userZoomingEnabled( false )
   }
 
   getIntersection(a, b){
@@ -544,13 +548,13 @@ class PanelConnections extends React.Component {
     const source = [];
     let sourceIndex = 0;
     for (var i = 0; i < users.length; i++) {
-        source[sourceIndex] = {};
+        source[sourceIndex] = {grabbable: false,};
         source[sourceIndex].data = users[i];
         sourceIndex++;
     }
 
     for (var i = 0; i < connections.length; i++) {
-        source[sourceIndex] = {};
+        source[sourceIndex] = {grabbable: false,};
         source[sourceIndex].data = connections[i];
         sourceIndex++;
     }
@@ -596,7 +600,7 @@ class PanelConnections extends React.Component {
 
         this.cytoscapeMax = <CytoscapeComponent key={this.childKey}
                             elements={source}
-                            cy={(cy) => this.renderedMaximised(cy) }
+                            cy={(cy) => this.renderedCytoscape(cy) }
                             style={{ width: '100%', height: '100%' }}
                             stylesheet={this.cytoscapeStylesheet}
                             layout={this.cytoscapeLayout} />;        
