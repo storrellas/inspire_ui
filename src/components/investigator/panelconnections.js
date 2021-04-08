@@ -182,8 +182,6 @@ class PanelConnections extends React.Component {
     // remove first user
     const usersLocal = usersFiltered.slice(1);
 
-    console.log("usersFiltered ", usersFiltered)
-
     return (
       <div className="h-100" style={{ position: 'relative'}}>
         <div className="h-100 d-flex flex-wrap" style={{ position:'absolute', overflowY: 'scroll' }}>
@@ -263,7 +261,6 @@ class PanelConnections extends React.Component {
         // Iterate on connectionType
         for( const connectionType of filters.connectionTypeList ) {
           if( connection[connectionType] > 0 ){
-            console.log("connection ", connection)
             filteredConnectionTypeConnectionSet.add(connection.id);          
           }          
             
@@ -452,10 +449,6 @@ class PanelConnections extends React.Component {
         const combined_name = `${item.first_name} ${middle_name} ${item.last_name}`
         const affiliation = this.get_affiliation(item)
 
-        //console.log("item ", item)
-        if(item.common_project === true){
-          console.log("Common Project !!!!")
-        }
 
         // prevent adding the node if for some reason, a medical expert is connected more than once
         const user = {

@@ -158,6 +158,7 @@ class PanelAffiliations extends React.Component {
         dataTable.push(...fill)
       }
 
+      
       // Set State
       const totalPage = Math.ceil(response.data.count / take);      
       this.setState({
@@ -324,6 +325,8 @@ class PanelAffiliations extends React.Component {
       nHospitals = affiliations.filter(x => x.affiliation_type === 'hospitals')[0].total
       nAssociations = affiliations.filter(x => x.affiliation_type === 'associations')[0].total
     }
+
+    console.log("datatable ", dataTable)
 
     return (
       <div>
