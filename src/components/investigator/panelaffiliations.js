@@ -443,7 +443,7 @@ class PanelAffiliations extends React.Component {
                     </EllipsisWithTooltip>
                   </td>
                   <td style={{ width: '20%'}}>{item.institution__institution_subtype__name}</td>
-                  <td style={{ width: '10%'}}>{item.past_position?'Yes':''}</td>
+                  <td style={{ width: '10%'}}>{item.past_position}</td>
                   <td style={{ width: '10%'}}>{item.year}</td>
                   <td style={{ width: '10%'}}>{item.institution__city}</td>
                   <td style={{ width: '10%'}}>{item.institution__country__name}</td>
