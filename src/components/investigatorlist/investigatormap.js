@@ -6,7 +6,6 @@ import { withRouter } from 'react-router-dom'
 // am4charts
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4maps from "@amcharts/amcharts4/maps";
-import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 import am4geodata_worldLow from "@amcharts/amcharts4-geodata/worldLow";
 import am4geodata_data_countries2 from "@amcharts/amcharts4-geodata/data/countries2";
 
@@ -16,7 +15,6 @@ import axios from 'axios';
 // Loading overlay
 import LoadingOverlay from 'react-loading-overlay';
 
-am4core.useTheme(am4themes_animated);
 
 class InvestigatorMap extends React.Component {
 

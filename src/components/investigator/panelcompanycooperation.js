@@ -8,7 +8,6 @@ import { withRouter } from 'react-router-dom'
 // am4Charts
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
-import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 import am4lang_de_DE from "@amcharts/amcharts4/lang/de_DE";
 
 
@@ -37,11 +36,6 @@ import axios from 'axios';
 // Project Imports
 import InspirePagination from '../shared/pagination'
 import SearchHeader, { SEARCH_HEADER } from '../shared/searchheader'
-import am4themes_inspire from '../shared/am4colorset';
-
-// Themes begin
-am4core.useTheme(am4themes_animated);
-am4core.useTheme(am4themes_inspire);
 
 const mapStateToProps = state => {
   return {

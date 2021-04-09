@@ -60,11 +60,7 @@ class Profile extends React.Component {
           { headers: { "Authorization": "jwt " + token }
         })
 
-      console.log("projectAllowedList ", projectAllowedList)
-
       const projectList = response.data.results;
-      console.log("response ", projectList)
-
       for(let project of projectList){
         if( projectAllowedList.some(item => ( item.oid == project.oid) )  ){
           project.allowed = true
@@ -75,7 +71,7 @@ class Profile extends React.Component {
 
 
       this.setState({
-        projectList: projectList,
+        projectList: projectAllowedList,
       })
     }catch(e){
       //this.props.history.push('/')
@@ -100,19 +96,19 @@ class Profile extends React.Component {
             <Col className="pt-3" sm={{ span: 4, offset: 4 }}>
               <Form.Group controlId="formBasicEmail">
                 <Form.Label>Email</Form.Label>
-                <Form.Control type="email" defaultValue={email}/>
+                <Form.Control disabled type="email" defaultValue={email}/>
               </Form.Group>
               <Form.Group controlId="formBasicEmail">
                 <Form.Label>First Name</Form.Label>
-                <Form.Control type="text" defaultValue={firstName}  />
+                <Form.Control disabled type="text" defaultValue={firstName}  />
               </Form.Group>
               <Form.Group controlId="formBasicEmail">
                 <Form.Label>Last Name</Form.Label>
-                <Form.Control type="text" defaultValue={lastName}  />
+                <Form.Control disabled type="text" defaultValue={lastName}  />
               </Form.Group>
               <Form.Group controlId="exampleForm.ControlSelect2">
                 <Form.Label>Project Permissions</Form.Label>
-                <Form.Control as="select" multiple style={{ height: '400px'}}>
+                <Form.Control disabled as="select" multiple style={{ height: '400px'}}>
                   {projectList.map( (item, id ) =>
                     <option selected={item.allowed} key={id}>{item.name}</option>
                   )}

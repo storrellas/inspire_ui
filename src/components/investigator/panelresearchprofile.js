@@ -8,7 +8,6 @@ import { withRouter } from 'react-router-dom'
 // am4charts
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
-import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 
 // Redux
 import { connect } from "react-redux";
@@ -25,8 +24,6 @@ import axios from 'axios';
 // Project imports
 import EmptyPanel from '../shared/emptypanel';
 
-// Themes begin
-am4core.useTheme(am4themes_animated);
 
 const mapStateToProps = state => {
   return { 
@@ -101,6 +98,10 @@ class PanelResearchProfile extends React.Component {
     let chart = am4core.create("researchprofilechart", am4charts.PieChart);
     chart.hiddenState.properties.opacity = 0; // this creates initial fade-in
   
+
+
+    
+
     chart.data = this.state.data.slice(0,7);
 
     var series = chart.series.push(new am4charts.PieSeries());
@@ -115,9 +116,23 @@ class PanelResearchProfile extends React.Component {
     series.labels.template.wrap = true;
     series.labels.template.fontSize = 14;
 
-  
     series.hiddenState.properties.endAngle = -90;
   
+    // Custom colorset for pie series
+    const colorSet = new am4core.ColorSet()
+    colorSet.list = [
+      // Row1
+      am4core.color("#162B3D"),
+      am4core.color("#336690"),
+      am4core.color("#4A92CE"),
+      am4core.color("#80B2DC"),
+      am4core.color("#A4C8E6"),
+    ].map(function(color) {
+      return new am4core.color(color);
+    });
+    
+    series.colors = colorSet 
+
     //chart.legend = new am4charts.Legend();
     this.chart = chart
     this.chart.legend = new am4charts.Legend();
@@ -158,6 +173,12 @@ class PanelResearchProfile extends React.Component {
       }     
       research_profile_data.push({'name': category, 'childrenList': childrenList})
     }
+
+    // Set Diseases to be first item in list
+    var first = "diseases";
+    research_profile_data.sort(function(x,y){ return x.name.toLowerCase() == first ? -1 : y.name.toLowerCase() == first ? 1 : 0; });
+
+
     this.state.researchProfileData = research_profile_data;
     return research_profile_data
   }

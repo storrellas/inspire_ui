@@ -80,9 +80,7 @@ class Investigator extends React.Component {
 
 
     const { panel } = this.state;
-    
-    const { match: { params } } = this.props;
-    let projectOid = params.id;
+
 
     return (
       <>
@@ -114,7 +112,7 @@ class Investigator extends React.Component {
           </Col>
           <Col sm={2}>
             <Button className="w-100 inspire-button inspire-box-shadow" variant="primary"
-            onClick={ (e) => this.props.history.push(`/dashboard/project/${projectOid}/`)}>Open Project</Button>{' '}
+            onClick={ (e) => this.props.history.push(`/dashboard/`)}>Open Project</Button>{' '}
           </Col>
         </Row>
 

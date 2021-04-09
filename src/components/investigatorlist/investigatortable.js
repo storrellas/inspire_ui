@@ -35,47 +35,47 @@ import SearchHeader, { SEARCH_HEADER } from '../shared/searchheader'
 
 const FILTERING = [
   { 
-    dataField:'first_name', caption: 'firstName', 
+    dataField:'first_name', caption: 'firstName', width: '10%',
     label: 'First Name', type: SEARCH_HEADER.TEXT 
   },
   { 
-    dataField:'last_name', caption: 'lastName', 
+    dataField:'last_name', caption: 'lastName',  width: '10%',
     label: 'Last Name', type: SEARCH_HEADER.TEXT 
   },
   { 
-    dataField:'prop_specialties', caption: 'specialties', 
+    dataField:'prop_specialties', caption: 'specialties', width: '150px',
     label: 'Specialties', type: SEARCH_HEADER.TEXT 
   },
   { 
-    dataField:'focus_areas_reasearch_interests', caption: 'focusArea', 
+    dataField:'focus_areas_reasearch_interests', caption: 'focusArea', width: '150px',
     label: 'Focus Area', type: SEARCH_HEADER.TEXT 
   },
   { 
-    dataField:'city', caption: 'city', 
+    dataField:'city', caption: 'city',  width: '10%',
     label: 'City', type: SEARCH_HEADER.TEXT 
   },
   { 
-    dataField:'country', caption: 'country', 
-    label: 'Country', type: SEARCH_HEADER.NUMBER 
+    dataField:'country', caption: 'country', width: '5%',
+    label: 'Country', type: SEARCH_HEADER.TEXT 
   },
   { 
-    dataField:'number_linked_publications', caption: 'Publications', 
+    dataField:'number_linked_publications', caption: 'Publications',  width: '5%',
     label: 'P', type: SEARCH_HEADER.NUMBER 
   },
   { 
-    dataField:'number_linked_events', caption: 'Events', 
+    dataField:'number_linked_events', caption: 'Events',  width: '5%',
     label: 'E', type: SEARCH_HEADER.NUMBER 
   },
   { 
-    dataField:'number_linked_clinical_trials', caption: 'Clinical Trials', 
+    dataField:'number_linked_clinical_trials', caption: 'Clinical Trials',  width: '5%',
     label: 'CT', type: SEARCH_HEADER.NUMBER 
   },
   { 
-    dataField:'number_linked_institutions_coi', caption: 'Confict of Interest', 
+    dataField:'number_linked_institutions_coi', caption: 'Confict of Interest',  width: '5%',
     label: 'COI', type: SEARCH_HEADER.NUMBER 
   },
   { 
-    dataField:'mesh_counter', caption: 'score', 
+    dataField:'mesh_counter', caption: 'score',  width: '5%',
     label: 'Score', type: SEARCH_HEADER.TEXT 
   },
 ]
@@ -342,10 +342,10 @@ class InvestigatorTable extends React.Component {
           <table className="w-100 inspire-table" style={{ display: 'block', minHeight: '200px', fontSize: '14px'}}>
             <thead>
               <tr>
-                <td></td>
-                <td>Profile</td>
+                <td style={{ width: '3%'}}></td>
+                <td style={{ width: '3%'}}>Profile</td>
                 {FILTERING.map((item, id) =>                  
-                  <td key={id} style={{ cursor: 'pointer'}} 
+                  <td key={id} style={{ cursor: 'pointer', width: item.width }} 
                     onClick={() => this.onSetSorting(item.dataField)}>
                     { 
                     ['P', 'E', 'CT', 'COI'].includes(item.label)?
@@ -388,38 +388,38 @@ class InvestigatorTable extends React.Component {
                 :<tr></tr>}
               {this.state.investigatorList.map((item, id) =>
                 <tr key={id}>
-                  <td style={{ width: '3%'}}>
+                  <td>
                     
                     <img src={item.is_favorite_investigator?favorite:nonfavorite} width="30"
                       onClick={(e) => this.onSetInvestigatorFavorite(item.oid, item.is_favorite_investigator)}
                       style={{ cursor: 'pointer' }}></img>
                     
                   </td>
-                  <td style={{ width: '3%'}}>
+                  <td>
                     <img src={arrow} width="30"
                       onClick={(e) => this.props.history.push(`/dashboard/project/${this.state.projectOid}/investigator/${item.oid}`)}
                       style={{ cursor: 'pointer' }}></img>
                   </td>
 
-                  <td style={{ width: '10%'}}>{item.first_name}</td>
-                  <td style={{ width: '10%'}}>{item.last_name}</td>
-                  <td style={{ width: '20%'}}>
-                          <EllipsisWithTooltip placement="bottom" style={{ width: '250px'}}>
-                          {item.prop_specialties || ''}
-                          </EllipsisWithTooltip>
+                  <td>{item.first_name}</td>
+                  <td>{item.last_name}</td>
+                  <td>
+                    <EllipsisWithTooltip placement="bottom" style={{ width: '150px'}}>
+                    {item.prop_specialties || ''}
+                    </EllipsisWithTooltip>
                   </td>
-                  <td style={{ width: '20%'}}>
-                        <EllipsisWithTooltip placement="bottom" style={{ width: '250px'}}>
-                          {item.focus_areas_reasearch_interests || ''}
-                        </EllipsisWithTooltip>
+                  <td>
+                    <EllipsisWithTooltip placement="bottom" style={{ width: '150px'}}>
+                      {item.focus_areas_reasearch_interests || ''}
+                    </EllipsisWithTooltip>
                   </td>
-                  <td style={{ width: '10%'}}>{item.city}</td>
-                  <td style={{ width: '10%'}}>{item.country}</td>
-                  <td style={{ width: '5%'}}>{item.number_linked_publications}</td>
-                  <td style={{ width: '5%'}}>{item.number_linked_events}</td>
-                  <td style={{ width: '5%'}}>{item.number_linked_clinical_trials}</td>
-                  <td style={{ width: '5%'}}>{item.number_linked_institutions_coi}</td>
-                  <td style={{ width: '5%'}}>{item.mesh_counter}</td>
+                  <td>{item.city}</td>
+                  <td>{item.country}</td>
+                  <td>{item.number_linked_publications}</td>
+                  <td>{item.number_linked_events}</td>
+                  <td>{item.number_linked_clinical_trials}</td>
+                  <td>{item.number_linked_institutions_coi}</td>
+                  <td>{item.mesh_counter}</td>
 
                 </tr>
               )}

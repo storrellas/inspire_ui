@@ -8,7 +8,6 @@ import { withRouter } from 'react-router-dom'
 // am4charts
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
-import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 
 // Font Awesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -32,9 +31,7 @@ import SearchHeader, { SEARCH_HEADER } from '../shared/searchheader'
 import EmptyPanel from '../shared/emptypanel';
 import am4themes_inspire from '../shared/am4colorset';
 
-// Themes begin
-am4core.useTheme(am4themes_animated);
-am4core.useTheme(am4themes_inspire);
+
 
 // Styles
 
@@ -211,7 +208,7 @@ class PanelPublications extends React.Component {
                 <tr key={id}>
                   <td  className="text-center" style={{ width: '5%' }}>
                     {item.weblink !=undefined?
-                    <a href={item.weblink}>
+                    <a href={item.weblink} target="_blank">                      
                       <img src="https://demo.explicatos.com/img/Internet.png" style={{ height: '25px' }}></img>
                     </a>
                     :''}

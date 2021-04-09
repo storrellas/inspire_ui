@@ -431,22 +431,22 @@ class PanelAffiliations extends React.Component {
 
               {dataTable.map((item, id) =>
                 <tr key={id}>
-                  <td  className="text-left" style={{ width: '10%'}}>{item.position__name}</td>
-                  <td  className="text-center" style={{ width: '200px'}}>
+                  <td style={{ width: '10%'}}>{item.position__name}</td>
+                  <td style={{ width: '200px'}}>
                     <EllipsisWithTooltip placement="bottom" style={{ width: '300px'}}>
                     {item.institution__parent_name || ''}
                     </EllipsisWithTooltip>
                   </td>
-                  <td  className="text-center" style={{ width: '20%'}}>
+                  <td style={{ width: '20%'}}>
                     <EllipsisWithTooltip placement="bottom" style={{ width: '100px'}}>
                     {item.institution__department || ''}
                     </EllipsisWithTooltip>
                   </td>
-                  <td  className="text-center" style={{ width: '20%'}}>{item.institution__institution_subtype__name}</td>
-                  <td  className="text-center" style={{ width: '10%'}}>{item.past_position}</td>
-                  <td  className="text-center" style={{ width: '10%'}}>{item.year}</td>
-                  <td  className="text-center" style={{ width: '10%'}}>{item.institution__city}</td>
-                  <td  className="text-center" style={{ width: '10%'}}>{item.institution__country__name}</td>
+                  <td style={{ width: '20%'}}>{item.institution__institution_subtype__name}</td>
+                  <td style={{ width: '10%'}}>{item.past_position?'Yes':''}</td>
+                  <td style={{ width: '10%'}}>{item.year}</td>
+                  <td style={{ width: '10%'}}>{item.institution__city}</td>
+                  <td style={{ width: '10%'}}>{item.institution__country__name}</td>
                 </tr>
               )}
             </tbody>
