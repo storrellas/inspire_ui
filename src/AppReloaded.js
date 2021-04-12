@@ -41,19 +41,34 @@ class AppReloaded extends React.Component {
   }
 }
 
-// // Add a response interceptor
-// axios.interceptors.response.use(function (response) {
-//   // Any status code that lie within the range of 2xx cause this function to trigger
-//   // Do something with response data
-//   console.log("all ok")
-//   return response;
-// }, function (error) {
-//   // Any status codes that falls outside the range of 2xx cause this function to trigger
-//   // Do something with response error
-//   alert("error", error)
-//   // Simulate a mouse click:
-//   window.location.href = process.env.REACT_APP_API_URL;
-//   return Promise.reject(error);
-// });
+// Add a response interceptor
+axios.interceptors.response.use(function (response) {
+  // Any status code that lie within the range of 2xx cause this function to trigger
+  // Do something with response data
+  return response;
+}, function (error) {
+  // Any status codes that falls outside the range of 2xx cause this function to trigger
+  // Do something with response error
+  //alert("error", error)
+  console.log(error)
+  console.log(error.response.config);
+  console.log(error.response.request);
+  /*
+  // Error
+  if (error.response) {
+    console.log(error.response.data);
+    console.log(error.response.status);
+    console.log(error.response.headers);
+  } else if (error.request) {
+      console.log(error.request);
+  } else {
+      console.log('Error', error.message);
+  }
+  /**/
+  // Simulate a mouse click:
+  // window.location.href = process.env.REACT_APP_API_URL;
+  // alert("waiting") 
+  return Promise.reject(error);
+});
 
 export default withRouter(AppReloaded);

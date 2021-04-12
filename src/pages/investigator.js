@@ -115,18 +115,7 @@ class Investigator extends React.Component {
 
       this.setState({isFavorite: !isFavorite})
     }catch(error){
-
-      // Error
-      if (error.response) {
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
-      } else if (error.request) {
-          console.log(error.request);
-      } else {
-          console.log('Error', error.message);
-      }
-
+      console.log("FAILED")
     } 
 
   }
@@ -148,18 +137,7 @@ class Investigator extends React.Component {
       }
       this.setState({meshOptions: meshOptions, isLoadingMesh:false})
     }catch(error){
-
-      // Error
-      if (error.response) {
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
-      } else if (error.request) {
-          console.log(error.request);
-      } else {
-          console.log('Error', error.message);
-      }
-
+      console.log("FAILED")
     }   
   }
 
@@ -202,17 +180,7 @@ class Investigator extends React.Component {
       // Set State
       this.setState({showMeshScore: true, mesh: mesh})
     }catch(error){
-
-      // Error
-      if (error.response) {
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
-      } else if (error.request) {
-          console.log(error.request);
-      } else {
-          console.log('Error', error.message);
-      }
+      console.log("FAILED")
     }
   }
 
@@ -304,17 +272,7 @@ class Investigator extends React.Component {
       })
 
     }catch(error){
-
-      // Error
-      if (error.response) {
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
-      } else if (error.request) {
-          console.log(error.request);
-      } else {
-          console.log('Error', error.message);
-      }
+      console.log("FAILED")
     }
   }
 

@@ -64,18 +64,7 @@ class PanelResearchProfile extends React.Component {
       this.setState({data: research_profile_data})
 
     }catch(error){
-
-      // Error
-      if (error.response) {
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
-      } else if (error.request) {
-          console.log(error.request);
-      } else {
-          console.log('Error', error.message);
-      }
-
+      console.log("FAILED")
     }
   }
 
@@ -98,10 +87,6 @@ class PanelResearchProfile extends React.Component {
     let chart = am4core.create("researchprofilechart", am4charts.PieChart);
     chart.hiddenState.properties.opacity = 0; // this creates initial fade-in
   
-
-
-    
-
     chart.data = this.state.data.slice(0,7);
 
     var series = chart.series.push(new am4charts.PieSeries());
@@ -192,7 +177,6 @@ class PanelResearchProfile extends React.Component {
       const that = this;
       setTimeout(function(){ that.generateChart() }, 500);
     }
-
 
     const researchProfileData = this.generateModalData()
     const emptyPanelShow = researchProfileData.length == 0 

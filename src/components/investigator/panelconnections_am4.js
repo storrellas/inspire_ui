@@ -38,8 +38,6 @@ class PanelConnections extends React.Component {
     networkSeries.dataFields.children = "children";
     networkSeries.dataFields.fixed = "fixed";  
     
-    
-    
     networkSeries.nodes.template.label.text = "{name}"
     networkSeries.links.template.distance = "{distance}";
 

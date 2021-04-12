@@ -197,17 +197,7 @@ class PanelClinicalTrials extends React.Component {
       this.state.emptyPanelShow = response.data.results.length == 0;
 
     }catch(error){
-
-      // Error
-      if (error.response) {
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
-      } else if (error.request) {
-          console.log(error.request);
-      } else {
-          console.log('Error', error.message);
-      }
+      console.log("FAILED")
     }
   }
 
@@ -222,17 +212,7 @@ class PanelClinicalTrials extends React.Component {
       this.state.dataInterventions = response.data.results;
 
     }catch(error){
-
-      // Error
-      if (error.response) {
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
-      } else if (error.request) {
-          console.log(error.request);
-      } else {
-          console.log('Error', error.message);
-      }
+      console.log("FAILED")
     }
   }
 
@@ -284,18 +264,7 @@ class PanelClinicalTrials extends React.Component {
       })
 
     }catch(error){
-
-      // Error
-      if (error.response) {
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
-      } else if (error.request) {
-          console.log(error.request);
-      } else {
-          console.log('Error', error.message);
-      }
-
+      console.log("FAILED")
     }
   }
 

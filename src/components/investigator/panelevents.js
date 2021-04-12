@@ -301,17 +301,7 @@ class PanelEvents extends React.Component {
       this.state.dataTypes = response.data.results;
 
     }catch(error){
-
-      // Error
-      if (error.response) {
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
-      } else if (error.request) {
-          console.log(error.request);
-      } else {
-          console.log('Error', error.message);
-      }
+      console.log("FAILED")
     }
   }
 
@@ -334,17 +324,7 @@ class PanelEvents extends React.Component {
       this.state.dataRoles = [dataRoles];
     
     }catch(error){
-
-      // Error
-      if (error.response) {
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
-      } else if (error.request) {
-          console.log(error.request);
-      } else {
-          console.log('Error', error.message);
-      }
+      console.log("FAILED")
     }
   }
 
@@ -396,17 +376,7 @@ class PanelEvents extends React.Component {
       })
 
     }catch(error){
-
-      // Error
-      if (error.response) {
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
-      } else if (error.request) {
-          console.log(error.request);
-      } else {
-          console.log('Error', error.message);
-      }
+      console.log("FAILED")
     }
   }
 

@@ -252,17 +252,7 @@ class PanelPublications extends React.Component {
       this.state.emptyPanelShow = response.data.results.length == 0;
 
     } catch (error) {
-
-      // Error
-      if (error.response) {
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
-      } else if (error.request) {
-        console.log(error.request);
-      } else {
-        console.log('Error', error.message);
-      }
+      console.log("FAILED")
     }
   }
 
@@ -283,17 +273,7 @@ class PanelPublications extends React.Component {
       this.state.dataYears = response.data.results;
 
     } catch (error) {
-
-      // Error
-      if (error.response) {
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
-      } else if (error.request) {
-        console.log(error.request);
-      } else {
-        console.log('Error', error.message);
-      }
+      console.log("FAILED")
     }
   }
 
@@ -345,26 +325,13 @@ class PanelPublications extends React.Component {
         isLoading: false
       })
     } catch (error) {
-
-      // Error
-      if (error.response) {
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
-      } else if (error.request) {
-        console.log(error.request);
-      } else {
-        console.log('Error', error.message);
-      }
+      console.log("FAILED")
     }
   }
 
   navigatePage(page) {
     this.retrievePublicationList(page)
   }
-
-
-
 
   retrievePublicationListFiltered(key, value) {
     let { currentPage, filtering } = this.state;

@@ -20,7 +20,6 @@ class ProjectSelector extends React.Component {
 
   async getProjectList(){
     try{
-
       // Get List of projects
       const token = localStorage.getItem('token')
       const response = await axios.get( `${process.env.REACT_APP_API_URL}/api/projects/?limit=100`,
@@ -55,7 +54,6 @@ class ProjectSelector extends React.Component {
       
       this.setState({projectList: projectList, projectAllowedList: projectAllowedList})
     }catch(e){
-      //this.props.history.push('/')
       console.log("FAILED")
     }
 

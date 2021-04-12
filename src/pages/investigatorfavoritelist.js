@@ -20,15 +20,12 @@ class InvestigatorFavoriteList extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-
     }
   }
 
 
   render() {
-    
     const { projectOid } = this.state;
-
     return (
       <Row className='mt-3 mb-3'>
         <Col sm={12} className='page-container'>
