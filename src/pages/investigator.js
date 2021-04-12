@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
 // Bootstrap
-import { Col, Row, InputGroup, FormControl, Button, Nav } from 'react-bootstrap';
+import { Col, Row, Modal, Button, Nav } from 'react-bootstrap';
 
 // React Router
 import { withRouter } from 'react-router-dom'
@@ -65,6 +65,9 @@ class Investigator extends React.Component {
       panel: PANEL.CONNECTIONS,
       isFavorite: false,
       meshOptions: [],
+      showMeshScore: false,
+      meshScore: 0,
+      mesh: { value: '', label: ''},
     }
   }
 
@@ -170,7 +173,7 @@ class Investigator extends React.Component {
 
     // Check if mesh is undefined
     if( mesh === undefined || mesh === null ){
-      this.loadInvestigators(currentPage)
+      // Do nothing
       return
     }
 
@@ -179,15 +182,17 @@ class Investigator extends React.Component {
     meshOid = meshOid.split('-')[meshOid.split('-').length -1 ]
     meshOid = parseInt( meshOid )
 
-    this.state.meshOid = meshOid;
-    this.loadInvestigators(currentPage)
+    this.setState({showMeshScore: true, mesh: mesh})
   }
+
 
 
 
   render() {
 
-    const { panel } = this.state;
+    const { panel, showMeshScore } = this.state;
+
+    console.log("showMeshScore ", showMeshScore)
     return (
       <>
 
@@ -206,12 +211,27 @@ class Investigator extends React.Component {
                     placeholder={'Search by names, position, field of study'}
                     styles={{ 
                       control: (provided) => ({ ...provided, borderLeft: 0, borderRadius: '0 20px 20px 0'}),
-                      dropdownIndicator: (provided) => ({ ...provided, color: 'white'}),
-                      indicatorSeparator: (provided) => ({ backgroundColor: 'white'}) 
+                      indicatorsContainer: (provided) => ({ ...provided, width:0, overflow: 'hidden'}),
                     }}
                     className="w-100 inspire-form-control"
                     />
             </div>
+
+            <Modal show={showMeshScore} onHide={e => this.setState({showMeshScore: false})} centered>
+              <Modal.Header closeButton>
+                <Modal.Title>Activities</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <div>65</div>
+                <div>{this.state.mesh.label}</div>
+              </Modal.Body>
+              <Modal.Footer>
+                <Button variant="primary" onClick={e => this.setState({showMeshScore: false})}>
+                  OK
+                </Button>
+              </Modal.Footer>
+            </Modal>
+
           </Col>
 
           <Col sm={3}>
