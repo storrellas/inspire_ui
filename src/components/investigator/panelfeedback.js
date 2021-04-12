@@ -17,6 +17,7 @@ class PanelFeedback extends React.Component {
         ticketPriority: '',
         message: '',
         showResponse: false,
+        showError: false,
     }
 
     this.ticketTypeOptions = [
@@ -30,12 +31,13 @@ class PanelFeedback extends React.Component {
         { value: 'high', label: 'High' },
     ]
 
-    this.state.ticketType = this.ticketTypeOptions[0].value
+    this.state.ticketType = this.ticketTypeOptions[1].value
     this.state.ticketPriority = this.ticketPriorityOptions[0].value
   }
 
   async onSubmitFeedback(){
     try{
+        this.setState({showError:false, showResponse: false})
         const  { ticketType, ticketPriority, message } = this.state;
 
         // Grab ME oid
@@ -55,19 +57,24 @@ class PanelFeedback extends React.Component {
             { headers: { "Authorization": "jwt " + token }
         })
 
-        this.setState({showResponse: true})
+        this.setState({
+            showResponse: true, 
+            ticketType: this.ticketTypeOptions[0].value, 
+            ticketPriority: this.ticketPriorityOptions[0].value,
+            message:''})
     }catch(error){
 
-    // Error
-    if (error.response) {
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
-    } else if (error.request) {
-        console.log(error.request);
-    } else {
-        console.log('Error', error.message);
-    }
+      this.setState({showError:true})
+      // Error
+      if (error.response) {
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+      } else if (error.request) {
+          console.log(error.request);
+      } else {
+          console.log('Error', error.message);
+      }
 
     } 
 
@@ -75,7 +82,7 @@ class PanelFeedback extends React.Component {
 
 
   render() {
-    const { showResponse } = this.state;
+    const { ticketType, ticketPriority, message, showResponse, showError } = this.state;
 
     return (
       <div>
@@ -83,16 +90,16 @@ class PanelFeedback extends React.Component {
 
           <Form.Group controlId="exampleForm.ControlSelect1">
             <Form.Label>Ticket Type</Form.Label>
-            <Form.Control as="select" onChange={e => this.setState({ ticketType: e.target.value })}>
+            <Form.Control as="select" onChange={e => this.setState({ ticketType: e.target.value })} value={ticketType}>
                 {this.ticketTypeOptions.map( (item, id ) =>
-                    <option key={id} value={item.value}>{item.label}</option>
+                    <option  key={id} value={item.value}>{item.label}</option>
                 )}
             </Form.Control>
           </Form.Group>
 
           <Form.Group controlId="exampleForm.ControlSelect1">
             <Form.Label>Ticket Priority</Form.Label>
-            <Form.Control as="select" onChange={e => this.setState({ ticketPriority: e.target.value })}>
+            <Form.Control as="select" onChange={e => this.setState({ ticketPriority: e.target.value })}  value={ticketPriority}>
                 {this.ticketPriorityOptions.map( (item, id ) =>
                     <option key={id} value={item.value}>{item.label}</option>
                 )}
@@ -104,12 +111,17 @@ class PanelFeedback extends React.Component {
           </Form.Label>
           <textarea className="w-100" rows="8" 
             style={{ borderColor: '#ced4da', resize: 'none'}}
-            onChange={e => this.setState({ message: e.target.value })}>            
+            onChange={e => this.setState({ message: e.target.value })}
+            value={message} >
+                    
           </textarea>
         
           <div className="mt-3">
-            <Alert className={showResponse?'':'d-none'} variant="primary">
+            <Alert className={showResponse?'text-center':'d-none'} variant="primary">
                 Your feedback has been submitted!
+            </Alert>
+            <Alert className={showError?'text-center':'d-none'} variant="danger">
+                You need to add a message
             </Alert>
           </div>
           
