@@ -3,9 +3,10 @@ import React from 'react';
 import { withRouter } from 'react-router-dom'
 
 // Bootstrap
-import { Form } from 'react-bootstrap';
+import { Form, Alert} from 'react-bootstrap';
 
-
+// Axios
+import axios from 'axios';
 
 class PanelFeedback extends React.Component {
 
@@ -14,7 +15,8 @@ class PanelFeedback extends React.Component {
     this.state = {
         ticketType: '',
         ticketPriority: '',
-        message: ''
+        message: '',
+        showResponse: false,
     }
 
     this.ticketTypeOptions = [
@@ -27,13 +29,53 @@ class PanelFeedback extends React.Component {
         { value: 'critical', label: 'Critical' },
         { value: 'high', label: 'High' },
     ]
+
+    this.state.ticketType = this.ticketTypeOptions[0].value
+    this.state.ticketPriority = this.ticketPriorityOptions[0].value
   }
 
-  onSubmitFeedback(){
-      console.log("Feedback submitted")
+  async onSubmitFeedback(){
+    try{
+        const  { ticketType, ticketPriority, message } = this.state;
+
+        // Grab ME oid
+        const { match: { params } } = this.props;
+        const oid = params.subid;
+  
+        const shortOid = oid.split('-')[oid.split('-').length -1 ]
+
+        // Perform request
+        const body = {
+            ticket_type: ticketType,
+            ticket_priority: ticketPriority,
+            message: message
+        }
+        const token = localStorage.getItem('token')
+        const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/investigator/${shortOid}/submit-feedback/`, body,
+            { headers: { "Authorization": "jwt " + token }
+        })
+
+        this.setState({showResponse: true})
+    }catch(error){
+
+    // Error
+    if (error.response) {
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+    } else if (error.request) {
+        console.log(error.request);
+    } else {
+        console.log('Error', error.message);
+    }
+
+    } 
+
   }
+
 
   render() {
+    const { showResponse } = this.state;
 
     return (
       <div>
@@ -64,6 +106,13 @@ class PanelFeedback extends React.Component {
             style={{ borderColor: '#ced4da', resize: 'none'}}
             onChange={e => this.setState({ message: e.target.value })}>            
           </textarea>
+        
+          <div className="mt-3">
+            <Alert className={showResponse?'':'d-none'} variant="primary">
+                Your feedback has been submitted!
+            </Alert>
+          </div>
+          
 
           <div className="w-100" style={{ padding: '0 20% 0 20%'}}>
             <button className="mt-3 w-100 inspire-button"

@@ -59,7 +59,6 @@ class Investigator extends React.Component {
     super(props)
     this.state = {
       panel: PANEL.CONNECTIONS,
-      oid: undefined,
       isFavorite: false
     }
   }
@@ -83,7 +82,11 @@ class Investigator extends React.Component {
 
   async onSetInvestigatorFavorite(){
     try{
-      let { oid, isFavorite } = this.state;
+      let { isFavorite } = this.state;
+
+      // Grab ME oid
+      const { match: { params } } = this.props;
+      const oid = params.subid;
 
       // Set selection      
       let shortOid = oid.split('-')[oid.split('-').length -1 ]
@@ -117,9 +120,7 @@ class Investigator extends React.Component {
   render() {
 
 
-    // Grab ME oid
-    const { match: { params } } = this.props;
-    this.state.oid = params.subid;
+
 
     const { panel } = this.state;
     return (
