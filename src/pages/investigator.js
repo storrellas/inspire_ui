@@ -27,7 +27,11 @@ import InvestigatorProfile from '../components/investigator/investigatorprofile'
 import { setPanelRendered, PANEL, resetPanel } from "../redux";
 import { connect } from "react-redux";
 
+// React Select
+import Select from 'react-select';
 
+
+// Panels
 import PanelConnections from '../components/investigator/panelconnections';
 import PanelCompanyCooperation from '../components/investigator/panelcompanycooperation';
 import PanelAffiliations from '../components/investigator/panelaffiliations';
@@ -59,7 +63,8 @@ class Investigator extends React.Component {
     super(props)
     this.state = {
       panel: PANEL.CONNECTIONS,
-      isFavorite: false
+      isFavorite: false,
+      meshOptions: [],
     }
   }
 
@@ -117,10 +122,70 @@ class Investigator extends React.Component {
 
   }
 
+  async loadMesh(pattern){
+
+    try{
+      this.setState({isLoadingMesh: true})
+
+      const token = localStorage.getItem('token')
+      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/meshs/?limit=10&ordering=name&name=${pattern}`,
+        { headers: { "Authorization": "jwt " + token }
+      })
+
+      // Autocomplete
+      const meshOptions = []
+      for(const mesh of response.data.results ){
+        meshOptions.push({value:mesh.oid, label: mesh.name})
+      }
+      this.setState({meshOptions: meshOptions, isLoadingMesh:false})
+    }catch(error){
+
+      // Error
+      if (error.response) {
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+          console.log(error.request);
+      } else {
+          console.log('Error', error.message);
+      }
+
+    }   
+  }
+
+  onMeshFill(pattern){
+    const that = this;
+
+    // Clear timeout
+    if ( this.typingTimeout ) {
+      clearTimeout(this.typingTimeout);
+    }
+    this.typingTimeout = 
+      setTimeout(function () {that.loadMesh(pattern);}, 1000)
+  }
+
+  onMeshSelected(mesh){
+    const { currentPage } = this.state;
+
+    // Check if mesh is undefined
+    if( mesh === undefined || mesh === null ){
+      this.loadInvestigators(currentPage)
+      return
+    }
+
+    // Set selection
+    let meshOid = mesh.value
+    meshOid = meshOid.split('-')[meshOid.split('-').length -1 ]
+    meshOid = parseInt( meshOid )
+
+    this.state.meshOid = meshOid;
+    this.loadInvestigators(currentPage)
+  }
+
+
+
   render() {
-
-
-
 
     const { panel } = this.state;
     return (
@@ -128,22 +193,27 @@ class Investigator extends React.Component {
 
         <Row className="mt-3">
           <Col sm={7}>
-            <InputGroup className="mb-2" >
-              <InputGroup.Prepend>
-                <InputGroup.Text style={{ borderRadius: '20px 0 0 20px', backgroundColor: 'white', borderRight: 0 }}>
-                  <FontAwesomeIcon icon={faSearch} />
-                </InputGroup.Text>
-              </InputGroup.Prepend>
-              <FormControl placeholder="Search by names, position, field of study"
-                style={{ borderLeft: 0, borderRadius: '0 20px 20px 0', }} />
-            </InputGroup>
+
+            <div className="d-flex">
+                <div className="d-flex justify-content-center flex-column pl-3 pr-2" 
+                  style={{ background: 'white', border: '1px solid #ced4da', borderRight: 0, borderRadius: '20px 0 0 20px'}}>
+                  <FontAwesomeIcon icon={faSearch}/>
+                </div>                
+                <Select isLoading={this.state.isLoadingMesh} isClearable 
+                    isSearchable options={this.state.meshOptions} 
+                    onInputChange={(e) => this.onMeshFill(e)} 
+                    onChange={ (e) => this.onMeshSelected(e)}
+                    placeholder={'Search by names, position, field of study'}
+                    styles={{ 
+                      control: (provided) => ({ ...provided, borderLeft: 0, borderRadius: '0 20px 20px 0'}),
+                      dropdownIndicator: (provided) => ({ ...provided, color: 'white'}),
+                      indicatorSeparator: (provided) => ({ backgroundColor: 'white'}) 
+                    }}
+                    className="w-100 inspire-form-control"
+                    />
+            </div>
           </Col>
-          {/* <Col sm={2}>
-            <Button className="w-100 inspire-ghost-button inspire-box-shadow" variant="outline-primary">
-              <FontAwesomeIcon icon={faArrowCircleDown} className="mr-2" />
-              Export
-            </Button>
-          </Col> */}
+
           <Col sm={3}>
             <Button className="w-100 inspire-ghost-button inspire-box-shadow" variant="outline-primary"
               style={{ paddingLeft: 0, paddingRight: 0 }} onClick={(e) => this.onSetInvestigatorFavorite()}>
