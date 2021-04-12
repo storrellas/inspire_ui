@@ -14,7 +14,6 @@ import { faAngleRight, faAngleDown, faStar, faSearch, faArrowCircleDown, faNewsp
 import axios from 'axios';
 
 // Redux
-import { setInvestigatorProfile } from "../../redux";
 import { connect } from "react-redux";
 
 // Styles
@@ -35,7 +34,6 @@ L.Marker.prototype.options.icon = DefaultIcon;
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    setInvestigatorProfile: (profile) => dispatch(setInvestigatorProfile(profile))
   };
 }
 
@@ -52,168 +50,10 @@ class InvestigatorProfile extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      name: '',
-      degree: '',
-
-      picture: '',
-      specialties: '',
-      focusArea: '',
-      
-      affiliationPosition: '',
-      affiliationInstitution: '',
-      affiliationInstitutionPhone: '',
-      affiliationInstitutionEmail: '',
-      affiliationInstitutionLocation: '',
-
-      careerStage: '',
-      privatePhone: '',
-      privateEmail: '',
-
-      lastUpdated: '-',
-      cv: '',
-
-      publicationsFirstAuthor: '',
-      publications: '',
-
-      coauthorsSamePA: '',
-      coauthors: '',
-
-      eventsChairPerson: '',
-      events: '',
-
-      ctRecruiting: '',
-      ct: '',
-
       snapshotSpecialties: true, 
       snapshotFocusArea: false,
     }
     this.mapRef = React.createRef();
-  }
-
-  async retrieveNominatim(){
-    // try{
-    //   // Perform request
-    //   const response = await axios.get(`https://nominatim.openstreetmap.org/search?format=json&country=spain`)
-      
-    //   //
-    // }catch(error){
-    //   // Error
-    //   if (error.response) {
-    //     console.log(error.response.data);
-    //     console.log(error.response.status);
-    //     console.log(error.response.headers);
-    //   } else if (error.request) {
-    //       console.log(error.request);
-    //   } else {
-    //       console.log('Error', error.message);
-    //   }
-    // }
-  }
-
-  async componentDidMount(){
-    try{
-
-      const token = localStorage.getItem('token')
-
-  
-      const { match: { params } } = this.props;
-      let investigatorId = params.subid;
-      investigatorId = investigatorId.split('-')[investigatorId.split('-').length -1 ]
-      investigatorId = parseInt( investigatorId )
-
-      // Perform request
-      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/investigator/${investigatorId}/`,
-        { headers: { "Authorization": "jwt " + token }
-      })
-
-      const { state } = this;
-
-      if(response.data.combined_name !== null) 
-        this.state.name = response.data.combined_name
-      if( response.data.degree !== null )
-        this.state.degree = response.data.degree
-      if( response.data.cv !== null)
-        this.state.cv = response.data.cv
-      if( response.data.photo_url != null)
-        this.state.picture = response.data.photo_url
-      if( response.data.specialties != null)
-        this.state.specialties = response.data.specialties
-      if( response.data.focus_areas_reasearch_interests != null)
-        this.state.focusArea = response.data.focus_areas_reasearch_interests 
-      if(response.data.affiliation != null){
-        if(response.data.affiliation.position__name != null)
-          this.state.affiliationPosition = response.data.affiliation.position__name
-        if( response.data.affiliation.institution__combined_name != null)
-          this.state.affiliationInsititution = response.data.affiliation.institution__combined_name
-        if( response.data.affiliation.institution__phone != null)
-          this.state.affiliationInstitutionPhone = response.data.affiliation.institution__phone
-        if( response.data.affiliation.institution__email != null)
-          this.state.affiliationInstitutionEmail = response.data.affiliation.institution__email          
-        if( response.data.affiliation.institution__location != null)
-          this.state.affiliationInstitutionLocation = response.data.affiliation.institution__location          
-      }
-
-      if( response.data.number_linked_publications_position_first_author != null)
-        this.state.publicationsFirstAuthor = response.data.number_linked_publications_position_first_author
-      if( response.data.number_linked_publications != null)
-        this.state.publications = response.data.number_linked_publications
-
-      if( response.data.number_co_authors_same_primary_affiliation != null)
-        this.state.coauthorsSamePA = response.data.number_co_authors_same_primary_affiliation
-      if( response.data.number_co_authors != null)
-        this.state.coauthors = response.data.number_co_authors
-        
-      if( response.data.number_linked_events_position_chairperson != null)
-        this.state.eventsChairPerson = response.data.number_linked_events_position_chairperson
-      if( response.data.number_linked_events != null)
-        this.state.events = response.data.number_linked_events
-
-      if( response.data.number_linked_clinical_trials_recruiting != null)
-        this.state.ctRecruiting = response.data.number_linked_clinical_trials_recruiting
-      if( response.data.number_linked_clinical_trials != null)
-        this.state.ct = response.data.number_linked_clinical_trials
-      if( response.data.profile_last_updated_on != null){
-        const timestamp = Date.parse(response.data.profile_last_updated_on)          
-        const date = new Date(timestamp);
-        const date_str = ('0' + date.getDate()).slice(-2) + '/'
-           + ('0' + (date.getMonth()+1)).slice(-2) + '/'
-           + date.getFullYear();
-        this.state.lastUpdated = date_str
-      }
-      if( response.data.career_stage != null)
-        this.state.careerStage = response.data.career_stage
-      if( response.data.phone != null)
-        this.state.privatePhone = response.data.phone      
-      if( response.data.email != null )
-        this.state.privateEmail = response.data.email      
-
-      // Refresh
-      this.setState(state)
-
-      //
-      this.props.setInvestigatorProfile({
-        name: this.state.name,
-        affiliationInstitution: this.state.affiliationInsititution,
-        picture: this.state.picture
-      })
-    }catch(error){
-
-      // Error
-      if (error.response) {
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
-      } else if (error.request) {
-          console.log(error.request);
-      } else {
-          console.log('Error', error.message);
-      }
-
-    }
-
-
-
-    this.retrieveNominatim()
   }
 
   onClickSnaphot(type){
@@ -226,20 +66,25 @@ class InvestigatorProfile extends React.Component {
   }
 
   render() {
-    const { match: { params } } = this.props;
-    let projectOid = params.id;
+
+    // Only render when profile is not undefined
+    if(this.props.profile === undefined)
+      return <></>
 
     // Map completition
-    const { affiliationInstitutionLocation } = this.state;
+    const { affiliationInstitutionLocation } = this.props.profile;
+    
     let lat = 47.5162;
     let lng = 14.5501;
-    if( affiliationInstitutionLocation ){    
+    if( affiliationInstitutionLocation && this.mapRef.current){    
       const location = affiliationInstitutionLocation.split('(')[1].slice(0, -1).split(' ')
+      
       lat = parseFloat( location[1] )
       lng = parseFloat( location[0] )
       // this.mapRef.current.flyTo([lat,lng], 14, {
       //   duration: 2
       // });
+
       this.mapRef.current.setView([lat,lng], 14);
     }
 
@@ -256,13 +101,13 @@ class InvestigatorProfile extends React.Component {
           <div className="d-flex p-3 justify-content-between inspire-box-shadow">
 
             <div className="d-flex justify-content-center align-items-center">
-              <img src={this.state.picture} style={{ width: '100px', borderRadius: '50%' }}></img>
-              <div className="inspire-text-secondary ml-3">{this.state.degree}</div>
-              <div className="ml-3"><b>{this.state.name} </b></div>
+              <img src={this.props.profile.picture} style={{ width: '100px', borderRadius: '50%' }}></img>
+              <div className="inspire-text-secondary ml-3">{this.props.profile.degree}</div>
+              <div className="ml-3"><b>{this.props.profile.name} </b></div>
             </div>
 
             <div className="d-flex justify-content-center align-items-center">
-              <div>{this.state.affiliationInstitutionPhone}</div>
+              <div>{this.props.profile.affiliationInstitutionPhone}</div>
               <div className="ml-3"> | </div>
               <div className="ml-3">
                 <a style={{wordBreak: 'break-all'}} 
@@ -281,20 +126,20 @@ class InvestigatorProfile extends React.Component {
             <div className="inspire-panel">
               <Row>
                 <Col sm={3} className="text-center">
-                  <img src={this.state.picture} style={{ width: '90%', borderRadius: '50%' }}></img>
+                  <img src={this.props.profile.picture} style={{ width: '90%', borderRadius: '50%' }}></img>
                 </Col>
                 <Col sm={9}>
                   <div className="h-100 d-flex flex-column justify-content-center" style={{ fontSize: '18px'}}>
                     <div>
                       <span className="inspire-text-secondary">{this.state.degree}</span>
-                      <span className="ml-3"><b>{this.state.name} </b></span>
+                      <span className="ml-3"><b>{this.props.profile.name} </b></span>
                       
                     </div>
                     <div>
-                      {this.state.affiliationInstitutionPhone}  | 
+                      {this.props.profile.affiliationInstitutionPhone}  | 
                       <span className="ml-3 inspire-text-secondary">
                         <a style={{wordBreak: 'break-all'}} 
-                          href={"mailto:"+this.state.affiliationInstitutionEmail}>{this.state.affiliationInstitutionEmail}</a>
+                          href={"mailto:"+this.props.profile.affiliationInstitutionEmail}>{this.props.profile.affiliationInstitutionEmail}</a>
                       </span>
                     </div>
                   </div>
@@ -304,17 +149,17 @@ class InvestigatorProfile extends React.Component {
               <Row style={{ marginTop: '3em'}}>
                 <Col sm={4}>
                   <div className="inspire-text-secondary" style={{ fontSize: '12px'}}>POSITION</div>
-                  <div>{this.state.affiliationPosition}</div>
+                  <div>{this.props.profile.affiliationPosition}</div>
                   <div className="inspire-text-secondary" style={{ fontSize: '12px'}}>CAREER STAGE</div>
-                  <div>{this.state.careerStage}</div>
+                  <div>{this.props.profile.careerStage}</div>
                 </Col>
                 <Col sm={4}>
                   <div className="inspire-text-secondary" style={{ fontSize: '12px'}}>AFFILIATION</div>
-                  <div>{this.state.affiliationInsititution}</div>
+                  <div>{this.props.profile.affiliationInsititution}</div>
                 </Col>
                 <Col sm={4}>
                   <div className="inspire-text-secondary" style={{ fontSize: '12px'}}>PRIVATE CONTACT</div>
-                  <div><a style={{wordBreak: 'break-all'}} href={"mailto:"+this.state.privateEmail}>{this.state.privateEmail}</a></div>
+                  <div><a style={{wordBreak: 'break-all'}} href={"mailto:"+this.props.profile.privateEmail}>{this.props.profile.privateEmail}</a></div>
                 </Col>
               </Row>
 
@@ -344,11 +189,11 @@ class InvestigatorProfile extends React.Component {
               <Row>
                 <Col sm={6}>
                   <b>Profile Snapshot</b>
-                  <div>Last Update: {this.state.lastUpdated}</div>
+                  <div>Last Update: {this.props.profile.lastUpdated}</div>
                 </Col>
                 <Col sm={6} className="text-right">
                   <div>
-                    <a href={this.state.cv} className={this.state.cv===''?'d-none':''} target="_blank">                  
+                    <a href={this.props.profile.cv} className={this.props.profile.cv===''?'d-none':''} target="_blank">                  
                       Go To CV
                       <FontAwesomeIcon className="ml-2" icon={faNewspaper} />
                     </a>
@@ -368,7 +213,7 @@ class InvestigatorProfile extends React.Component {
                       <AnimateHeight
                           height={this.state.snapshotSpecialties?'auto':0}
                           duration={500}>  
-                      {this.state.specialties}
+                      {this.props.profile.specialties}
                       </AnimateHeight> 
                     </div>
 
@@ -381,13 +226,14 @@ class InvestigatorProfile extends React.Component {
                         icon={faAngleDown}/>
                     </div>
                     <div className="text-justify">
-                        <div className={this.state.snapshotFocusArea?'d-none':''} style={{ width:'100%', textOverflow: 'ellipsis', overflow:'hidden', whiteSpace: 'nowrap'}}>
-                          {this.state.focusArea}
+                        <div className={this.props.profile.snapshotFocusArea?'d-none':''} 
+                          style={{ width:'100%', textOverflow: 'ellipsis', overflow:'hidden', whiteSpace: 'nowrap'}}>
+                          {this.props.profile.focusArea}
                         </div>
                         <AnimateHeight
                           height={this.state.snapshotFocusArea?'auto':0}
                           duration={500}>  
-                        {this.state.focusArea}
+                        {this.props.profile.focusArea}
                         </AnimateHeight> 
                     </div>
                   </div>
@@ -401,11 +247,11 @@ class InvestigatorProfile extends React.Component {
                     <Row>
                       <Col sm={6}>
                         <div className="inspire-text-secondary" style={{ fontSize: '12px'}}>FIRST AUTHOR</div>
-                        <div style={{ fontSize: '12px'}}>{this.state.publicationsFirstAuthor}</div>
+                        <div style={{ fontSize: '12px'}}>{this.props.profile.publicationsFirstAuthor}</div>
                       </Col>
                       <Col sm={6}>
                         <div className="inspire-text-secondary" style={{ fontSize: '12px'}}>TOTAL</div>
-                        <div style={{ fontSize: '12px'}}>{this.state.publications}</div>
+                        <div style={{ fontSize: '12px'}}>{this.props.profile.publications}</div>
                       </Col>
                     </Row>
                   </div>
@@ -419,11 +265,11 @@ class InvestigatorProfile extends React.Component {
                     <Row>
                       <Col sm={6}>
                         <div className="inspire-text-secondary" style={{ fontSize: '12px'}}>SAME PA</div>
-                        <div style={{ fontSize: '12px'}}>{this.state.coauthorsSamePA}</div>
+                        <div style={{ fontSize: '12px'}}>{this.props.profile.coauthorsSamePA}</div>
                       </Col>
                       <Col sm={6}>
                         <div className="inspire-text-secondary" style={{ fontSize: '12px'}}>TOTAL</div>
-                        <div style={{ fontSize: '12px'}}>{this.state.coauthors}</div>
+                        <div style={{ fontSize: '12px'}}>{this.props.profile.coauthors}</div>
                       </Col>
                     </Row>
                   </div>
@@ -438,11 +284,11 @@ class InvestigatorProfile extends React.Component {
                     <Row>
                       <Col sm={6}>
                         <div className="inspire-text-secondary" style={{ fontSize: '12px'}}>CHAIR PERSON</div>
-                        <div style={{ fontSize: '12px'}}>{this.state.eventsChairPerson}</div>
+                        <div style={{ fontSize: '12px'}}>{this.props.profile.eventsChairPerson}</div>
                       </Col>
                       <Col sm={6}>
                         <div className="inspire-text-secondary" style={{ fontSize: '12px'}}>TOTAL</div>
-                        <div style={{ fontSize: '12px'}}>{this.state.events}</div>
+                        <div style={{ fontSize: '12px'}}>{this.props.profile.events}</div>
                       </Col>
                     </Row>
                   </div>
@@ -456,11 +302,11 @@ class InvestigatorProfile extends React.Component {
                     <Row>
                       <Col sm={6}>
                         <div className="inspire-text-secondary" style={{ fontSize: '12px'}}>RECRUITING</div>
-                        <div style={{ fontSize: '12px'}}>{this.state.ctRecruiting}</div>
+                        <div style={{ fontSize: '12px'}}>{this.props.profile.ctRecruiting}</div>
                       </Col>
                       <Col sm={6}>
                         <div className="inspire-text-secondary" style={{ fontSize: '12px'}}>TOTAL</div>
-                        <div style={{ fontSize: '12px'}}>{this.state.ct}</div>
+                        <div style={{ fontSize: '12px'}}>{this.props.profile.ct}</div>
                       </Col>
                     </Row>
                   </div>

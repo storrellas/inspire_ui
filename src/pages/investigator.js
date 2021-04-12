@@ -24,7 +24,7 @@ import { faAngleRight, faAngleDown, faStar, faSearch, faArrowCircleDown, faNewsp
 import InvestigatorProfile from '../components/investigator/investigatorprofile'
 
 // Redux
-import { setPanelRendered, PANEL, resetPanel } from "../redux";
+import { setInvestigatorProfile, setPanelRendered, PANEL, resetPanel } from "../redux";
 import { connect } from "react-redux";
 
 // React Select
@@ -46,7 +46,8 @@ import PanelClinicalTrials from '../components/investigator/panelclinicaltrials'
 const mapDispatchToProps = (dispatch) => {
   return {
     setPanelRendered: (panel) => dispatch(setPanelRendered(panel)),
-    resetPanel: () => dispatch(resetPanel())
+    resetPanel: () => dispatch(resetPanel()),
+    setInvestigatorProfile: (profile) => dispatch(setInvestigatorProfile(profile))
   };
 }
 
@@ -68,6 +69,7 @@ class Investigator extends React.Component {
       showMeshScore: false,
       meshScore: 0,
       mesh: { value: '', label: ''},
+      profile: undefined,
     }
 
     this.typingTimeout = undefined
@@ -209,21 +211,117 @@ class Investigator extends React.Component {
       } else {
           console.log('Error', error.message);
       }
-
-    }   
-
-    
-
+    }
   }
 
+  async componentDidMount(){
 
+    try{
+
+      const { match: { params } } = this.props;
+      let investigatorId = params.subid;
+      investigatorId = investigatorId.split('-')[investigatorId.split('-').length -1 ]
+      investigatorId = parseInt( investigatorId )
+
+      // Perform request
+      const token = localStorage.getItem('token')      
+      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/investigator/${investigatorId}/`,
+        { headers: { "Authorization": "jwt " + token }
+      })
+
+      let profile = {}
+
+      if(response.data.combined_name !== null) 
+        profile.name = response.data.combined_name
+      if( response.data.degree !== null )
+        profile.degree = response.data.degree
+      if( response.data.cv !== null)
+        profile.cv = response.data.cv
+      if( response.data.photo_url != null)
+        profile.picture = response.data.photo_url
+      if( response.data.specialties != null)
+        profile.specialties = response.data.specialties
+      if( response.data.focus_areas_reasearch_interests != null)
+        profile.focusArea = response.data.focus_areas_reasearch_interests 
+      if(response.data.affiliation != null){
+        if(response.data.affiliation.position__name != null)
+          profile.affiliationPosition = response.data.affiliation.position__name
+        if( response.data.affiliation.institution__combined_name != null)
+          profile.affiliationInsititution = response.data.affiliation.institution__combined_name
+        if( response.data.affiliation.institution__phone != null)
+          profile.affiliationInstitutionPhone = response.data.affiliation.institution__phone
+        if( response.data.affiliation.institution__email != null)
+          profile.affiliationInstitutionEmail = response.data.affiliation.institution__email          
+        if( response.data.affiliation.institution__location != null)
+          profile.affiliationInstitutionLocation = response.data.affiliation.institution__location          
+      }
+
+      if( response.data.number_linked_publications_position_first_author != null)
+        profile.publicationsFirstAuthor = response.data.number_linked_publications_position_first_author
+      if( response.data.number_linked_publications != null)
+        profile.publications = response.data.number_linked_publications
+
+      if( response.data.number_co_authors_same_primary_affiliation != null)
+        profile.coauthorsSamePA = response.data.number_co_authors_same_primary_affiliation
+      if( response.data.number_co_authors != null)
+        profile.coauthors = response.data.number_co_authors
+        
+      if( response.data.number_linked_events_position_chairperson != null)
+        profile.eventsChairPerson = response.data.number_linked_events_position_chairperson
+      if( response.data.number_linked_events != null)
+        profile.events = response.data.number_linked_events
+
+      if( response.data.number_linked_clinical_trials_recruiting != null)
+        profile.ctRecruiting = response.data.number_linked_clinical_trials_recruiting
+      if( response.data.number_linked_clinical_trials != null)
+        profile.ct = response.data.number_linked_clinical_trials
+      if( response.data.profile_last_updated_on != null){
+        const timestamp = Date.parse(response.data.profile_last_updated_on)          
+        const date = new Date(timestamp);
+        const date_str = ('0' + date.getDate()).slice(-2) + '/'
+           + ('0' + (date.getMonth()+1)).slice(-2) + '/'
+           + date.getFullYear();
+        profile.lastUpdated = date_str
+      }
+      if( response.data.career_stage != null)
+        profile.careerStage = response.data.career_stage
+      if( response.data.phone != null)
+        profile.privatePhone = response.data.phone      
+      if( response.data.email != null )
+        profile.privateEmail = response.data.email      
+
+      profile.isFavoriteInvestigator = response.data.is_favorite_investigator
+      // Refresh
+      this.setState({profile:profile})
+
+      //
+      this.props.setInvestigatorProfile({
+        name: this.state.name,
+        affiliationInstitution: this.state.affiliationInsititution,
+        picture: this.state.picture
+      })
+
+    }catch(error){
+
+      // Error
+      if (error.response) {
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+          console.log(error.request);
+      } else {
+          console.log('Error', error.message);
+      }
+    }
+  }
 
 
   render() {
 
-    const { panel, showMeshScore } = this.state;
+    const { panel, showMeshScore, profile } = this.state;
 
-    console.log("showMeshScore ", showMeshScore)
+
     return (
       <>
 
@@ -268,8 +366,12 @@ class Investigator extends React.Component {
           <Col sm={3}>
             <Button className="w-100 inspire-ghost-button inspire-box-shadow" variant="outline-primary"
               style={{ paddingLeft: 0, paddingRight: 0 }} onClick={(e) => this.onSetInvestigatorFavorite()}>
-              <FontAwesomeIcon icon={this.state.isFavorite?farStar:faStar} className="mr-2" />
-              {this.state.isFavorite?"Remove from Favorites":"Add to Favorites"}
+              {profile?
+                <>
+                  <FontAwesomeIcon icon={profile.isFavoriteInvestigator?farStar:faStar} className="mr-2" />
+                  {profile.isFavoriteInvestigator?"Remove from Favorites":"Add to Favorites"}
+                </>
+              :''}
             </Button>
           </Col>
           <Col sm={2}>
@@ -280,7 +382,7 @@ class Investigator extends React.Component {
 
 
 
-        <InvestigatorProfile />
+        <InvestigatorProfile profile={this.state.profile} />
 
         <Row className="pb-3" style={{ marginTop: '4em'}}>
           <Col sm={12}>
