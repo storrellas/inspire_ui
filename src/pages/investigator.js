@@ -43,6 +43,8 @@ import PanelEvents from '../components/investigator/panelevents';
 import PanelClinicalTrials from '../components/investigator/panelclinicaltrials';
 
 
+
+
 const mapDispatchToProps = (dispatch) => {
   return {
     setPanelRendered: (panel) => dispatch(setPanelRendered(panel)),
@@ -104,8 +106,8 @@ class Investigator extends React.Component {
       let shortOid = oid.split('-')[oid.split('-').length -1 ]
       const token = localStorage.getItem('token')
       const baseUrl = isFavorite?
-        `${process.env.REACT_APP_BASE_URL}/api/remove-favorite-investigators/`:
-        `${process.env.REACT_APP_BASE_URL}/api/add-favorite-investigators/`;
+        `${process.env.REACT_APP_API_URL}/api/remove-favorite-investigators/`:
+        `${process.env.REACT_APP_API_URL}/api/add-favorite-investigators/`;
       const body = { ids: [ shortOid ] }
       const response = await axios.post(baseUrl, body,
         { headers: { "Authorization": "jwt " + token }
@@ -135,7 +137,7 @@ class Investigator extends React.Component {
       this.setState({isLoadingMesh: true})
 
       const token = localStorage.getItem('token')
-      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/meshs/?limit=10&ordering=name&name=${pattern}`,
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/meshs/?limit=10&ordering=name&name=${pattern}`,
         { headers: { "Authorization": "jwt " + token }
       })
 
@@ -190,7 +192,7 @@ class Investigator extends React.Component {
       // Perform request
       let urlParams = `mesh=${meshOid}`;
       const token = localStorage.getItem('token')
-      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/investigators/?${urlParams}`,
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/investigators/?${urlParams}`,
         { headers: { "Authorization": "jwt " + token }
       })
 
@@ -225,7 +227,7 @@ class Investigator extends React.Component {
 
       // Perform request
       const token = localStorage.getItem('token')      
-      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/investigator/${investigatorId}/`,
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/investigator/${investigatorId}/`,
         { headers: { "Authorization": "jwt " + token }
       })
 

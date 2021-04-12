@@ -80,7 +80,7 @@ class PanelAffiliations extends React.Component {
       affiliationsAssociations: undefined,
       currentPage: 1,
       totalPage: 10,
-      take: 10,
+      take: 10, 
       limit: 10,
       isLoading: false,
       dataTable: [],
@@ -96,7 +96,7 @@ class PanelAffiliations extends React.Component {
       const token = localStorage.getItem('token')
 
       // Perform request
-      const url = `${process.env.REACT_APP_BASE_URL}/api/investigator/${this.state.investigatorId}/affiliations-per-institution-type/`
+      const url = `${process.env.REACT_APP_API_URL}/api/investigator/${this.state.investigatorId}/affiliations-per-institution-type/`
       const response = await axios.get(url,
         { headers: { "Authorization": "jwt " + token }
       })
@@ -185,17 +185,17 @@ class PanelAffiliations extends React.Component {
   }
 
   async retrieveAffiliationsUniversities(page = 1) {
-    const base_url = `${process.env.REACT_APP_BASE_URL}/api/investigator/${this.state.investigatorId}/affiliations-universities/`
+    const base_url = `${process.env.REACT_APP_API_URL}/api/investigator/${this.state.investigatorId}/affiliations-universities/`
     this.retrieveAffiliationsInstitution(base_url, page)
   }
 
   async retrieveAffiliationsHospitals(page = 1) {
-    const base_url = `${process.env.REACT_APP_BASE_URL}/api/investigator/${this.state.investigatorId}/affiliations-hospitals/`
+    const base_url = `${process.env.REACT_APP_API_URL}/api/investigator/${this.state.investigatorId}/affiliations-hospitals/`
     this.retrieveAffiliationsInstitution(base_url, page)
   }
 
   async retrieveAffiliationsAssociations(page = 1) {
-    const base_url = `${process.env.REACT_APP_BASE_URL}/api/investigator/${this.state.investigatorId}/affiliations-associations/`
+    const base_url = `${process.env.REACT_APP_API_URL}/api/investigator/${this.state.investigatorId}/affiliations-associations/`
     this.retrieveAffiliationsInstitution(base_url, page)
   }
 

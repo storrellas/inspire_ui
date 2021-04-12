@@ -136,7 +136,7 @@ class InvestigatorTableLegacy extends React.Component {
       }
 
       // Perform request
-      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/investigators/?${urlParams}`,
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/investigators/?${urlParams}`,
         { headers: { "Authorization": "jwt " + token }
       })
 
@@ -181,7 +181,7 @@ class InvestigatorTableLegacy extends React.Component {
       this.setState({isLoadingMesh: true})
 
       const token = localStorage.getItem('token')
-      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/meshs/?limit=10&ordering=name&name=${pattern}`,
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/meshs/?limit=10&ordering=name&name=${pattern}`,
         { headers: { "Authorization": "jwt " + token }
       })
 

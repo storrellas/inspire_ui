@@ -141,7 +141,7 @@ class InvestigatorTable extends React.Component {
       const baseUrl = this.props.favorites?'/api/favorite-investigators/':'/api/investigators/'
 
       // Perform request
-      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}${baseUrl}?${urlParams}`,
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}${baseUrl}?${urlParams}`,
         { headers: { "Authorization": "jwt " + token }
       })
 
@@ -188,7 +188,7 @@ class InvestigatorTable extends React.Component {
       this.setState({isLoadingMesh: true})
 
       const token = localStorage.getItem('token')
-      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/meshs/?limit=10&ordering=name&name=${pattern}`,
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/meshs/?limit=10&ordering=name&name=${pattern}`,
         { headers: { "Authorization": "jwt " + token }
       })
 
@@ -283,8 +283,8 @@ class InvestigatorTable extends React.Component {
       let shortOid = oid.split('-')[oid.split('-').length -1 ]
       const token = localStorage.getItem('token')
       const baseUrl = isFavorite?
-        `${process.env.REACT_APP_BASE_URL}/api/remove-favorite-investigators/`:
-        `${process.env.REACT_APP_BASE_URL}/api/add-favorite-investigators/`;
+        `${process.env.REACT_APP_API_URL}/api/remove-favorite-investigators/`:
+        `${process.env.REACT_APP_API_URL}/api/add-favorite-investigators/`;
       const body = { ids: [ shortOid ] }
       const response = await axios.post(baseUrl, body,
         { headers: { "Authorization": "jwt " + token }

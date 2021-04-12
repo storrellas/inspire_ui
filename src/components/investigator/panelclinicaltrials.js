@@ -190,7 +190,7 @@ class PanelClinicalTrials extends React.Component {
       const token = localStorage.getItem('token')
 
       // Perform request      
-      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/investigator/${this.investigatorId}/clinical-trials-per-condition/`,
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/investigator/${this.investigatorId}/clinical-trials-per-condition/`,
         { headers: { "Authorization": "jwt " + token }
       })
       this.state.dataConditions = response.data.results;      
@@ -216,7 +216,7 @@ class PanelClinicalTrials extends React.Component {
       const token = localStorage.getItem('token')
   
       // Perform request
-      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/investigator/${this.investigatorId}/clinical-trials-per-intervention/`,
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/investigator/${this.investigatorId}/clinical-trials-per-intervention/`,
         { headers: { "Authorization": "jwt " + token }
       })
       this.state.dataInterventions = response.data.results;
@@ -262,7 +262,7 @@ class PanelClinicalTrials extends React.Component {
         urlParams = `${urlParams}&ordering=${sorting}`;
       }
 
-      const url = `${process.env.REACT_APP_BASE_URL}/api/investigator/${this.investigatorId}/clinical-trials/?${urlParams}`;
+      const url = `${process.env.REACT_APP_API_URL}/api/investigator/${this.investigatorId}/clinical-trials/?${urlParams}`;
       const response = await axios.get(url,
         { headers: { "Authorization": "jwt " + token }
       })

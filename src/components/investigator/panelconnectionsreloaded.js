@@ -431,7 +431,7 @@ class PanelConnectionsReloaded extends React.Component {
       let projectOid = params.id;
 
       // Perform request
-      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/investigator/${investigatorId}/connections/?affiliations=true`,
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/investigator/${investigatorId}/connections/?affiliations=true`,
         { headers: { "Authorization": "jwt " + token }
       })
 

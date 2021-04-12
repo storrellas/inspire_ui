@@ -53,7 +53,7 @@ class PanelFeedback extends React.Component {
             message: message
         }
         const token = localStorage.getItem('token')
-        const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/investigator/${shortOid}/submit-feedback/`, body,
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/investigator/${shortOid}/submit-feedback/`, body,
             { headers: { "Authorization": "jwt " + token }
         })
 

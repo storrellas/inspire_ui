@@ -295,7 +295,7 @@ class PanelEvents extends React.Component {
 
 
       // Perform request
-      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/investigator/${this.investigatorId}/events-per-type/`,
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/investigator/${this.investigatorId}/events-per-type/`,
         { headers: { "Authorization": "jwt " + token }
       })
       this.state.dataTypes = response.data.results;
@@ -320,7 +320,7 @@ class PanelEvents extends React.Component {
       const token = localStorage.getItem('token')
   
       // Perform request
-      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/investigator/${this.investigatorId}/events-per-position/`,
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/investigator/${this.investigatorId}/events-per-position/`,
         { headers: { "Authorization": "jwt " + token }
       })
       this.state.dataRoles = response.data.results;
@@ -374,7 +374,7 @@ class PanelEvents extends React.Component {
         urlParams = `${urlParams}&ordering=${sorting}`;
       }
 
-      const url = `${process.env.REACT_APP_BASE_URL}/api/investigator/${this.investigatorId}/events/?${urlParams}`;
+      const url = `${process.env.REACT_APP_API_URL}/api/investigator/${this.investigatorId}/events/?${urlParams}`;
       const response = await axios.get(url,
         { headers: { "Authorization": "jwt " + token }
       })

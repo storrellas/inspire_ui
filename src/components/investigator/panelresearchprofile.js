@@ -55,7 +55,7 @@ class PanelResearchProfile extends React.Component {
       investigatorId = parseInt( investigatorId )
 
       // Perform request
-      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/investigator/${investigatorId}/meshs/`,
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/investigator/${investigatorId}/meshs/`,
         { headers: { "Authorization": "jwt " + token }
       })
 

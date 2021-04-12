@@ -244,7 +244,7 @@ class PanelPublications extends React.Component {
       const token = localStorage.getItem('token')
 
       // Perform request
-      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/investigator/${this.investigatorId}/publications-per-type/`,
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/investigator/${this.investigatorId}/publications-per-type/`,
         {
           headers: { "Authorization": "jwt " + token }
         })
@@ -276,7 +276,7 @@ class PanelPublications extends React.Component {
       investigatorId = parseInt(investigatorId)
 
       // Perform request
-      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/investigator/${investigatorId}/publications-per-year/`,
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/investigator/${investigatorId}/publications-per-year/`,
         {
           headers: { "Authorization": "jwt " + token }
         })
@@ -323,7 +323,7 @@ class PanelPublications extends React.Component {
         urlParams = `${urlParams}&ordering=${sorting}`;
       }
 
-      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/investigator/${this.investigatorId}/publications/?${urlParams}`,
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/investigator/${this.investigatorId}/publications/?${urlParams}`,
         {
           headers: { "Authorization": "jwt " + token }
         })

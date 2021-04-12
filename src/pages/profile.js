@@ -32,7 +32,7 @@ class Profile extends React.Component {
 
       // Get List of projects
       const token = localStorage.getItem('token')
-      const response = await axios.get( `${process.env.REACT_APP_BASE_URL}/api/me/`,
+      const response = await axios.get( `${process.env.REACT_APP_API_URL}/api/me/`,
           { headers: { "Authorization": "jwt " + token }
         })
 
@@ -56,7 +56,7 @@ class Profile extends React.Component {
 
       // Get List of projects
       const token = localStorage.getItem('token')
-      const response = await axios.get( `${process.env.REACT_APP_BASE_URL}/api/projects/?limit=100&offset=0`,
+      const response = await axios.get( `${process.env.REACT_APP_API_URL}/api/projects/?limit=100&offset=0`,
           { headers: { "Authorization": "jwt " + token }
         })
 

@@ -14,6 +14,9 @@ import "./App.scss"
 import Dashboard from './pages/dashboard'
 import Login from './pages/login'
 
+// Axios
+import axios from 'axios';
+
 
 class AppReloaded extends React.Component {
 
@@ -37,5 +40,20 @@ class AppReloaded extends React.Component {
     );
   }
 }
+
+// // Add a response interceptor
+// axios.interceptors.response.use(function (response) {
+//   // Any status code that lie within the range of 2xx cause this function to trigger
+//   // Do something with response data
+//   console.log("all ok")
+//   return response;
+// }, function (error) {
+//   // Any status codes that falls outside the range of 2xx cause this function to trigger
+//   // Do something with response error
+//   alert("error", error)
+//   // Simulate a mouse click:
+//   window.location.href = process.env.REACT_APP_API_URL;
+//   return Promise.reject(error);
+// });
 
 export default withRouter(AppReloaded);
