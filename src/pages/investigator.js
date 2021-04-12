@@ -69,6 +69,8 @@ class Investigator extends React.Component {
       meshScore: 0,
       mesh: { value: '', label: ''},
     }
+
+    this.typingTimeout = undefined
   }
 
   componentDidMount(){
@@ -168,8 +170,7 @@ class Investigator extends React.Component {
       setTimeout(function () {that.loadMesh(pattern);}, 1000)
   }
 
-  onMeshSelected(mesh){
-    const { currentPage } = this.state;
+  async onMeshSelected(mesh){
 
     // Check if mesh is undefined
     if( mesh === undefined || mesh === null ){
@@ -182,7 +183,37 @@ class Investigator extends React.Component {
     meshOid = meshOid.split('-')[meshOid.split('-').length -1 ]
     meshOid = parseInt( meshOid )
 
-    this.setState({showMeshScore: true, mesh: mesh})
+    try{
+
+      // Perform request
+      let urlParams = `mesh=${meshOid}`;
+      const token = localStorage.getItem('token')
+      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/investigators/?${urlParams}`,
+        { headers: { "Authorization": "jwt " + token }
+      })
+
+      clearTimeout(this.typingTimeout);
+
+      
+      // Set State
+      this.setState({showMeshScore: true, mesh: mesh})
+    }catch(error){
+
+      // Error
+      if (error.response) {
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+          console.log(error.request);
+      } else {
+          console.log('Error', error.message);
+      }
+
+    }   
+
+    
+
   }
 
 
