@@ -106,6 +106,7 @@ class InvestigatorTable extends React.Component {
   }
 
   async loadInvestigators(page = 1){
+
     try{
       this.setState({isLoading: true, investigatorList: []})
       const { match: { params } } = this.props;
@@ -289,7 +290,6 @@ class InvestigatorTable extends React.Component {
         { headers: { "Authorization": "jwt " + token }
       })
 
-      console.log("response ", response)
       this.loadInvestigators(currentPage)
 
     }catch(error){

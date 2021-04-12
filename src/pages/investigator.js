@@ -8,12 +8,15 @@ import { withRouter } from 'react-router-dom'
 // Loading Overlay
 import LoadingOverlay from 'react-loading-overlay';
 
+// Axios
+import axios from 'axios';
 
 // Styles
 import "./investigator.scss"
 
 // Font Awesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faStar as farStar } from '@fortawesome/free-regular-svg-icons'
 import { faAngleRight, faAngleDown, faStar, faSearch, faArrowCircleDown, faNewspaper } from '@fortawesome/free-solid-svg-icons'
 
 
@@ -56,6 +59,8 @@ class Investigator extends React.Component {
     super(props)
     this.state = {
       panel: PANEL.CONNECTIONS,
+      oid: undefined,
+      isFavorite: false
     }
   }
 
@@ -76,12 +81,47 @@ class Investigator extends React.Component {
     this.props.setPanelRendered(panel)
   }
 
+  async onSetInvestigatorFavorite(){
+    try{
+      let { oid, isFavorite } = this.state;
+
+      // Set selection      
+      let shortOid = oid.split('-')[oid.split('-').length -1 ]
+      const token = localStorage.getItem('token')
+      const baseUrl = isFavorite?
+        `${process.env.REACT_APP_BASE_URL}/api/remove-favorite-investigators/`:
+        `${process.env.REACT_APP_BASE_URL}/api/add-favorite-investigators/`;
+      const body = { ids: [ shortOid ] }
+      const response = await axios.post(baseUrl, body,
+        { headers: { "Authorization": "jwt " + token }
+      })
+
+      this.setState({isFavorite: !isFavorite})
+    }catch(error){
+
+      // Error
+      if (error.response) {
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+          console.log(error.request);
+      } else {
+          console.log('Error', error.message);
+      }
+
+    } 
+
+  }
+
   render() {
 
 
+    // Grab ME oid
+    const { match: { params } } = this.props;
+    this.state.oid = params.subid;
+
     const { panel } = this.state;
-
-
     return (
       <>
 
@@ -105,9 +145,9 @@ class Investigator extends React.Component {
           </Col> */}
           <Col sm={3}>
             <Button className="w-100 inspire-ghost-button inspire-box-shadow" variant="outline-primary"
-              style={{ paddingLeft: 0, paddingRight: 0 }}>
-              <FontAwesomeIcon icon={faStar} className="mr-2" />
-              Add to Favorites
+              style={{ paddingLeft: 0, paddingRight: 0 }} onClick={(e) => this.onSetInvestigatorFavorite()}>
+              <FontAwesomeIcon icon={this.state.isFavorite?farStar:faStar} className="mr-2" />
+              {this.state.isFavorite?"Remove from Favorites":"Add to Favorites"}
             </Button>
           </Col>
           <Col sm={2}>

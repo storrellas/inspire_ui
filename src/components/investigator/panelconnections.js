@@ -225,6 +225,8 @@ class PanelConnections extends React.Component {
 
   getFiltering(users, connections){
 
+    console.log("connections ", connections)
+
     const { filters } = this.state;
 
     // Initialise filtered connections/users

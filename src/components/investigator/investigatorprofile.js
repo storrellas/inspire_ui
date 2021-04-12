@@ -243,7 +243,6 @@ class InvestigatorProfile extends React.Component {
       this.mapRef.current.setView([lat,lng], 14);
     }
 
-
     return (
       <>
 
@@ -254,8 +253,7 @@ class InvestigatorProfile extends React.Component {
             height={this.props.investigatorFixedTopProfile?'auto':0}
             duration={500}>  
 
-          <div className="d-flex p-3 justify-content-between inspire-box-shadow" 
->
+          <div className="d-flex p-3 justify-content-between inspire-box-shadow">
 
             <div className="d-flex justify-content-center align-items-center">
               <img src={this.state.picture} style={{ width: '100px', borderRadius: '50%' }}></img>
