@@ -51,17 +51,15 @@ class InvestigatorList extends React.Component {
             </Nav.Item>
           </Nav>
           <Row style={{ padding: 0, margin: 0 }}>
-            <Col sm={12} style={{
-              backgroundColor: 'white', border: '1px solid',
+            <Col sm={12} className="page-container" style={{
               borderColor: 'transparent #dee2e6 #dee2e6 #dee2e6', borderRadius: '0 .25rem 0 .25rem',
-              minHeight: '50vh', padding: '2em', overflow: 'hidden'
             }}>
-          <div className={activeTab === TAB.TABLE ? '' : 'd-none'}>
-            <InvestigatorTable />
-          </div>
-          <div className={activeTab === TAB.MAP ? '' : 'd-none'}>
-            {this.state.map}
-          </div>
+              <div className={activeTab === TAB.TABLE ? '' : 'd-none'}>
+                <InvestigatorTable />
+              </div>
+              <div className={activeTab === TAB.MAP ? '' : 'd-none'}>
+                {this.state.map}
+              </div>
             </Col>
           </Row>
 

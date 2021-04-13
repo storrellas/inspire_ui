@@ -228,7 +228,7 @@ class Dashboard extends React.Component {
                                     <Route path={`${this.props.match.path}`} exact
                                         render={(props) => (<ProjectSelector />)} />
                                     <Route path={`${this.props.match.path}project/:id`} exact
-                                        render={(props) => (isMobile?<InvestigatorList />:<InvestigatorListMobile />)} />
+                                        render={(props) => (isMobile?<InvestigatorListMobile />:<InvestigatorList />)} />
                                     <Route path={`${this.props.match.path}favorites`} exact
                                         render={(props) => (<InvestigatorFavoriteList />)} />
                                     <Route path={`${this.props.match.path}project/:id/investigator/:subid`} exact
