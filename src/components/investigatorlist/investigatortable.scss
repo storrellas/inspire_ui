@@ -49,6 +49,16 @@
     background-color: #ECEFF8;
     border-radius: 0 10px 10px 0;
 }
+/* Mobile table */
+.inspire-mobile-table tr td{
+  padding: 0.5em 0 0.5em 0;
+  text-align: center;
+}
+
+.inspire-mobile-table tr td:first-child{
+  padding: 0.5em 0 0.5em 0;
+  text-align: left;
+}
 
 .inspire-table-profile-mobile{
   .folded{

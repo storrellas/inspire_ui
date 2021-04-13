@@ -5,6 +5,8 @@ import { Col, Row, Dropdown, Pagination, Tooltip, OverlayTrigger } from 'react-b
 // React Router
 import { withRouter } from 'react-router-dom'
 
+// Animate Height
+import AnimateHeight from 'react-animate-height';
 
 // Assets
 import arrow from '../../assets/arrow.png';
@@ -256,14 +258,15 @@ class InvestigatorTableMobile extends React.Component {
     }
   }
 
-  onExpandInvestigator(id){
-    console.log("item ", id)
+  onShowInvestigator(id){
     const { investigatorList } = this.state;
-    investigatorList[id].folded = !investigatorList[id].folded;
+    // Keep former value
+    let former = investigatorList[id].show
+    investigatorList.map( x => x.show = false)
 
-    // Expand
-    investigatorList.map( x => x.folded = false)
-    
+    // Expand    
+    investigatorList[id].show = !former;
+
     // Set State
     this.setState({ investigatorList: investigatorList})
   }
@@ -289,7 +292,7 @@ class InvestigatorTableMobile extends React.Component {
           </div>
         </div>
 
-        <table className="w-100 inspire-table" style={{ minHeight: '200px', fontSize: '14px' }}>
+        <table className="w-100 inspire-mobile-table" style={{ minHeight: '200px', fontSize: '14px' }}>
           <thead>
             <tr style={{ border: '1px solid #A4C8E6', borderWidth: '0px 0px 1px 0px' }}>
               <td style={{ width: '15%' }}></td>
@@ -317,8 +320,8 @@ class InvestigatorTableMobile extends React.Component {
               </tr>
               : <tr></tr>}
             {this.state.investigatorList.map((item, id) =>
-              <tr key={id}>
-                <td>
+              [<tr key={id}>
+                <td className="text-center" >
 
                   <img src={item.is_favorite_investigator ? favorite : nonfavorite} width="30"
                     onClick={(e) => this.onSetInvestigatorFavorite(item.oid, item.is_favorite_investigator)}
@@ -328,12 +331,65 @@ class InvestigatorTableMobile extends React.Component {
                 <td>{item.first_name}</td>
                 <td>{item.last_name}</td>
                 <td className="inspire-table-profile-mobile">
-                  <FontAwesomeIcon icon={faAngleDown}  className={item.folded?'unfolded':"folded" }
-                    style={{ fontSize: '14px', color: 'grey' }} 
-                    onClick={ e => this.onExpandInvestigator(id) }/>
+                  <FontAwesomeIcon icon={faAngleDown} className={item.show ? 'unfolded' : "folded"}
+                    style={{ fontSize: '14px', color: 'grey' }}
+                    onClick={e => this.onShowInvestigator(id)} />
                 </td>
 
-              </tr>
+              </tr>,
+                <tr key={id + "_"} className="inspire-table-events-subrow">
+                  <td colSpan="7" className={item.show ? '' : 'd-none'}>
+                    
+                    <AnimateHeight
+                      height={item.show ? 'auto': 0}
+                      duration={250}>
+                      <div className="p-2" style={{ background: '#ECEFF8'}}>
+                        <div className="d-flex">
+                          <div className="w-50">
+                            <div style={{ color: '#8a8a8a', fontSize: '12px'  }}>SPECIALTIES</div>
+                            <div className="inspire-submenu-item">{item.prop_specialties}</div>
+                          </div>
+                          <div className="w-50">
+                            <div style={{ color: '#8a8a8a', fontSize: '12px'  }}>FOCUS AREA</div>
+                            <div className="inspire-submenu-item">{item.focus_areas_reasearch_interests}</div>
+                          </div>
+                        </div>
+                        <div className="d-flex mt-3">
+                          <div className="w-50">
+                            <div style={{ color: '#8a8a8a', fontSize: '12px'  }}>CITY</div>
+                            <div className="inspire-submenu-item">{item.city}</div>
+                          </div>
+                          <div className="w-50">
+                            <div style={{ color: '#8a8a8a', fontSize: '12px'  }}>COUNTRY</div>
+                            <div className="inspire-submenu-item">{item.country}</div>
+                          </div>
+                        </div>
+                        <div className="d-flex mt-3 justify-content-between">
+                          <div>
+                            <div style={{ color: '#8a8a8a', fontSize: '12px'  }}>P</div>
+                            <div>{item.number_linked_publications}</div>
+                          </div>
+                          <div>
+                            <div style={{ color: '#8a8a8a', fontSize: '12px'  }}>E</div>
+                            <div>{item.number_linked_events}</div>
+                          </div>
+                          <div>
+                            <div style={{ color: '#8a8a8a', fontSize: '12px'  }}>CT</div>
+                            <div>{item.number_linked_clinical_trials}</div>
+                          </div>
+                          <div>
+                            <div style={{ color: '#8a8a8a', fontSize: '12px'  }}>COI</div>
+                            <div>{item.number_linked_institutions_coi}</div>
+                          </div>
+                          <div>
+                            <div style={{ color: '#8a8a8a', fontSize: '12px'  }}>SCORE</div>
+                            <div>{item.mesh_counter?item.mesh_counter:'--'}</div>
+                          </div>
+                        </div>
+                      </div>
+                    </AnimateHeight>
+                  </td>
+                </tr>]
             )}
           </tbody>
         </table>
