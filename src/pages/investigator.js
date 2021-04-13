@@ -96,7 +96,7 @@ class Investigator extends React.Component {
 
   async onSetInvestigatorFavorite(){
     try{
-      let { isFavorite } = this.state;
+      let { profile } = this.state;
 
       // Grab ME oid
       const { match: { params } } = this.props;
@@ -105,7 +105,7 @@ class Investigator extends React.Component {
       // Set selection      
       let shortOid = oid.split('-')[oid.split('-').length -1 ]
       const token = localStorage.getItem('token')
-      const baseUrl = isFavorite?
+      const baseUrl = profile.is_favorite_investigator?
         `${process.env.REACT_APP_API_URL}/api/remove-favorite-investigators/`:
         `${process.env.REACT_APP_API_URL}/api/add-favorite-investigators/`;
       const body = { ids: [ shortOid ] }
@@ -113,9 +113,10 @@ class Investigator extends React.Component {
         { headers: { "Authorization": "jwt " + token }
       })
 
-      this.setState({isFavorite: !isFavorite})
+      profile.isFavoriteInvestigator = !profile.isFavoriteInvestigator;
+      this.setState({profile: profile})
     }catch(error){
-      console.log("FAILED")
+      console.log("FAILED", error)
     } 
 
   }
@@ -280,7 +281,6 @@ class Investigator extends React.Component {
   render() {
 
     const { panel, showMeshScore, profile } = this.state;
-
 
     return (
       <>
