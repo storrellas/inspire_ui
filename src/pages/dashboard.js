@@ -23,9 +23,13 @@ import { faUser, faBars, faStar, faAngleRight } from '@fortawesome/free-solid-sv
 // Assets
 import inspireLogo from '../assets/logo2.png';
 
+// Project Imports
+import DetectMobile from '../components/shared/mobiledetect';
+
 // Project imports
 import ProjectSelector from './projectselector';
 import InvestigatorList from './investigatorlist';
+import InvestigatorListMobile from './investigatorlistmobile';
 import InvestigatorFavoriteList from './investigatorfavoritelist';
 import Investigator from './investigator';
 import InvestigatorReloaded from './investigatorreloaded';
@@ -88,6 +92,9 @@ class Dashboard extends React.Component {
         const name = investigatorProfile?investigatorProfile.name:undefined
         const section = this.props.location.pathname.split('/')[2];
 
+        const isMobile = DetectMobile()
+        console.log("mobile", isMobile)
+
         return (
             <div style={{ position: 'relative' }}>
                 <div className="hamburguer">
@@ -148,49 +155,27 @@ class Dashboard extends React.Component {
                                         </span>
                                     </div>
                                 </div>
-
-                                {/* <div className="mt-3" style={{ cursor: 'pointer' }}>
-                                    <div className="d-flex font-weight-bold">
-                                        <div><FontAwesomeIcon icon={faQuestionCircle} /></div>
-                                        <span className="align-self-end ml-2" style={{ flexGrow: 1 }}>Navigation3</span>
-                                    </div>
-                                </div>
-
-                                <div className="mt-3" style={{ cursor: 'pointer' }}>
-                                    <div className="d-flex font-weight-bold">
-                                        <div><FontAwesomeIcon icon={faTasks} /></div>
-                                        <span className="align-self-end ml-2" style={{ flexGrow: 1 }}>Navigation4</span>
-                                    </div>
-                                </div> */}
                             </div>
                             <div className="pb-3">
+                              <div className="mt-3" style={{ cursor: 'pointer' }}>
+                                  <div className="d-flex font-weight-bold">
+                                      <div><FontAwesomeIcon icon={faUser} /></div>
+                                      <span className="align-self-end ml-2" style={{ flexGrow: 1 }}
+                                      onClick={(e) => this.setState({ userHeight: this.state.userHeight == 0 ? 'auto' : 0 })}>{username}</span>
 
-                                {/* <div className="mt-3" style={{ cursor: 'pointer' }}>
-                                    <div className="d-flex font-weight-bold">
-                                        <div><FontAwesomeIcon icon={faQuestionCircle} /></div>
-                                        <span className="align-self-end ml-2" style={{ flexGrow: 1 }}>Navigation3</span>
-                                    </div>
-                                </div> */}
-                                <div className="mt-3" style={{ cursor: 'pointer' }}>
-                                    <div className="d-flex font-weight-bold">
-                                        <div><FontAwesomeIcon icon={faUser} /></div>
-                                        <span className="align-self-end ml-2" style={{ flexGrow: 1 }}
-                                        onClick={(e) => this.setState({ userHeight: this.state.userHeight == 0 ? 'auto' : 0 })}>{username}</span>
-
-                                    </div>
-                                    <AnimateHeight
-                                            height={this.state.userHeight}
-                                            duration={500}>
-                                        <div className="inspire-submenu-item">
-                                            <a href="/dashboard/profile" style={{ color: 'white', marginLeft: '1em' }}>Profile</a>
-                                        </div>
-                                        <div className="inspire-submenu-item">
-                                            <a href="#" style={{ color: 'white', marginLeft: '1em' }}
-                                            onClick={(e) => this.logout(e)}>Logout</a>
-                                        </div>
-                                    </AnimateHeight>
-                                </div>
-
+                                  </div>
+                                  <AnimateHeight
+                                          height={this.state.userHeight}
+                                          duration={500}>
+                                      <div className="inspire-submenu-item">
+                                          <a href="/dashboard/profile" style={{ color: 'white', marginLeft: '1em' }}>Profile</a>
+                                      </div>
+                                      <div className="inspire-submenu-item">
+                                          <a href="#" style={{ color: 'white', marginLeft: '1em' }}
+                                          onClick={(e) => this.logout(e)}>Logout</a>
+                                      </div>
+                                  </AnimateHeight>
+                              </div>
                             </div>
                         </div>
 
@@ -243,7 +228,7 @@ class Dashboard extends React.Component {
                                     <Route path={`${this.props.match.path}`} exact
                                         render={(props) => (<ProjectSelector />)} />
                                     <Route path={`${this.props.match.path}project/:id`} exact
-                                        render={(props) => (<InvestigatorList />)} />
+                                        render={(props) => (isMobile?<InvestigatorList />:<InvestigatorListMobile />)} />
                                     <Route path={`${this.props.match.path}favorites`} exact
                                         render={(props) => (<InvestigatorFavoriteList />)} />
                                     <Route path={`${this.props.match.path}project/:id/investigator/:subid`} exact

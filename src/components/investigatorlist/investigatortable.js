@@ -33,6 +33,7 @@ import LoadingOverlay from 'react-loading-overlay';
 import InspirePagination from '../shared/pagination'
 import SearchHeader, { SEARCH_HEADER } from '../shared/searchheader'
 
+
 const FILTERING = [
   { 
     dataField:'first_name', caption: 'firstName', width: '10%',
@@ -295,7 +296,7 @@ class InvestigatorTable extends React.Component {
       </Tooltip>
     );
 
-       
+
 
 
     return (
