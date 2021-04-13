@@ -11,7 +11,7 @@ import { withRouter } from 'react-router-dom'
 // Assets
 
 // Project imports
-import InvestigatorTable from '../components/investigatorlist/investigatortable';
+import InvestigatorTableMobile from '../components/investigatorlist/investigatortablemobile';
 import InvestigatorMap from '../components/investigatorlist/investigatormap';
 // Lazy import 
 //const InvestigatorMap = React.lazy(() => import('../components/investigatorlist/investigatormap'));
@@ -41,11 +41,12 @@ class InvestigatorListMobile extends React.Component {
     }
     return (
       <Row className='mt-3 mb-3'>        
-      <div>THIS IS MOBILE</div>
-        <Col sm={12} className="page-container" style={{
+        <h5 className="ml-2">Project Results</h5>
+        <Col sm={12} className="p-2 page-container" style={{
             borderColor: 'transparent #dee2e6 #dee2e6 #dee2e6', borderRadius: '0 .25rem 0 .25rem',
+            
           }}>
-          <InvestigatorTable />
+          <InvestigatorTableMobile />
 
         </Col>
       </Row>);

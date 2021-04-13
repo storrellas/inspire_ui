@@ -290,15 +290,6 @@ class InvestigatorTable extends React.Component {
   render() {
     const { currentPage, totalPage, meshOptions, sorting } = this.state;
 
-    const renderTooltip = (props) => (
-      <Tooltip id="button-tooltip" {...props}>
-        Simple tooltip
-      </Tooltip>
-    );
-
-
-
-
     return (
       <>
         <div className="d-flex justify-content-end pt-3 pb-3">
