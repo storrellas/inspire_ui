@@ -326,7 +326,7 @@ class Investigator extends React.Component {
 
           <Col sm={3}>
             {profile?
-            <Button className={profile.isFavoriteInvestigator?"w-100 inspire-ghost-button inspire-box-shadow":"w-100 inspire-button inspire-box-shadow"} 
+            <Button className={profile.isFavoriteInvestigator?"w-100 inspire-button inspire-box-shadow":"w-100 inspire-ghost-button inspire-box-shadow"} 
               variant="outline-primary"
               style={{ paddingLeft: 0, paddingRight: 0 }} onClick={(e) => this.onSetInvestigatorFavorite()}>
 
