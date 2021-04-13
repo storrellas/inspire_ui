@@ -95,6 +95,8 @@ class Dashboard extends React.Component {
         const isMobile = DetectMobile()
         return (
             <div style={{ position: 'relative' }}>
+
+                {!isMobile?
                 <div className="hamburguer">
                     <div style={{
                         backgroundColor: '#343547', margin: '0.5em',
@@ -104,8 +106,8 @@ class Dashboard extends React.Component {
                         <FontAwesomeIcon icon={faBars}
                             onClick={(e) => this.setState({ isToggled: !isToggled })} />
                     </div>
-
                 </div>
+                :''}
 
                 <div className={isToggled ? "d-flex inspire-wrapper" : "d-flex inspire-wrapper toggled"}>
                     <div className="inspire-overlay"
@@ -179,68 +181,78 @@ class Dashboard extends React.Component {
 
                     </div>
                     <div className="inspire-page-content" onScroll={(e) => this.onScroll(e)}>
-                        <Container>
-                            <Row className="inspire-breadcrumb">
-                                <Col sm={12}>
-                                    <div className="d-flex">
-                                        {(section!=='')?
-                                            <>
-                                                <div><a href="/dashboard/">Select Plan</a></div>
-                                            </>
-                                        :''}                                                
-                                        
-                                        {(section==='project')?
-                                            <>
-                                                <div className="ml-2">
-                                                    <FontAwesomeIcon icon={faAngleRight} />
-                                                </div>
-                                                <div className="ml-2">
-                                                    {name === undefined?
-                                                    <div>Medical Experts</div>
-                                                    :                                                    
-                                                    <a href={`/dashboard/project/${projectOid}`}>Medical Experts</a>
-                                                    }
-                                                </div>
-                                            </>
-                                        :''}
+                      {isMobile?                
+                        <div style={{
+                          color:'grey', margin: '0.5em',
+                          padding: '0.1em 0.4em 0.1em 0.4em'
+                        }}>
+                          <FontAwesomeIcon icon={faBars}
+                            onClick={(e) => this.setState({ isToggled: !isToggled })} />
+                        </div>
+                      :''}
+                      <Container>
+                        
+                          <Row className={isMobile?'':"inspire-breadcrumb"}>
+                              <Col sm={12}>
+                                  <div className="d-flex">
+                                      {(section!=='')?
+                                          <>
+                                              <div><a href="/dashboard/">Select Plan</a></div>
+                                          </>
+                                      :''}                                                
+                                      
+                                      {(section==='project')?
+                                          <>
+                                              <div className="ml-2">
+                                                  <FontAwesomeIcon icon={faAngleRight} />
+                                              </div>
+                                              <div className="ml-2">
+                                                  {name === undefined?
+                                                  <div>Medical Experts</div>
+                                                  :                                                    
+                                                  <a href={`/dashboard/project/${projectOid}`}>Medical Experts</a>
+                                                  }
+                                              </div>
+                                          </>
+                                      :''}
 
-                                        {(section==='favorites')?
-                                            <>
-                                                <div className="ml-2">
-                                                    <FontAwesomeIcon icon={faAngleRight} />
-                                                </div>                                        
-                                                <div className="ml-2">Favorites</div>
-                                            </>
-                                        :''}
-                                        {name!==undefined?
-                                            <>
-                                                <div className="ml-2"><FontAwesomeIcon icon={faAngleRight} /></div>
-                                                <div className="ml-2">{name}</div>
-                                            </>
-                                        :''}
-                                    </div>
-                                </Col>
-                            </Row>
-                            <Row className="inspire-content-reloaded">
-                                <Col sm={12}>
-                                    <Route path={`${this.props.match.path}`} exact
-                                        render={(props) => (<ProjectSelector />)} />
-                                    <Route path={`${this.props.match.path}project/:id`} exact
-                                        render={(props) => (isMobile?<InvestigatorListMobile />:<InvestigatorList />)} />
-                                    <Route path={`${this.props.match.path}favorites`} exact
-                                        render={(props) => (<InvestigatorFavoriteList />)} />
-                                    <Route path={`${this.props.match.path}project/:id/investigator/:subid`} exact
-                                        render={(props) => (<Investigator />)} />
-                                        
-                                    <Route path={`${this.props.match.path}project/:id/investigator/reloaded/:subid`} exact
-                                        render={(props) => (<InvestigatorReloaded/>)} />
+                                      {(section==='favorites')?
+                                          <>
+                                              <div className="ml-2">
+                                                  <FontAwesomeIcon icon={faAngleRight} />
+                                              </div>                                        
+                                              <div className="ml-2">Favorites</div>
+                                          </>
+                                      :''}
+                                      {name!==undefined?
+                                          <>
+                                              <div className="ml-2"><FontAwesomeIcon icon={faAngleRight} /></div>
+                                              <div className="ml-2">{name}</div>
+                                          </>
+                                      :''}
+                                  </div>
+                              </Col>
+                          </Row>
+                          <Row className="inspire-content-reloaded">
+                              <Col sm={12}>
+                                  <Route path={`${this.props.match.path}`} exact
+                                      render={(props) => (<ProjectSelector />)} />
+                                  <Route path={`${this.props.match.path}project/:id`} exact
+                                      render={(props) => (isMobile?<InvestigatorListMobile />:<InvestigatorList />)} />
+                                  <Route path={`${this.props.match.path}favorites`} exact
+                                      render={(props) => (<InvestigatorFavoriteList />)} />
+                                  <Route path={`${this.props.match.path}project/:id/investigator/:subid`} exact
+                                      render={(props) => (<Investigator />)} />
+                                      
+                                  <Route path={`${this.props.match.path}project/:id/investigator/reloaded/:subid`} exact
+                                      render={(props) => (<InvestigatorReloaded/>)} />
 
-                                    <Route path={`${this.props.match.path}profile`} exact
-                                        render={(props) => (<Profile />)} />
+                                  <Route path={`${this.props.match.path}profile`} exact
+                                      render={(props) => (<Profile />)} />
 
-                                </Col>
-                            </Row>
-                        </Container>
+                              </Col>
+                          </Row>
+                      </Container>
                     </div>
                 </div>
             </div>);
