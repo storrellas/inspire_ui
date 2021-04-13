@@ -112,11 +112,16 @@ class InvestigatorTableMobile extends React.Component {
 
       clearTimeout(this.typingTimeout);
 
-      
+
+      // Added folded attribute      
+      const investigatorList = response.data.results;
+      investigatorList.map( x => x.folded = false)
+
+
       // Set State
       const totalPage = Math.ceil(response.data.count / take);
       this.setState({
-        investigatorList: response.data.results, 
+        investigatorList: investigatorList, 
         projectOid: projectOid,
         currentPage: page,
         totalPage: totalPage,
@@ -251,6 +256,18 @@ class InvestigatorTableMobile extends React.Component {
     }
   }
 
+  onExpandInvestigator(id){
+    console.log("item ", id)
+    const { investigatorList } = this.state;
+    investigatorList[id].folded = !investigatorList[id].folded;
+
+    // Expand
+    investigatorList.map( x => x.folded = false)
+    
+    // Set State
+    this.setState({ investigatorList: investigatorList})
+  }
+
   render() {
     const { currentPage, totalPage, meshOptions, sorting } = this.state;
 
@@ -285,7 +302,6 @@ class InvestigatorTableMobile extends React.Component {
                     <FontAwesomeIcon icon={faLongArrowAltDown} className={sorting == `-${item.dataField}` ? "ml-1" : "ml-1 d-none"} style={{ color: 'grey' }} />
                   </div>
                 </td>
-  
               )}
               <td style={{ width: '15%' }}></td>
             </tr>
@@ -311,14 +327,10 @@ class InvestigatorTableMobile extends React.Component {
                 </td>
                 <td>{item.first_name}</td>
                 <td>{item.last_name}</td>
-                <td>
-                  <FontAwesomeIcon icon={faAngleDown} style={{ fontSize: '14px', color: 'grey' }} />
-
-                
-
-                  {/* <img src={arrow} width="30"
-                    onClick={(e) => this.props.history.push(`/dashboard/project/${this.state.projectOid}/investigator/${item.oid}`)}
-                    style={{ cursor: 'pointer' }}></img> */}
+                <td className="inspire-table-profile-mobile">
+                  <FontAwesomeIcon icon={faAngleDown}  className={item.folded?'unfolded':"folded" }
+                    style={{ fontSize: '14px', color: 'grey' }} 
+                    onClick={ e => this.onExpandInvestigator(id) }/>
                 </td>
 
               </tr>

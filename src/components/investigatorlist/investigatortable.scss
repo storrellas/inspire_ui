@@ -49,3 +49,14 @@
     background-color: #ECEFF8;
     border-radius: 0 10px 10px 0;
 }
+
+.inspire-table-profile-mobile{
+  .folded{
+      transition: all 0.5s;
+      transform: rotate(0deg);
+  }
+  .unfolded{
+      transition: all 0.5s;
+      transform: rotate(180deg);
+  }
+}

@@ -93,8 +93,6 @@ class Dashboard extends React.Component {
         const section = this.props.location.pathname.split('/')[2];
 
         const isMobile = DetectMobile()
-        console.log("mobile", isMobile)
-
         return (
             <div style={{ position: 'relative' }}>
                 <div className="hamburguer">
