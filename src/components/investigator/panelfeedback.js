@@ -8,6 +8,15 @@ import { Form, Alert} from 'react-bootstrap';
 // Axios
 import axios from 'axios';
 
+// Redux
+import { connect } from "react-redux";
+
+const mapStateToProps = state => {
+  return {
+    tabFeedbackOpened: state.tabFeedbackOpened,
+  };
+};
+
 class PanelFeedback extends React.Component {
 
   constructor(props) {
@@ -17,7 +26,7 @@ class PanelFeedback extends React.Component {
         ticketPriority: '',
         message: '',
         showResponse: false,
-        showError: false,
+        showError: false
     }
 
     this.ticketTypeOptions = [
@@ -66,46 +75,59 @@ class PanelFeedback extends React.Component {
       this.setState({showError:true})
       console.log("FAILED")
     } 
-
   }
 
 
   render() {
     const { ticketType, ticketPriority, message, showResponse, showError } = this.state;
 
+    if( this.props.tabFeedbackOpened == false ){
+      this.state.showResponse = false;
+      this.state.showError = false;
+    }
+
     return (
-      <div>
-        <div style={{ padding: '1em 20% 1em 20%'}}>
+      <div style={{ padding: '1em 20% 1em 20%', }}>
+        <div style={{  position: 'relative'}}>
+          
+          <div className={showResponse||showError?'invisible':''}>
+            <Form.Group controlId="exampleForm.ControlSelect1">
+              <Form.Label>Ticket Type</Form.Label>
+              <Form.Control as="select" onChange={e => this.setState({ ticketType: e.target.value })} value={ticketType}>
+                  {this.ticketTypeOptions.map( (item, id ) =>
+                      <option  key={id} value={item.value}>{item.label}</option>
+                  )}
+              </Form.Control>
+            </Form.Group>
 
-          <Form.Group controlId="exampleForm.ControlSelect1">
-            <Form.Label>Ticket Type</Form.Label>
-            <Form.Control as="select" onChange={e => this.setState({ ticketType: e.target.value })} value={ticketType}>
-                {this.ticketTypeOptions.map( (item, id ) =>
-                    <option  key={id} value={item.value}>{item.label}</option>
-                )}
-            </Form.Control>
-          </Form.Group>
+            <Form.Group controlId="exampleForm.ControlSelect1">
+              <Form.Label>Ticket Priority</Form.Label>
+              <Form.Control as="select" onChange={e => this.setState({ ticketPriority: e.target.value })}  value={ticketPriority}>
+                  {this.ticketPriorityOptions.map( (item, id ) =>
+                      <option key={id} value={item.value}>{item.label}</option>
+                  )}
+              </Form.Control>
+            </Form.Group>
 
-          <Form.Group controlId="exampleForm.ControlSelect1">
-            <Form.Label>Ticket Priority</Form.Label>
-            <Form.Control as="select" onChange={e => this.setState({ ticketPriority: e.target.value })}  value={ticketPriority}>
-                {this.ticketPriorityOptions.map( (item, id ) =>
-                    <option key={id} value={item.value}>{item.label}</option>
-                )}
-            </Form.Control>
-          </Form.Group>
-
-          <Form.Label className="mt-2">
-            Feedback Comment
-          </Form.Label>
-          <textarea className="w-100" rows="8" 
-            style={{ borderColor: '#ced4da', resize: 'none'}}
-            onChange={e => this.setState({ message: e.target.value })}
-            value={message} >
-                    
-          </textarea>
-        
-          <div className="mt-3">
+            <Form.Label className="mt-2">
+              Feedback Comment
+            </Form.Label>
+            <textarea className="w-100" rows="8" 
+              style={{ borderColor: '#ced4da', resize: 'none'}}
+              onChange={e => this.setState({ message: e.target.value })}
+              value={message} >
+                      
+            </textarea>
+            <div className="w-100" style={{ padding: '0 20% 0 20%'}}>
+              <button className="mt-3 w-100 inspire-button"
+                  style={{ padding: '0.5em 1em 0.5em 1em' }}
+                  onClick={ (e) => this.onSubmitFeedback()}>
+                  Send Feedback
+              </button>
+            </div>
+          </div>
+          
+          <div className="mt-3 w-100" style={{ position: 'absolute', top: 0}}>
             <Alert className={showResponse?'text-center':'d-none'} variant="primary">
                 Your feedback has been submitted!
             </Alert>
@@ -113,18 +135,16 @@ class PanelFeedback extends React.Component {
                 You need to add a message
             </Alert>
           </div>
+        
+
           
 
-          <div className="w-100" style={{ padding: '0 20% 0 20%'}}>
-            <button className="mt-3 w-100 inspire-button"
-                style={{ padding: '0.5em 1em 0.5em 1em' }}
-                onClick={ (e) => this.onSubmitFeedback()}>
-                Send Feedback
-            </button>
-          </div>
+
         </div>
       </div>);
   }
 }
 
-export default withRouter(PanelFeedback);
+
+export default connect(mapStateToProps, undefined)(withRouter(PanelFeedback))
+

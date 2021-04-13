@@ -87,10 +87,11 @@ class Investigator extends React.Component {
   onSetPanel(panel) {      
     this.setState({ panel })
     // These panels do not require to trigger action
-    if( panel === PANEL.AFFILIATIONS ||
-      panel === PANEL.FEEDBACK ){
-        return
-    }    
+    // if( panel === PANEL.AFFILIATIONS ||
+    //   panel === PANEL.FEEDBACK ){
+    //     return
+    // }    
+    console.log("Firing event", panel)
     this.props.setPanelRendered(panel)
   }
 

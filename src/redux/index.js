@@ -27,6 +27,7 @@ export const PANEL_RESEARCH_PROFILE_OPENED = "PANEL_RESEARCH_PROFILE_OPENED";
 export const PANEL_PUBLICATIONS_OPENED = "PANEL_PUBLICATIONS_OPENED";
 export const PANEL_EVENTS_OPENED = "PANEL_EVENTS_OPENED";
 export const PANEL_CLINICAL_TRIALS_OPENED = "PANEL_CLINICAL_TRIALS_OPENED";
+export const PANEL_FEEDBACK_OPENED = "PANEL_FEEDBACK_OPENED";
 
 export const INVESTIGATOR_PROFILE = "INVESTIGATOR_PROFILE";
 export const INVESTIGATOR_FIXED_TOP_PROFILE = "INVESTIGATOR_FIXED_PROFILE";
@@ -40,15 +41,19 @@ export function setPanelRendered(panel) {
     return { type: PANEL_CONNECTIONS_OPENED }
   if( panel == PANEL.COMPANY_COOPERATION ) 
     return { type: PANEL_COMPANY_COOPERATION_OPENED }
-
+  if( panel == PANEL.AFFILIATIONS ) 
+    return { type: PANEL_AFFILIATIONS_OPENED }
   if( panel == PANEL.RESEARCH_PROFILE ) 
     return { type: PANEL_RESEARCH_PROFILE_OPENED } 
+
   if( panel == PANEL.PUBLICATIONS ) 
     return { type: PANEL_PUBLICATIONS_OPENED } 
   if( panel == PANEL.EVENTS ) 
     return { type: PANEL_EVENTS_OPENED } 
   if( panel == PANEL.CLINICAL_TRIALS ) 
     return { type: PANEL_CLINICAL_TRIALS_OPENED }
+  if( panel == PANEL.FEEDBACK ) 
+    return { type: PANEL_FEEDBACK_OPENED }
 };
 
 export function resetPanel() {
@@ -68,11 +73,13 @@ export function setInvestigatorFixedTopProfile(payload) {
 const initialState = {
   tabConnectionsOpened: false,
   tabCompanyCooperationOpened: false,
-  
+  tabAffiliationsOpened: false,  
   tabResearchProfileOpened: false,
+
   tabPublicationsOpened: false,
   tabEventsOpened: false,
   tabClinicalTrialsOpened: false,
+  tabFeedbackOpened: false,
 
   investigatorProfile: undefined,
 
@@ -81,25 +88,111 @@ const initialState = {
 
 export function rootReducer(state = initialState, action) {
   if (action.type === PANEL_CONNECTIONS_OPENED) {
-    return { ...state, tabConnectionsOpened: true };    
+    return { ...state, 
+              tabConnectionsOpened: true,
+              tabCompanyCooperationOpened: false,
+              tabAffiliationsOpened: false,  
+              tabResearchProfileOpened: false,
+            
+              tabPublicationsOpened: false,
+              tabEventsOpened: false,
+              tabClinicalTrialsOpened: false,
+              tabFeedbackOpened: false,
+            };    
   }
   if (action.type === PANEL_COMPANY_COOPERATION_OPENED) {
-    return { ...state, tabCompanyCooperationOpened: true };    
+    return { ...state, 
+            tabConnectionsOpened: false,
+            tabCompanyCooperationOpened: true,
+            tabAffiliationsOpened: false,  
+            tabResearchProfileOpened: false,
+          
+            tabPublicationsOpened: false,
+            tabEventsOpened: false,
+            tabClinicalTrialsOpened: false,
+            tabFeedbackOpened: false,
+    };    
+  }
+  if (action.type === PANEL_AFFILIATIONS_OPENED) {
+    return { ...state, 
+      tabConnectionsOpened: false,
+      tabCompanyCooperationOpened: false,
+      tabAffiliationsOpened: true,  
+      tabResearchProfileOpened: false,
+    
+      tabPublicationsOpened: false,
+      tabEventsOpened: false,
+      tabClinicalTrialsOpened: false,
+      tabFeedbackOpened: false,
+     };    
+  }
+  if (action.type === PANEL_RESEARCH_PROFILE_OPENED) {
+    return { ...state, 
+      tabConnectionsOpened: false,
+      tabCompanyCooperationOpened: false,
+      tabAffiliationsOpened: false,  
+      tabResearchProfileOpened: true,
+    
+      tabPublicationsOpened: false,
+      tabEventsOpened: false,
+      tabClinicalTrialsOpened: false,
+      tabFeedbackOpened: false,
+    };    
   }
 
-  
-  if (action.type === PANEL_RESEARCH_PROFILE_OPENED) {
-    return { ...state, tabResearchProfileOpened: true };    
-  }
   if (action.type === PANEL_PUBLICATIONS_OPENED) {
-    return { ...state, tabPublicationsOpened: true };    
+    return { ...state, 
+      tabConnectionsOpened: false,
+      tabCompanyCooperationOpened: false,
+      tabAffiliationsOpened: false,  
+      tabResearchProfileOpened: false,
+    
+      tabPublicationsOpened: true,
+      tabEventsOpened: false,
+      tabClinicalTrialsOpened: false,
+      tabFeedbackOpened: false,
+    };    
   }
   if (action.type === PANEL_EVENTS_OPENED) {
-    return { ...state, tabEventsOpened: true };
+    return { ...state, 
+      tabConnectionsOpened: false,
+      tabCompanyCooperationOpened: false,
+      tabAffiliationsOpened: false,  
+      tabResearchProfileOpened: false,
+    
+      tabPublicationsOpened: false,
+      tabEventsOpened: true,
+      tabClinicalTrialsOpened: false,
+      tabFeedbackOpened: false,
+    };
   }
   if (action.type === PANEL_CLINICAL_TRIALS_OPENED) {
-    return { ...state, tabClinicalTrialsOpened: true };
+    return { ...state, 
+      tabConnectionsOpened: false,
+      tabCompanyCooperationOpened: false,
+      tabAffiliationsOpened: false,  
+      tabResearchProfileOpened: false,
+    
+      tabPublicationsOpened: false,
+      tabEventsOpened: false,
+      tabClinicalTrialsOpened: true,
+      tabFeedbackOpened: false,
+    };
   }
+  if (action.type === PANEL_FEEDBACK_OPENED) {
+    return { ...state, 
+      tabConnectionsOpened: false,
+      tabCompanyCooperationOpened: false,
+      tabAffiliationsOpened: false,  
+      tabResearchProfileOpened: false,
+    
+      tabPublicationsOpened: false,
+      tabEventsOpened: false,
+      tabClinicalTrialsOpened: false,
+      tabFeedbackOpened: true,
+     };
+  }
+
 
   if (action.type === PANEL_RESET) {
     return { ...state, 
