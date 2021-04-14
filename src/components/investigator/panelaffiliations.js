@@ -408,13 +408,13 @@ class PanelAffiliations extends React.Component {
               {dataTable.map((item, id) =>
                 <tr key={id}>
                   <td style={{ width: '10%'}}>{item.position__name}</td>
-                  <td style={{ width: '200px'}}>
-                    <EllipsisWithTooltip placement="bottom" style={{ width: '300px'}}>
+                  <td style={{ width: '20%'}}>
+                    <EllipsisWithTooltip placement="bottom" style={{ width: '150px'}}>
                     {item.institution__parent_name || ''}
                     </EllipsisWithTooltip>
                   </td>
                   <td style={{ width: '20%'}}>
-                    <EllipsisWithTooltip placement="bottom" style={{ width: '100px'}}>
+                    <EllipsisWithTooltip placement="bottom" style={{ width: '150px'}}>
                     {item.institution__department || ''}
                     </EllipsisWithTooltip>
                   </td>

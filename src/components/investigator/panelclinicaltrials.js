@@ -353,7 +353,7 @@ class PanelClinicalTrials extends React.Component {
             {dataTable.map((item, id) =>
               <tr key={id}>
                 {FILTERING.map( (header, id ) => 
-                  <td key={id}  style={{ width: '20%'}}>{item[header.dataField]}</td>
+                  <td key={id} className="pl-3 pr-3">{item[header.dataField]}</td>
                 )}
               </tr>
             )}
