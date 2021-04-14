@@ -638,22 +638,21 @@ class PanelConnections extends React.Component {
     const centerX = 50;
     const centerY = 50;
     const radius = 7;
-    const steps = 8;
+    let nItemsPerCircle = 8;
     let nCircle = 1;
 
     const { usersFiltered, connectionsFiltered } = this.state;
 
+    /*
     let children  = []
-    for (const [idx, user] of usersFiltered.slice(1).entries()){
-      
-
-      nCircle = Math.floor( (idx) / (steps * nCircle) ) + 1;
+    for (const [idx, user] of usersFiltered.entries()){
+      nCircle = Math.floor( (idx) / (nItemsPerCircle * nCircle) ) + 1;
 
       console.log("idx ", idx, nCircle)
 
 
-      let x = (centerX + radius * nCircle * Math.cos(2 * Math.PI * idx / (steps * nCircle) ));
-      let y = (centerY + radius * nCircle * Math.sin(2 * Math.PI * idx / (steps * nCircle) ));
+      let x = (centerX + radius * nCircle * Math.cos(2 * Math.PI * idx / (nItemsPerCircle * nCircle) ));
+      let y = (centerY + radius * nCircle * Math.sin(2 * Math.PI * idx / (nItemsPerCircle * nCircle) ));
 
       children.push({
         name:user.label,
@@ -663,7 +662,29 @@ class PanelConnections extends React.Component {
         y: am4core.percent(y),    
       })
 
-      if( children.length > steps * 3 ) break;
+      if( children.length > nItemsPerCircle * 3 ) break;
+    }
+    /**/
+
+    let children  = []
+    for (const [idx, user] of usersFiltered.entries()){
+      nCircle = Math.floor( (idx) / (nItemsPerCircle) ) + 1;
+
+      console.log("idx ", idx, nCircle)
+
+
+      let x = (centerX + radius * nCircle * Math.cos(2 * Math.PI * idx / (nItemsPerCircle) ));
+      let y = (centerY + radius * nCircle * Math.sin(2 * Math.PI * idx / (nItemsPerCircle) ));
+
+      children.push({
+        name:user.label,
+        distance: 5,
+        fixed: true,
+        x: am4core.percent(x),
+        y: am4core.percent(y),    
+      })
+
+      if( children.length > nItemsPerCircle * 3 ) break;
     }
 
     networkSeries.data = [  
