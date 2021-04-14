@@ -212,7 +212,7 @@ class InvestigatorProfile extends React.Component {
                       <AnimateHeight
                           height={this.state.snapshotSpecialties?'auto':0}
                           duration={500}>  
-                      {this.props.profile.specialties}
+                      <>{this.props.profile.specialties}</>
                       </AnimateHeight> 
                     </div>
 
@@ -232,7 +232,7 @@ class InvestigatorProfile extends React.Component {
                         <AnimateHeight
                           height={this.state.snapshotFocusArea?'auto':0}
                           duration={500}>  
-                        {this.props.profile.focusArea}
+                        <>{this.props.profile.focusArea}</>
                         </AnimateHeight> 
                     </div>
                   </div>

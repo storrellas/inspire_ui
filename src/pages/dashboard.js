@@ -193,6 +193,7 @@ class Dashboard extends React.Component {
                       <Container>
                         
                           <Row className={isMobile?'':"inspire-breadcrumb"}>
+                            
                               <Col sm={12}>
                                   <div className="d-flex">
                                       {(section!=='')?

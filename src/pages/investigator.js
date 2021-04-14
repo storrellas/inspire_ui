@@ -145,6 +145,14 @@ class Investigator extends React.Component {
       })
 
       profile.isFavoriteInvestigator = !profile.isFavoriteInvestigator;
+
+      this.props.setInvestigatorProfile({
+        name: profile.name,
+        affiliationInstitution: profile.affiliationInsititution,
+        picture: profile.picture
+      })
+
+
       this.setState({profile: profile})
     }catch(error){
       console.log("FAILED", error)
@@ -299,9 +307,9 @@ class Investigator extends React.Component {
 
       //
       this.props.setInvestigatorProfile({
-        name: this.state.name,
-        affiliationInstitution: this.state.affiliationInsititution,
-        picture: this.state.picture
+        name: profile.name,
+        affiliationInstitution: profile.affiliationInsititution,
+        picture: profile.picture
       })
 
     }catch(error){
