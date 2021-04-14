@@ -21,9 +21,12 @@ import euler from 'cytoscape-euler';
 import Select from 'react-select'
 
 // Project imports
-import sourceFile from './source'
 import userGray from '../../assets/userGray.png';
 
+/* Imports */
+import * as am4core from "@amcharts/amcharts4/core";
+import * as am4charts from "@amcharts/amcharts4/charts";
+import * as am4plugins_forceDirected from "@amcharts/amcharts4/plugins/forceDirected"; 
 
 // Redux
 import { connect } from "react-redux";
@@ -81,7 +84,7 @@ const connectionTypeOptions = [
 ];
 
 
-const TAB = { NETWORK: 1, PROFILES: 2, }
+const TAB = { NETWORK: 1, PROFILES: 2, RELOADED: 3 }
 class PanelConnections extends React.Component {
 
   constructor(props) {
@@ -518,7 +521,6 @@ class PanelConnections extends React.Component {
   componentDidMount(){
     if( this.state.users.length == 0 && this.props.investigatorProfile)
       this.retrieveConnections()
-
   }
 
   componentDidUpdate(){
@@ -571,8 +573,142 @@ class PanelConnections extends React.Component {
       all, clinicalTrials, events,
       publications, institutionsPast, institutionsPresent
     };
-}
+  }
 
+  generateNetworkChart(){
+    this.chart = am4core.create("connectionschart", am4plugins_forceDirected.ForceDirectedTree);
+    // Enable zoom
+    this.chart.zoomable = true;
+    // Disable draggable
+    this.chart.seriesContainer.draggable = false;
+
+    // Create chart series
+    let networkSeries = this.chart.series.push(new am4plugins_forceDirected.ForceDirectedSeries())
+    networkSeries.dataFields.linkWith = "linkWith";
+    networkSeries.dataFields.name = "name";
+    networkSeries.dataFields.id = "name";
+    networkSeries.dataFields.value = "value";
+    networkSeries.dataFields.children = "children";
+    networkSeries.dataFields.fixed = "fixed";  
+    networkSeries.fontSize = 10;
+    networkSeries.minRadius = 15;
+    networkSeries.maxRadius = 40;
+
+    networkSeries.nodes.template.propertyFields.x = "x";
+    networkSeries.nodes.template.propertyFields.y = "y";
+
+    networkSeries.nodes.template.label.text = "{name}"
+    networkSeries.links.template.distance = 2;
+
+    networkSeries.manyBodyStrength = -30;
+    networkSeries.fontSize = 8;
+    networkSeries.linkWithStrength = 0;
+    
+    let nodeTemplate = networkSeries.nodes.template;
+    nodeTemplate.tooltipText = "{name}"
+    nodeTemplate.fillOpacity = 1;
+    nodeTemplate.label.hideOversized = true;
+    nodeTemplate.label.truncate = true;
+
+
+
+
+    /*
+    let linkTemplate = networkSeries.links.template;
+    linkTemplate.strokeWidth = 1;
+    let linkHoverState = linkTemplate.states.create("hover");
+    linkHoverState.properties.strokeOpacity = 1;
+    linkHoverState.properties.strokeWidth = 2;
+    
+    nodeTemplate.events.on("over", function (event) {
+        let dataItem = event.target.dataItem;
+        dataItem.childLinks.each(function (link) {
+            link.isHover = true;
+        })
+    })
+    
+    nodeTemplate.events.on("out", function (event) {
+        let dataItem = event.target.dataItem;
+        dataItem.childLinks.each(function (link) {
+            link.isHover = false;
+        })
+    })
+    /**/
+
+    const centerX = 50;
+    const centerY = 50;
+    const radius = 7;
+    const steps = 8;
+    let nCircle = 1;
+
+    const { usersFiltered, connectionsFiltered } = this.state;
+
+    let children  = []
+    for (const [idx, user] of usersFiltered.slice(1).entries()){
+      
+
+      nCircle = Math.floor( (idx) / (steps * nCircle) ) + 1;
+
+      console.log("idx ", idx, nCircle)
+
+
+      let x = (centerX + radius * nCircle * Math.cos(2 * Math.PI * idx / (steps * nCircle) ));
+      let y = (centerY + radius * nCircle * Math.sin(2 * Math.PI * idx / (steps * nCircle) ));
+
+      children.push({
+        name:user.label,
+        distance: 5,
+        fixed: true,
+        x: am4core.percent(x),
+        y: am4core.percent(y),    
+      })
+
+      if( children.length > steps * 3 ) break;
+    }
+
+    networkSeries.data = [  
+      {  
+        name: usersFiltered[0].label,
+        children: children,
+        fixed: true,
+        x: am4core.percent(centerX),
+        y: am4core.percent(centerY),    
+      },        
+  ];
+
+    /*
+    networkSeries.data = [  
+        {  
+          "name": "Phoebe",
+          "value":1,
+          "fixed": true,
+          "children":[  
+              {  
+                "name":"David",
+                "value":1,
+                "distance": 100
+              },
+              {  
+                "name":"Roger",
+                "value":1,
+                "distance": 1
+              },
+              {  
+                "name":"Duncan",
+                "value":1,
+                "distance": 1
+              },
+              {  
+                "name":"Rob Dohnen",
+                "value":1,
+                "distance": 1
+              }
+          ]
+        },        
+    ];
+    /**/
+    
+  }
 
   render() {
 
@@ -581,17 +717,26 @@ class PanelConnections extends React.Component {
     if ( this.cytoscapeMax === undefined && source.length > 0) {
 
         this.cytoscapeMax = <CytoscapeComponent key={this.childKey}
-                            elements={source}
-                            cy={(cy) => this.renderedCytoscape(cy) }
-                            style={{ width: '100%', height: '100%' }}
-                            stylesheet={this.cytoscapeStylesheet}
-                            layout={this.cytoscapeLayout} />;        
+                                elements={source}
+                                cy={(cy) => this.renderedCytoscape(cy) }
+                                style={{ width: '100%', height: '100%' }}
+                                stylesheet={this.cytoscapeStylesheet}
+                                layout={this.cytoscapeLayout} />;  
+        // Generate connections
+        this.generateNetworkChart()
     }
 
     const { activeTab, countryList, yearList } = this.state;
     const { countrySelected, connectionTypeSelected } = this.state;
     const { cytoscapeInvestigator } = this.state;
-    const content = (activeTab == TAB.NETWORK) ? this.cytoscapeMax : this.generateProfiles()
+    //const content = (activeTab == TAB.NETWORK) ? this.cytoscapeMax : this.generateProfiles()
+
+    let content = undefined;
+    switch(activeTab){
+      case TAB.NETWORK: content = this.cytoscapeMax; break;
+      case TAB.PROFILES: content = this.generateProfiles(); break;
+      case TAB.RELOADED: break;
+    }
 
     // Calculate nodeData
     let nodeDesc = {}
@@ -666,9 +811,17 @@ class PanelConnections extends React.Component {
               <Nav.Link href="#" active={activeTab == TAB.PROFILES}
                 onClick={(e) => this.setState({ activeTab: TAB.PROFILES })}><b>Profiles</b></Nav.Link>
             </Nav.Item>
+            <Nav.Item>
+              <Nav.Link href="#" active={activeTab == TAB.RELOADED}
+                onClick={(e) => this.setState({ activeTab: TAB.RELOADED })}><b>Reloaded</b></Nav.Link>
+            </Nav.Item>
           </Nav>
 
           {content}
+          
+          <div className={activeTab===TAB.RELOADED?'h-100':'d-none'}>
+            <div id="connectionschart" className="h-100 w-100" style={{ background: 'green'}}></div> 
+          </div>
         </div>
 
       </div>);
