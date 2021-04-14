@@ -71,7 +71,38 @@ class Investigator extends React.Component {
       showMeshScore: false,
       meshScore: 0,
       mesh: { value: '', label: ''},
-      profile: undefined,
+      profile: {
+        name: '',
+        degree: '',
+  
+        picture: '',
+        specialties: '',
+        focusArea: '',
+        
+        affiliationPosition: '',
+        affiliationInstitution: '',
+        affiliationInstitutionPhone: '',
+        affiliationInstitutionEmail: '',
+  
+        careerStage: '',
+        privatePhone: '',
+        privateEmail: '',
+  
+        lastUpdated: '-',
+        cv: '',
+  
+        publicationsFirstAuthor: '',
+        publications: '',
+  
+        coauthorsSamePA: '',
+        coauthors: '',
+  
+        eventsChairPerson: '',
+        events: '',
+  
+        ctRecruiting: '',
+        ct: '',
+      },
     }
 
     this.typingTimeout = undefined
@@ -91,7 +122,6 @@ class Investigator extends React.Component {
     //   panel === PANEL.FEEDBACK ){
     //     return
     // }    
-    console.log("Firing event", panel)
     this.props.setPanelRendered(panel)
   }
 
@@ -265,6 +295,7 @@ class Investigator extends React.Component {
       profile.isFavoriteInvestigator = response.data.is_favorite_investigator
       // Refresh
       this.setState({profile:profile})
+
 
       //
       this.props.setInvestigatorProfile({
