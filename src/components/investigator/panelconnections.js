@@ -580,7 +580,7 @@ class PanelConnections extends React.Component {
     // Enable zoom
     this.chart.zoomable = true;
     // Disable draggable
-    this.chart.seriesContainer.draggable = false;
+    //this.chart.seriesContainer.draggable = false;
 
     // Create chart series
     let networkSeries = this.chart.series.push(new am4plugins_forceDirected.ForceDirectedSeries())
@@ -590,20 +590,25 @@ class PanelConnections extends React.Component {
     networkSeries.dataFields.value = "value";
     networkSeries.dataFields.children = "children";
     networkSeries.dataFields.fixed = "fixed";  
-    networkSeries.fontSize = 10;
+    networkSeries.dataFields.color = "color";
+    networkSeries.fontSize = 20;
     networkSeries.minRadius = 15;
-    networkSeries.maxRadius = 40;
+    networkSeries.maxRadius = 15;
 
     networkSeries.nodes.template.propertyFields.x = "x";
     networkSeries.nodes.template.propertyFields.y = "y";
 
     networkSeries.nodes.template.label.text = "{name}"
+    //networkSeries.nodes.template.label.text = ""
     networkSeries.links.template.distance = 2;
 
-    networkSeries.manyBodyStrength = -30;
+
+
+    networkSeries.manyBodyStrength = -20;
     networkSeries.fontSize = 8;
     networkSeries.linkWithStrength = 0;
-    
+    networkSeries.nodes.template.togglable = false;
+
     let nodeTemplate = networkSeries.nodes.template;
     nodeTemplate.tooltipText = "{name}"
     nodeTemplate.fillOpacity = 1;
@@ -612,60 +617,52 @@ class PanelConnections extends React.Component {
 
 
 
-
-    /*
-    let linkTemplate = networkSeries.links.template;
-    linkTemplate.strokeWidth = 1;
-    let linkHoverState = linkTemplate.states.create("hover");
-    linkHoverState.properties.strokeOpacity = 1;
-    linkHoverState.properties.strokeWidth = 2;
-    
-    nodeTemplate.events.on("over", function (event) {
-        let dataItem = event.target.dataItem;
-        dataItem.childLinks.each(function (link) {
-            link.isHover = true;
-        })
-    })
-    
-    nodeTemplate.events.on("out", function (event) {
-        let dataItem = event.target.dataItem;
-        dataItem.childLinks.each(function (link) {
-            link.isHover = false;
-        })
-    })
-    /**/
-
     const centerX = 50;
     const centerY = 50;
-    const radius = 7;
+    const radius = 6;
     let nItemsPerCircle = 8;
     let nCircle = 1;
 
     const { usersFiltered, connectionsFiltered } = this.state;
 
-    /*
+    
     let children  = []
-    for (const [idx, user] of usersFiltered.entries()){
-      nCircle = Math.floor( (idx) / (nItemsPerCircle * nCircle) ) + 1;
+    let idx = 0;
+    while(idx < usersFiltered.length){
+      const user = usersFiltered[idx]
+      // nCircle = Math.floor( (idx) / (nItemsPerCircle * nCircle) ) + 1;
 
-      console.log("idx ", idx, nCircle)
+      // console.log("idx ", idx, nCircle)
+
+      const initIdx = idx;
+      const endIdx = nItemsPerCircle + idx > usersFiltered.length?usersFiltered.length:nItemsPerCircle + idx;
+      const userInCirle = usersFiltered.slice(initIdx, endIdx);
+      console.log("usersInCircle ", userInCirle.length)
 
 
-      let x = (centerX + radius * nCircle * Math.cos(2 * Math.PI * idx / (nItemsPerCircle * nCircle) ));
-      let y = (centerY + radius * nCircle * Math.sin(2 * Math.PI * idx / (nItemsPerCircle * nCircle) ));
+      for(const [innerIdx, user] of userInCirle.entries()){
+        let x = (centerX + radius * nCircle * Math.cos(2 * Math.PI * innerIdx / nItemsPerCircle) );
+        let y = (centerY + radius * nCircle * Math.sin(2 * Math.PI * innerIdx / nItemsPerCircle) );
+        children.push({
+          name:user.label,
+          distance: 1,
+          fixed: true,
+          value: 1,
+          x: am4core.percent(x),
+          y: am4core.percent(y),    
+          color: "#4283f1"
+        })
+        console.log("Iterations ")
+      }
+      idx = idx + nItemsPerCircle;
 
-      children.push({
-        name:user.label,
-        distance: 5,
-        fixed: true,
-        x: am4core.percent(x),
-        y: am4core.percent(y),    
-      })
+      nCircle++;
+      nItemsPerCircle = nItemsPerCircle*1.3;
 
-      if( children.length > nItemsPerCircle * 3 ) break;
+      //if( children.length > nItemsPerCircle * 3 ) break;
     }
     /**/
-
+    /*
     let children  = []
     for (const [idx, user] of usersFiltered.entries()){
       nCircle = Math.floor( (idx) / (nItemsPerCircle) ) + 1;
@@ -686,14 +683,16 @@ class PanelConnections extends React.Component {
 
       if( children.length > nItemsPerCircle * 3 ) break;
     }
-
+    /**/
     networkSeries.data = [  
       {  
         name: usersFiltered[0].label,
         children: children,
         fixed: true,
+        value: 1,
         x: am4core.percent(centerX),
-        y: am4core.percent(centerY),    
+        y: am4core.percent(centerY),  
+        color: "#4283f1" 
       },        
   ];
 
@@ -841,7 +840,7 @@ class PanelConnections extends React.Component {
           {content}
           
           <div className={activeTab===TAB.RELOADED?'h-100':'d-none'}>
-            <div id="connectionschart" className="h-100 w-100" style={{ background: 'green'}}></div> 
+            <div id="connectionschart" className="h-100 w-100"></div> 
           </div>
         </div>
 
