@@ -14,9 +14,6 @@ import { withRouter } from 'react-router-dom'
 import InvestigatorTable from '../components/investigatorlist/investigatortable';
 import InvestigatorTableMobile from '../components/investigatorlist/investigatortablemobile';
 import InvestigatorMap from '../components/investigatorlist/investigatormap';
-// Project Imports
-import DetectMobile from '../components/shared/mobiledetect';
-
 
 const TAB = { TABLE: 1, MAP: 2, }
 class InvestigatorList extends React.Component {
@@ -89,8 +86,7 @@ class InvestigatorList extends React.Component {
 
 
   render() {
-    const isMobile = DetectMobile()
-    return (isMobile?this.renderMobile():this.renderDesktop())
+    return (window.mobile?this.renderMobile():this.renderDesktop())
   }
 }
 

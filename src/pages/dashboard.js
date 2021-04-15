@@ -23,9 +23,6 @@ import { faUser, faBars, faStar, faAngleRight } from '@fortawesome/free-solid-sv
 // Assets
 import inspireLogo from '../assets/logo2.png';
 
-// Project Imports
-import DetectMobile from '../components/shared/mobiledetect';
-
 // Project imports
 import ProjectSelector from './projectselector';
 import InvestigatorList from './investigatorlist';
@@ -92,11 +89,11 @@ class Dashboard extends React.Component {
         const name = investigatorProfile?investigatorProfile.name:undefined
         const section = this.props.location.pathname.split('/')[2];
 
-        const isMobile = DetectMobile()
+
         return (
             <div style={{ position: 'relative' }}>
 
-                {!isMobile?
+                {!window.mobile?
                 <div className="hamburguer">
                     <div style={{
                         backgroundColor: '#343547', margin: '0.5em',
@@ -181,7 +178,7 @@ class Dashboard extends React.Component {
 
                     </div>
                     <div className="inspire-page-content" onScroll={(e) => this.onScroll(e)}>
-                      {isMobile?                
+                      {window.mobile?                
                         <div style={{
                           color:'grey', margin: '0.5em',
                           padding: '0.1em 0.4em 0.1em 0.4em'
@@ -192,7 +189,7 @@ class Dashboard extends React.Component {
                       :''}
                       <Container>
                         
-                          <Row className={isMobile?'':"inspire-breadcrumb"}>
+                          <Row className={window.mobile?'':"inspire-breadcrumb"}>
                             
                               <Col sm={12}>
                                   <div className="d-flex">

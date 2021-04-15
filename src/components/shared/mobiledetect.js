@@ -5,5 +5,6 @@ export default () => {
       /Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i
     )
   );
+  window.mobile = mobile
   return mobile
 }

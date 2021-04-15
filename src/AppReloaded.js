@@ -17,6 +17,10 @@ import Login from './pages/login'
 // Axios
 import axios from 'axios';
 
+// Project Imports
+import MobileDetect from './components/shared/mobiledetect';
+MobileDetect()
+
 
 class AppReloaded extends React.Component {
 
