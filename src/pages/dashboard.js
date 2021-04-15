@@ -93,8 +93,6 @@ class Dashboard extends React.Component {
         const name = investigatorProfile?investigatorProfile.name:undefined
         const section = this.props.location.pathname.split('/')[2];
 
-        console.log("meOid", meOid)
-
         const isMobile = DetectMobile()
         return (
             <div style={{ position: 'relative' }}>
