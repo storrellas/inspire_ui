@@ -362,7 +362,7 @@ class Investigator extends React.Component {
               </Modal.Header>
               <Modal.Body>
                 <div><b>Score:</b><span className="ml-2">{mesh.score}</span></div>
-                <div><b>Name:</b><span className="ml-2">{mesh.label}</span></div>
+                <div><b>Key Term:</b><span className="ml-2">{mesh.label}</span></div>
               </Modal.Body>
               <Modal.Footer>
                 <Button variant="primary" onClick={e => this.setState({showMeshScore: false})}>
