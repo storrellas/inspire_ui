@@ -744,7 +744,7 @@ class PanelConnections extends React.Component {
                                 stylesheet={this.cytoscapeStylesheet}
                                 layout={this.cytoscapeLayout} />;  
         // Generate connections
-        this.generateNetworkChart()
+        //this.generateNetworkChart()
     }
 
     const { activeTab, countryList, yearList } = this.state;

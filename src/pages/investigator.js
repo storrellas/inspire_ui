@@ -69,7 +69,7 @@ class Investigator extends React.Component {
       meshOptions: [],
       showMeshScore: false,
       meshScore: 0,
-      mesh: { value: '', label: ''},
+      mesh: { oid: '', score: '65', label: ''},
       profile: {
         name: '',
         degree: '',
@@ -170,7 +170,7 @@ class Investigator extends React.Component {
       // Autocomplete
       const meshOptions = []
       for(const mesh of response.data.results ){
-        meshOptions.push({value:mesh.oid, label: mesh.name})
+        meshOptions.push({oid:mesh.oid, score: 77, label: mesh.name})
       }
       this.setState({meshOptions: meshOptions, isLoadingMesh:false})
     }catch(error){
@@ -197,27 +197,40 @@ class Investigator extends React.Component {
       return
     }
 
-    // Set selection
-    let meshOid = mesh.value
+    // Mesh oid selection
+    let meshOid = mesh.oid
     meshOid = meshOid.split('-')[meshOid.split('-').length -1 ]
     meshOid = parseInt( meshOid )
+
+    // Get investigator Oid
+    const { match: { params } } = this.props;
+    let investigatorId = params.subid;
+    investigatorId = investigatorId.split('-')[investigatorId.split('-').length -1 ]
+    investigatorId = parseInt( investigatorId )
 
     try{
 
       // Perform request
       let urlParams = `mesh=${meshOid}`;
       const token = localStorage.getItem('token')
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/investigators/?${urlParams}`,
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/investigator/${investigatorId}/mesh-score/${meshOid}/`,
         { headers: { "Authorization": "jwt " + token }
       })
 
+      console.log("response ", response.data)
+      mesh.score = response.data.score
       clearTimeout(this.typingTimeout);
 
-      
       // Set State
       this.setState({showMeshScore: true, mesh: mesh})
     }catch(error){
       console.log("FAILED")
+      clearTimeout(this.typingTimeout);
+
+      // Set State
+      mesh.score = 0
+      this.setState({showMeshScore: true, mesh: mesh})
+
     }
   }
 
@@ -317,7 +330,9 @@ class Investigator extends React.Component {
 
   render() {
 
-    const { panel, showMeshScore, profile } = this.state;
+    const { panel, showMeshScore, profile, mesh } = this.state;
+
+    console.log("mesh ", mesh)
 
     return (
       <>
@@ -348,8 +363,8 @@ class Investigator extends React.Component {
                 <Modal.Title>Activities</Modal.Title>
               </Modal.Header>
               <Modal.Body>
-                <div>65</div>
-                <div>{this.state.mesh.label}</div>
+                <div><b>Score:</b><span className="ml-2">{mesh.score}</span></div>
+                <div><b>Name:</b><span className="ml-2">{mesh.label}</span></div>
               </Modal.Body>
               <Modal.Footer>
                 <Button variant="primary" onClick={e => this.setState({showMeshScore: false})}>
