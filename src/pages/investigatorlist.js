@@ -27,7 +27,7 @@ class InvestigatorList extends React.Component {
     }
   }
 
-  renderDesktop(){
+  render(){
     const { projectOid } = this.state;
 
     // Activate tab
@@ -37,8 +37,9 @@ class InvestigatorList extends React.Component {
     }
     return (
       <Row className='mt-3 mb-3'>        
-        <Col sm={12}>
-          <Nav variant="tabs" style={{ width: '100%' }}>
+        <Col sm={12} className={window.mobile?'no-padding no-margin':''}>
+          <h5 className={window.mobile?'ml-2':'d-none'}>Project Results</h5>
+          <Nav className={window.mobile?'d-none':''} variant="tabs">
             <Nav.Item>
               <Nav.Link href="#" active={activeTab == TAB.TABLE} onClick={(e) => this.setState({ activeTab: TAB.TABLE })}><b>Table</b></Nav.Link>
             </Nav.Item>
@@ -47,7 +48,7 @@ class InvestigatorList extends React.Component {
             </Nav.Item>
           </Nav>
           <Row style={{ padding: 0, margin: 0 }}>
-            <Col sm={12} className="page-container" style={{
+            <Col sm={12} className={window.mobile?"p-2 page-container":"page-container"} style={{
               borderColor: 'transparent #dee2e6 #dee2e6 #dee2e6', borderRadius: '0 .25rem 0 .25rem',
             }}>
               <div className={activeTab === TAB.TABLE ? '' : 'd-none'}>
@@ -63,31 +64,7 @@ class InvestigatorList extends React.Component {
       </Row>);
   }
 
-  renderMobile(){
-    const { projectOid } = this.state;
 
-    // Activate tab
-    const { activeTab } = this.state;
-    if( this.state.map === undefined && activeTab == TAB.MAP ){
-      this.state.map = <InvestigatorMap projectOid={projectOid} />                    
-    }
-    return (
-      <Row className='mt-3 mb-3'>        
-        <h5 className="ml-2">Project Results</h5>
-        <Col sm={12} className="p-2 page-container" style={{
-            borderColor: 'transparent #dee2e6 #dee2e6 #dee2e6', borderRadius: '0 .25rem 0 .25rem',
-            
-          }}>
-          <InvestigatorTableMobile />
-
-        </Col>
-      </Row>);
-  }
-
-
-  render() {
-    return (window.mobile?this.renderMobile():this.renderDesktop())
-  }
 }
 
 

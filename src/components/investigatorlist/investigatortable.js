@@ -5,6 +5,8 @@ import { Col, Row, Dropdown, Pagination, Tooltip, OverlayTrigger } from 'react-b
 // React Router
 import { withRouter } from 'react-router-dom'
 
+// Animate Height
+import AnimateHeight from 'react-animate-height';
 
 // Assets
 import arrow from '../../assets/arrow.png';
@@ -18,7 +20,10 @@ import EllipsisWithTooltip from 'react-ellipsis-with-tooltip'
 
 // Project imports
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSpinner, faLongArrowAltUp, faLongArrowAltDown } from '@fortawesome/free-solid-svg-icons'
+import { faSpinner, faLongArrowAltUp, faLongArrowAltDown,faAngleDown } from '@fortawesome/free-solid-svg-icons'
+
+// Redux
+import { connect } from "react-redux";
 
 // Axios
 import axios from 'axios';
@@ -34,7 +39,13 @@ import InspirePagination from '../shared/pagination'
 import SearchHeader, { SEARCH_HEADER } from '../shared/searchheader'
 
 
-const FILTERING = [
+const mapStateToProps = (state) => {
+  return {
+    scrollEnd: state.scrollEnd,
+  };
+}
+
+const FILTERING_DESKTOP = [
   { 
     dataField:'first_name', caption: 'firstName', width: '10%',
     label: 'First Name', type: SEARCH_HEADER.TEXT 
@@ -81,12 +92,25 @@ const FILTERING = [
   },
 ]
 
+const FILTERING_MOBILE = [
+  { 
+    dataField:'first_name', caption: 'firstName', width: '30%',
+    label: 'First Name', type: SEARCH_HEADER.TEXT 
+  },
+  { 
+    dataField:'last_name', caption: 'lastName',  width: '30%',
+    label: 'Last Name', type: SEARCH_HEADER.TEXT 
+  },
+]
+
 class InvestigatorTable extends React.Component {
 
   constructor(props) {
     super(props)
 
-    const filteringList = FILTERING.reduce((acc,curr)=> (acc[curr.caption]='',acc),{});    
+    this.filteringDevice = window.mobile?FILTERING_MOBILE:FILTERING_DESKTOP;
+
+    const filteringList = this.filteringDevice.reduce((acc,curr)=> (acc[curr.caption]='',acc),{});    
     this.state = {
       currentPage: 1,
       totalPage: 10,
@@ -126,7 +150,7 @@ class InvestigatorTable extends React.Component {
 
       // Add filtering
       if( filtering !== undefined ){
-        for(const item of FILTERING ){
+        for(const item of this.filteringDevice ){
           if( filtering[item.caption] !== '' ){
             urlParams = `${urlParams}&${item.dataField}=${filtering[item.caption]}`;
           }
@@ -148,11 +172,14 @@ class InvestigatorTable extends React.Component {
 
       clearTimeout(this.typingTimeout);
 
+      // Added folded attribute      
+      const investigatorList = response.data.results;
+      investigatorList.map( x => x.folded = false)
       
       // Set State
       const totalPage = Math.ceil(response.data.count / take);
       this.setState({
-        investigatorList: response.data.results, 
+        investigatorList: investigatorList, 
         projectOid: projectOid,
         currentPage: page,
         totalPage: totalPage,
@@ -172,6 +199,16 @@ class InvestigatorTable extends React.Component {
     this.loadInvestigators()
   }
 
+  componentDidUpdate(){
+    console.log("props ", this.props)
+    /*
+    this.setState({
+
+    })
+    take: 100,
+    limit: 100,
+    /**/
+  }
 
   async loadMesh(pattern){
     try{
@@ -235,7 +272,7 @@ class InvestigatorTable extends React.Component {
 
   loadFilteredInvestigators(key, value){
     let { currentPage, filtering } = this.state;
-    for(const item_candidate of FILTERING ){
+    for(const item_candidate of this.filteringDevice ){
       if( key === item_candidate.caption ){
         filtering[item_candidate.caption] = value
       }
@@ -287,7 +324,20 @@ class InvestigatorTable extends React.Component {
     }
   }
 
-  render() {
+  onShowInvestigator(id){
+    const { investigatorList } = this.state;
+    // Keep former value
+    let former = investigatorList[id].show
+    investigatorList.map( x => x.show = false)
+
+    // Expand    
+    investigatorList[id].show = !former;
+
+    // Set State
+    this.setState({ investigatorList: investigatorList})
+  }
+
+  renderDesktop() {
     const { currentPage, totalPage, meshOptions, sorting } = this.state;
 
     return (
@@ -313,7 +363,7 @@ class InvestigatorTable extends React.Component {
               <tr>
                 <td style={{ width: '3%'}}></td>
                 <td style={{ width: '3%'}}>Profile</td>
-                {FILTERING.map((item, id) =>                  
+                {this.filteringDevice.map((item, id) =>                  
                   <td key={id} style={{ cursor: 'pointer', width: item.width }} 
                     onClick={() => this.onSetSorting(item.dataField)}>
                     { 
@@ -336,7 +386,7 @@ class InvestigatorTable extends React.Component {
                 <td></td>
                 <td></td>
 
-                {FILTERING.map((item, id) =>
+                {this.filteringDevice.map((item, id) =>
                 <td key={id}>
                   <SearchHeader 
                     onChange={(pattern) => this.loadFilteredInvestigators(item.caption, pattern)} 
@@ -347,7 +397,7 @@ class InvestigatorTable extends React.Component {
             </thead>
 
             <tbody>
-                {this.state.isLoading?
+                {this.state.isLoading && this.state.investigatorList.length === 0 ?
                 <tr>
                   <td style={{ background: 'white', height: '400px' }} colSpan="14" className="text-center">
                     <div className="mb-3" style={{ fontSize: '20px', color: 'grey' }} >Loading ...</div>
@@ -396,13 +446,146 @@ class InvestigatorTable extends React.Component {
           </table>
           
 
-          <InspirePagination currentPage={currentPage} totalPage={totalPage} onClick={this.navigatePage.bind(this)}/>        
+          <InspirePagination currentPage={currentPage} 
+            totalPage={totalPage} onClick={this.navigatePage.bind(this)}/>        
       </>
     );
   }
 
+  renderMobile() {
+    const { currentPage, totalPage, meshOptions, sorting } = this.state;
+
+
+    return (
+      <>
+        <div className="d-flex justify-content-end pb-3">
+          <div className="w-100">
+            <div style={{ color: '#A8A8A8', fontSize: '12px' }}>Select Mesh</div>
+            <Select isLoading={this.state.isLoadingMesh} isClearable
+              isSearchable options={meshOptions}
+              onInputChange={(e) => this.onMeshFill(e)}
+              onChange={(e) => this.onMeshSelected(e)}
+              placeholder={'All'}
+              styles={{
+                control: (provided) => ({ ...provided, borderTop: 0, borderLeft: 0, borderRight: 0, borderRadius: 0 }),
+                indicatorSeparator: (provided) => ({ backgroundColor: 'white' })
+              }}
+            />
+          </div>
+        </div>
+
+        <table className="w-100 inspire-mobile-table" style={{ minHeight: '200px', fontSize: '14px' }}>
+          <thead>
+            <tr style={{ border: '1px solid #A4C8E6', borderWidth: '0px 0px 1px 0px' }}>
+              <td style={{ width: '15%' }}></td>
+              {this.filteringDevice.map((item, id) =>
+                <td key={id} style={{ cursor: 'pointer', width: item.width }}
+                  onClick={() => this.onSetSorting(item.dataField)}>
+                  <div className="d-flex justify-content-center">
+                    <div>{item.label}</div>
+                    <FontAwesomeIcon icon={faLongArrowAltUp} className={sorting == item.dataField ? "ml-1" : "ml-1 d-none"} style={{ color: 'grey' }} />
+                    <FontAwesomeIcon icon={faLongArrowAltDown} className={sorting == `-${item.dataField}` ? "ml-1" : "ml-1 d-none"} style={{ color: 'grey' }} />
+                  </div>
+                </td>
+              )}
+              <td style={{ width: '15%' }}></td>
+            </tr>
+          </thead>
+
+          <tbody>
+            {this.state.isLoading ?
+              <tr>
+                <td style={{ background: 'white', height: '400px' }} colSpan="14" className="text-center">
+                  <div className="mb-3" style={{ fontSize: '20px', color: 'grey' }} >Loading ...</div>
+                  <FontAwesomeIcon icon={faSpinner} spin style={{ fontSize: '40px', color: 'grey' }} />
+                </td>
+              </tr>
+              : <tr></tr>}
+            {this.state.investigatorList.map((item, id) =>
+              [<tr key={id}>
+                <td className="text-center" >
+
+                  <img src={item.is_favorite_investigator ? favorite : nonfavorite} width="30"
+                    onClick={(e) => this.onSetInvestigatorFavorite(item.oid, item.is_favorite_investigator)}
+                    style={{ cursor: 'pointer' }}></img>
+
+                </td>
+                <td>{item.first_name}</td>
+                <td>{item.last_name}</td>
+                <td className="inspire-table-profile-mobile">
+                  <FontAwesomeIcon icon={faAngleDown} className={item.show ? 'unfolded' : "folded"}
+                    style={{ fontSize: '14px', color: 'grey' }}
+                    onClick={e => this.onShowInvestigator(id)} />
+                </td>
+
+              </tr>,
+                <tr key={id + "_"} className="inspire-table-events-subrow">
+                  <td colSpan="7" className={item.show ? '' : 'd-none'}>
+                    
+                    <AnimateHeight
+                      height={item.show ? 'auto': 0}
+                      duration={250}>
+                      <div className="p-2" style={{ background: '#ECEFF8'}}>
+                        <div className="d-flex">
+                          <div className="w-50">
+                            <div style={{ color: '#8a8a8a', fontSize: '12px'  }}>SPECIALTIES</div>
+                            <div className="inspire-submenu-item">{item.prop_specialties}</div>
+                          </div>
+                          <div className="w-50">
+                            <div style={{ color: '#8a8a8a', fontSize: '12px'  }}>FOCUS AREA</div>
+                            <div className="inspire-submenu-item">{item.focus_areas_reasearch_interests}</div>
+                          </div>
+                        </div>
+                        <div className="d-flex mt-3">
+                          <div className="w-50">
+                            <div style={{ color: '#8a8a8a', fontSize: '12px'  }}>CITY</div>
+                            <div className="inspire-submenu-item">{item.city}</div>
+                          </div>
+                          <div className="w-50">
+                            <div style={{ color: '#8a8a8a', fontSize: '12px'  }}>COUNTRY</div>
+                            <div className="inspire-submenu-item">{item.country}</div>
+                          </div>
+                        </div>
+                        <div className="d-flex mt-3 justify-content-between">
+                          <div>
+                            <div style={{ color: '#8a8a8a', fontSize: '12px'  }}>P</div>
+                            <div>{item.number_linked_publications}</div>
+                          </div>
+                          <div>
+                            <div style={{ color: '#8a8a8a', fontSize: '12px'  }}>E</div>
+                            <div>{item.number_linked_events}</div>
+                          </div>
+                          <div>
+                            <div style={{ color: '#8a8a8a', fontSize: '12px'  }}>CT</div>
+                            <div>{item.number_linked_clinical_trials}</div>
+                          </div>
+                          <div>
+                            <div style={{ color: '#8a8a8a', fontSize: '12px'  }}>COI</div>
+                            <div>{item.number_linked_institutions_coi}</div>
+                          </div>
+                          <div>
+                            <div style={{ color: '#8a8a8a', fontSize: '12px'  }}>SCORE</div>
+                            <div>{item.mesh_counter?item.mesh_counter:'--'}</div>
+                          </div>
+                        </div>
+                      </div>
+                    </AnimateHeight>
+                  </td>
+                </tr>]
+            )}
+          </tbody>
+        </table>
+
+        {window.mobile?'':                
+          <InspirePagination currentPage={currentPage} totalPage={totalPage} onClick={this.navigatePage.bind(this)} />
+        }
+      </>
+    );
+  }
+
+  render() {
+    return (window.mobile?this.renderMobile():this.renderDesktop())
+  }
 }
 
-
-
-export default withRouter(InvestigatorTable);
+export default connect(mapStateToProps, undefined)(withRouter(InvestigatorTable));

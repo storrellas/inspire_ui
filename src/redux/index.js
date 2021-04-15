@@ -32,6 +32,7 @@ export const PANEL_FEEDBACK_OPENED = "PANEL_FEEDBACK_OPENED";
 
 export const INVESTIGATOR_PROFILE = "INVESTIGATOR_PROFILE";
 export const INVESTIGATOR_FIXED_TOP_PROFILE = "INVESTIGATOR_FIXED_PROFILE";
+export const SITE_SCROLL_END_REACHED = "SITE_SCROLL_END_REACHED";
 
 // Content list
 
@@ -52,14 +53,17 @@ export function setInvestigatorFixedTopProfile(payload) {
   return { type: INVESTIGATOR_FIXED_TOP_PROFILE, payload }
 };
 
+export function setScrollEnd(payload) {
+  return { type: SITE_SCROLL_END_REACHED, payload }
+};
+
 // Reducers
 // ---------------------
 const initialState = {
   tabActive: PANEL.CONNECTIONS,
-
   investigatorProfile: undefined,
-
   investigatorFixedTopProfile: false,
+  scrollEnd: false,
 };
 
 export function rootReducer(state = initialState, action) {
@@ -71,6 +75,9 @@ export function rootReducer(state = initialState, action) {
   }
   if (action.type === INVESTIGATOR_FIXED_TOP_PROFILE) {
     return { ...state, investigatorFixedTopProfile: action.payload.investigatorFixedTopProfile };
+  }
+  if (action.type === SITE_SCROLL_END_REACHED) {
+    return { ...state, scrollEnd: action.payload.scrollEnd };
   }
 
   return state;

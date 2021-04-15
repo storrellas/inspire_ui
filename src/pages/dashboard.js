@@ -9,8 +9,7 @@ import { Route } from "react-router-dom";
 import { withRouter } from 'react-router-dom'
 
 // Redux
-import { setInvestigatorFixedTopProfile } from "../redux";
-
+import { setInvestigatorFixedTopProfile, setScrollEnd } from "../redux";
 import { connect } from "react-redux";
 
 // Styles
@@ -43,6 +42,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         setInvestigatorFixedTopProfile: (payload) => dispatch(setInvestigatorFixedTopProfile(payload)),
+        setScrollEnd: (payload) => dispatch(setScrollEnd(payload))
     };
 }
 
@@ -64,15 +64,26 @@ class Dashboard extends React.Component {
     }    
 
     onScroll(e){
-        const scrollTop = e.target.scrollTop;
-        let docHeight = e.target.scrollHeight;
-        let clientHeight = e.target.clientHeight;
-        let scrollPercent = scrollTop *100 / (docHeight - clientHeight);
-        if(scrollPercent > 50 ){
-            this.props.setInvestigatorFixedTopProfile({investigatorFixedTopProfile: true})
-        }else{
-            this.props.setInvestigatorFixedTopProfile({investigatorFixedTopProfile: false})
-        }
+
+      const scrollTop = e.target.scrollTop;
+      let docHeight = e.target.scrollHeight;
+      let clientHeight = e.target.clientHeight;
+      let scrollPercent = scrollTop *100 / (docHeight - clientHeight);
+
+      // scrollPercent > 50
+      if(scrollPercent > 50 ){
+        this.props.setInvestigatorFixedTopProfile({investigatorFixedTopProfile: true})
+      }else{
+        this.props.setInvestigatorFixedTopProfile({investigatorFixedTopProfile: false})
+      }
+
+      // scrollPercent === 100
+      if( scrollPercent === 100 ){
+        this.props.setScrollEnd({scrollEnd: true})
+      }else{
+        this.props.setScrollEnd({scrollEnd: false})
+      }
+        
     }
 
     render() {
