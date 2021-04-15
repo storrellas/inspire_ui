@@ -29,7 +29,6 @@ import DetectMobile from '../components/shared/mobiledetect';
 // Project imports
 import ProjectSelector from './projectselector';
 import InvestigatorList from './investigatorlist';
-import InvestigatorListMobile from './investigatorlistmobile';
 import InvestigatorFavoriteList from './investigatorfavoritelist';
 import Investigator from './investigator';
 import InvestigatorReloaded from './investigatorreloaded';
@@ -239,15 +238,17 @@ class Dashboard extends React.Component {
                               <Col sm={12}>
                                   <Route path={`${this.props.match.path}`} exact
                                       render={(props) => (<ProjectSelector />)} />
+                                  {/* <Route path={`${this.props.match.path}project/:id`} exact
+                                      render={(props) => (isMobile?<InvestigatorListMobile />:<InvestigatorList />)} /> */}
                                   <Route path={`${this.props.match.path}project/:id`} exact
-                                      render={(props) => (isMobile?<InvestigatorListMobile />:<InvestigatorList />)} />
+                                      render={(props) => (<InvestigatorList />)} />
                                   <Route path={`${this.props.match.path}favorites`} exact
                                       render={(props) => (<InvestigatorFavoriteList />)} />
                                   <Route path={`${this.props.match.path}project/:id/investigator/:subid`} exact
                                       render={(props) => (<Investigator />)} />
                                       
-                                  <Route path={`${this.props.match.path}project/:id/investigator/reloaded/:subid`} exact
-                                      render={(props) => (<InvestigatorReloaded/>)} />
+                                  {/* <Route path={`${this.props.match.path}project/:id/investigator/reloaded/:subid`} exact
+                                      render={(props) => (<InvestigatorReloaded/>)} /> */}
 
                                   <Route path={`${this.props.match.path}profile`} exact
                                       render={(props) => (<Profile />)} />

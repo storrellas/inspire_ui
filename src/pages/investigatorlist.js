@@ -12,9 +12,10 @@ import { withRouter } from 'react-router-dom'
 
 // Project imports
 import InvestigatorTable from '../components/investigatorlist/investigatortable';
+import InvestigatorTableMobile from '../components/investigatorlist/investigatortablemobile';
 import InvestigatorMap from '../components/investigatorlist/investigatormap';
-// Lazy import 
-//const InvestigatorMap = React.lazy(() => import('../components/investigatorlist/investigatormap'));
+// Project Imports
+import DetectMobile from '../components/shared/mobiledetect';
 
 
 const TAB = { TABLE: 1, MAP: 2, }
@@ -29,9 +30,7 @@ class InvestigatorList extends React.Component {
     }
   }
 
-
-  render() {
-    
+  renderDesktop(){
     const { projectOid } = this.state;
 
     // Activate tab
@@ -65,6 +64,33 @@ class InvestigatorList extends React.Component {
 
         </Col>
       </Row>);
+  }
+
+  renderMobile(){
+    const { projectOid } = this.state;
+
+    // Activate tab
+    const { activeTab } = this.state;
+    if( this.state.map === undefined && activeTab == TAB.MAP ){
+      this.state.map = <InvestigatorMap projectOid={projectOid} />                    
+    }
+    return (
+      <Row className='mt-3 mb-3'>        
+        <h5 className="ml-2">Project Results</h5>
+        <Col sm={12} className="p-2 page-container" style={{
+            borderColor: 'transparent #dee2e6 #dee2e6 #dee2e6', borderRadius: '0 .25rem 0 .25rem',
+            
+          }}>
+          <InvestigatorTableMobile />
+
+        </Col>
+      </Row>);
+  }
+
+
+  render() {
+    const isMobile = DetectMobile()
+    return (isMobile?this.renderMobile():this.renderDesktop())
   }
 }
 
