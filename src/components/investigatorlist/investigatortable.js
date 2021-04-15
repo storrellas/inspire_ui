@@ -122,7 +122,8 @@ class InvestigatorTable extends React.Component {
       meshOptions: [],
       meshOid: undefined,
       filtering : {...filteringList},
-      sorting: ''
+      sorting: '',
+      scrollEndHandled: false
     }
 
 
@@ -133,7 +134,8 @@ class InvestigatorTable extends React.Component {
   async loadInvestigators(page = 1){
 
     try{
-      this.setState({isLoading: true, investigatorList: []})
+      if( window.mobile == false) this.state.investigatorList = []
+      this.setState({isLoading: true})
       const { match: { params } } = this.props;
       const projectOid = params.id;
       const { take, limit, sorting, meshOid, filtering } = this.state;
@@ -184,7 +186,7 @@ class InvestigatorTable extends React.Component {
         currentPage: page,
         totalPage: totalPage,
         meshOid: meshOid,
-        isLoading: false
+        isLoading: false, 
       })
     }catch(error){
       console.log("FAILED")
@@ -199,15 +201,24 @@ class InvestigatorTable extends React.Component {
     this.loadInvestigators()
   }
 
-  componentDidUpdate(){
-    console.log("props ", this.props)
-    /*
-    this.setState({
+  componentDidUpdate(){    
+    const { take, limit } = this.state;
+    
+    // Refresh table when mobile
+    if( window.mobile ){
+      // Refresh table when scroll reached end and it was not handled
+      if( this.props.scrollEnd && this.state.scrollEndHandled == false){
+        this.state.scrollEndHandled = true;
+        this.state.take = take + 10;
+        this.state.limit = limit + 10;
+        this.loadInvestigators()
+      }
+    }
 
-    })
-    take: 100,
-    limit: 100,
-    /**/
+    // Reset scrollEndHandled
+    if( this.props.scrollEnd === false){      
+      this.state.scrollEndHandled = false;
+    }
   }
 
   async loadMesh(pattern){
