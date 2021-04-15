@@ -89,8 +89,11 @@ class Dashboard extends React.Component {
         const { match: { params } } = this.props;        
         const pathNameList = this.props.location.pathname.split('/');
         const projectOid = pathNameList[3];
+        const meOid = pathNameList[5];
         const name = investigatorProfile?investigatorProfile.name:undefined
         const section = this.props.location.pathname.split('/')[2];
+
+        console.log("meOid", meOid)
 
         const isMobile = DetectMobile()
         return (
@@ -208,10 +211,10 @@ class Dashboard extends React.Component {
                                                   <FontAwesomeIcon icon={faAngleRight} />
                                               </div>
                                               <div className="ml-2">
-                                                  {name === undefined?
-                                                  <div>Medical Experts</div>
-                                                  :                                                    
+                                                  {(name!==undefined&&meOid!==undefined)?
                                                   <a href={`/dashboard/project/${projectOid}`}>Medical Experts</a>
+                                                  :                                                    
+                                                  <div>Medical Experts</div>                                                
                                                   }
                                               </div>
                                           </>
@@ -225,7 +228,7 @@ class Dashboard extends React.Component {
                                               <div className="ml-2">Favorites</div>
                                           </>
                                       :''}
-                                      {name!==undefined?
+                                      {(name!==undefined&&meOid!==undefined)?
                                           <>
                                               <div className="ml-2"><FontAwesomeIcon icon={faAngleRight} /></div>
                                               <div className="ml-2">{name}</div>

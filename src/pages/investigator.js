@@ -217,7 +217,6 @@ class Investigator extends React.Component {
         { headers: { "Authorization": "jwt " + token }
       })
 
-      console.log("response ", response.data)
       mesh.score = response.data.score
       clearTimeout(this.typingTimeout);
 
@@ -332,7 +331,6 @@ class Investigator extends React.Component {
 
     const { panel, showMeshScore, profile, mesh } = this.state;
 
-    console.log("mesh ", mesh)
 
     return (
       <>
