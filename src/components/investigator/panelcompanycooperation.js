@@ -22,6 +22,7 @@ import { faLongArrowAltUp, faLongArrowAltDown, faSpinner } from '@fortawesome/fr
 import './modal.scss';
 
 // Redux
+import { PANEL } from "../../redux";
 import { connect } from "react-redux";
 
 // Loading overlay
@@ -37,9 +38,12 @@ import axios from 'axios';
 import InspirePagination from '../shared/pagination'
 import SearchHeader, { SEARCH_HEADER } from '../shared/searchheader'
 
+
+
 const mapStateToProps = state => {
   return {
     tabCompanyCooperationOpened: state.tabCompanyCooperationOpened,
+    tabActive: state.tabActive,
   };
 };
 
@@ -364,7 +368,7 @@ class PanelCompanyCooperation extends React.Component {
   }
 
   render() {
-    if (this.props.tabCompanyCooperationOpened == true && 
+    if (this.props.tabActive == PANEL.COMPANY_COOPERATION && 
       this.state.isOpened == false &&
       this.state.dataPerCompany !== undefined) {
       const that = this;

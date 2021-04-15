@@ -17,6 +17,7 @@ import EllipsisWithTooltip from 'react-ellipsis-with-tooltip'
 
 
 // Redux
+import { PANEL } from "../../redux";
 import { connect } from "react-redux";
 
 // Loading Overlay
@@ -39,6 +40,7 @@ import EmptyPanel from '../shared/emptypanel';
 const mapStateToProps = state => {
   return {
     tabEventsOpened: state.tabEventsOpened,
+    tabActive: state.tabActive,    
   };
 };
 
@@ -466,7 +468,7 @@ class PanelEvents extends React.Component {
   }
 
   render() {
-    if (this.props.tabEventsOpened == true && 
+    if (this.props.tabActive == PANEL.EVENTS && 
         this.state.isOpened == false &&
         this.state.dataRoles !== undefined &&
         this.state.dataTypes !== undefined) {

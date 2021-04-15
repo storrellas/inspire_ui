@@ -14,6 +14,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faExpandArrowsAlt, faLongArrowAltUp, faLongArrowAltDown, faSpinner } from '@fortawesome/free-solid-svg-icons'
 
 // Redux
+import { PANEL } from "../../redux";
 import { connect } from "react-redux";
 
 // Loading Overlay
@@ -59,6 +60,7 @@ const FILTERING = [
 const mapStateToProps = state => {
   return {
     tabPublicationsOpened: state.tabPublicationsOpened,
+    tabActive: state.tabActive,    
   };
 };
 
@@ -393,7 +395,7 @@ class PanelPublications extends React.Component {
   }
 
   render() {
-    if (this.props.tabPublicationsOpened == true &&
+    if (this.props.tabActive == PANEL.PUBLICATIONS &&
       this.state.isOpened == false &&
       this.state.dataType !== undefined &&
       this.state.dataYears !== undefined) {

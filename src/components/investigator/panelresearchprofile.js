@@ -10,6 +10,7 @@ import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 
 // Redux
+import { PANEL } from "../../redux";
 import { connect } from "react-redux";
 
 // Loading Overlay
@@ -27,7 +28,8 @@ import EmptyPanel from '../shared/emptypanel';
 
 const mapStateToProps = state => {
   return { 
-    tabResearchProfileOpened: state.tabResearchProfileOpened,
+      tabResearchProfileOpened: state.tabResearchProfileOpened,
+      tabActive: state.tabActive,
     };
 };
 
@@ -171,7 +173,7 @@ class PanelResearchProfile extends React.Component {
 
 
   render() {
-    if( this.props.tabResearchProfileOpened == true && 
+    if( this.props.tabActive == PANEL.RESEARCH_PROFILE && 
         this.state.isOpened == false &&
         this.state.data !== undefined){
       const that = this;

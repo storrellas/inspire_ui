@@ -14,6 +14,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSpinner, faLongArrowAltUp, faLongArrowAltDown } from '@fortawesome/free-solid-svg-icons'
 
 // Redux
+import { PANEL } from "../../redux";
 import { connect } from "react-redux";
 
 // Loading Overlay
@@ -38,6 +39,7 @@ import EmptyPanel from '../shared/emptypanel';
 const mapStateToProps = state => {
   return {
     tabClinicalTrialsOpened: state.tabClinicalTrialsOpened,
+    tabActive: state.tabActive,    
   };
 };
 
@@ -401,7 +403,7 @@ class PanelClinicalTrials extends React.Component {
   }
 
   render() {
-    if( this.props.tabClinicalTrialsOpened == true && 
+    if(this.props.tabActive == PANEL.CLINICAL_TRIALS && 
         this.state.isOpened == false &&
         this.state.dataConditions !== undefined &&
         this.state.dataInterventions !== undefined){

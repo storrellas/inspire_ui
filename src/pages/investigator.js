@@ -24,7 +24,7 @@ import { faAngleRight, faAngleDown, faStar, faSearch, faArrowCircleDown, faNewsp
 import InvestigatorProfile from '../components/investigator/investigatorprofile'
 
 // Redux
-import { setInvestigatorProfile, setPanelRendered, PANEL, resetPanel } from "../redux";
+import { setInvestigatorProfile, setPanelActive, PANEL } from "../redux";
 import { connect } from "react-redux";
 
 // React Select
@@ -47,8 +47,7 @@ import PanelClinicalTrials from '../components/investigator/panelclinicaltrials'
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    setPanelRendered: (panel) => dispatch(setPanelRendered(panel)),
-    resetPanel: () => dispatch(resetPanel()),
+    setPanelActive: (panel) => dispatch(setPanelActive(panel)),
     setInvestigatorProfile: (profile) => dispatch(setInvestigatorProfile(profile))
   };
 }
@@ -108,11 +107,9 @@ class Investigator extends React.Component {
     this.typingTimeout = undefined
   }
 
-  componentDidMount(){
-    this.props.resetPanel()
-    
+  componentDidMount(){   
     const that = this;
-    setTimeout(function(){ that.props.setPanelRendered(PANEL.CONNECTIONS) }, 1000);
+    setTimeout(function(){ that.props.setPanelActive(PANEL.CONNECTIONS) }, 1000);
   }
 
   onSetPanel(panel) {      
@@ -122,7 +119,7 @@ class Investigator extends React.Component {
     //   panel === PANEL.FEEDBACK ){
     //     return
     // }    
-    this.props.setPanelRendered(panel)
+    this.props.setPanelActive(panel)
   }
 
   async onSetInvestigatorFavorite(){

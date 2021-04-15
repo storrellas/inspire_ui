@@ -40,6 +40,7 @@ const mapStateToProps = state => {
   return {
     investigatorProfile: state.investigatorProfile,
     tabConnectionsOpened: state.tabConnectionsOpened,
+    tabActive: state.tabActive,
   };
 };
 
@@ -831,7 +832,7 @@ class PanelConnections extends React.Component {
               <Nav.Link href="#" active={activeTab == TAB.PROFILES}
                 onClick={(e) => this.setState({ activeTab: TAB.PROFILES })}><b>Profiles</b></Nav.Link>
             </Nav.Item>
-            <Nav.Item>
+            <Nav.Item className="d-none">
               <Nav.Link href="#" active={activeTab == TAB.RELOADED}
                 onClick={(e) => this.setState({ activeTab: TAB.RELOADED })}><b>Reloaded</b></Nav.Link>
             </Nav.Item>
