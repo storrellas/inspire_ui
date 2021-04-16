@@ -60,9 +60,9 @@ class Login extends React.Component {
 
   render() {
     // Clear previous session
-    localStorage.removeItem('token');
-    localStorage.removeItem('project_permissions');
-    localStorage.removeItem('username');
+    // NOTE: Not sure of this feature
+    // localStorage.clear();
+
 
     // Wrong Credentials
     const alert_wrong_credentials = this.state.wrongCredentials?(
