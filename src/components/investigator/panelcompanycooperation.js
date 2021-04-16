@@ -239,6 +239,8 @@ class PanelCompanyCooperation extends React.Component {
         { headers: { "Authorization": "jwt " + token }
       })
 
+      
+
       // Chart data
       this.state.dataPerCompany = response.data.results      
       this.state.emptyPanelShow = response.data.results.length == 0
@@ -377,7 +379,7 @@ class PanelCompanyCooperation extends React.Component {
 
     const {dataTable, currentPage, totalPage, sorting} = this.state;
 
-    const emptyPanelShow = this.state.emptyPanelShow && this.props.tabCompanyCooperationOpened;    
+    const emptyPanelShow = this.state.emptyPanelShow && this.props.tabActive == PANEL.COMPANY_COOPERATION;
     return (
       <div>
         <LoadingOverlay

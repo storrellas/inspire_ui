@@ -407,7 +407,7 @@ class PanelPublications extends React.Component {
     const modalContent = this.generateModalContent()
 
     const emptyPanelShow = this.state.emptyPanelShow && 
-                          this.props.tabPublicationsOpened;
+                            this.props.tabActive == PANEL.PUBLICATIONS;
     return (
       <div>
         <LoadingOverlay

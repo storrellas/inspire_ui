@@ -481,7 +481,7 @@ class PanelEvents extends React.Component {
 
 
     const emptyPanelShow = this.state.emptyPanelShow && 
-      this.props.tabEventsOpened;
+                            this.props.tabActive == PANEL.EVENTS;
 
     return (
       <div>

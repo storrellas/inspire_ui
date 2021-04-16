@@ -182,7 +182,7 @@ class PanelResearchProfile extends React.Component {
 
     const researchProfileData = this.generateModalData()
     const emptyPanelShow = researchProfileData.length == 0 
-                            && this.props.tabResearchProfileOpened;
+                            && this.props.tabActive == PANEL.RESEARCH_PROFILE;
     return (
       <div>    
         <LoadingOverlay

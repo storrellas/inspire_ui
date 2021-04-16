@@ -413,7 +413,7 @@ class PanelClinicalTrials extends React.Component {
 
     const modalContent = this.generateModalContent()      
     const emptyPanelShow = this.state.emptyPanelShow && 
-                          this.props.tabClinicalTrialsOpened;
+                            this.props.tabActive == PANEL.CLINICAL_TRIALS;
     return (
       <div>
         <LoadingOverlay
