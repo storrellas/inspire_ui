@@ -130,9 +130,8 @@ class InvestigatorProfile extends React.Component {
                 <Col sm={9}>
                   <div className="h-100 d-flex flex-column justify-content-center" style={{ fontSize: '18px'}}>
                     <div>
-                      <span className="inspire-text-secondary">{this.state.degree}</span>
-                      <span className="ml-3"><b>{this.props.profile.name} </b></span>
-                      
+                      <span className="inspire-text-secondary">{this.props.profile.degree}</span>
+                      <span className="ml-3"><b>{this.props.profile.name} </b></span>                      
                     </div>
                     <div>
                       {this.props.profile.affiliationInstitutionPhone}  | 

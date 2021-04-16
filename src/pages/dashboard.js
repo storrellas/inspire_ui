@@ -217,7 +217,7 @@ class Dashboard extends React.Component {
                                       
                                       {(section==='project')?
                                           <>
-                                              <div className="ml-2">
+                                              <div className="ml-2 d-flex align-items-center">
                                                   <FontAwesomeIcon icon={faAngleRight} />
                                               </div>
                                               <div className="ml-2">
@@ -232,7 +232,7 @@ class Dashboard extends React.Component {
 
                                       {(section==='favorites')?
                                           <>
-                                              <div className="ml-2">
+                                              <div className="ml-2 d-flex align-items-center">
                                                   <FontAwesomeIcon icon={faAngleRight} />
                                               </div>                                        
                                               <div className="ml-2">Favorites</div>
@@ -240,7 +240,7 @@ class Dashboard extends React.Component {
                                       :''}
                                       {(name!==undefined&&meOid!==undefined)?
                                           <>
-                                              <div className="ml-2"><FontAwesomeIcon icon={faAngleRight} /></div>
+                                              <div className="ml-2 d-flex align-items-center"><FontAwesomeIcon icon={faAngleRight} /></div>
                                               <div className="ml-2">{name}</div>
                                           </>
                                       :''}

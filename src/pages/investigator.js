@@ -327,11 +327,8 @@ class Investigator extends React.Component {
   }
 
 
-  render() {
-
+  renderDesktop() {
     const { panel, showMeshScore, profile, mesh } = this.state;
-
-
     return (
       <>
 
@@ -347,7 +344,7 @@ class Investigator extends React.Component {
                     isSearchable options={this.state.meshOptions} 
                     onInputChange={(e) => this.onMeshFill(e)} 
                     onChange={ (e) => this.onMeshSelected(e)}
-                    placeholder={'Search by names, position, field of study'}
+                    placeholder={'Search by Key Term'}
                     styles={{ 
                       control: (provided) => ({ ...provided, borderLeft: 0, borderRadius: '0 20px 20px 0'}),
                       indicatorsContainer: (provided) => ({ ...provided, width:0, overflow: 'hidden'}),
@@ -468,6 +465,28 @@ class Investigator extends React.Component {
         </Row>
       </>
     );
+  }
+
+  renderMobile(){
+    const { profile } = this.state;
+    return (
+      <div>
+        <div className="d-flex align-items-center">
+          <div className="w-25">
+            <img src={this.state.profile.picture} style={{ width: '90%', borderRadius: '50%' }}></img>
+          </div>
+          <div className="w-75">
+            <div>
+              <span className="inspire-text-secondary">{this.state.profile.degree}</span>
+              <span className="ml-3"><b>{this.state.profile.name} </b></span>
+            </div>                </div>
+        </div>
+      </div>
+      )
+  }
+
+  render() {
+    return (window.mobile?this.renderMobile():this.renderDesktop())
   }
 }
 

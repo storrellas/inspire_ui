@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 // Bootstrap
-import { Col, Row, Dropdown, Pagination, Tooltip, OverlayTrigger } from 'react-bootstrap';
+import { Col, Row, Button, Dropdown, Pagination, Tooltip, OverlayTrigger } from 'react-bootstrap';
 
 // React Router
 import { withRouter } from 'react-router-dom'
@@ -579,6 +579,14 @@ class InvestigatorTable extends React.Component {
                             <div>{item.mesh_counter?item.mesh_counter:'--'}</div>
                           </div>
                         </div>
+                        <div className="mt-3">
+                          <Button className="w-100 inspire-button inspire-box-shadow" 
+                            variant="outline-primary"
+                            style={{ paddingLeft: 0, paddingRight: 0 }} 
+                            onClick={(e) => this.props.history.push(`/dashboard/project/${this.state.projectOid}/investigator/${item.oid}`)}>
+                              See Profile
+                          </Button>
+                          </div>
                       </div>
                     </AnimateHeight>
                   </td>
@@ -587,9 +595,6 @@ class InvestigatorTable extends React.Component {
           </tbody>
         </table>
 
-        {window.mobile?'':                
-          <InspirePagination currentPage={currentPage} totalPage={totalPage} onClick={this.navigatePage.bind(this)} />
-        }
       </>
     );
   }

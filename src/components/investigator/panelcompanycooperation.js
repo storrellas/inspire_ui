@@ -143,7 +143,7 @@ class PanelCompanyCooperation extends React.Component {
 
     // Add data
     this.chart.data = companyList
-    
+
     // Create axes
     let categoryAxis = this.chart.yAxes.push(new am4charts.CategoryAxis());
     categoryAxis.dataFields.category = "name";
@@ -172,7 +172,7 @@ class PanelCompanyCooperation extends React.Component {
       series.dataFields.categoryY = "name";
       series.stacked = true;
       series.name = name;
-      series.columns.template.tooltipText = "{name}: {valueX}";
+      series.columns.template.tooltipText = `{name}: {valueX} Year: ${field}`;
       series.numberFormatter.language.locale = am4lang_de_DE;
   
       let labelBullet = series.bullets.push(new am4charts.LabelBullet());
@@ -186,6 +186,10 @@ class PanelCompanyCooperation extends React.Component {
     for(const item of Array.from(yearSet) ){
       createSeries(item, item);
     }
+
+    
+    // Add legend
+    this.chart.legend = new am4charts.Legend(); 
 
     // Set state after timeout
     this.setState({ isOpened: true })
