@@ -190,6 +190,7 @@ class PanelCompanyCooperation extends React.Component {
     
     // Add legend
     this.chart.legend = new am4charts.Legend(); 
+    this.chart.legend.numberFormatter.numberFormat = "#####"; 
 
     // Set state after timeout
     this.setState({ isOpened: true })
