@@ -55,8 +55,10 @@ axios.interceptors.response.use(function (response) {
   // Do something with response error
   //alert("error", error)
   console.log(error)
-  console.log(error.response.config);
-  console.log(error.response.request);
+  if(error.response){
+    console.log(error.response.config);
+    console.log(error.response.request);
+  }
   /*
   // Error
   if (error.response) {
@@ -69,8 +71,8 @@ axios.interceptors.response.use(function (response) {
       console.log('Error', error.message);
   }
   /**/
-  // Simulate a mouse click:
-  // window.location.href = process.env.REACT_APP_API_URL;
+  // Redirect to home
+  window.location.href = '/';
   // alert("waiting") 
   return Promise.reject(error);
 });

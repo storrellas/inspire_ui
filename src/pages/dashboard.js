@@ -86,11 +86,16 @@ class Dashboard extends React.Component {
         
     }
 
+
+
     render() {
         const { isToggled } = this.state;
         const { investigatorProfile } = this.props;
         
-        const projectList = JSON.parse(localStorage.getItem('project_permissions'));
+        let projectList = JSON.parse(localStorage.getItem('project_permissions'));
+        if( projectList === null ){
+          projectList = []
+        }
         const username = localStorage.getItem('username');        
 
         const { match: { params } } = this.props;        
