@@ -55,9 +55,13 @@ axios.interceptors.response.use(function (response) {
   // Do something with response error
   //alert("error", error)
   console.log(error)
+  let url = '';
   if(error.response){
     console.log(error.response.config);
     console.log(error.response.request);
+
+    // Store URL
+    url = error.response.config.url
   }
   /*
   // Error
@@ -71,9 +75,13 @@ axios.interceptors.response.use(function (response) {
       console.log('Error', error.message);
   }
   /**/
+
+
   // Redirect to home
-  if(window.location.pathname !== '/')
+  if( url.includes('mesh-score') == false){ // Exclude mesh-score
+    if(window.location.pathname !== '/')
     window.location.href = '/';
+  }
   // alert("waiting") 
   return Promise.reject(error);
 });
