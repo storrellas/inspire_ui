@@ -72,7 +72,8 @@ axios.interceptors.response.use(function (response) {
   }
   /**/
   // Redirect to home
-  window.location.href = '/';
+  if(window.location.pathname !== '/')
+    window.location.href = '/';
   // alert("waiting") 
   return Promise.reject(error);
 });
