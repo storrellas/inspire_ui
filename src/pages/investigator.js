@@ -469,18 +469,32 @@ class Investigator extends React.Component {
 
   renderMobile(){
     const { profile } = this.state;
+
     return (
-      <div>
+      <div className="mt-3">
         <div className="d-flex align-items-center">
           <div className="w-25">
-            <img src={this.state.profile.picture} style={{ width: '90%', borderRadius: '50%' }}></img>
+            <img src={profile.picture} style={{ width: '90%', borderRadius: '50%' }}></img>
           </div>
           <div className="w-75">
             <div>
-              <span className="inspire-text-secondary">{this.state.profile.degree}</span>
-              <span className="ml-3"><b>{this.state.profile.name} </b></span>
-            </div>                </div>
+              <span className="inspire-text-secondary">{profile.degree}</span>
+              <span className="ml-3"><b>{profile.name} </b></span>
+            </div>                
+          </div>            
         </div>
+
+        <div className="d-flex mt-3">
+          <div className="text-center"  style={{ width: "49%" }}>
+          {profile.affiliationInstitutionPhone}
+          </div>
+          <div className="text-center" style={{ width: "2%" }}>|</div>
+          <div className="ml-3 text-center inspire-text-secondary" style={{ width: "49%" }}>
+            <a style={{wordBreak: 'break-all'}} 
+              href={"mailto:"+profile.affiliationInstitutionEmail}>{profile.affiliationInstitutionEmail}</a>
+          </div>
+        </div>
+
       </div>
       )
   }
