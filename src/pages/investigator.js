@@ -133,7 +133,7 @@ class Investigator extends React.Component {
       // Set selection      
       let shortOid = oid.split('-')[oid.split('-').length -1 ]
       const token = localStorage.getItem('token')
-      const baseUrl = profile.is_favorite_investigator?
+      const baseUrl = profile.isFavoriteInvestigator?
         `${process.env.REACT_APP_API_URL}/api/remove-favorite-investigators/`:
         `${process.env.REACT_APP_API_URL}/api/add-favorite-investigators/`;
       const body = { ids: [ shortOid ] }
@@ -141,7 +141,7 @@ class Investigator extends React.Component {
         { headers: { "Authorization": "jwt " + token }
       })
 
-      profile.isFavoriteInvestigator = !profile.isFavoriteInvestigator;
+      profile.isFavoriteInvestigator = !profile.isFavoriteInvestigator;      
 
       this.props.setInvestigatorProfile({
         name: profile.name,
@@ -372,7 +372,7 @@ class Investigator extends React.Component {
 
           <Col sm={3}>
             {profile?
-            <Button className={profile.isFavoriteInvestigator?"w-100 inspire-button inspire-box-shadow":"w-100 inspire-ghost-button inspire-box-shadow"} 
+            <Button className={profile.isFavoriteInvestigator?"w-100 inspire-button inspire-box":"w-100 inspire-ghost-button inspire-box-shadow"} 
               variant="outline-primary"
               style={{ paddingLeft: 0, paddingRight: 0 }} onClick={(e) => this.onSetInvestigatorFavorite()}>
 

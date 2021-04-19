@@ -84,7 +84,7 @@ class InvestigatorProfile extends React.Component {
       //   duration: 2
       // });
 
-      this.mapRef.current.setView([lat,lng], 14);
+      this.mapRef.current.setView([lat,lng], 17);
     }
 
     return (
@@ -166,7 +166,7 @@ class InvestigatorProfile extends React.Component {
 
             <MapContainer 
               whenCreated={ mapInstance => { this.mapRef.current = mapInstance } }
-              center={[lat, lng]} zoom={10} scrollWheelZoom 
+              center={[lat, lng]} zoom={18} scrollWheelZoom 
               style={{ height: "200px", width: '100%', borderRadius: '5px'}}>
               <TileLayer
                 attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'

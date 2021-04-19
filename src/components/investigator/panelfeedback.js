@@ -33,6 +33,7 @@ class PanelFeedback extends React.Component {
         { value: 'coverage_issue', label: 'Coverage Issue' },
         { value: 'data_consistency_issue', label: 'Data Consistency Issue' },
         { value: 'technical_issue', label: 'Technical Issue' },
+        { value: 'other', label: 'Other' },
     ]
     this.ticketPriorityOptions = [
         { value: 'normal', label: 'Normal' },

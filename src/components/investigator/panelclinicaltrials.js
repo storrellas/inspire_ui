@@ -73,10 +73,6 @@ const FILTERING = [
     label: 'Study Type', type: SEARCH_HEADER.TEXT 
   },
   { 
-    dataField: 'enrollment', caption: 'enrollement', 
-    label: 'Enrolment', type: SEARCH_HEADER.TEXT 
-  },
-  { 
     dataField: 'intervention', caption: 'intervention', 
     label: 'Intervention', type: SEARCH_HEADER.TEXT 
   },
