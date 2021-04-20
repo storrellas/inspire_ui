@@ -17,7 +17,7 @@ import "./dashboard.scss"
 
 // Font Awesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUser, faBars, faStar, faAngleRight } from '@fortawesome/free-solid-svg-icons'
+import { faUser, faTasks, faBars, faStar, faAngleRight } from '@fortawesome/free-solid-svg-icons'
 
 // Assets
 import inspireLogo from '../assets/logo2.png';
@@ -134,7 +134,7 @@ class Dashboard extends React.Component {
                                 </div>
                                 <div style={{ marginTop: '3em', cursor: 'pointer' }}>
                                     <div className="d-flex font-weight-bold">
-                                        <div><FontAwesomeIcon icon={faUser} /></div>
+                                        <div><FontAwesomeIcon icon={faTasks} /></div>
                                         <span className="align-self-end ml-2" style={{ flexGrow: 1 }}>
                                             <a href="#" style={{ color: 'white' }}
                                                 onClick={(e) => this.setState({ projectHeight: this.state.projectHeight == 0 ? 'auto' : 0 })}>

@@ -220,7 +220,7 @@ class PanelConnections extends React.Component {
       that.setState({cytoscapeInvestigator:data})
     });
     this.cy.layout(this.cytoscapeLayout).run() 
-    cy.userZoomingEnabled( false )
+    //cy.userZoomingEnabled( false )
   }
 
   getIntersection(a, b){
