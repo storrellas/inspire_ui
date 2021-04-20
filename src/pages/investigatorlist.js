@@ -37,7 +37,7 @@ class InvestigatorList extends React.Component {
     }
     return (
       <Row className='mt-3 mb-3'>        
-        <Col sm={12} className={window.mobile?'no-padding no-margin':''}>
+        <Col sm={12}>
           <h5 className={window.mobile?'ml-2':'d-none'}>Project Results</h5>
           <Nav className={window.mobile?'d-none':''} variant="tabs">
             <Nav.Item>

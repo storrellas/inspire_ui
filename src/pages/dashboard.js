@@ -248,7 +248,7 @@ class Dashboard extends React.Component {
                               </Col>
                           </Row>
                           <Row className="inspire-content-reloaded">
-                              <Col sm={12}>
+                              <Col sm={12} className={window.mobile?'no-padding':''}>
                                   <Route path={`${this.props.match.path}`} exact
                                       render={(props) => (<ProjectSelector />)} />
                                   {/* <Route path={`${this.props.match.path}project/:id`} exact
