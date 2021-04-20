@@ -10,6 +10,7 @@ import AnimateHeight from 'react-animate-height';
 
 // Assets
 import arrow from '../../assets/arrow.png';
+import lock from '../../assets/lock.png';
 import favorite from '../../assets/favorite.png';
 import nonfavorite from '../../assets/nonfavorite.png';
 
@@ -426,9 +427,13 @@ class InvestigatorTable extends React.Component {
                     
                   </td>
                   <td>
-                    <img src={arrow} width="30"
-                      onClick={(e) => this.props.history.push(`/dashboard/project/${this.state.projectOid}/investigator/${item.oid}`)}
-                      style={{ cursor: 'pointer' }}></img>
+                    {item.is_unlocked_investigator?                    
+                      <img src={arrow} width="30"
+                        onClick={(e) => this.props.history.push(`/dashboard/project/${this.state.projectOid}/investigator/${item.oid}`)}
+                        style={{ cursor: 'pointer' }}></img>
+                    :
+                      <img src={lock} width="20"></img>
+                    }
                   </td>
 
                   <td>{item.first_name}</td>
