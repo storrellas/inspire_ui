@@ -22,6 +22,7 @@ import { faAngleRight, faAngleDown, faStar, faSearch, faArrowCircleDown, faNewsp
 
 // Project imports
 import InvestigatorProfile from '../components/investigator/investigatorprofile'
+import InvestigatorProfileMobile from '../components/investigator/investigatorprofilemobile'
 
 // Redux
 import { setInvestigatorProfile, setPanelActive, PANEL } from "../redux";
@@ -472,74 +473,7 @@ class Investigator extends React.Component {
 
     return (
       <div className="mt-3">
-        <div className="pl-3 pr-3">
-
-          <div className="d-flex align-items-center">
-            <div className="w-25">
-              <img src={profile.picture} style={{ width: '90%', borderRadius: '50%' }}></img>
-            </div>
-            <div className="w-75">
-              <div>
-                <span className="inspire-text-secondary">{profile.degree}</span>
-                <span className="ml-3"><b>{profile.name} </b></span>
-              </div>
-            </div>
-          </div>
-
-          <div className="d-flex mt-3">
-            <div className="text-center" style={{ width: "49%" }}>
-              {profile.affiliationInstitutionPhone}
-            </div>
-            <div className="text-center" style={{ width: "2%" }}>|</div>
-            <div className="ml-3 text-center inspire-text-secondary" style={{ width: "49%" }}>
-              <a style={{ wordBreak: 'break-all' }}
-                href={"mailto:" + profile.affiliationInstitutionEmail}>{profile.affiliationInstitutionEmail}</a>
-            </div>
-          </div>
-
-          <div className="mt-3 d-flex">
-
-            <Button className="mr-1 w-100 inspire-button inspire-box-shadow" variant="primary"
-              onClick={(e) => this.props.history.push(`/dashboard/`)}>Open Project</Button>
-
-            {profile ?
-              <Button className={profile.isFavoriteInvestigator ? "ml-1 w-100 inspire-button inspire-box" : "ml-1 w-100 inspire-ghost-button inspire-box-shadow"}
-                variant="outline-primary"
-                style={{ paddingLeft: 0, paddingRight: 0 }} onClick={(e) => this.onSetInvestigatorFavorite()}>
-
-                <>
-                  <FontAwesomeIcon icon={profile.isFavoriteInvestigator ? farStar : faStar} className="mr-2" />
-                  {profile.isFavoriteInvestigator ? "Remove from Favorites" : "Add to Favorites"}
-                </>
-              </Button>
-              : ''}
-          </div>
-        </div>
-
-        <div className="mt-3 page-container" style={{ borderColor: '#dee2e6',borderRadius: '.25rem'}}>
-          <div className="d-flex">
-            <div className="w-50 d-flex flex-column  justify-content-between">
-              <div>
-                <div className="inspire-text-secondary" style={{ fontSize: '12px'}}>POSITION</div>
-                <div>{profile.affiliationPosition}</div>
-              </div>
-              <div>
-                <div className="inspire-text-secondary" style={{ fontSize: '12px'}}>CAREER STAGE</div>
-                <div>{profile.careerStage}</div>              
-              </div>
-            </div>
-            <div className="w-50">
-            <div className="inspire-text-secondary" style={{ fontSize: '12px'}}>AFFILIATION</div>
-              <div>{profile.affiliationInsititution}</div>          
-            </div>
-          </div>
-          <div className="mt-3">
-            <div className="inspire-text-secondary" style={{ fontSize: '12px'}}>PRIVATE CONTACT</div>
-            <div><a style={{wordBreak: 'break-all'}} href={"mailto:"+profile.privateEmail}>{profile.privateEmail}</a></div>
-          </div>
-        </div>
-
-
+        <InvestigatorProfileMobile profile={this.state.profile} />
       </div>
       )
   }
