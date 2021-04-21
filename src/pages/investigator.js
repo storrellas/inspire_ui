@@ -8,6 +8,9 @@ import { withRouter } from 'react-router-dom'
 // Loading Overlay
 import LoadingOverlay from 'react-loading-overlay';
 
+// AnimateHeight
+import AnimateHeight from 'react-animate-height';
+
 // Axios
 import axios from 'axios';
 
@@ -469,14 +472,83 @@ class Investigator extends React.Component {
   }
 
   renderMobile(){
-    const { profile } = this.state;
+    const { profile, panel } = this.state;
+
+    const PanelTitle = (props) => 
+      <div className="mt-3 w-100 text-center p-3" style={{ background: '#DEE7F4', borderRadius: '3%', pointer: 'cursor' }}>
+        <b>{props.name}</b>
+      </div>
 
     return (
       <div className="mt-3">
         <InvestigatorProfileMobile profile={this.state.profile} />
 
-        <div className="mt-3">
-          Panels
+        <div className="mt-3 mb-3">
+          <div onClick={(e) => this.setState({ panel: PANEL.CONNECTIONS })}>
+            <PanelTitle name={"Connections"} />
+            <AnimateHeight
+              height={panel === PANEL.CONNECTIONS ? 'auto' : 0}
+              duration={500}>
+              Place Panel Here
+            </AnimateHeight>
+          </div>
+          <div onClick={(e) => this.setState({ panel: PANEL.AFFILIATIONS })}>
+            <PanelTitle name={"Affiliations"} />
+            <AnimateHeight
+              height={panel === PANEL.AFFILIATIONS ? 'auto' : 0}
+              duration={500}>
+              Place Panel Here
+            </AnimateHeight>
+          </div>
+
+          <div onClick={(e) => this.setState({ panel: PANEL.RESEARCH_PROFILE })}>
+            <PanelTitle name={"Research Profile"} />
+            <AnimateHeight
+              height={panel === PANEL.RESEARCH_PROFILE ? 'auto' : 0}
+              duration={500}>
+              Place Panel Here
+            </AnimateHeight>
+          </div>
+
+          <div onClick={(e) => this.setState({ panel: PANEL.PUBLICATIONS })}>
+            <PanelTitle name={"Publications"} />
+            <AnimateHeight
+              height={panel === PANEL.PUBLICATIONS ? 'auto' : 0}
+              duration={500}>
+              Place Panel Here
+            </AnimateHeight>
+          </div>
+
+          <div onClick={(e) => this.setState({ panel: PANEL.EVENTS })}>
+            <PanelTitle name={"Events"} />
+            <AnimateHeight
+              height={panel === PANEL.EVENTS ? 'auto' : 0}
+              duration={500}>
+              Place Panel Here
+            </AnimateHeight>
+          </div>
+
+          <div onClick={(e) => this.setState({ panel: PANEL.CLINICAL_TRIALS })}>
+            <PanelTitle name={"Clinical Trials"} />
+            <AnimateHeight
+              height={panel === PANEL.CLINICAL_TRIALS ? 'auto' : 0}
+              duration={500}>
+              Place Panel Here
+            </AnimateHeight>
+          </div>
+
+          <div onClick={(e) => this.setState({ panel: PANEL.FEEDBACK })}>
+            <PanelTitle name={"Feedback"} />
+            <AnimateHeight
+              height={panel === PANEL.FEEDBACK ? 'auto' : 0}
+              duration={500}>
+              Place Panel Here
+            </AnimateHeight>
+          </div>
+
+
+
+
         </div>
       </div>
       )

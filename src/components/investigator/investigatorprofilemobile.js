@@ -74,8 +74,6 @@ class InvestigatorProfileMobile extends React.Component {
     const { profile } = this.props;
     const { affiliationInstitutionLocation } = profile;
     
-    console.log("affiliationInstitutionLocation ", affiliationInstitutionLocation)
-
     let lat = 47.5162;
     let lng = 14.5501;
     if (affiliationInstitutionLocation && this.mapRef.current) {
@@ -173,7 +171,7 @@ class InvestigatorProfileMobile extends React.Component {
                 </Marker>
               </MapContainer>
             </div>
-            <div className="pl-3 pr-3">
+            <div className="p-3">
               <InvestigatorProfileSnapshot profile={this.props.profile}/>
             </div>
 
