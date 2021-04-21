@@ -474,6 +474,10 @@ class Investigator extends React.Component {
     return (
       <div className="mt-3">
         <InvestigatorProfileMobile profile={this.state.profile} />
+
+        <div className="mt-3">
+          Panels
+        </div>
       </div>
       )
   }

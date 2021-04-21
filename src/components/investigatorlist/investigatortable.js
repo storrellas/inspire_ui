@@ -289,6 +289,7 @@ class InvestigatorTable extends React.Component {
         filtering[item_candidate.caption] = value
       }
     }
+    this.state.investigatorList = []
 
     this.state.filtering = filtering;
     // Clear timeout
@@ -506,6 +507,20 @@ class InvestigatorTable extends React.Component {
               )}
               <td style={{ width: '15%' }}></td>
             </tr>
+            <tr style={{ border: '1px solid #A4C8E6', borderWidth: '1px 0px 2px 0px' }}>
+                <td></td>
+                
+
+                {this.filteringDevice.map((item, id) =>
+                <td key={id}>
+                  <SearchHeader 
+                    onChange={(pattern) => this.loadFilteredInvestigators(item.caption, pattern)} 
+                    type={item.type} />
+                </td>
+                )}
+                <td></td>
+              </tr>
+
           </thead>
 
           <tbody>
