@@ -475,7 +475,7 @@ class Investigator extends React.Component {
     const { profile, panel } = this.state;
 
     const PanelTitle = (props) => 
-      <div className="mt-3 w-100 text-center p-3" style={{ background: '#DEE7F4', borderRadius: '3%', pointer: 'cursor' }}>
+      <div className="mt-3 w-100 text-center p-3">
         <b>{props.name}</b>
       </div>
 
@@ -484,7 +484,8 @@ class Investigator extends React.Component {
         <InvestigatorProfileMobile profile={this.state.profile} />
 
         <div className="mt-3 mb-3">
-          <div onClick={(e) => this.setState({ panel: PANEL.CONNECTIONS })}>
+          <div onClick={(e) => this.setState({ panel: PANEL.CONNECTIONS })}
+           style={{ background: '#DEE7F4', borderRadius: '3%', pointer: 'cursor' }}>
             <PanelTitle name={"Connections"} />
             <AnimateHeight
               height={panel === PANEL.CONNECTIONS ? 'auto' : 0}
@@ -492,7 +493,8 @@ class Investigator extends React.Component {
               Place Panel Here
             </AnimateHeight>
           </div>
-          <div onClick={(e) => this.setState({ panel: PANEL.AFFILIATIONS })}>
+          <div onClick={(e) => this.setState({ panel: PANEL.AFFILIATIONS })}
+           style={{ background: '#DEE7F4', borderRadius: '3%', pointer: 'cursor' }}>
             <PanelTitle name={"Affiliations"} />
             <AnimateHeight
               height={panel === PANEL.AFFILIATIONS ? 'auto' : 0}
@@ -501,7 +503,8 @@ class Investigator extends React.Component {
             </AnimateHeight>
           </div>
 
-          <div onClick={(e) => this.setState({ panel: PANEL.RESEARCH_PROFILE })}>
+          <div onClick={(e) => this.setState({ panel: PANEL.RESEARCH_PROFILE })}
+           style={{ background: '#DEE7F4', borderRadius: '3%', pointer: 'cursor' }}>
             <PanelTitle name={"Research Profile"} />
             <AnimateHeight
               height={panel === PANEL.RESEARCH_PROFILE ? 'auto' : 0}
@@ -510,7 +513,8 @@ class Investigator extends React.Component {
             </AnimateHeight>
           </div>
 
-          <div onClick={(e) => this.setState({ panel: PANEL.PUBLICATIONS })}>
+          <div onClick={(e) => this.setState({ panel: PANEL.PUBLICATIONS })} 
+            style={{ background: '#DEE7F4', borderRadius: '3%', pointer: 'cursor' }}>
             <PanelTitle name={"Publications"} />
             <AnimateHeight
               height={panel === PANEL.PUBLICATIONS ? 'auto' : 0}
@@ -519,7 +523,8 @@ class Investigator extends React.Component {
             </AnimateHeight>
           </div>
 
-          <div onClick={(e) => this.setState({ panel: PANEL.EVENTS })}>
+          <div onClick={(e) => this.setState({ panel: PANEL.EVENTS })}
+            style={{ background: '#DEE7F4', borderRadius: '3%', pointer: 'cursor' }}>
             <PanelTitle name={"Events"} />
             <AnimateHeight
               height={panel === PANEL.EVENTS ? 'auto' : 0}
@@ -528,7 +533,8 @@ class Investigator extends React.Component {
             </AnimateHeight>
           </div>
 
-          <div onClick={(e) => this.setState({ panel: PANEL.CLINICAL_TRIALS })}>
+          <div onClick={(e) => this.setState({ panel: PANEL.CLINICAL_TRIALS })}
+            style={{ background: '#DEE7F4', borderRadius: '3%', pointer: 'cursor' }}>
             <PanelTitle name={"Clinical Trials"} />
             <AnimateHeight
               height={panel === PANEL.CLINICAL_TRIALS ? 'auto' : 0}
@@ -537,7 +543,8 @@ class Investigator extends React.Component {
             </AnimateHeight>
           </div>
 
-          <div onClick={(e) => this.setState({ panel: PANEL.FEEDBACK })}>
+          <div onClick={(e) => this.setState({ panel: PANEL.FEEDBACK })}
+            style={{ background: '#DEE7F4', borderRadius: '3%', pointer: 'cursor' }}>
             <PanelTitle name={"Feedback"} />
             <AnimateHeight
               height={panel === PANEL.FEEDBACK ? 'auto' : 0}
