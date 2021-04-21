@@ -10,7 +10,7 @@ import './modal.scss';
 
 // Font Awesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faExpandArrowsAlt, faFolder, faBook, faCalendarWeek, faHome } from '@fortawesome/free-solid-svg-icons'
+import { faAngleLeft } from '@fortawesome/free-solid-svg-icons'
 
 // Cytoscape
 import CytoscapeComponent from 'react-cytoscapejs';
@@ -132,6 +132,7 @@ class PanelConnections extends React.Component {
         institutionsPast: 0, 
         institutionsPresent: 0
       },
+      showSideModal: false
     }
     this.cytoscape = undefined
     this.cytoscapeMax = undefined
@@ -342,6 +343,8 @@ class PanelConnections extends React.Component {
     const { users, connections } = this.state;
     const filtering = this.getFiltering(users, connections)
 
+    // Only for mobile
+    this.state.showSideModal = false;
 
     // Force cytoscapeMax to reload
     this.cytoscapeMax = undefined;
@@ -677,6 +680,50 @@ class PanelConnections extends React.Component {
     
   }
 
+  renderFilters(){
+    const { activeTab, countryList, yearList } = this.state;
+    const { countrySelected, connectionTypeSelected } = this.state;
+    return (
+      <>
+        <div className="font-weight-bold">Connection Strength</div>
+        <Select
+          options={connectionStregnthOptions}
+          defaultValue={connectionStregnthOptions[0]}
+          onChange={(e) => this.onFilterConnectionStrength(e)}
+        />
+        <div className="font-weight-bold">Country</div>
+        <Select
+          isMulti
+          options={countryList}
+          value={countrySelected}
+          onChange={(e) => this.onFilterCountry(e)}
+        />
+
+        <div className="font-weight-bold">Connection Type</div>
+        <Select
+          isMulti
+          options={connectionTypeOptions}
+          value={connectionTypeSelected}
+          onChange={(e) => this.onFilterConnectionType(e)}
+        />
+        <div className="d-flex">
+          <div className="w-50 mr-1">
+            <div className="font-weight-bold">From</div>
+            <Select options={yearList}
+              onChange={(e) => this.onYearFrom(e)}
+              defaultValue={yearList[0]} />
+          </div>
+          <div className="w-50 ml-1">
+            <div className="font-weight-bold">To</div>
+            <Select options={yearList}
+              onChange={(e) => this.onYearTo(e)}
+              defaultValue={yearList[yearList.length - 1]} />
+          </div>
+        </div>
+      </>
+    )
+  }
+
   renderDesktop() {
 
     const { usersFiltered, connectionsFiltered } = this.state;
@@ -693,8 +740,7 @@ class PanelConnections extends React.Component {
         //this.generateNetworkChart()
     }
 
-    const { activeTab, countryList, yearList } = this.state;
-    const { countrySelected, connectionTypeSelected } = this.state;
+    const { activeTab } = this.state;
     const { cytoscapeInvestigator } = this.state;
     //const content = (activeTab == TAB.NETWORK) ? this.cytoscapeMax : this.generateProfiles()
 
@@ -720,43 +766,7 @@ class PanelConnections extends React.Component {
           <div>
             <div className="font-weight-bold p-2 " style={{ fontSize: '16px' }}>FILTERS</div>
             <div className="p-2" style={{ color: '#555' }}>
-              <div className="font-weight-bold">Connection Strength</div>
-              <Select
-                options={connectionStregnthOptions}
-                defaultValue={connectionStregnthOptions[0]}
-                onChange={ (e) => this.onFilterConnectionStrength(e)}
-              />
-              <div className="font-weight-bold">Country</div>
-              <Select
-                isMulti
-                options={countryList}
-                value={countrySelected}
-                onChange={ (e) => this.onFilterCountry(e)}
-              />
-
-              <div className="font-weight-bold">Connection Type</div>
-              <Select
-                isMulti
-                options={connectionTypeOptions}
-                value={connectionTypeSelected}
-                onChange={ (e) => this.onFilterConnectionType(e)}
-              />
-              <div className="d-flex">
-                <div className="w-50 mr-1">
-                  <div className="font-weight-bold">From</div>
-                  <Select options={yearList} 
-                    onChange={ (e) => this.onYearFrom(e)}
-                    defaultValue={yearList[0]}/>
-                </div>
-                <div className="w-50 ml-1">
-                  <div className="font-weight-bold">To</div>
-                  <Select options={yearList} 
-                    onChange={ (e) => this.onYearTo(e)}
-                    defaultValue={yearList[yearList.length-1]}/>
-                </div>
-
-              </div>
-              
+              {this.renderFilters()}              
             </div>
           </div>
           <div className="mt-3">
@@ -795,10 +805,9 @@ class PanelConnections extends React.Component {
   }
 
   renderMobile(){
-    const { usersFiltered, connectionsFiltered } = this.state;
+    const { usersFiltered, connectionsFiltered, showSideModal } = this.state;
     const source = this.generateSource(usersFiltered, connectionsFiltered)        
     if ( this.cytoscapeMax === undefined && source.length > 0) {
-
         this.cytoscapeMax = <CytoscapeComponent key={this.childKey}
                                 elements={source}
                                 cy={(cy) => this.renderedCytoscape(cy) }
@@ -809,7 +818,41 @@ class PanelConnections extends React.Component {
         //this.generateNetworkChart()
     }
 
-    return <div>This is jus ta test</div>
+
+    return (
+      <div className="w-100" style={{ height: '400px'}}>
+
+        <div className={showSideModal ? "inspire-sidemodal-wrapper toggled": "inspire-sidemodal-wrapper"}>
+            <div className="p-3">
+              <div style={{ fontSize: '20px' }} 
+                onClick={(e) => this.setState({ showSideModal: false })}>
+                <FontAwesomeIcon icon={faAngleLeft}/>              
+              </div>
+              <div className="mt-3" style={{ fontSize: '20px' }}>
+                <b>Filters</b>  
+              </div>
+              <div className="mt-3">
+                {this.renderFilters()}
+              </div>
+            </div>
+
+
+        </div>
+
+        <div className="d-flex p-3">
+          <Button className="mr-1 w-100 inspire-ghost-button no-padding" 
+            variant="outline-primary"
+            onClick={e => this.setState({showSideModal: true})}>
+                Open Filters
+          </Button>
+          <Button className="ml-1 w-100 inspire-ghost-button no-padding" 
+            variant="outline-primary">
+                See Details
+          </Button>          
+        </div>
+        {this.cytoscapeMax}
+      </div>
+    )
   }
 
   render() {

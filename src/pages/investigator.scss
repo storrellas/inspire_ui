@@ -96,3 +96,27 @@ $inspire-text-secondary: #8A8A8A;
   box-shadow: none;
   border-color: #ced4da;
 }
+
+
+// Side Modal
+.inspire-sidemodal-wrapper {
+    overflow-x: hidden;
+    height: 100vh;
+    min-height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    margin-left: 100%;
+    z-index: 3000;
+    background-color: white;
+    -webkit-transition: margin .25s ease-out;
+    -moz-transition: margin .25s ease-out;
+    -o-transition: margin .25s ease-out;
+    transition: margin .25s ease-out;
+}
+
+.inspire-sidemodal-wrapper.toggled {
+    margin-left: 0;
+}
+
