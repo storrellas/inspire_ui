@@ -63,6 +63,27 @@ const mapStateToProps = (state) => {
 }
 
 
+const Panel = (props) => {
+  return (
+    <div onClick={(e) => props.handler(props.panel)}
+      className={props.panel === props.activePanel?"inspire-panel-mobile inspire-panel-mobile-active":"inspire-panel-mobile"}>
+      <div className="mt-3 w-100 p-3">
+        <div 
+          className={props.panel === props.activePanel?"text-center inspire-panel-title-mobile-active" :"w-75 text-center" }
+          style={{ margin: '0 auto'}}>
+          <b>{props.name}</b>
+        </div>
+        
+      </div>
+     <AnimateHeight
+       height={props.activePanel === props.panel?'auto':0}
+       duration={500}>
+       {props.children}
+     </AnimateHeight>
+   </div>
+  )
+}
+
 class Investigator extends React.Component {
 
   constructor(props) {
@@ -437,7 +458,7 @@ class Investigator extends React.Component {
 
             </Nav>
             <div className={panel === PANEL.CONNECTIONS ? 'inspire-panel-content' : 'd-none'}>
-                <PanelConnections reloaded />
+              <PanelConnections />
             </div>
             <div className={panel === PANEL.COMPANY_COOPERATION ? 'inspire-panel-content' : 'd-none'}>
               <PanelCompanyCooperation/>
@@ -474,85 +495,60 @@ class Investigator extends React.Component {
   renderMobile(){
     const { profile, panel } = this.state;
 
-    const PanelTitle = (props) => 
-      <div className="mt-3 w-100 text-center p-3">
-        <b>{props.name}</b>
-      </div>
-
     return (
       <div className="mt-3">
         <InvestigatorProfileMobile profile={this.state.profile} />
 
         <div className="mt-3 mb-3">
-          <div onClick={(e) => this.setState({ panel: PANEL.CONNECTIONS })}
-           style={{ background: '#DEE7F4', borderRadius: '3%', pointer: 'cursor' }}>
-            <PanelTitle name={"Connections"} />
-            <AnimateHeight
-              height={panel === PANEL.CONNECTIONS ? 'auto' : 0}
-              duration={500}>
-              Place Panel Here
-            </AnimateHeight>
-          </div>
-          <div onClick={(e) => this.setState({ panel: PANEL.AFFILIATIONS })}
-           style={{ background: '#DEE7F4', borderRadius: '3%', pointer: 'cursor' }}>
-            <PanelTitle name={"Affiliations"} />
-            <AnimateHeight
-              height={panel === PANEL.AFFILIATIONS ? 'auto' : 0}
-              duration={500}>
-              Place Panel Here
-            </AnimateHeight>
-          </div>
 
-          <div onClick={(e) => this.setState({ panel: PANEL.RESEARCH_PROFILE })}
-           style={{ background: '#DEE7F4', borderRadius: '3%', pointer: 'cursor' }}>
-            <PanelTitle name={"Research Profile"} />
-            <AnimateHeight
-              height={panel === PANEL.RESEARCH_PROFILE ? 'auto' : 0}
-              duration={500}>
-              Place Panel Here
-            </AnimateHeight>
-          </div>
+          <Panel
+            name={"Connections"}
+            activePanel={panel} panel={PANEL.CONNECTIONS}
+            handler={(e) => this.setState({ panel: PANEL.CONNECTIONS })}>
+            <PanelConnections />
+          </Panel>
 
-          <div onClick={(e) => this.setState({ panel: PANEL.PUBLICATIONS })} 
-            style={{ background: '#DEE7F4', borderRadius: '3%', pointer: 'cursor' }}>
-            <PanelTitle name={"Publications"} />
-            <AnimateHeight
-              height={panel === PANEL.PUBLICATIONS ? 'auto' : 0}
-              duration={500}>
-              Place Panel Here
-            </AnimateHeight>
-          </div>
+          <Panel
+            name={"Affiliations"}
+            activePanel={panel} panel={PANEL.AFFILIATIONS}
+            handler={(e) => this.setState({ panel: PANEL.AFFILIATIONS })}>
+            <div>MyContentHere</div>
+          </Panel>
 
-          <div onClick={(e) => this.setState({ panel: PANEL.EVENTS })}
-            style={{ background: '#DEE7F4', borderRadius: '3%', pointer: 'cursor' }}>
-            <PanelTitle name={"Events"} />
-            <AnimateHeight
-              height={panel === PANEL.EVENTS ? 'auto' : 0}
-              duration={500}>
-              Place Panel Here
-            </AnimateHeight>
-          </div>
+          <Panel
+            name={"Research Profile"}
+            activePanel={panel} panel={PANEL.RESEARCH_PROFILE}
+            handler={(e) => this.setState({ panel: PANEL.RESEARCH_PROFILE })}>
+            <div>MyContentHere</div>
+          </Panel>
 
-          <div onClick={(e) => this.setState({ panel: PANEL.CLINICAL_TRIALS })}
-            style={{ background: '#DEE7F4', borderRadius: '3%', pointer: 'cursor' }}>
-            <PanelTitle name={"Clinical Trials"} />
-            <AnimateHeight
-              height={panel === PANEL.CLINICAL_TRIALS ? 'auto' : 0}
-              duration={500}>
-              Place Panel Here
-            </AnimateHeight>
-          </div>
+          <Panel
+            name={"Publications"}
+            activePanel={panel} panel={PANEL.PUBLICATIONS}
+            handler={(e) => this.setState({ panel: PANEL.PUBLICATIONS })}>
+            <div>MyContentHere</div>
+          </Panel>
 
-          <div onClick={(e) => this.setState({ panel: PANEL.FEEDBACK })}
-            style={{ background: '#DEE7F4', borderRadius: '3%', pointer: 'cursor' }}>
-            <PanelTitle name={"Feedback"} />
-            <AnimateHeight
-              height={panel === PANEL.FEEDBACK ? 'auto' : 0}
-              duration={500}>
-              Place Panel Here
-            </AnimateHeight>
-          </div>
+          <Panel
+            name={"Events"}
+            activePanel={panel} panel={PANEL.EVENTS}
+            handler={(e) => this.setState({ panel: PANEL.EVENTS })}>
+            <div>MyContentHere</div>
+          </Panel>
 
+          <Panel
+            name={"Clinical Trials"}
+            activePanel={panel} panel={PANEL.CLINICAL_TRIALS}
+            handler={(e) => this.setState({ panel: PANEL.CLINICAL_TRIALS })}>
+            <div>MyContentHere</div>
+          </Panel>
+
+          <Panel
+            name={"Feedback"}
+            activePanel={panel} panel={PANEL.FEEDBACK}
+            handler={(e) => this.setState({ panel: PANEL.FEEDBACK })}>
+            <div>MyContentHere</div>
+          </Panel>
 
 
 

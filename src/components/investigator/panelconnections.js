@@ -662,29 +662,7 @@ class PanelConnections extends React.Component {
 
       //if( children.length > nItemsPerCircle * 3 ) break;
     }
-    /**/
-    /*
-    let children  = []
-    for (const [idx, user] of usersFiltered.entries()){
-      nCircle = Math.floor( (idx) / (nItemsPerCircle) ) + 1;
 
-      console.log("idx ", idx, nCircle)
-
-
-      let x = (centerX + radius * nCircle * Math.cos(2 * Math.PI * idx / (nItemsPerCircle) ));
-      let y = (centerY + radius * nCircle * Math.sin(2 * Math.PI * idx / (nItemsPerCircle) ));
-
-      children.push({
-        name:user.label,
-        distance: 5,
-        fixed: true,
-        x: am4core.percent(x),
-        y: am4core.percent(y),    
-      })
-
-      if( children.length > nItemsPerCircle * 3 ) break;
-    }
-    /**/
     networkSeries.data = [  
       {  
         name: usersFiltered[0].label,
@@ -696,42 +674,10 @@ class PanelConnections extends React.Component {
         color: "#4283f1" 
       },        
   ];
-
-    /*
-    networkSeries.data = [  
-        {  
-          "name": "Phoebe",
-          "value":1,
-          "fixed": true,
-          "children":[  
-              {  
-                "name":"David",
-                "value":1,
-                "distance": 100
-              },
-              {  
-                "name":"Roger",
-                "value":1,
-                "distance": 1
-              },
-              {  
-                "name":"Duncan",
-                "value":1,
-                "distance": 1
-              },
-              {  
-                "name":"Rob Dohnen",
-                "value":1,
-                "distance": 1
-              }
-          ]
-        },        
-    ];
-    /**/
     
   }
 
-  render() {
+  renderDesktop() {
 
     const { usersFiltered, connectionsFiltered } = this.state;
     const source = this.generateSource(usersFiltered, connectionsFiltered)        
@@ -846,6 +792,28 @@ class PanelConnections extends React.Component {
         </div>
 
       </div>);
+  }
+
+  renderMobile(){
+    const { usersFiltered, connectionsFiltered } = this.state;
+    const source = this.generateSource(usersFiltered, connectionsFiltered)        
+    if ( this.cytoscapeMax === undefined && source.length > 0) {
+
+        this.cytoscapeMax = <CytoscapeComponent key={this.childKey}
+                                elements={source}
+                                cy={(cy) => this.renderedCytoscape(cy) }
+                                style={{ width: '100%', height: '100%' }}
+                                stylesheet={this.cytoscapeStylesheet}
+                                layout={this.cytoscapeLayout} />;  
+        // Generate connections
+        //this.generateNetworkChart()
+    }
+
+    return <div>This is jus ta test</div>
+  }
+
+  render() {
+    return (window.mobile?this.renderMobile():this.renderDesktop())
   }
 }
 
