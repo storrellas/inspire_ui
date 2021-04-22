@@ -504,49 +504,56 @@ class Investigator extends React.Component {
           <Panel
             name={"Connections"}
             activePanel={panel} panel={PANEL.CONNECTIONS}
-            handler={(e) => this.setState({ panel: PANEL.CONNECTIONS })}>
+            handler={(e) => this.onSetPanel(PANEL.CONNECTIONS)}>
             <PanelConnections />
+          </Panel>
+
+          <Panel
+            name={"Company Cooperation"}
+            activePanel={panel} panel={PANEL.COMPANY_COOPERATION}
+            handler={(e) => this.onSetPanel(PANEL.COMPANY_COOPERATION)}>
+            <PanelCompanyCooperation />
           </Panel>
 
           <Panel
             name={"Affiliations"}
             activePanel={panel} panel={PANEL.AFFILIATIONS}
-            handler={(e) => this.setState({ panel: PANEL.AFFILIATIONS })}>
+            handler={(e) => this.onSetPanel(PANEL.AFFILIATIONS)}>
             <div>MyContentHere</div>
           </Panel>
 
           <Panel
             name={"Research Profile"}
             activePanel={panel} panel={PANEL.RESEARCH_PROFILE}
-            handler={(e) => this.setState({ panel: PANEL.RESEARCH_PROFILE })}>
+            handler={(e) => this.onSetPanel(PANEL.RESEARCH_PROFILE)}>
             <div>MyContentHere</div>
           </Panel>
 
           <Panel
             name={"Publications"}
             activePanel={panel} panel={PANEL.PUBLICATIONS}
-            handler={(e) => this.setState({ panel: PANEL.PUBLICATIONS })}>
+            handler={(e) => this.onSetPanel(PANEL.PUBLICATIONS)}>
             <div>MyContentHere</div>
           </Panel>
 
           <Panel
             name={"Events"}
             activePanel={panel} panel={PANEL.EVENTS}
-            handler={(e) => this.setState({ panel: PANEL.EVENTS })}>
+            handler={(e) => this.onSetPanel(PANEL.EVENTS)}>
             <div>MyContentHere</div>
           </Panel>
 
           <Panel
             name={"Clinical Trials"}
             activePanel={panel} panel={PANEL.CLINICAL_TRIALS}
-            handler={(e) => this.setState({ panel: PANEL.CLINICAL_TRIALS })}>
+            handler={(e) => this.onSetPanel(PANEL.CLINICAL_TRIALS)}>
             <div>MyContentHere</div>
           </Panel>
 
           <Panel
             name={"Feedback"}
             activePanel={panel} panel={PANEL.FEEDBACK}
-            handler={(e) => this.setState({ panel: PANEL.FEEDBACK })}>
+            handler={(e) => this.onSetPanel(PANEL.FEEDBACK)}>
             <div>MyContentHere</div>
           </Panel>
 

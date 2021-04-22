@@ -111,14 +111,15 @@ class PanelCompanyCooperation extends React.Component {
 
   }
 
-  generateChart() {
+  generateBarChart() {
     if( this.state.dataTable.length == 0 ){
       this.setState({ isOpened: true })
       return
     }
 
     // Create chart instance
-    this.chart = am4core.create("companycooperationchart", am4charts.XYChart);
+    const container = window.mobile?"companycooperationbarchartmobile":"companycooperationbarchart"
+    this.chart = am4core.create(container, am4charts.XYChart);
 
     // Generate set
     let companySet = new Set()
@@ -144,10 +145,18 @@ class PanelCompanyCooperation extends React.Component {
     // Add data
     this.chart.data = companyList
 
+    console.log("field ", companyList)
+
+
     // Create axes
     let categoryAxis = this.chart.yAxes.push(new am4charts.CategoryAxis());
     categoryAxis.dataFields.category = "name";
     categoryAxis.renderer.grid.template.opacity = 0;
+    if( window.mobile ){
+      categoryAxis.renderer.labels.template.visible = false;
+      categoryAxis.renderer.maxWidth = 0;
+    }
+
     let label = categoryAxis.renderer.labels.template;
     label.truncate = true;
     label.maxWidth = 150;
@@ -167,6 +176,7 @@ class PanelCompanyCooperation extends React.Component {
 
     const that = this;
     function createSeries(field, name) {
+
       let series = that.chart.series.push(new am4charts.ColumnSeries());
       series.dataFields.valueX = field;
       series.dataFields.categoryY = "name";
@@ -196,10 +206,11 @@ class PanelCompanyCooperation extends React.Component {
     this.setState({ isOpened: true })
   }
 
-  generateMaxChart() {
+  generatePieChart() {
 
     // Create chart instance
-    this.maxchart = am4core.create("companycooperationmaxchart", am4charts.PieChart);
+    const container = window.mobile?"companycooperationpiechartmobile":"companycooperationpiechart"
+    this.maxchart = am4core.create(container, am4charts.PieChart);
 
     this.maxchart.data = this.state.dataPerNature
 
@@ -374,12 +385,12 @@ class PanelCompanyCooperation extends React.Component {
     this.retrieveCompanyCooperations(currentPage)
   }
 
-  render() {
+  renderDesktop() {
     if (this.props.tabActive == PANEL.COMPANY_COOPERATION && 
       this.state.isOpened == false &&
       this.state.dataPerCompany !== undefined) {
       const that = this;
-      setTimeout(function () { that.generateChart(); that.generateMaxChart() }, 500);
+      setTimeout(function () { that.generateBarChart(); that.generatePieChart() }, 500);
     }
 
     const {dataTable, currentPage, totalPage, sorting} = this.state;
@@ -394,11 +405,11 @@ class PanelCompanyCooperation extends React.Component {
           <EmptyPanel show={emptyPanelShow} />
           {!emptyPanelShow?
           <>
-          <div id="companycooperationchart" style={{ height: '400px', padding: '1em' }}></div>
+          <div id="companycooperationbarchart" style={{ height: '400px', padding: '1em' }}></div>
 
           <div className="d-flex" style={{ marginTop: '3em' }}>
               <div className="d-flex justify-content-center flex-column" style={{ width: '30%' }}>
-                <div id="companycooperationmaxchart" style={{ height: '400px' }}></div>
+                <div id="companycooperationpiechart" style={{ height: '400px' }}></div>
               </div>
               <div style={{ width: '70%' }}>
 
@@ -471,6 +482,41 @@ class PanelCompanyCooperation extends React.Component {
         
 
       </div>);
+  }
+
+  renderMobile(){
+    if (this.props.tabActive == PANEL.COMPANY_COOPERATION && 
+      this.state.isOpened == false &&
+      this.state.dataPerCompany !== undefined) {
+      const that = this;
+      setTimeout(function () { that.generateBarChart(); that.generatePieChart() }, 500);
+    }
+
+    const {dataTable, currentPage, totalPage, sorting} = this.state;
+
+    const emptyPanelShow = this.state.emptyPanelShow && this.props.tabActive == PANEL.COMPANY_COOPERATION;
+
+    return (
+      <div>
+        <LoadingOverlay
+          active={this.state.isOpened == false}
+          spinner>
+
+          <EmptyPanel show={emptyPanelShow} />
+          {!emptyPanelShow?
+          <>
+            <div id="companycooperationbarchartmobile" style={{ height: '400px', padding: '1em' }}></div>
+            <div id="companycooperationpiechartmobile" style={{ height: '400px', padding: '1em' }}></div>
+          </>
+          :''}
+        </ LoadingOverlay>
+      </div>
+    )
+
+  }
+
+  render(){
+    return (window.mobile?this.renderMobile():this.renderDesktop())
   }
 }
 
