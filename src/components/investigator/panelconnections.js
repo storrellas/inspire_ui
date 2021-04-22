@@ -132,7 +132,8 @@ class PanelConnections extends React.Component {
         institutionsPast: 0, 
         institutionsPresent: 0
       },
-      showSideModal: false
+      showFilterSideModal: false,
+      showDetailSideModal: false,
     }
     this.cytoscape = undefined
     this.cytoscapeMax = undefined
@@ -344,7 +345,7 @@ class PanelConnections extends React.Component {
     const filtering = this.getFiltering(users, connections)
 
     // Only for mobile
-    this.state.showSideModal = false;
+    this.state.showFilterSideModal = false;
 
     // Force cytoscapeMax to reload
     this.cytoscapeMax = undefined;
@@ -805,7 +806,8 @@ class PanelConnections extends React.Component {
   }
 
   renderMobile(){
-    const { usersFiltered, connectionsFiltered, showSideModal } = this.state;
+    const { usersFiltered, connectionsFiltered, cytoscapeInvestigator } = this.state;
+    const { showFilterSideModal, showDetailSideModal } = this.state;
     const source = this.generateSource(usersFiltered, connectionsFiltered)        
     if ( this.cytoscapeMax === undefined && source.length > 0) {
         this.cytoscapeMax = <CytoscapeComponent key={this.childKey}
@@ -818,14 +820,19 @@ class PanelConnections extends React.Component {
         //this.generateNetworkChart()
     }
 
+    // Calculate nodeData
+    let nodeDesc = {}
+    if( cytoscapeInvestigator.id !== '' )
+      nodeDesc = this.getNodeDesc(cytoscapeInvestigator.id)
+    const nodeData = { ...cytoscapeInvestigator, ...nodeDesc}
 
     return (
-      <div className="w-100" style={{ height: '400px'}}>
+      <div className="w-100">
 
-        <div className={showSideModal ? "inspire-sidemodal-wrapper toggled": "inspire-sidemodal-wrapper"}>
+        <div className={showFilterSideModal ? "inspire-sidemodal-wrapper toggled": "inspire-sidemodal-wrapper"}>
             <div className="p-3">
               <div style={{ fontSize: '20px' }} 
-                onClick={(e) => this.setState({ showSideModal: false })}>
+                onClick={(e) => this.setState({ showFilterSideModal: false })}>
                 <FontAwesomeIcon icon={faAngleLeft}/>              
               </div>
               <div className="mt-3" style={{ fontSize: '20px' }}>
@@ -835,22 +842,39 @@ class PanelConnections extends React.Component {
                 {this.renderFilters()}
               </div>
             </div>
-
-
         </div>
+
+        <div className={showDetailSideModal ? "inspire-sidemodal-wrapper toggled": "inspire-sidemodal-wrapper"}>
+            <div className="p-3">
+              <div style={{ fontSize: '20px' }} 
+                onClick={(e) => this.setState({ showDetailSideModal: false })}>
+                <FontAwesomeIcon icon={faAngleLeft}/>              
+              </div>
+              <div className="mt-3" style={{ fontSize: '20px' }}>
+                <b>Details</b>  
+              </div>
+              <div className="mt-3">
+                <NodeDetail data={nodeData} />
+              </div>
+            </div>
+        </div>
+        
 
         <div className="d-flex p-3">
           <Button className="mr-1 w-100 inspire-ghost-button no-padding" 
             variant="outline-primary"
-            onClick={e => this.setState({showSideModal: true})}>
+            onClick={e => this.setState({showFilterSideModal: true})}>
                 Open Filters
           </Button>
           <Button className="ml-1 w-100 inspire-ghost-button no-padding" 
-            variant="outline-primary">
+            variant="outline-primary"
+            onClick={e => this.setState({showDetailSideModal: true})}>
                 See Details
           </Button>          
         </div>
+        <div style={{ height: '400px'}}>
         {this.cytoscapeMax}
+        </div>
       </div>
     )
   }
