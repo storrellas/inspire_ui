@@ -13,7 +13,7 @@ import EllipsisWithTooltip from 'react-ellipsis-with-tooltip'
 
 // Project imports
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faLongArrowAltUp, faLongArrowAltDown, faSpinner } from '@fortawesome/free-solid-svg-icons'
+import { faLongArrowAltUp, faLongArrowAltDown, faSpinner, faAngleLeft } from '@fortawesome/free-solid-svg-icons'
 
 // Assets
 import universities from '../../assets/universities.svg';
@@ -105,7 +105,9 @@ class PanelAffiliations extends React.Component {
       isLoading: false,
       dataTable: [],
       filtering : {...filteringList},
-      sorting: ''
+      sorting: '',
+      showTableSideTitle: '',
+      showTableSideModal: false
     }
   }
 
@@ -197,9 +199,9 @@ class PanelAffiliations extends React.Component {
     this.retrieveAffiliationsInstitution(base_url, page)
   }
 
-  showTableUniversities(){
+  showTableUniversities(componentDidMount = false){
     this.setState({
-      showTableUniversities: true, 
+      showTableUniversities: window.mobile?false:true, 
       showTableHospitals: false, 
       showTableAssociations: false, 
       currentPage: 1,
@@ -207,6 +209,8 @@ class PanelAffiliations extends React.Component {
       take: 10,
       limit: 10,
       isLoading: false,
+      showTableSideTitle: "Universities",
+      showTableSideModal: (componentDidMount?false:true),
     })
     this.retrieveAffiliationsUniversities(1) 
   }
@@ -215,13 +219,15 @@ class PanelAffiliations extends React.Component {
   showTableHospitals(){
     this.setState({
       showTableUniversities: false, 
-      showTableHospitals: true, 
+      showTableHospitals: window.mobile?false:true, 
       showTableAssociations: false, 
       currentPage: 1,
       totalPage: 1,
       take: 10,
       limit: 10,
       isLoading: false,
+      showTableSideTitle: "Hospitals",
+      showTableSideModal: true,
     })
     this.retrieveAffiliationsHospitals(1) 
   }
@@ -230,12 +236,14 @@ class PanelAffiliations extends React.Component {
     this.setState({
       showTableUniversities: false, 
       showTableHospitals: false, 
-      showTableAssociations: true, 
+      showTableAssociations: window.mobile?false:true, 
       currentPage: 1,
       totalPage: 1,
       take: 10,
       limit: 10,
       isLoading: false,
+      showTableSideTitle: "Associations",
+      showTableSideModal: true,
     })
     this.retrieveAffiliationsAssociations(1) 
   }
@@ -276,7 +284,7 @@ class PanelAffiliations extends React.Component {
     this.state.investigatorId = parseInt( this.state.investigatorId )
 
     this.retrieveAffiliations()
-    this.showTableUniversities()
+    this.showTableUniversities(true)
   }  
 
   navigatePage(page) {
@@ -314,6 +322,7 @@ class PanelAffiliations extends React.Component {
     const { affiliations, dataTable } = this.state;
     const { currentPage, totalPage, sorting } = this.state;
     const { showTableUniversities, showTableHospitals, showTableAssociations } = this.state;
+    const { showTableSideModal, showTableSideTitle } = this.state;
 
     let nUniversities = "-";
     let nHospitals = "-";
@@ -347,6 +356,21 @@ class PanelAffiliations extends React.Component {
           </Row>
           </Col>
         </Row>
+
+        <div className={showTableSideModal ? "inspire-sidemodal-wrapper toggled": "inspire-sidemodal-wrapper"}>
+          <div className="p-3">
+            <div style={{ fontSize: '20px' }} 
+              onClick={(e) => this.setState({ showTableSideModal: false })}>
+              <FontAwesomeIcon icon={faAngleLeft}/>              
+            </div>
+            <div className="mt-3" style={{ fontSize: '20px' }}>
+              <b>{showTableSideTitle}</b>  
+            </div>
+            <div className="mt-3">
+              MyNodeDetails
+            </div>
+          </div>
+        </div>
 
         <div className={window.mobile?"d-none":"p-3 h-100"} style={{ fontSize: '14px'}}>
           <table className="w-100 inspire-table">
