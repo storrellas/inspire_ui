@@ -46,7 +46,7 @@ const mapStateToProps = (state) => {
   };
 }
 
-const FILTERING_DESKTOP = [
+const DATA_FIELD_LIST = [
   { 
     dataField:'first_name', caption: 'firstName', width: '10%',
     label: 'First Name', type: SEARCH_HEADER.TEXT 
@@ -93,25 +93,14 @@ const FILTERING_DESKTOP = [
   },
 ]
 
-const FILTERING_MOBILE = [
-  { 
-    dataField:'first_name', caption: 'firstName', width: '30%',
-    label: 'First Name', type: SEARCH_HEADER.TEXT 
-  },
-  { 
-    dataField:'last_name', caption: 'lastName',  width: '30%',
-    label: 'Last Name', type: SEARCH_HEADER.TEXT 
-  },
-]
-
 class InvestigatorTable extends React.Component {
 
   constructor(props) {
     super(props)
 
-    this.filteringDevice = window.mobile?FILTERING_MOBILE:FILTERING_DESKTOP;
+    this.dataFieldList = window.mobile?DATA_FIELD_LIST.slice(0,2):DATA_FIELD_LIST;
 
-    const filteringList = this.filteringDevice.reduce((acc,curr)=> (acc[curr.caption]='',acc),{});    
+    const filteringList = this.dataFieldList.reduce((acc,curr)=> (acc[curr.caption]='',acc),{});    
     this.state = {
       currentPage: 1,
       totalPage: 10,
@@ -153,7 +142,7 @@ class InvestigatorTable extends React.Component {
 
       // Add filtering
       if( filtering !== undefined ){
-        for(const item of this.filteringDevice ){
+        for(const item of this.dataFieldList ){
           if( filtering[item.caption] !== '' ){
             urlParams = `${urlParams}&${item.dataField}=${filtering[item.caption]}`;
           }
@@ -177,7 +166,7 @@ class InvestigatorTable extends React.Component {
 
       // Added folded attribute      
       const investigatorList = response.data.results;
-      investigatorList.map( x => x.folded = false)
+      investigatorList.map( x => x.show = false)
       
       // Set State
       const totalPage = Math.ceil(response.data.count / take);
@@ -284,7 +273,7 @@ class InvestigatorTable extends React.Component {
 
   loadFilteredInvestigators(key, value){
     let { currentPage, filtering } = this.state;
-    for(const item_candidate of this.filteringDevice ){
+    for(const item_candidate of this.dataFieldList ){
       if( key === item_candidate.caption ){
         filtering[item_candidate.caption] = value
       }
@@ -337,7 +326,7 @@ class InvestigatorTable extends React.Component {
     }
   }
 
-  onShowInvestigator(id){
+  onExpandRow(id){
     const { investigatorList } = this.state;
     // Keep former value
     let former = investigatorList[id].show
@@ -376,7 +365,7 @@ class InvestigatorTable extends React.Component {
               <tr>
                 <td style={{ width: '3%'}}></td>
                 <td style={{ width: '3%'}}>Profile</td>
-                {this.filteringDevice.map((item, id) =>                  
+                {this.dataFieldList.map((item, id) =>                  
                   <td key={id} style={{ cursor: 'pointer', width: item.width }} 
                     onClick={() => this.onSetSorting(item.dataField)}>
                     { 
@@ -399,7 +388,7 @@ class InvestigatorTable extends React.Component {
                 <td></td>
                 <td></td>
 
-                {this.filteringDevice.map((item, id) =>
+                {this.dataFieldList.map((item, id) =>
                 <td key={id}>
                   <SearchHeader 
                     onChange={(pattern) => this.loadFilteredInvestigators(item.caption, pattern)} 
@@ -495,7 +484,7 @@ class InvestigatorTable extends React.Component {
           <thead>
             <tr style={{ border: '1px solid #A4C8E6', borderWidth: '0px 0px 1px 0px' }}>
               <td style={{ width: '15%' }}></td>
-              {this.filteringDevice.map((item, id) =>
+              {this.dataFieldList.map((item, id) =>
                 <td key={id} style={{ cursor: 'pointer', width: item.width }}
                   onClick={() => this.onSetSorting(item.dataField)}>
                   <div className="d-flex justify-content-center">
@@ -509,9 +498,7 @@ class InvestigatorTable extends React.Component {
             </tr>
             <tr style={{ border: '1px solid #A4C8E6', borderWidth: '1px 0px 2px 0px' }}>
                 <td></td>
-                
-
-                {this.filteringDevice.map((item, id) =>
+                {this.dataFieldList.map((item, id) =>
                 <td key={id}>
                   <SearchHeader 
                     onChange={(pattern) => this.loadFilteredInvestigators(item.caption, pattern)} 
@@ -535,82 +522,80 @@ class InvestigatorTable extends React.Component {
             {this.state.investigatorList.map((item, id) =>
               [<tr key={id}>
                 <td className="text-center" >
-
                   <img src={item.is_favorite_investigator ? favorite : nonfavorite} width="30"
                     onClick={(e) => this.onSetInvestigatorFavorite(item.oid, item.is_favorite_investigator)}
                     style={{ cursor: 'pointer' }}></img>
-
                 </td>
                 <td>{item.first_name}</td>
                 <td>{item.last_name}</td>
                 <td className="inspire-table-profile-mobile">
                   <FontAwesomeIcon icon={faAngleDown} className={item.show ? 'unfolded' : "folded"}
                     style={{ fontSize: '14px', color: 'grey' }}
-                    onClick={e => this.onShowInvestigator(id)} />
+                    onClick={e => this.onExpandRow(id)} />
                 </td>
-
-              </tr>,
-                <tr key={id + "_"} className="inspire-table-events-subrow">
-                  <td colSpan="7" className={item.show ? '' : 'd-none'}>
-                    
-                    <AnimateHeight
-                      height={item.show ? 'auto': 0}
-                      duration={250}>
-                      <div className="p-2" style={{ background: '#ECEFF8'}}>
-                        <div className="d-flex">
-                          <div className="w-50">
-                            <div style={{ color: '#8a8a8a', fontSize: '12px'  }}>SPECIALTIES</div>
-                            <div className="inspire-submenu-item">{item.prop_specialties}</div>
-                          </div>
-                          <div className="w-50">
-                            <div style={{ color: '#8a8a8a', fontSize: '12px'  }}>FOCUS AREA</div>
-                            <div className="inspire-submenu-item">{item.focus_areas_reasearch_interests}</div>
-                          </div>
+              </tr>
+              ,
+              <tr key={id + "_"} className="inspire-table-subrow">
+                <td colSpan="7" className={item.show ? '' : 'd-none'}>
+                  
+                  <AnimateHeight
+                    height={item.show ? 'auto': 0}
+                    duration={250}>
+                    <div className="p-2" style={{ background: '#ECEFF8'}}>
+                      <div className="d-flex">
+                        <div className="w-50">
+                          <div className="expand-title">SPECIALTIES</div>
+                          <div className="expand-value">{item.prop_specialties}</div>
                         </div>
-                        <div className="d-flex mt-3">
-                          <div className="w-50">
-                            <div style={{ color: '#8a8a8a', fontSize: '12px'  }}>CITY</div>
-                            <div className="inspire-submenu-item">{item.city}</div>
-                          </div>
-                          <div className="w-50">
-                            <div style={{ color: '#8a8a8a', fontSize: '12px'  }}>COUNTRY</div>
-                            <div className="inspire-submenu-item">{item.country}</div>
-                          </div>
+                        <div className="w-50">
+                          <div className="expand-title">FOCUS AREA</div>
+                          <div className="expand-value">{item.focus_areas_reasearch_interests}</div>
                         </div>
-                        <div className="d-flex mt-3 justify-content-between">
-                          <div>
-                            <div style={{ color: '#8a8a8a', fontSize: '12px'  }}>P</div>
-                            <div>{item.number_linked_publications}</div>
-                          </div>
-                          <div>
-                            <div style={{ color: '#8a8a8a', fontSize: '12px'  }}>E</div>
-                            <div>{item.number_linked_events}</div>
-                          </div>
-                          <div>
-                            <div style={{ color: '#8a8a8a', fontSize: '12px'  }}>CT</div>
-                            <div>{item.number_linked_clinical_trials}</div>
-                          </div>
-                          <div>
-                            <div style={{ color: '#8a8a8a', fontSize: '12px'  }}>COI</div>
-                            <div>{item.number_linked_institutions_coi}</div>
-                          </div>
-                          <div>
-                            <div style={{ color: '#8a8a8a', fontSize: '12px'  }}>SCORE</div>
-                            <div>{item.mesh_counter?item.mesh_counter:'--'}</div>
-                          </div>
-                        </div>
-                        <div className="mt-3">
-                          <Button className="w-100 inspire-button inspire-box-shadow" 
-                            variant="outline-primary"
-                            style={{ paddingLeft: 0, paddingRight: 0 }} 
-                            onClick={(e) => this.props.history.push(`/dashboard/project/${this.state.projectOid}/investigator/${item.oid}`)}>
-                              See Profile
-                          </Button>
-                          </div>
                       </div>
-                    </AnimateHeight>
-                  </td>
-                </tr>]
+                      <div className="d-flex mt-3">
+                        <div className="w-50">
+                          <div className="expand-title">CITY</div>
+                          <div className="expand-value">{item.city}</div>
+                        </div>
+                        <div className="w-50">
+                          <div className="expand-title">COUNTRY</div>
+                          <div className="expand-value">{item.country}</div>
+                        </div>
+                      </div>
+                      <div className="d-flex mt-3 justify-content-between">
+                        <div>
+                          <div className="expand-title">P</div>
+                          <div>{item.number_linked_publications}</div>
+                        </div>
+                        <div>
+                          <div className="expand-title">E</div>
+                          <div>{item.number_linked_events}</div>
+                        </div>
+                        <div>
+                          <div className="expand-title">CT</div>
+                          <div>{item.number_linked_clinical_trials}</div>
+                        </div>
+                        <div>
+                          <div className="expand-title">COI</div>
+                          <div>{item.number_linked_institutions_coi}</div>
+                        </div>
+                        <div>
+                          <div className="expand-title">SCORE</div>
+                          <div>{item.mesh_counter?item.mesh_counter:'--'}</div>
+                        </div>
+                      </div>
+                      <div className="mt-3">
+                        <Button className="w-100 inspire-button inspire-box-shadow" 
+                          variant="outline-primary"
+                          style={{ paddingLeft: 0, paddingRight: 0 }} 
+                          onClick={(e) => this.props.history.push(`/dashboard/project/${this.state.projectOid}/investigator/${item.oid}`)}>
+                            See Profile
+                        </Button>
+                        </div>
+                    </div>
+                  </AnimateHeight>
+                </td>
+              </tr>]
             )}
           </tbody>
         </table>

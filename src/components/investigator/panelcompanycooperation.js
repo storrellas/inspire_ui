@@ -16,7 +16,10 @@ import EllipsisWithTooltip from 'react-ellipsis-with-tooltip'
 
 // Project imports
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faLongArrowAltUp, faLongArrowAltDown, faSpinner } from '@fortawesome/free-solid-svg-icons'
+import { faLongArrowAltUp, faLongArrowAltDown, faSpinner, faAngleDown } from '@fortawesome/free-solid-svg-icons'
+
+// Animate Height
+import AnimateHeight from 'react-animate-height';
 
 // Styles
 import './modal.scss';
@@ -47,7 +50,7 @@ const mapStateToProps = state => {
   };
 };
 
-const FILTERING = [
+const DATA_FIELD_LIST = [
   { 
     dataField:'nature_of_payment', caption: 'type', 
     label: 'Type', type: SEARCH_HEADER.TEXT 
@@ -72,9 +75,11 @@ const FILTERING = [
 
 class PanelCompanyCooperation extends React.Component {
 
+  
   constructor(props) {
     super(props)
-    const filteringList = FILTERING.reduce((acc,curr)=> (acc[curr.caption]='',acc),{});    
+    this.dataFieldList = window.mobile?DATA_FIELD_LIST.slice(0,2):DATA_FIELD_LIST;
+    const filteringList = this.dataFieldList.reduce((acc,curr)=> (acc[curr.caption]='',acc),{});    
     this.state = {
       currentPage: 1,
       totalPage: 10,
@@ -144,9 +149,6 @@ class PanelCompanyCooperation extends React.Component {
 
     // Add data
     this.chart.data = companyList
-
-    console.log("field ", companyList)
-
 
     // Create axes
     let categoryAxis = this.chart.yAxes.push(new am4charts.CategoryAxis());
@@ -299,7 +301,7 @@ class PanelCompanyCooperation extends React.Component {
 
       // Add filtering
       if( filtering !== undefined ){
-        for(const item of FILTERING ){
+        for(const item of this.dataFieldList ){
           if( filtering[item.caption] !== '' ){
             urlParams = `${urlParams}&${item.dataField}=${filtering[item.caption]}`;
           }
@@ -317,9 +319,12 @@ class PanelCompanyCooperation extends React.Component {
       })
 
       let dataTable = response.data.results
+      dataTable.map( x => x.show = false)
+      dataTable.map( x => x.enabled = true)      
       if(response.data.results.length < take ){
-        const filteringList = FILTERING.reduce((acc,curr)=> (acc[curr.caption]='',acc),{});    
+        const filteringList = this.dataFieldList.reduce((acc,curr)=> (acc[curr.caption]='',acc),{});    
         const fill = new Array(take - response.data.results.length).fill(filteringList)
+        fill.map( x => x.enabled = false)
         dataTable.push(...fill)
       }
 
@@ -356,7 +361,7 @@ class PanelCompanyCooperation extends React.Component {
 
   retrieveCompanyCooperationsFiltered(key, value){
     let { currentPage, filtering } = this.state;
-    for(const item_candidate of FILTERING ){
+    for(const item_candidate of this.dataFieldList ){
       if( key === item_candidate.caption ){
         filtering[item_candidate.caption] = value
       }
@@ -383,6 +388,19 @@ class PanelCompanyCooperation extends React.Component {
     this.state.sorting = target;
 
     this.retrieveCompanyCooperations(currentPage)
+  }
+
+  onExpandRow(id){
+    const { dataTable } = this.state;
+    // Keep former value
+    let former = dataTable[id].show
+    dataTable.map( x => x.show = false)
+
+    // Expand    
+    dataTable[id].show = !former;
+
+    // Set State
+    this.setState({ dataTable })
   }
 
   renderDesktop() {
@@ -416,7 +434,7 @@ class PanelCompanyCooperation extends React.Component {
                 <table className="w-100 inspire-table">
                   <thead>
                     <tr>
-                    {FILTERING.map((item, id) =>
+                    {this.dataFieldList.map((item, id) =>
                       <td key={id} style={{ cursor: 'pointer' }}
                         onClick={(e) => this.onSetSorting(item.dataField)}>
                         {item.label}
@@ -426,7 +444,7 @@ class PanelCompanyCooperation extends React.Component {
                     )}
                     </tr>
                     <tr style={{ border: '1px solid #A4C8E6', borderWidth: '1px 0px 2px 0px' }}>
-                    {FILTERING.map((item, id) =>
+                    {this.dataFieldList.map((item, id) =>
                       <td key={id} className="text-center" >
                         <SearchHeader 
                           onChange={(pattern) => this.retrieveCompanyCooperationsFiltered(item.caption, pattern)} 
@@ -507,8 +525,86 @@ class PanelCompanyCooperation extends React.Component {
           <>
             <div id="companycooperationbarchartmobile" style={{ height: '400px', padding: '1em' }}></div>
             <div id="companycooperationpiechartmobile" style={{ height: '400px', padding: '1em' }}></div>
+
+
+            <div className="p-3 w-100">
+
+              <table className="w-100 inspire-mobile-table">
+                <thead>
+                  <tr>
+                  {this.dataFieldList.map((item, id) =>
+                    <td key={id} style={{ cursor: 'pointer' }}
+                      onClick={(e) => this.onSetSorting(item.dataField)}>
+                      {item.label}
+                      <FontAwesomeIcon icon={faLongArrowAltUp} className={sorting == item.dataField ? "ml-1" : "ml-1 d-none"} style={{ color: 'grey' }} />
+                      <FontAwesomeIcon icon={faLongArrowAltDown} className={sorting == `-${item.dataField}` ? "ml-1" : "ml-1 d-none"} style={{ color: 'grey' }} />
+                    </td>
+                  )}
+                  <td></td>
+                  </tr>
+                  <tr style={{ border: '1px solid #A4C8E6', borderWidth: '1px 0px 2px 0px' }}>
+                    {this.dataFieldList.map((item, id) =>
+                      <td key={id} className="text-center" >
+                        <SearchHeader 
+                          onChange={(pattern) => this.retrieveCompanyCooperationsFiltered(item.caption, pattern)} 
+                          type={item.type} />
+                      </td>
+                    )}
+                    <td></td>
+                  </tr>
+                </thead>
+                <tbody>
+                {this.state.isLoading?
+                  <>
+                  <tr>
+                    <td rowSpan="2" style={{ background: 'white', height: '400px' }} colSpan="14" className="text-center">
+                      <div className="mb-3" style={{ fontSize: '20px', color: 'grey' }} >Loading ...</div>
+                      <FontAwesomeIcon icon={faSpinner}  spin style={{ fontSize: '40px', color: 'grey' }} />                    
+                    </td>
+                  </tr>
+                  </>
+                  :<tr></tr>}
+                  {dataTable.map((item, id) =>
+                    [ 
+                    <tr key={id}>
+                      <td style={{ width: '40%'}}>{item.nature_of_payment}</td>
+                      <td style={{ width: '40%'}}>{item.year}</td>
+                      <td className={item.enabled?"inspire-table-profile-mobile":'d-none'}>
+                        <FontAwesomeIcon icon={faAngleDown} className={item.show ? 'unfolded' : "folded"}
+                          style={{ fontSize: '14px', color: 'grey' }}
+                          onClick={e => this.onExpandRow(id)} />
+                      </td>
+                    </tr>
+                    ,
+                    <tr key={id + "_"} className="inspire-table-subrow">
+                      <td colSpan="7" className={item.show ? '' : 'd-none'}>                      
+                        <AnimateHeight
+                          height={item.show ? 'auto': 0}
+                          duration={250}>
+                          <div className="p-2" style={{ background: '#ECEFF8'}}>
+                            <div className="expand-title">COMPANY</div>
+                            <div className="expand-value" style={{ width: '200px'}}>{item.institution}</div>
+                            <div className="expand-title">AMOUNT</div>
+                            <div className="expand-value">{item.amount}</div>
+                            <div className="expand-title">CURRENCY</div>
+                            <div className="expand-value">{item.currency}</div>
+                          </div>
+                        </AnimateHeight>
+                      </td>
+                    </tr>
+                    ]
+                  )}
+                </tbody>
+              </table>
+              <InspirePagination currentPage={currentPage} totalPage={totalPage} onClick={this.navigatePage.bind(this)}/>
+
+              </div>
+
           </>
           :''}
+
+
+
         </ LoadingOverlay>
       </div>
     )

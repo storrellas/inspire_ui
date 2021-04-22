@@ -267,7 +267,7 @@ class PanelEvents extends React.Component {
               <td  className="text-center" style={{ width: '15%'}}>{item.city}</td>              
               <td  className="text-center" style={{ width: '15%'}}>{item.country}</td>
             </tr>,
-            <tr key={id+"_"} className="inspire-table-events-subrow">
+            <tr key={id+"_"} className="inspire-table-subrow">
               <td colSpan="7" className={item.show?'':'d-none'}>
               <AnimateHeight
                 id="example-panel"

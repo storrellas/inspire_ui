@@ -681,6 +681,13 @@ class PanelConnections extends React.Component {
     
   }
 
+  clearFilters(){
+    this.state.filters.strength = 'all';
+    this.state.filters.connectionTypeList = ['all']
+    this.state.filters.countryList = ['all']
+    this.updateCytoscape()
+  }
+
   renderFilters(){
     const { activeTab, countryList, yearList } = this.state;
     const { countrySelected, connectionTypeSelected } = this.state;
@@ -871,6 +878,13 @@ class PanelConnections extends React.Component {
             onClick={e => this.setState({showDetailSideModal: true})}>
                 See Details
           </Button>          
+        </div>
+        <div className={window.mobile?"p-3":"d-none"}>
+          <Button className="ml-1 w-100 inspire-ghost-button no-padding" 
+            variant="outline-primary"
+            onClick={e => this.clearFilters()}>
+                Clear Filters
+          </Button>  
         </div>
         <div style={{ height: '400px'}}>
         {this.cytoscapeMax}

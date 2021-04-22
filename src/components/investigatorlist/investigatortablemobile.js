@@ -337,7 +337,7 @@ class InvestigatorTableMobile extends React.Component {
                 </td>
 
               </tr>,
-                <tr key={id + "_"} className="inspire-table-events-subrow">
+                <tr key={id + "_"} className="inspire-table-subrow">
                   <td colSpan="7" className={item.show ? '' : 'd-none'}>
                     
                     <AnimateHeight
