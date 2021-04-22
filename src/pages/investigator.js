@@ -519,7 +519,7 @@ class Investigator extends React.Component {
             name={"Affiliations"}
             activePanel={panel} panel={PANEL.AFFILIATIONS}
             handler={(e) => this.onSetPanel(PANEL.AFFILIATIONS)}>
-            <div>MyContentHere</div>
+            <PanelAffiliations />
           </Panel>
 
           <Panel

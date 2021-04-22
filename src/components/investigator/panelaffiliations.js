@@ -1,6 +1,6 @@
 import React from 'react';
 // Bootstrap
-import { Modal, Button } from 'react-bootstrap';
+import { Row, Col } from 'react-bootstrap';
 
 // React Router
 import { withRouter } from 'react-router-dom'
@@ -63,6 +63,26 @@ const FILTERING = [
   },
 ]
 
+const Affiliation = (props) => {
+  return (
+    <div className="text-center m-1" style={{ border: '1px solid #D1E3F2', borderRadius: '5px'  }}>
+    <div className="font-weight-bold" style={{ padding: '1em 2em 1em 2em'}}>
+      {props.name}
+    </div>
+    <div className="font-weight-bold">{props.number}</div>
+    <div style={{ padding: '1em 2em 1em 2em'}}>
+      <img className="w-100" src={props.img} alt=" "></img>
+    </div>
+    
+    <div style={{ padding: '1em 2em 1em 2em'}}>
+      <button className={props.active?"w-100 inspire-button no-padding":"w-100 inspire-ghost-button no-padding"}  variant="primary"
+        onClick={ (e) => props.handler()}>
+        Show Results
+      </button>
+    </div>
+  </div>
+  )
+}
 
 class PanelAffiliations extends React.Component {
 
@@ -305,62 +325,30 @@ class PanelAffiliations extends React.Component {
     }
 
     return (
-      <div>
-        <div className="d-flex" style={{ margin: '0 20% 0 20%'}}>
-          <div className="text-center" style={{ width: '33%', margin: '1em 0.2em 1em 0.2em', border: '1px solid #D1E3F2', borderRadius: '5px' }}>
-            <div className="font-weight-bold" style={{ padding: '1em 2em 1em 2em'}}>
-              Universities
-            </div>
-            <div className="font-weight-bold">{nUniversities}</div>
-            <div style={{ padding: '1em 2em 1em 2em'}}>
-              <img className="w-100" src={universities} alt=" "></img>
-            </div>
-            
-            <div style={{ padding: '1em 2em 1em 2em'}}>
-              <button className={showTableUniversities?"w-100 inspire-button":"w-100 inspire-ghost-button"}
-                style={{ paddingLeft: '1em', paddingRight: '1em' }}
-                onClick={ (e) => this.showTableUniversities()}>
-                Show Results
-              </button>
-            </div>
-          </div>
-          <div className="text-center" style={{ width: '33%', margin: '1em 0.2em 1em 0.2em', border: '1px solid #D1E3F2', borderRadius: '5px'  }}>
-            <div className="font-weight-bold" style={{ padding: '1em 2em 1em 2em'}}>
-              Hospitals
-            </div>
-            <div className="font-weight-bold">{nHospitals}</div>
-            <div style={{ padding: '1em 2em 1em 2em'}}>
-              <img className="w-100" src={hospitals} alt=" "></img>
-            </div>
-            
-            <div style={{ padding: '1em 2em 1em 2em'}}>
-              <button className={showTableHospitals?"w-100 inspire-button":"w-100 inspire-ghost-button"}
-                style={{ paddingLeft: 0, paddingRight: 0 }}
-                onClick={ (e) => this.showTableHospitals()}>
-                Show Results
-              </button>
-            </div>
-          </div>
-          <div className="text-center" style={{ width: '33%', margin: '1em 0.2em 1em 0.2em', border: '1px solid #D1E3F2', borderRadius: '5px'  }}>
-            <div className="font-weight-bold" style={{ padding: '1em 2em 1em 2em'}}>
-              Associations
-            </div>
-            <div className="font-weight-bold">{nAssociations}</div>
-            <div style={{ padding: '1em 2em 1em 2em'}}>
-              <img className="w-100" src={associations} alt=" "></img>
-            </div>
-            
-            <div style={{ padding: '1em 2em 1em 2em'}}>
-              <button className={showTableAssociations?"w-100 inspire-button":"w-100 inspire-ghost-button"}  variant="primary"
-                style={{ paddingLeft: 0, paddingRight: 0 }}
-                onClick={ (e) => this.showTableAssociations()}>
-                Show Results
-              </button>
-            </div>
-          </div>
-        </div>
+      <>
+        <Row>
+          <Col xs={{ span: 8, offset:2}} className="mb-3">
+            <Row>
+              <Col sm={{ span: 4 }} className="no-padding">
+                  <Affiliation name={"Universities"} number={nUniversities}
+                    img={associations} active={showTableUniversities}
+                    handler={e => this.showTableUniversities()} />
+              </Col>
+              <Col sm={{ span: 4 }} className="no-padding">
+                <Affiliation name={"Hospitals"} number={nHospitals}
+                  img={associations} active={showTableHospitals}
+                  handler={e => this.showTableHospitals()} />
+              </Col>
+              <Col sm={{ span: 4 }} className="no-padding">
+                <Affiliation name={"Associations"} number={nAssociations}
+                  img={associations} active={showTableAssociations}
+                  handler={e => this.showTableAssociations()} />
+              </Col>
+          </Row>
+          </Col>
+        </Row>
 
-        <div className="p-3 h-100" style={{ fontSize: '14px'}}>
+        <div className={window.mobile?"d-none":"p-3 h-100"} style={{ fontSize: '14px'}}>
           <table className="w-100 inspire-table">
             <thead>
               <tr>
@@ -429,7 +417,7 @@ class PanelAffiliations extends React.Component {
           </table>
           <InspirePagination currentPage={currentPage} totalPage={totalPage} onClick={this.navigatePage.bind(this)}/>
       </div>
-    </div>);
+    </>);
   }
 }
 

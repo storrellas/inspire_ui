@@ -852,18 +852,18 @@ class PanelConnections extends React.Component {
         </div>
 
         <div className={showDetailSideModal ? "inspire-sidemodal-wrapper toggled": "inspire-sidemodal-wrapper"}>
-            <div className="p-3">
-              <div style={{ fontSize: '20px' }} 
-                onClick={(e) => this.setState({ showDetailSideModal: false })}>
-                <FontAwesomeIcon icon={faAngleLeft}/>              
-              </div>
-              <div className="mt-3" style={{ fontSize: '20px' }}>
-                <b>Details</b>  
-              </div>
-              <div className="mt-3">
-                <NodeDetail data={nodeData} />
-              </div>
+          <div className="p-3">
+            <div style={{ fontSize: '20px' }} 
+              onClick={(e) => this.setState({ showDetailSideModal: false })}>
+              <FontAwesomeIcon icon={faAngleLeft}/>              
             </div>
+            <div className="mt-3" style={{ fontSize: '20px' }}>
+              <b>Details</b>  
+            </div>
+            <div className="mt-3">
+              <NodeDetail data={nodeData} />
+            </div>
+          </div>
         </div>
         
 
