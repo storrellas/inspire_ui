@@ -365,10 +365,10 @@ class PanelEvents extends React.Component {
               </td>
               <td  className="text-center" style={{ width: '10%'}}>{item.position}</td>
               <td className={item.enabled?"inspire-table-profile-mobile":'d-none'}>
-                  <FontAwesomeIcon icon={faAngleDown} className={item.show ? 'unfolded' : "folded"}
-                    style={{ fontSize: '14px', color: 'grey' }}
-                    onClick={e => this.onExpandRow(id)} />
-                </td>
+                <FontAwesomeIcon icon={faAngleDown} className={item.show ? 'unfolded' : "folded"}
+                  style={{ fontSize: '14px', color: 'grey' }}
+                  onClick={e => this.onExpandRow(id)} />
+              </td>
             </tr>
             <tr className="inspire-table-subrow">
               <td colSpan="7" className={item.show?'':'d-none'}>
@@ -469,7 +469,7 @@ class PanelEvents extends React.Component {
       let dataTable = response.data.results
       dataTable.map( x => x.show = false)
       dataTable.map( x => x.enabled = true)           
-      if(response.data.results.length < take){
+      if(dataTable.length < take){
         const filteringList = this.dataFieldList.reduce((acc,curr)=> (acc[curr.caption]='',acc),{});    
         const fill = new Array(take - response.data.results.length).fill(filteringList)
         fill.map( x => x.enabled = false)
@@ -609,28 +609,28 @@ class PanelEvents extends React.Component {
 
 
             <div className={this.state.showTableSideModal ? "inspire-sidemodal-wrapper toggled" : "inspire-sidemodal-wrapper"}>
-                <div className="p-3">
-                  <div style={{ fontSize: '20px' }}
-                    onClick={e => this.setState({ showTableSideModal: false })}>
-                    <FontAwesomeIcon icon={faAngleLeft} />
-                  </div>
-                  <div className="mt-3" style={{ fontSize: '20px' }}>
-                    <b>Events</b>
-                  </div>
-                  <div className="mt-3">
-                    {this.generateTableMobile()}
-                  </div>
+              <div className="p-3">
+                <div style={{ fontSize: '20px' }}
+                  onClick={e => this.setState({ showTableSideModal: false })}>
+                  <FontAwesomeIcon icon={faAngleLeft} />
+                </div>
+                <div className="mt-3" style={{ fontSize: '20px' }}>
+                  <b>Events</b>
+                </div>
+                <div className="mt-3">
+                  {this.generateTableMobile()}
                 </div>
               </div>
+            </div>
 
-              {window.mobile?
-              <div className="p-3 text-right" style={{ pointer: 'cursor'}}
-                onClick={ e =>  this.setState({ showTableSideModal: true })}>
-                View Details ...
-              </div>
-              :
-              <div className="mt-3">{this.generateTable()}</div>
-              }
+            {window.mobile?
+            <div className="p-3 text-right" style={{ pointer: 'cursor'}}
+              onClick={ e =>  this.setState({ showTableSideModal: true })}>
+              View Details ...
+            </div>
+            :
+            <div className="mt-3">{this.generateTable()}</div>
+            }
           
 
 
