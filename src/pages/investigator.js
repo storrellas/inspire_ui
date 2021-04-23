@@ -533,7 +533,7 @@ class Investigator extends React.Component {
             name={"Publications"}
             activePanel={panel} panel={PANEL.PUBLICATIONS}
             handler={(e) => this.onSetPanel(PANEL.PUBLICATIONS)}>
-            <div>MyContentHere</div>
+            <PanelPublications />
           </Panel>
 
           <Panel

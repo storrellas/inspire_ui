@@ -499,7 +499,7 @@ class PanelAffiliations extends React.Component {
                     onClick={e => this.onExpandRow(id)} />
                 </td>
               </tr>            
-              <tr key={id + "_"} className="inspire-table-subrow">
+              <tr className="inspire-table-subrow">
                 <td colSpan="7" className={item.show ? '' : 'd-none'}>                      
                   <AnimateHeight
                     height={item.show ? 'auto': 0}
