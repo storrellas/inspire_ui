@@ -605,7 +605,7 @@ class PanelAffiliations extends React.Component {
                   handler={e => this.showTableAssociations()} />
         </div>
 
-        <div className={showTableSideModal&&window.mobile ? "inspire-sidemodal-wrapper toggled": "inspire-sidemodal-wrapper"}>
+        <div className={showTableSideModal? "inspire-sidemodal-wrapper toggled": "inspire-sidemodal-wrapper"}>
           <div className="p-3">
             <div style={{ fontSize: '20px' }} 
               onClick={(e) => this.setState({ showTableSideModal: false })}>

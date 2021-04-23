@@ -33,6 +33,35 @@ const mapStateToProps = state => {
     };
 };
 
+const ResearchProfileDetail = (props) => {
+  return (
+    <div className="mt-3" style={{ height: '400px' }}>
+    <div className="h-100" style={{ overflowY: 'scroll', overflowX: 'none' }}>
+      <div style={{ position: 'relative' }}>
+        {props.data.map((item, key) =>
+          <div key={key} className="category" style={{ marginTop: '1em', width: '100%' }}>
+            <h4><b>{item.name}</b></h4>
+            <div className="d-flex flex-wrap w-100 h-100">
+              {item.childrenList.map((item, key) =>
+                <div key={key} className={window.mobile ? "w-100 p-2" : "w-50 p-2"}>
+                  {item.label}
+                  <div className={props.isOpened ? "bar ready" : "bar"} style={{ position: 'relative' }}>
+                    <div className="pl-3" style={{ lineHeight: '30px', position: 'absolute' }}>
+                      <b>{item.counter} - {item.name}</b>
+                    </div>
+                    <div className="rowshadow text-rigth pl-3" style={{ width: item.relative + "%" }}>&nbsp;</div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  </div>
+  )
+}
+
 
 class PanelResearchProfile extends React.Component {
 
@@ -203,33 +232,9 @@ class PanelResearchProfile extends React.Component {
 
           <EmptyPanel show={emptyPanelShow} />
           {!emptyPanelShow?
-          <>
-            <div id="researchprofilechart" style={{ height:'100%', height: '500px' }}></div>
-
-            <div className="mt-3" style={{ height: '400px'}}>
-              <div className="h-100" style={{ overflowY:'scroll', overflowX: 'none'}}>
-                <div style={{ position:'relative'}}>
-                {researchProfileData.map( (item, key) => 
-                <div key={key} className="category" style={{ marginTop: '1em', width: '100%'}}>
-                  <h4><b>{item.name}</b></h4>
-                  <div className="d-flex flex-wrap w-100 h-100">
-                    {item.childrenList.map( (item, key) => 
-                        <div key={key} className="w-50 p-2">
-                          {item.label}
-                          <div className={this.state.isOpened ? "bar ready" : "bar"} style={{ position: 'relative'}}>
-                            <div className="pl-3" style={{ lineHeight: '30px', position:'absolute'}}>
-                              <b>{item.counter} - {item.name}</b>
-                            </div>
-                            <div className="rowshadow text-rigth pl-3" style={{ width: item.relative + "%" }}>&nbsp;</div>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                </div>
-                )}
-                </div>
-                </div>
-              </div>
+            <>
+              <div id="researchprofilechart" style={{ height:'100%', height: '500px' }}></div>
+              <ResearchProfileDetail data={researchProfileData} isOpened={this.state.isOpened} />
             </>
             :''}
         </LoadingOverlay> 
@@ -251,9 +256,20 @@ class PanelResearchProfile extends React.Component {
                           && this.props.tabActive == PANEL.RESEARCH_PROFILE;
 
     return (
-        <div>
-          <div id="researchprofilechartmobile" style={{ height:'100%', height: '500px' }}></div>
-        </div>
+      <>
+        <LoadingOverlay
+          active={this.state.isOpened == false}
+          spinner>
+
+          <EmptyPanel show={emptyPanelShow} />
+          {!emptyPanelShow ?
+            <>
+              <div id="researchprofilechartmobile" style={{ height: '100%', height: '500px' }}></div>
+              <ResearchProfileDetail data={researchProfileData} isOpened={this.state.isOpened} />
+            </>
+            : ''}
+        </LoadingOverlay>
+      </>
     )
   }
 
