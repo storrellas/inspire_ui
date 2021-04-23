@@ -67,22 +67,47 @@ const DATA_FIELD_LIST = [
 
 const Affiliation = (props) => {
   return (
-    <div className="text-center m-1" style={{ border: '1px solid #D1E3F2', borderRadius: '5px'  }}>
-    <div className="font-weight-bold" style={{ padding: '1em 2em 1em 2em'}}>
-      {props.name}
-    </div>
-    <div className="font-weight-bold">{props.number}</div>
-    <div style={{ padding: '1em 2em 1em 2em'}}>
-      <img className="w-100" src={props.img} alt=" "></img>
-    </div>
-    
-    <div style={{ padding: '1em 2em 1em 2em'}}>
-      <button className={props.active&&!window.mobile?"w-100 inspire-button no-padding":"w-100 inspire-ghost-button no-padding"}  variant="primary"
-        onClick={ (e) => props.handler()}>
-        Show Results
+    <div className="text-center m-1" style={{ border: '1px solid #D1E3F2', borderRadius: '5px' }}>
+      <div className="font-weight-bold" style={{ padding: '1em 2em 1em 2em' }}>
+        {props.name}
+      </div>
+      <div className="font-weight-bold">{props.number}</div>
+      <div style={{ padding: '1em 2em 1em 2em' }}>
+        <img className="w-100" src={props.img} alt=" "></img>
+      </div>
+
+      <div style={{ padding: '1em 2em 1em 2em' }}>
+        <button className={props.active && !window.mobile ? "w-100 inspire-button no-padding" : "w-100 inspire-ghost-button no-padding"} variant="primary"
+          onClick={(e) => props.handler()}>
+          Show Results
       </button>
+      </div>
     </div>
-  </div>
+  )
+}
+
+const AffiliationMobile = (props) => {
+  return (
+    <div className="text-center m-1" style={{ border: '1px solid #D1E3F2', borderRadius: '5px' }}>
+
+      <div className="d-flex w-100 justify-content-center mt-3">
+        <div>
+          <img className="w-100" src={props.img} alt=" "></img>
+        </div>
+        <div className="font-weight-bold">
+          <p>{props.name}</p>
+          <p>{props.number}</p>
+        </div>
+
+      </div>
+
+      <div style={{ padding: '1em 2em 1em 2em' }}>
+        <button className={props.active && !window.mobile ? "w-100 inspire-button no-padding" : "w-100 inspire-ghost-button no-padding"} variant="primary"
+          onClick={(e) => props.handler()}>
+          Show Results
+      </button>
+      </div>
+    </div>
   )
 }
 
@@ -442,12 +467,10 @@ class PanelAffiliations extends React.Component {
           {this.state.isLoading?
             <>
             <tr>
-              <td></td>
-              <td rowSpan="2" style={{ background: 'white', height: '400px' }} colSpan="14" className="text-center">
+              <td rowSpan="3" style={{ background: 'white', height: '400px' }} colSpan="14" className="text-center">
                 <div className="mb-3" style={{ fontSize: '20px', color: 'grey' }} >Loading ...</div>
                 <FontAwesomeIcon icon={faSpinner}  spin style={{ fontSize: '40px', color: 'grey' }} />                    
               </td>
-              <td></td>
             </tr>
             <tr><td></td></tr>
             <tr><td></td></tr>
@@ -462,44 +485,43 @@ class PanelAffiliations extends React.Component {
             :<tr></tr>}
 
           {dataTable.map((item, id) =>
-            [
-            <tr key={id}>
-              <td style={{ width: '40%'}}>{item.position__name}</td>
-              <td style={{ width: '40%'}}>
-                <EllipsisWithTooltip placement="bottom" style={{ width: '150px'}}>
-                {item.institution__parent_name || ''}
-                </EllipsisWithTooltip>
-              </td>
-              <td className={item.enabled?"inspire-table-profile-mobile":'d-none'}>
-                <FontAwesomeIcon icon={faAngleDown} className={item.show ? 'unfolded' : "folded"}
-                  style={{ fontSize: '14px', color: 'grey' }}
-                  onClick={e => this.onExpandRow(id)} />
-              </td>
-            </tr>
-            ,
-            <tr key={id + "_"} className="inspire-table-subrow">
-              <td colSpan="7" className={item.show ? '' : 'd-none'}>                      
-                <AnimateHeight
-                  height={item.show ? 'auto': 0}
-                  duration={250}>
-                  <div className="p-2" style={{ background: '#ECEFF8'}}>
-                    <div className="expand-title">DEPARTMENT</div>
-                    <div className="expand-value">{item.institution__department}</div>
-                    <div className="expand-title">SUBTYPE</div>
-                    <div className="expand-value">{item.institution__institution_subtype__name}</div>
-                    <div className="expand-title">PAST POSITION</div>
-                    <div className="expand-value">{item.past_position}</div>
-                    <div className="expand-title">YEAR</div>
-                    <div className="expand-value">{item.year}</div>
-                    <div className="expand-title">CITY</div>
-                    <div className="expand-value">{item.institution__city}</div>
-                    <div className="expand-title">COUNTRY</div>
-                    <div className="expand-value">{item.institution__country__name}</div>
-                  </div>
-                </AnimateHeight>
-              </td>
-            </tr>
-            ]
+            <React.Fragment key={id}>
+              <tr>
+                <td style={{ width: '40%'}}>{item.position__name}</td>
+                <td style={{ width: '40%'}}>
+                  <EllipsisWithTooltip placement="bottom" style={{ width: '150px'}}>
+                  {item.institution__parent_name || ''}
+                  </EllipsisWithTooltip>
+                </td>
+                <td className={item.enabled?"inspire-table-profile-mobile":'d-none'}>
+                  <FontAwesomeIcon icon={faAngleDown} className={item.show ? 'unfolded' : "folded"}
+                    style={{ fontSize: '14px', color: 'grey' }}
+                    onClick={e => this.onExpandRow(id)} />
+                </td>
+              </tr>            
+              <tr key={id + "_"} className="inspire-table-subrow">
+                <td colSpan="7" className={item.show ? '' : 'd-none'}>                      
+                  <AnimateHeight
+                    height={item.show ? 'auto': 0}
+                    duration={250}>
+                    <div className="p-2" style={{ background: '#ECEFF8'}}>
+                      <div className="expand-title">DEPARTMENT</div>
+                      <div className="expand-value">{item.institution__department}</div>
+                      <div className="expand-title">SUBTYPE</div>
+                      <div className="expand-value">{item.institution__institution_subtype__name}</div>
+                      <div className="expand-title">PAST POSITION</div>
+                      <div className="expand-value">{item.past_position}</div>
+                      <div className="expand-title">YEAR</div>
+                      <div className="expand-value">{item.year}</div>
+                      <div className="expand-title">CITY</div>
+                      <div className="expand-value">{item.institution__city}</div>
+                      <div className="expand-title">COUNTRY</div>
+                      <div className="expand-value">{item.institution__country__name}</div>
+                    </div>
+                  </AnimateHeight>
+                </td>
+              </tr>
+            </React.Fragment>
           )}
         </tbody>
       </table>
@@ -509,7 +531,7 @@ class PanelAffiliations extends React.Component {
     )
   }
 
-  render() {
+  renderDesktop() {
 
     const { affiliations } = this.state;
     const { showTableUniversities, showTableHospitals, showTableAssociations } = this.state;
@@ -548,6 +570,41 @@ class PanelAffiliations extends React.Component {
           </Col>
         </Row>
 
+        <div className="p-3 h-100" style={{ fontSize: '14px'}}>
+          {this.renderTableDesktop()}
+      </div>
+    </>);
+  }
+
+  renderMobile() {
+
+    const { affiliations } = this.state;
+    const { showTableUniversities, showTableHospitals, showTableAssociations } = this.state;
+    const { showTableSideModal, showTableSideTitle } = this.state;
+
+    let nUniversities = "-";
+    let nHospitals = "-";
+    let nAssociations = "-";
+    if( affiliations ){
+      nUniversities = affiliations.filter(x => x.affiliation_type === 'universities')[0].total
+      nHospitals = affiliations.filter(x => x.affiliation_type === 'hospitals')[0].total
+      nAssociations = affiliations.filter(x => x.affiliation_type === 'associations')[0].total
+    }
+
+    return (
+      <>
+        <div>
+            <AffiliationMobile name={"Universities"} number={nUniversities}
+                    img={associations} active={showTableUniversities}
+                    handler={e => this.showTableUniversities()} />
+            <AffiliationMobile name={"Hospitals"} number={nHospitals}
+                  img={associations} active={showTableHospitals}
+                  handler={e => this.showTableHospitals()} />
+            <AffiliationMobile name={"Associations"} number={nAssociations}
+                  img={associations} active={showTableAssociations}
+                  handler={e => this.showTableAssociations()} />
+        </div>
+
         <div className={showTableSideModal&&window.mobile ? "inspire-sidemodal-wrapper toggled": "inspire-sidemodal-wrapper"}>
           <div className="p-3">
             <div style={{ fontSize: '20px' }} 
@@ -562,12 +619,14 @@ class PanelAffiliations extends React.Component {
             </div>
           </div>
         </div>
-
-        <div className={window.mobile?"d-none":"p-3 h-100"} style={{ fontSize: '14px'}}>
-          {this.renderTableDesktop()}
-      </div>
     </>);
   }
+
+  render() {
+    return (window.mobile?this.renderMobile():this.renderDesktop())
+  }
+
+  
 }
 
 export default withRouter(PanelAffiliations);
