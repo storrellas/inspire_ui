@@ -10,7 +10,7 @@ import * as am4charts from "@amcharts/amcharts4/charts";
 
 // Font Awesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSpinner, faLongArrowAltUp, faLongArrowAltDown, faCaretRight } from '@fortawesome/free-solid-svg-icons'
+import { faSpinner, faLongArrowAltUp, faLongArrowAltDown, faCaretRight, faAngleLeft, faAngleDown } from '@fortawesome/free-solid-svg-icons'
 
 // EllipsisWithTooltip
 import EllipsisWithTooltip from 'react-ellipsis-with-tooltip'
@@ -44,7 +44,7 @@ const mapStateToProps = state => {
   };
 };
 
-const FILTERING = [
+const DATA_FIELD_LIST = [
   { 
     dataField:'name', caption: 'name', 
     label: 'Name', type: SEARCH_HEADER.TEXT 
@@ -75,7 +75,8 @@ class PanelEvents extends React.Component {
 
   constructor(props) {
     super(props)
-    const filteringList = FILTERING.reduce((acc,curr)=> (acc[curr.caption]='',acc),{});    
+    this.dataFieldList = window.mobile?DATA_FIELD_LIST.slice(0,2):DATA_FIELD_LIST;
+    const filteringList = this.dataFieldList.reduce((acc,curr)=> (acc[curr.caption]='',acc),{});    
     this.state = {
       isOpened: false,
       showModal: false,
@@ -183,7 +184,7 @@ class PanelEvents extends React.Component {
   generateEventRoleChart() {
     this.eventRoleChart = this.generateEventRole("eventRoleChart")
     this.eventRoleChart.legend = new am4charts.Legend();    
-    this.eventRoleChart.legend.position = "right"
+    this.eventRoleChart.legend.position = window.mobile?"bottom":"right"
   }
 
   onClickedTableDetail(id){    
@@ -194,7 +195,7 @@ class PanelEvents extends React.Component {
     this.setState({ dataTable: dataTable })
   }
 
-  generateModalContent(){
+  generateTable(){
     const { currentPage, totalPage, sorting } = this.state;
 
     return (
@@ -205,7 +206,7 @@ class PanelEvents extends React.Component {
         <thead>
           <tr>
             <td></td>
-            {FILTERING.map((item, id) =>
+            {this.dataFieldList.map((item, id) =>
               <td key={id} style={{ cursor: 'pointer' }}
                 onClick={(e) => this.onSetSorting(item.dataField)}>
                 {item.label}
@@ -216,7 +217,7 @@ class PanelEvents extends React.Component {
           </tr>
           <tr style={{ border: '1px solid #A4C8E6', borderWidth: '1px 0px 2px 0px' }}>
             <td></td>
-              {FILTERING.map((item, id) =>
+              {this.dataFieldList.map((item, id) =>
                 <td key={id}>
                   <SearchHeader 
                     onChange={(pattern) => this.retrieveEventsFiltered(item.caption, pattern)} 
@@ -291,6 +292,110 @@ class PanelEvents extends React.Component {
     </div>)
   }
 
+  onExpandRow(id){
+    const { dataTable } = this.state;
+    // Keep former value
+    let former = dataTable[id].show
+    dataTable.map( x => x.show = false)
+
+    // Expand    
+    dataTable[id].show = !former;
+
+    // Set State
+    this.setState({ dataTable })
+  }
+
+  generateTableMobile(){
+    const { currentPage, totalPage, sorting } = this.state;
+
+    return (
+    <div className="p-3 h-100" style={{ fontSize:'14px'}}>
+
+
+      <table className="w-100 inspire-mobile-table">
+        <thead>
+          <tr>
+            {this.dataFieldList.map((item, id) =>
+              <td key={id} style={{ cursor: 'pointer' }}
+                onClick={(e) => this.onSetSorting(item.dataField)}>
+                {item.label}
+                <FontAwesomeIcon icon={faLongArrowAltUp} className={sorting == item.dataField ? "ml-1" : "ml-1 d-none"} style={{ color: 'grey' }} />
+                <FontAwesomeIcon icon={faLongArrowAltDown} className={sorting == `-${item.dataField}` ? "ml-1" : "ml-1 d-none"} style={{ color: 'grey' }} />
+              </td>
+              )}
+          </tr>
+          <tr style={{ border: '1px solid #A4C8E6', borderWidth: '1px 0px 2px 0px' }}>
+            
+              {this.dataFieldList.map((item, id) =>
+                <td key={id}>
+                  <SearchHeader 
+                    onChange={(pattern) => this.retrieveEventsFiltered(item.caption, pattern)} 
+                    type={item.type} />
+                </td>
+              )}
+              <td></td>
+          </tr>
+        </thead>
+        <tbody>
+        {this.state.isLoading?
+          <>
+          <tr>
+            <td></td>
+            <td rowSpan="10" style={{ background: 'white', height: '400px' }} colSpan="14" className="text-center">
+              <div className="mb-3" style={{ fontSize: '20px', color: 'grey' }} >Loading ...</div>
+              <FontAwesomeIcon icon={faSpinner}  spin style={{ fontSize: '40px', color: 'grey' }} />                    
+            </td>
+          </tr>
+          <tr><td></td></tr>
+          <tr><td></td></tr>
+          <tr><td></td></tr>
+          <tr><td></td></tr>
+          <tr><td></td></tr>
+          <tr><td></td></tr>
+          <tr><td></td></tr>
+          <tr><td></td></tr>
+          <tr><td></td></tr>
+          </>
+          :<tr></tr>}
+          {this.state.dataTable.map((item, id) =>
+            <React.Fragment key={id}>
+            <tr>
+              <td  className="text-justify" style={{ width: '45%'}}>
+                {item.name}
+              </td>
+              <td  className="text-center" style={{ width: '10%'}}>{item.position}</td>
+              <td className={item.enabled?"inspire-table-profile-mobile":'d-none'}>
+                  <FontAwesomeIcon icon={faAngleDown} className={item.show ? 'unfolded' : "folded"}
+                    style={{ fontSize: '14px', color: 'grey' }}
+                    onClick={e => this.onExpandRow(id)} />
+                </td>
+            </tr>
+            <tr className="inspire-table-subrow">
+              <td colSpan="7" className={item.show?'':'d-none'}>
+              <AnimateHeight
+                height={ item.show?'auto':0}
+                duration={250}>
+                <div className="p-2" style={{ background: '#ECEFF8'}}>
+                  <div className="expand-title">TALKS</div>
+                  <div className="expand-value">{item.talks}</div>
+                  <div className="expand-title">SESSIONS</div>
+                  <div className="expand-value">{item.sessions}</div>
+                  <div className="expand-title">POSTERS</div>
+                  <div className="expand-value">{item.posters}</div>
+                </div>
+                </AnimateHeight>
+              </td>
+            </tr>
+            </React.Fragment>
+            
+          )}
+        </tbody>
+      </table>
+
+      <InspirePagination currentPage={currentPage} totalPage={totalPage} onClick={this.navigatePage.bind(this)}/>
+    </div>)
+  }
+
   async retrieveEventTypes(){
     try{      
       const token = localStorage.getItem('token')
@@ -344,7 +449,7 @@ class PanelEvents extends React.Component {
 
       // Add filtering
       if( filtering !== undefined ){
-        for(const item of FILTERING ){
+        for(const item of this.dataFieldList ){
           if( filtering[item.caption] !== '' ){
             urlParams = `${urlParams}&${item.dataField}=${filtering[item.caption]}`;
           }
@@ -362,9 +467,12 @@ class PanelEvents extends React.Component {
       })
 
       let dataTable = response.data.results
+      dataTable.map( x => x.show = false)
+      dataTable.map( x => x.enabled = true)           
       if(response.data.results.length < take){
-        const filteringList = FILTERING.reduce((acc,curr)=> (acc[curr.caption]='',acc),{});    
+        const filteringList = this.dataFieldList.reduce((acc,curr)=> (acc[curr.caption]='',acc),{});    
         const fill = new Array(take - response.data.results.length).fill(filteringList)
+        fill.map( x => x.enabled = false)
         dataTable.push(...fill)
       }
 
@@ -384,7 +492,7 @@ class PanelEvents extends React.Component {
 
   retrieveEventsFiltered(key, value){
     let { currentPage, filtering } = this.state;
-    for(const candidate_item of FILTERING ){
+    for(const candidate_item of this.dataFieldList ){
       if( key === candidate_item.caption ){
         filtering[candidate_item.caption] = value
       }
@@ -476,10 +584,6 @@ class PanelEvents extends React.Component {
       setTimeout(function () { that.generateChart() }, 500);
     }
 
-    const { showModal } = this.state;
-    let modalContent = this.generateModalContent()   
-
-
     const emptyPanelShow = this.state.emptyPanelShow && 
                             this.props.tabActive == PANEL.EVENTS;
 
@@ -492,20 +596,45 @@ class PanelEvents extends React.Component {
           spinner>
           {!emptyPanelShow?
           <>
-          <Row style={{ padding: '1em 1em 1em 1em' }}>
-            <Col>
-              <div>Event Types</div>
-              <div id="eventTypeChart" style={{ width: '100%', height: '300px'}}></div>
-            </Col>
-            <Col>
-              <div>Event Roles</div>
-              <div id="eventRoleChart" style={{ width: '100%', height: '300px'}}></div>
-            </Col>
-          </Row>
-          <div className="mt-3">
-            {modalContent}
-          </div>
-        </>
+            <Row style={{ padding: '1em 1em 1em 1em' }}>
+              <Col sm={6}>
+                <div>Event Types</div>
+                <div id="eventTypeChart" style={{ width: '100%', height: '300px'}}></div>
+              </Col>
+              <Col sm={6}>
+                <div>Event Roles</div>
+                <div id="eventRoleChart" style={{ width: '100%', height: '300px'}}></div>
+              </Col>
+            </Row>
+
+
+            <div className={this.state.showTableSideModal ? "inspire-sidemodal-wrapper toggled" : "inspire-sidemodal-wrapper"}>
+                <div className="p-3">
+                  <div style={{ fontSize: '20px' }}
+                    onClick={e => this.setState({ showTableSideModal: false })}>
+                    <FontAwesomeIcon icon={faAngleLeft} />
+                  </div>
+                  <div className="mt-3" style={{ fontSize: '20px' }}>
+                    <b>Events</b>
+                  </div>
+                  <div className="mt-3">
+                    {this.generateTableMobile()}
+                  </div>
+                </div>
+              </div>
+
+              {window.mobile?
+              <div className="p-3 text-right" style={{ pointer: 'cursor'}}
+                onClick={ e =>  this.setState({ showTableSideModal: true })}>
+                View Details ...
+              </div>
+              :
+              <div className="mt-3">{this.generateTable()}</div>
+              }
+          
+
+
+          </>
         :''}
         </LoadingOverlay>
 

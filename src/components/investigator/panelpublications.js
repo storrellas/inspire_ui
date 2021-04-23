@@ -335,11 +335,11 @@ class PanelPublications extends React.Component {
                     height={item.show ? 'auto': 0}
                     duration={250}>
                     <div className="p-2" style={{ background: '#ECEFF8'}}>
-                      <div className="expand-title">DEPARTMENT</div>
+                      <div className="expand-title">YEAR</div>
                       <div className="expand-value">{item.publication_year}</div>
-                      <div className="expand-title">SUBTYPE</div>
+                      <div className="expand-title">POSITION</div>
                       <div className="expand-value">{item.position}</div>
-                      <div className="expand-title">PAST POSITION</div>
+                      <div className="expand-title">TYPE</div>
                       <div className="expand-value">{item.publication_subtype}</div>
                     </div>
                   </AnimateHeight>

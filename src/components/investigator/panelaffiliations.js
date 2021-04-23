@@ -444,12 +444,12 @@ class PanelAffiliations extends React.Component {
         <thead>
           <tr>
             {this.dataFieldList.map((item, id) =>
-            <td key={id} style={{ cursor: 'pointer' }}
-              onClick={(e) => this.onSetSorting(item.dataField)}>
-              {item.label}
-              <FontAwesomeIcon icon={faLongArrowAltUp} className={sorting == item.dataField ? "ml-1" : "ml-1 d-none"} style={{ color: 'grey' }} />
-              <FontAwesomeIcon icon={faLongArrowAltDown} className={sorting == `-${item.dataField}` ? "ml-1" : "ml-1 d-none"} style={{ color: 'grey' }} />
-            </td>
+              <td key={id} style={{ cursor: 'pointer' }}
+                onClick={(e) => this.onSetSorting(item.dataField)}>
+                {item.label}
+                <FontAwesomeIcon icon={faLongArrowAltUp} className={sorting == item.dataField ? "ml-1" : "ml-1 d-none"} style={{ color: 'grey' }} />
+                <FontAwesomeIcon icon={faLongArrowAltDown} className={sorting == `-${item.dataField}` ? "ml-1" : "ml-1 d-none"} style={{ color: 'grey' }} />
+              </td>
             )}
           </tr>
           <tr style={{ border: '1px solid #A4C8E6', borderWidth: '1px 0px 2px 0px' }}>

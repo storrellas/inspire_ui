@@ -540,21 +540,21 @@ class Investigator extends React.Component {
             name={"Events"}
             activePanel={panel} panel={PANEL.EVENTS}
             handler={(e) => this.onSetPanel(PANEL.EVENTS)}>
-            <div>MyContentHere</div>
+            <PanelEvents />
           </Panel>
 
           <Panel
             name={"Clinical Trials"}
             activePanel={panel} panel={PANEL.CLINICAL_TRIALS}
             handler={(e) => this.onSetPanel(PANEL.CLINICAL_TRIALS)}>
-            <div>MyContentHere</div>
+            <PanelClinicalTrials />
           </Panel>
 
           <Panel
             name={"Feedback"}
             activePanel={panel} panel={PANEL.FEEDBACK}
             handler={(e) => this.onSetPanel(PANEL.FEEDBACK)}>
-            <div>MyContentHere</div>
+            <PanelFeedback />
           </Panel>
 
 
