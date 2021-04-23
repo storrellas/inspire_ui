@@ -526,7 +526,7 @@ class Investigator extends React.Component {
             name={"Research Profile"}
             activePanel={panel} panel={PANEL.RESEARCH_PROFILE}
             handler={(e) => this.onSetPanel(PANEL.RESEARCH_PROFILE)}>
-            <div>MyContentHere</div>
+            <PanelResearchProfile />
           </Panel>
 
           <Panel

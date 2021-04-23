@@ -85,16 +85,18 @@ class PanelResearchProfile extends React.Component {
       this.setState({isOpened: true})
       return
     }
-
-    let chart = am4core.create("researchprofilechart", am4charts.PieChart);
+    const container = window.mobile?"researchprofilechartmobile":"researchprofilechart"
+    let chart = am4core.create(container, am4charts.PieChart);
     chart.hiddenState.properties.opacity = 0; // this creates initial fade-in
   
     chart.data = this.state.data.slice(0,7);
 
     var series = chart.series.push(new am4charts.PieSeries());
-    series.radius = "100%"
+    series.radius = "100%"    
     series.dataFields.value = "counter";
-    series.dataFields.radiusValue = "counter";
+    // Remove Radius
+    if( window.mobile == false )
+      series.dataFields.radiusValue = "counter";
     series.dataFields.category = "name";
     series.slices.template.cornerRadius = 6;
     series.colors.step = 3;
@@ -102,6 +104,12 @@ class PanelResearchProfile extends React.Component {
     series.labels.template.maxWidth = 150;
     series.labels.template.wrap = true;
     series.labels.template.fontSize = 14;
+
+    // series.ticks.template.disabled = true;
+    
+    // Remove labels
+    if( window.mobile )
+      series.labels.template.disabled = true;
 
     series.hiddenState.properties.endAngle = -90;
   
@@ -124,7 +132,12 @@ class PanelResearchProfile extends React.Component {
     this.chart = chart
     this.chart.legend = new am4charts.Legend();
     this.chart.legend.fontSize = 12;
-    this.chart.legend.position = "right"
+    if( window.mobile ){
+      //this.chart.legend.position = "bottom"
+    }else{
+      this.chart.legend.position = "right"
+    }
+    
 
     // Set state after timeout
     this.setState({isOpened: true})
@@ -138,7 +151,6 @@ class PanelResearchProfile extends React.Component {
 
   generateModalData(){
     const { data } = this.state;
-
 
     // Get List of categories
     const category_set = new Set()
@@ -172,7 +184,7 @@ class PanelResearchProfile extends React.Component {
 
 
 
-  render() {
+  renderDesktop() {
     if( this.props.tabActive == PANEL.RESEARCH_PROFILE && 
         this.state.isOpened == false &&
         this.state.data !== undefined){
@@ -198,7 +210,7 @@ class PanelResearchProfile extends React.Component {
               <div className="h-100" style={{ overflowY:'scroll', overflowX: 'none'}}>
                 <div style={{ position:'relative'}}>
                 {researchProfileData.map( (item, key) => 
-                <div key={key} id="category-page-3" className="category" style={{ marginTop: '1em', width: '100%'}}>
+                <div key={key} className="category" style={{ marginTop: '1em', width: '100%'}}>
                   <h4><b>{item.name}</b></h4>
                   <div className="d-flex flex-wrap w-100 h-100">
                     {item.childrenList.map( (item, key) => 
@@ -224,6 +236,29 @@ class PanelResearchProfile extends React.Component {
 
 
       </div>);
+  }
+
+  renderMobile(){
+    if( this.props.tabActive == PANEL.RESEARCH_PROFILE && 
+      this.state.isOpened == false &&
+      this.state.data !== undefined){
+    const that = this;
+    setTimeout(function(){ that.generateChart() }, 500);
+  }
+
+  const researchProfileData = this.generateModalData()
+  const emptyPanelShow = researchProfileData.length == 0 
+                          && this.props.tabActive == PANEL.RESEARCH_PROFILE;
+
+    return (
+        <div>
+          <div id="researchprofilechartmobile" style={{ height:'100%', height: '500px' }}></div>
+        </div>
+    )
+  }
+
+  render(){
+    return (window.mobile?this.renderMobile():this.renderDesktop())
   }
 }
 

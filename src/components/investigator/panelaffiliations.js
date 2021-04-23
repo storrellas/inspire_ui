@@ -13,13 +13,15 @@ import EllipsisWithTooltip from 'react-ellipsis-with-tooltip'
 
 // Project imports
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faLongArrowAltUp, faLongArrowAltDown, faSpinner, faAngleLeft } from '@fortawesome/free-solid-svg-icons'
+import { faLongArrowAltUp, faLongArrowAltDown, faSpinner, faAngleLeft, faAngleDown  } from '@fortawesome/free-solid-svg-icons'
 
 // Assets
 import universities from '../../assets/universities.svg';
 import hospitals from '../../assets/hospitals.svg';
 import associations from '../../assets/associations.svg';
 
+// Animate Height
+import AnimateHeight from 'react-animate-height';
 
 // Axios
 import axios from 'axios';
@@ -28,7 +30,7 @@ import axios from 'axios';
 import InspirePagination from '../shared/pagination'
 import SearchHeader, { SEARCH_HEADER } from '../shared/searchheader'
 
-const FILTERING = [
+const DATA_FIELD_LIST = [
   { 
     dataField:'position__name', caption: 'position', 
     label: 'Position', type: SEARCH_HEADER.TEXT 
@@ -75,7 +77,7 @@ const Affiliation = (props) => {
     </div>
     
     <div style={{ padding: '1em 2em 1em 2em'}}>
-      <button className={props.active?"w-100 inspire-button no-padding":"w-100 inspire-ghost-button no-padding"}  variant="primary"
+      <button className={props.active&&!window.mobile?"w-100 inspire-button no-padding":"w-100 inspire-ghost-button no-padding"}  variant="primary"
         onClick={ (e) => props.handler()}>
         Show Results
       </button>
@@ -88,7 +90,8 @@ class PanelAffiliations extends React.Component {
 
   constructor(props) {
     super(props)
-    const filteringList = FILTERING.reduce((acc,curr)=> (acc[curr.caption]='',acc),{});    
+    this.dataFieldList = window.mobile?DATA_FIELD_LIST.slice(0,2):DATA_FIELD_LIST;
+    const filteringList = DATA_FIELD_LIST.reduce((acc,curr)=> (acc[curr.caption]='',acc),{});    
     this.state = {
       showTableUniversities: false,
       showTableHospitals: false,
@@ -145,7 +148,7 @@ class PanelAffiliations extends React.Component {
 
       // Add filtering
       if( filtering !== undefined ){
-        for(const item of FILTERING ){
+        for(const item of this.dataFieldList ){
           if( filtering[item.caption] !== '' ){
             urlParams = `${urlParams}&${item.dataField}=${filtering[item.caption]}`;
           }
@@ -163,9 +166,12 @@ class PanelAffiliations extends React.Component {
       })
 
       let dataTable = response.data.results
+      dataTable.map( x => x.show = false)
+      dataTable.map( x => x.enabled = true)        
       if(response.data.results.length < take){
-        const filteringList = FILTERING.reduce((acc,curr)=> (acc[curr.caption]='',acc),{});    
+        const filteringList = this.dataFieldList.reduce((acc,curr)=> (acc[curr.caption]='',acc),{});    
         const fill = new Array(take - response.data.results.length).fill(filteringList)
+        fill.map( x => x.enabled = false)
         dataTable.push(...fill)
       }
 
@@ -199,9 +205,9 @@ class PanelAffiliations extends React.Component {
     this.retrieveAffiliationsInstitution(base_url, page)
   }
 
-  showTableUniversities(componentDidMount = false){
+  showTableUniversities(componentDidMount = false){    
     this.setState({
-      showTableUniversities: window.mobile?false:true, 
+      showTableUniversities: true, 
       showTableHospitals: false, 
       showTableAssociations: false, 
       currentPage: 1,
@@ -219,7 +225,7 @@ class PanelAffiliations extends React.Component {
   showTableHospitals(){
     this.setState({
       showTableUniversities: false, 
-      showTableHospitals: window.mobile?false:true, 
+      showTableHospitals: true, 
       showTableAssociations: false, 
       currentPage: 1,
       totalPage: 1,
@@ -236,7 +242,7 @@ class PanelAffiliations extends React.Component {
     this.setState({
       showTableUniversities: false, 
       showTableHospitals: false, 
-      showTableAssociations: window.mobile?false:true, 
+      showTableAssociations: true, 
       currentPage: 1,
       totalPage: 1,
       take: 10,
@@ -251,7 +257,7 @@ class PanelAffiliations extends React.Component {
   retrieveAffiliationsFiltered(key, value){
     
     let { currentPage, filtering } = this.state;
-    for(const candidate_item of FILTERING ){
+    for(const candidate_item of this.dataFieldList ){
       if( key === candidate_item.caption ){
         filtering[candidate_item.caption] = value
       }
@@ -294,8 +300,7 @@ class PanelAffiliations extends React.Component {
       this.retrieveAffiliationsHospitals(page) 
     }else if( this.state.showTableAssociations ){
       this.retrieveAffiliationsAssociations(page) 
-    }
-    
+    }    
   }
 
   onSetSorting(field){
@@ -317,10 +322,196 @@ class PanelAffiliations extends React.Component {
     }
   }
 
+  renderTableDesktop(){
+    const { dataTable } = this.state;
+    const { currentPage, totalPage, sorting } = this.state;
+    return (<>
+      <table className="w-100 inspire-table">
+        <thead>
+          <tr>
+            {this.dataFieldList.map((item, id) =>
+            <td key={id} style={{ cursor: 'pointer' }}
+              onClick={(e) => this.onSetSorting(item.dataField)}>
+              {item.label}
+              <FontAwesomeIcon icon={faLongArrowAltUp} className={sorting == item.dataField ? "ml-1" : "ml-1 d-none"} style={{ color: 'grey' }} />
+              <FontAwesomeIcon icon={faLongArrowAltDown} className={sorting == `-${item.dataField}` ? "ml-1" : "ml-1 d-none"} style={{ color: 'grey' }} />
+            </td>
+            )}
+          </tr>
+          <tr style={{ border: '1px solid #A4C8E6', borderWidth: '1px 0px 2px 0px' }}>
+            {this.dataFieldList.map((item, id) =>
+              <td key={id} className="text-center">
+                <SearchHeader 
+                  onChange={(pattern) => this.retrieveAffiliationsFiltered(item.caption, pattern)} 
+                  type={item.type} />
+              </td>
+            )}
+          </tr>
+        </thead>
+        <tbody>
+          {this.state.isLoading?
+            <>
+            <tr>
+              <td></td>
+              <td rowSpan="10" style={{ background: 'white', height: '400px' }} colSpan="14" className="text-center">
+                <div className="mb-3" style={{ fontSize: '20px', color: 'grey' }} >Loading ...</div>
+                <FontAwesomeIcon icon={faSpinner}  spin style={{ fontSize: '40px', color: 'grey' }} />                    
+              </td>
+            </tr>
+            <tr><td></td></tr>
+            <tr><td></td></tr>
+            <tr><td></td></tr>
+            <tr><td></td></tr>
+            <tr><td></td></tr>
+            <tr><td></td></tr>
+            <tr><td></td></tr>
+            <tr><td></td></tr>
+            <tr><td></td></tr>
+            </>
+            :<tr></tr>}
+
+          {dataTable.map((item, id) =>
+            <tr key={id}>
+              <td style={{ width: '10%'}}>{item.position__name}</td>
+              <td style={{ width: '20%'}}>
+                <EllipsisWithTooltip placement="bottom" style={{ width: '150px'}}>
+                {item.institution__parent_name || ''}
+                </EllipsisWithTooltip>
+              </td>
+              <td style={{ width: '20%'}}>
+                <EllipsisWithTooltip placement="bottom" style={{ width: '150px'}}>
+                {item.institution__department || ''}
+                </EllipsisWithTooltip>
+              </td>
+              <td style={{ width: '20%'}}>{item.institution__institution_subtype__name}</td>
+              <td style={{ width: '10%'}}>{item.past_position}</td>
+              <td style={{ width: '10%'}}>{item.year}</td>
+              <td style={{ width: '10%'}}>{item.institution__city}</td>
+              <td style={{ width: '10%'}}>{item.institution__country__name}</td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+      <InspirePagination currentPage={currentPage} 
+          totalPage={totalPage} onClick={this.navigatePage.bind(this)}/>
+      </>
+    )
+  }
+
+  onExpandRow(id){
+    const { dataTable } = this.state;
+    // Keep former value
+    let former = dataTable[id].show
+    dataTable.map( x => x.show = false)
+
+    // Expand    
+    dataTable[id].show = !former;
+
+    // Set State
+    this.setState({ dataTable })
+  }
+
+  renderTableMobile(){
+    const { dataTable } = this.state;
+    const { currentPage, totalPage, sorting } = this.state;
+    return (<>
+      <table className="w-100 inspire-mobile-table">
+        <thead>
+          <tr>
+            {this.dataFieldList.map((item, id) =>
+            <td key={id} style={{ cursor: 'pointer' }}
+              onClick={(e) => this.onSetSorting(item.dataField)}>
+              {item.label}
+              <FontAwesomeIcon icon={faLongArrowAltUp} className={sorting == item.dataField ? "ml-1" : "ml-1 d-none"} style={{ color: 'grey' }} />
+              <FontAwesomeIcon icon={faLongArrowAltDown} className={sorting == `-${item.dataField}` ? "ml-1" : "ml-1 d-none"} style={{ color: 'grey' }} />
+            </td>
+            )}
+          </tr>
+          <tr style={{ border: '1px solid #A4C8E6', borderWidth: '1px 0px 2px 0px' }}>
+            {this.dataFieldList.map((item, id) =>
+              <td key={id} className="text-center">
+                <SearchHeader 
+                  onChange={(pattern) => this.retrieveAffiliationsFiltered(item.caption, pattern)} 
+                  type={item.type} />
+              </td>
+            )}
+            <td></td>
+          </tr>
+        </thead>
+        <tbody>
+          {this.state.isLoading?
+            <>
+            <tr>
+              <td></td>
+              <td rowSpan="2" style={{ background: 'white', height: '400px' }} colSpan="14" className="text-center">
+                <div className="mb-3" style={{ fontSize: '20px', color: 'grey' }} >Loading ...</div>
+                <FontAwesomeIcon icon={faSpinner}  spin style={{ fontSize: '40px', color: 'grey' }} />                    
+              </td>
+              <td></td>
+            </tr>
+            <tr><td></td></tr>
+            <tr><td></td></tr>
+            <tr><td></td></tr>
+            <tr><td></td></tr>
+            <tr><td></td></tr>
+            <tr><td></td></tr>
+            <tr><td></td></tr>
+            <tr><td></td></tr>
+            <tr><td></td></tr>
+            </>
+            :<tr></tr>}
+
+          {dataTable.map((item, id) =>
+            [
+            <tr key={id}>
+              <td style={{ width: '40%'}}>{item.position__name}</td>
+              <td style={{ width: '40%'}}>
+                <EllipsisWithTooltip placement="bottom" style={{ width: '150px'}}>
+                {item.institution__parent_name || ''}
+                </EllipsisWithTooltip>
+              </td>
+              <td className={item.enabled?"inspire-table-profile-mobile":'d-none'}>
+                <FontAwesomeIcon icon={faAngleDown} className={item.show ? 'unfolded' : "folded"}
+                  style={{ fontSize: '14px', color: 'grey' }}
+                  onClick={e => this.onExpandRow(id)} />
+              </td>
+            </tr>
+            ,
+            <tr key={id + "_"} className="inspire-table-subrow">
+              <td colSpan="7" className={item.show ? '' : 'd-none'}>                      
+                <AnimateHeight
+                  height={item.show ? 'auto': 0}
+                  duration={250}>
+                  <div className="p-2" style={{ background: '#ECEFF8'}}>
+                    <div className="expand-title">DEPARTMENT</div>
+                    <div className="expand-value">{item.institution__department}</div>
+                    <div className="expand-title">SUBTYPE</div>
+                    <div className="expand-value">{item.institution__institution_subtype__name}</div>
+                    <div className="expand-title">PAST POSITION</div>
+                    <div className="expand-value">{item.past_position}</div>
+                    <div className="expand-title">YEAR</div>
+                    <div className="expand-value">{item.year}</div>
+                    <div className="expand-title">CITY</div>
+                    <div className="expand-value">{item.institution__city}</div>
+                    <div className="expand-title">COUNTRY</div>
+                    <div className="expand-value">{item.institution__country__name}</div>
+                  </div>
+                </AnimateHeight>
+              </td>
+            </tr>
+            ]
+          )}
+        </tbody>
+      </table>
+      <InspirePagination currentPage={currentPage} 
+          totalPage={totalPage} onClick={this.navigatePage.bind(this)}/>
+      </>
+    )
+  }
+
   render() {
 
-    const { affiliations, dataTable } = this.state;
-    const { currentPage, totalPage, sorting } = this.state;
+    const { affiliations } = this.state;
     const { showTableUniversities, showTableHospitals, showTableAssociations } = this.state;
     const { showTableSideModal, showTableSideTitle } = this.state;
 
@@ -357,7 +548,7 @@ class PanelAffiliations extends React.Component {
           </Col>
         </Row>
 
-        <div className={showTableSideModal ? "inspire-sidemodal-wrapper toggled": "inspire-sidemodal-wrapper"}>
+        <div className={showTableSideModal&&window.mobile ? "inspire-sidemodal-wrapper toggled": "inspire-sidemodal-wrapper"}>
           <div className="p-3">
             <div style={{ fontSize: '20px' }} 
               onClick={(e) => this.setState({ showTableSideModal: false })}>
@@ -367,79 +558,13 @@ class PanelAffiliations extends React.Component {
               <b>{showTableSideTitle}</b>  
             </div>
             <div className="mt-3">
-              MyNodeDetails
+              {this.renderTableMobile()}
             </div>
           </div>
         </div>
 
         <div className={window.mobile?"d-none":"p-3 h-100"} style={{ fontSize: '14px'}}>
-          <table className="w-100 inspire-table">
-            <thead>
-              <tr>
-                {FILTERING.map((item, id) =>
-                <td key={id} style={{ cursor: 'pointer' }}
-                  onClick={(e) => this.onSetSorting(item.dataField)}>
-                  {item.label}
-                  <FontAwesomeIcon icon={faLongArrowAltUp} className={sorting == item.dataField ? "ml-1" : "ml-1 d-none"} style={{ color: 'grey' }} />
-                  <FontAwesomeIcon icon={faLongArrowAltDown} className={sorting == `-${item.dataField}` ? "ml-1" : "ml-1 d-none"} style={{ color: 'grey' }} />
-                </td>
-                )}
-              </tr>
-              <tr style={{ border: '1px solid #A4C8E6', borderWidth: '1px 0px 2px 0px' }}>
-                {FILTERING.map((item, id) =>
-                  <td key={id} className="text-center">
-                    <SearchHeader 
-                      onChange={(pattern) => this.retrieveAffiliationsFiltered(item.caption, pattern)} 
-                      type={item.type} />
-                  </td>
-                )}
-              </tr>
-            </thead>
-            <tbody>
-              {this.state.isLoading?
-                <>
-                <tr>
-                  <td></td>
-                  <td rowSpan="10" style={{ background: 'white', height: '400px' }} colSpan="14" className="text-center">
-                    <div className="mb-3" style={{ fontSize: '20px', color: 'grey' }} >Loading ...</div>
-                    <FontAwesomeIcon icon={faSpinner}  spin style={{ fontSize: '40px', color: 'grey' }} />                    
-                  </td>
-                </tr>
-                <tr><td></td></tr>
-                <tr><td></td></tr>
-                <tr><td></td></tr>
-                <tr><td></td></tr>
-                <tr><td></td></tr>
-                <tr><td></td></tr>
-                <tr><td></td></tr>
-                <tr><td></td></tr>
-                <tr><td></td></tr>
-                </>
-                :<tr></tr>}
-
-              {dataTable.map((item, id) =>
-                <tr key={id}>
-                  <td style={{ width: '10%'}}>{item.position__name}</td>
-                  <td style={{ width: '20%'}}>
-                    <EllipsisWithTooltip placement="bottom" style={{ width: '150px'}}>
-                    {item.institution__parent_name || ''}
-                    </EllipsisWithTooltip>
-                  </td>
-                  <td style={{ width: '20%'}}>
-                    <EllipsisWithTooltip placement="bottom" style={{ width: '150px'}}>
-                    {item.institution__department || ''}
-                    </EllipsisWithTooltip>
-                  </td>
-                  <td style={{ width: '20%'}}>{item.institution__institution_subtype__name}</td>
-                  <td style={{ width: '10%'}}>{item.past_position}</td>
-                  <td style={{ width: '10%'}}>{item.year}</td>
-                  <td style={{ width: '10%'}}>{item.institution__city}</td>
-                  <td style={{ width: '10%'}}>{item.institution__country__name}</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-          <InspirePagination currentPage={currentPage} totalPage={totalPage} onClick={this.navigatePage.bind(this)}/>
+          {this.renderTableDesktop()}
       </div>
     </>);
   }
